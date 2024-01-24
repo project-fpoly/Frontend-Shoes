@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost/",
+  baseURL: "http://localhost:3000",
 });
 
 instance.interceptors.request.use(
   (config) => {
-    console.log("Request Interceptor:", config);
+    // console.log("Request Interceptor:", config);
     return config;
   },
   (error) => {
@@ -17,7 +17,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log("Response Interceptor:", response);
+    // console.log("Response Interceptor:", response);
     return response;
   },
   (error) => {
