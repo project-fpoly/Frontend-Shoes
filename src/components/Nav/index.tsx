@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { SiJordan } from "react-icons/si";
 import { Popover, Menu, Avatar, ConfigProvider, Badge } from "antd";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
 import type { MenuProps } from "antd";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const content = (
@@ -15,11 +15,19 @@ const NavBar = () => {
   );
   const items: MenuProps["items"] = [
     {
-      label: <h1 className="font-bold">New & Features</h1>,
+      label: (
+        <Link to="/">
+          <h1 className="font-bold">New & Features</h1>
+        </Link>
+      ),
       key: "mail",
     },
     {
-      label: <h1 className="font-bold">Men</h1>,
+      label: (
+        <Link to="/demo">
+          <h1 className="font-bold">Men</h1>
+        </Link>
+      ),
       key: "app",
     },
     {
@@ -122,8 +130,6 @@ const NavBar = () => {
             <Menu
               className="flex w-[800px] pl-10 "
               mode="horizontal"
-              //   onClick={onClick}
-              //   selectedKeys={[current]}
               items={items}
             />
 
