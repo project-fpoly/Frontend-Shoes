@@ -4,7 +4,7 @@ import { getProducts } from "../../services/products";
 import { isRejected } from "@reduxjs/toolkit/react";
 
 const initialState: initialProduct = {
-  loading: "pending",
+  loading: "idle",
   products: [],
   product: {},
 };
@@ -34,7 +34,7 @@ export const productSlice = createSlice({
     builder.addCase(fetchAllProducts.rejected, (state) => {
       state.loading = "failed";
     });
-    builder.addCase(fetchAllProducts.fulfilled, (state?, action?: any) => {
+    builder.addCase(fetchAllProducts.fulfilled, (state, action: any) => {
       state.loading = "fulfilled";
       state.products = action.payload;
     });
