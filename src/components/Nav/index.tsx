@@ -26,7 +26,7 @@ const NavBar = () => {
     },
     {
       label: (
-        <Link to="/demo">
+        <Link to="/gearup">
           <h1 className="font-bold">Men</h1>
         </Link>
       ),
@@ -86,7 +86,6 @@ const NavBar = () => {
 
   const [showNav, setShowNav] = useState<boolean>(false);
   const [position, setPosition] = useState<boolean>(false);
-  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,8 +94,6 @@ const NavBar = () => {
       } else {
         setPosition(false);
       }
-
-      // window.scrollY > 100 ? setShowNav(true) : setShowNav(false);
     };
     const handleScrollTop = (e: any) => {
       if (e.deltaY === 100) {
@@ -108,8 +105,6 @@ const NavBar = () => {
     window.addEventListener("wheel", handleScrollTop);
     window.addEventListener("scroll", handleScroll);
   }, []);
-
-  console.log(position);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "../layouts/Mainlayout";
 import Home from "../pages/Home";
-import Demo from "../pages/DEMO";
+import GreaUp from "../pages/GreaUp";
 
 const Router = () => {
   return (
@@ -9,7 +9,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="demo" element={<Demo />} />
+          <Route path="/gearup" element={<GreaUp />} />
         </Route>
       </Routes>
     </>
