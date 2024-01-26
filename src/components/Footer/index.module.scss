@@ -1,0 +1,28 @@
+.footer {
+  @media (max-width: 1000px) {
+    gap: 40px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width: 600px) {
+    align-items: baseline;
+    gap: 40px;
+    padding: 0 20px;
+    .infoFooter {
+      justify-content: start;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+.detailFooter {
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 30px;
+    .aboutDtFooter {
+      flex-direction: column;
+    }
+  }
+}

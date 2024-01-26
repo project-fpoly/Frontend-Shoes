@@ -4,6 +4,8 @@ import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
 import type { MenuProps } from "antd";
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 
 const NavBar = () => {
   const content = (
@@ -82,6 +84,33 @@ const NavBar = () => {
     },
   ];
 
+  const [showNav, setShowNav] = useState<boolean>(false);
+  const [position, setPosition] = useState<boolean>(false);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 100) {
+        setPosition(true);
+      } else {
+        setPosition(false);
+      }
+
+      // window.scrollY > 100 ? setShowNav(true) : setShowNav(false);
+    };
+    const handleScrollTop = (e: any) => {
+      if (e.deltaY === 100) {
+        setShowNav(true);
+      } else {
+        setShowNav(false);
+      }
+    };
+    window.addEventListener("wheel", handleScrollTop);
+    window.addEventListener("scroll", handleScroll);
+  }, []);
+
+  console.log(position);
+
   return (
     <>
       <ConfigProvider
@@ -123,7 +152,13 @@ const NavBar = () => {
           </div>
         </div>
 
-        <div className="flex fixed bg-white w-full left-1/2  -translate-x-1/2  justify-evenly z-20">
+        <div
+          className={clsx(
+            "flex fixed bg-white w-full justify-evenly z-20",
+            showNav ? "hidden" : "",
+            position ? "top-0" : ""
+          )}
+        >
           <div className="flex gap-[270px]">
             <SiNike className="hover:opacity-75" size={50} />
 
@@ -133,9 +168,7 @@ const NavBar = () => {
               items={items}
             />
 
-            <Badge count={5}>
-              <ShoppingCartOutlined sizes={"large"} />
-            </Badge>
+            <ShoppingCartOutlined sizes={"small"} />
           </div>
         </div>
 

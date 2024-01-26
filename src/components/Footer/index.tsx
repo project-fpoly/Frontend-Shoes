@@ -5,13 +5,19 @@ import {
   InstagramOutlined,
 } from "@ant-design/icons";
 import { IoLocationOutline } from "react-icons/io5";
-
 import { Avatar } from "antd";
+import clsx from "clsx";
+import style from "./index.module.scss";
 const Footer = () => {
   return (
     <div className="bg-black ">
-      <div className=" py-6 flex lg:justify-around  cursor-pointer justify-start  ">
-        <div className="flex md:gap-32  md:flex-col xl:flex-row  ">
+      <div
+        className={clsx(
+          "py-16 flex justify-around cursor-pointer",
+          style.footer
+        )}
+      >
+        <div className={clsx("flex gap-32 flex-row", style.infoFooter)}>
           <div className="text-base flex flex-col gap-3 text-white">
             <p>FIND A STORE</p>
             <p>BECOME A MEMBER</p>
@@ -61,7 +67,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="flex justify-around py-6">
+      <div className={clsx("flex justify-around py-6", style.detailFooter)}>
         <span className="text-sm">
           <span className=" flex gap-3 ">
             <p className="mt-1 text-white">
@@ -73,7 +79,12 @@ const Footer = () => {
             </p>
           </span>
         </span>
-        <span className="text-sm text-gray-400 flex gap-6">
+        <span
+          className={clsx(
+            "text-sm text-gray-400 flex gap-6",
+            style.aboutDtFooter
+          )}
+        >
           <p>Guides</p>
           <p>Terms of Sale</p>
           <p>Terms of Use</p>
