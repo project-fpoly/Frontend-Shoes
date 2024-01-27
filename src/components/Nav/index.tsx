@@ -4,7 +4,7 @@ import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
 import type { MenuProps } from "antd";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 const NavBar = () => {
@@ -26,45 +26,25 @@ const NavBar = () => {
     },
     {
       label: (
-        <Link to="/gearup">
-          <h1 className="font-bold">Men</h1>
+        <Link to="/greaup">
+          <h1 className="font-bold">DetailCart</h1>
         </Link>
       ),
-      key: "app",
+      key: "SubMenuCart",
+      children: [
+        {
+          type: "group",
+          label: (
+            <Link to="/greaup">
+              <h1 className="font-bold">DetailCart</h1>
+            </Link>
+          ),
+        },
+      ],
     },
     {
       label: <h1 className="font-bold">Women</h1>,
       key: "SubMenu",
-      children: [
-        {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:1",
-            },
-            {
-              label: "Option 2",
-              key: "setting:2",
-            },
-          ],
-        },
-        {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:3",
-            },
-            {
-              label: "Option 4",
-              key: "setting:4",
-            },
-          ],
-        },
-      ],
     },
     {
       label: <h1 className="font-bold">Kids</h1>,
@@ -96,7 +76,7 @@ const NavBar = () => {
       }
     };
     const handleScrollTop = (e: any) => {
-      if (e.deltaY === 100) {
+      if (e.deltaY === 100 && window.scrollY >= 100) {
         setShowNav(true);
       } else {
         setShowNav(false);
@@ -104,6 +84,11 @@ const NavBar = () => {
     };
     window.addEventListener("wheel", handleScrollTop);
     window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("wheel", handleScrollTop);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -167,13 +152,13 @@ const NavBar = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-20 items-center flex-col">
+        {/* <div className="flex justify-center mt-20 items-center flex-col">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>
           <p>
             No matter what you feel like doing today, It’s better as a Member.
           </p>
           <a href="">Join us</a>
-        </div>
+        </div> */}
       </ConfigProvider>
     </>
   );
