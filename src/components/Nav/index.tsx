@@ -103,7 +103,9 @@ const NavBar = () => {
         }}
       >
         <div className="flex justify-between px-16 py-5">
-          <SiJordan size={28} className="hover:opacity-70" />
+          <Link to={"/"}>
+            <SiJordan size={28} className="hover:opacity-70" />
+          </Link>
           <div className="flex gap-3 cursor-pointer ">
             <Popover
               className="hover:opacity-70"
@@ -140,7 +142,9 @@ const NavBar = () => {
           )}
         >
           <div className="flex gap-[270px]">
-            <SiNike className="hover:opacity-75" size={50} />
+            <Link to={"/"}>
+              <SiNike className="hover:opacity-75" size={50} />
+            </Link>
 
             <Menu
               className="flex w-[800px] pl-10 "
