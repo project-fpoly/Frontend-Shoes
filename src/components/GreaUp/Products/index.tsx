@@ -51,7 +51,7 @@ const ListProduct = (props: Props) => {
           </a>
         </Dropdown>
       </span>
-      <div>
+      <div className="mt-32">
         <Card shoes={shoes} />
       </div>
     </>

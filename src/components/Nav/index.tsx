@@ -76,7 +76,7 @@ const NavBar = () => {
       }
     };
     const handleScrollTop = (e: any) => {
-      if (e.deltaY === 100 && window.scrollY >= 100) {
+      if (e.deltaY === 100) {
         setShowNav(true);
       } else {
         setShowNav(false);

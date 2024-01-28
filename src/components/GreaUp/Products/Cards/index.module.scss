@@ -1,7 +1,9 @@
 .cardContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  height: 700px;
+  height: 1000px;
+  gap: 20px;
+
   overflow-y: scroll;
   margin: 0 20px;
   &::-webkit-scrollbar {
@@ -15,5 +17,11 @@
 
   &::-webkit-scrollbar-track {
     background-color: #f0f0f0; /* WebKit */
+  }
+
+  .image {
+    object-fit: cover;
+    height: 250px;
+    width: 100%;
   }
 }

@@ -32,21 +32,27 @@ const items: MenuProps["items"] = [
     ]),
   ]),
 
-  getItem("Sale & offers", "sub4", "", [
+  getItem("Sale & offers", "sub3", "", [
     getItem("Option 9", "9"),
     getItem("Option 10", "10"),
     getItem("Option 11", "11"),
     getItem("Option 12", "12"),
   ]),
 
-  getItem("Size", "Size", "", [getItem("Option h", "sad")]),
-  getItem("Colour", "Colour", "", [getItem("Option 7", "17")]),
-  getItem("Brand", "Brand", "", [getItem("Option 1b1", "s11")]),
-  getItem("Icon", "Icon", "", [getItem("Option 12312", "121")]),
-  getItem("Technology", "Technology", "", [getItem("Option 13", "13")]),
-  getItem("Shoe Height", "Shoe Height", "", [getItem("Option 14", "14")]),
-  getItem("Material", "Material", "", [getItem("Option 15", "15")]),
-  getItem("Benefits", "Benefits", "", [getItem("Option 16", "16")]),
+  getItem("Size", "sub4", "", [getItem("Option h", "sad")]),
+  getItem("Colour", "sub5", "", [getItem("Option 7", "17")]),
+  getItem("Brand", "sub6", "", [getItem("Option 1b1", "s11")]),
+  getItem("Icon", "sub7", "", [getItem("Option 12312", "121")]),
+  getItem("Technology", "sub8", "", [getItem("Option 13", "13")]),
+  getItem("Shoe Height", "sub9", "", [getItem("Option 14", "14")]),
+  getItem("Material", "sub10", "", [getItem("Option 15", "15")]),
+  getItem("Benefits", "sub11", "", [getItem("Option 16", "16")]),
+  getItem("Benefits", "sub12", "", [getItem("Option 17", "17")]),
+  getItem("Benefits", "sub13", "", [getItem("Option 18", "18")]),
+  getItem("Benefits", "sub14", "", [getItem("Option 19", "19")]),
+  getItem("Benefits", "sub15", "", [getItem("Option 20", "20")]),
+  getItem("Benefits", "sub16", "", [getItem("Option 21", "21")]),
+  getItem("Benefits", "sub17", "", [getItem("Option 22", "22")]),
 ];
 
 interface Props {
@@ -67,7 +73,25 @@ const Sidebar = (props: Props) => {
           onClick={onClick}
           style={{ width: 256 }}
           defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+          defaultOpenKeys={[
+            "sub1",
+            "sub2",
+            "sub3",
+            "sub4",
+            "sub5",
+            "sub6",
+            "sub7",
+            "sub8",
+            "sub9",
+            "sub10",
+            "sub11",
+            "sub12",
+            "sub13",
+            "sub14",
+            "sub15",
+            "sub16",
+            "sub17",
+          ]}
           mode="inline"
           items={items}
         />

@@ -19,20 +19,20 @@ const GreaUp = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(false);
   return (
     <>
-      <div className="flex mt-32 mx-10">
-        <div className="w-[auto]">
+      <div className="flex  mx-10 justify-center items-center">
+        <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>
 
         {loading === "pending" ? (
           <>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center ">
               <LoadingProduct></LoadingProduct>
             </div>
           </>
         ) : (
           <>
-            <div className="w-[100%] ">
+            <div className="w-[100%]  ">
               <ListProduct
                 shoes={shoes}
                 hideFilter={hideFilter}
