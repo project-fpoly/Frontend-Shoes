@@ -1,0 +1,27 @@
+.cardContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 1000px;
+  gap: 20px;
+
+  overflow-y: scroll;
+  margin: 0 20px;
+  &::-webkit-scrollbar {
+    width: 5px; /* WebKit */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888; /* WebKit */
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f0f0f0; /* WebKit */
+  }
+
+  .image {
+    object-fit: cover;
+    height: 250px;
+    width: 100%;
+  }
+}
