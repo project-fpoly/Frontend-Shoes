@@ -13,11 +13,11 @@ const Card = (props: Props) => {
       <div className={style.cardContainer}>
         {shoes.map((item, index) => {
           return (
-            <div key={index + 1} className="mb-28 ">
+            <div key={index + 1} className="mb-28">
               <Link className="flex flex-col gap-6" to={`/detail/${item.id}`}>
                 <img
                   className={style.image}
-                  src={item.image}
+                  src={"/src/assets/air-jordan-1-low-se-shoes-ZbxSRp.jpg"}
                   width={"100%"}
                   alt="BigCo Inc. logo"
                 />
