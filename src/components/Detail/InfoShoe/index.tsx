@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Image } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
+import "./button.scss";
 interface Props {
   shoe: IProduct;
   category: ICategory;
