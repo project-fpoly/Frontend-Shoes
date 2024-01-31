@@ -10,8 +10,11 @@ import clsx from "clsx";
 const NavBar = () => {
   const content = (
     <div>
-      hrhrhr
-      <p>login</p>
+
+      {/* <p>login</p> */}
+      <Link to="/signin">
+        <h1 className="font-bold">Login</h1>
+      </Link>
       <p>logout</p>
     </div>
   );
