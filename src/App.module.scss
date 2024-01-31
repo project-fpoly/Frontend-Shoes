@@ -1,0 +1,8 @@
+.ant-btn {
+  border-color: black; /* Change the border color on hover */
+}
+.ant-btn-default {
+  &:hover {
+    border-color: black; /* Change the border color on hover */
+  }
+}

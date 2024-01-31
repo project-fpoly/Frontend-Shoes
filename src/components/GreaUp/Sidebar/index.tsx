@@ -32,7 +32,7 @@ const items: MenuProps["items"] = [
     ]),
   ]),
 
-  getItem("Sale & offers", "sub3", "", [
+  getItem("Sale & offers", "offers", "", [
     getItem("Option 9", "9"),
     getItem("Option 10", "10"),
     getItem("Option 11", "11"),
@@ -40,7 +40,7 @@ const items: MenuProps["items"] = [
   ]),
 
   getItem("Size", "sub4", "", [getItem("Option h", "sad")]),
-  getItem("Colour", "sub5", "", [getItem("Option 7", "17")]),
+  getItem("Colour", "sub58", "", [getItem("Option ss7", "a7")]),
   getItem("Brand", "sub6", "", [getItem("Option 1b1", "s11")]),
   getItem("Icon", "sub7", "", [getItem("Option 12312", "121")]),
   getItem("Technology", "sub8", "", [getItem("Option 13", "13")]),

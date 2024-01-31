@@ -102,7 +102,7 @@ const NavBar = () => {
           },
         }}
       >
-        <div className="flex justify-between px-16 py-5">
+        <div className="flex justify-between px-16 py-4 bg-[#f5f5f5]">
           <Link to={"/"}>
             <SiJordan size={28} className="hover:opacity-70" />
           </Link>
@@ -136,7 +136,7 @@ const NavBar = () => {
 
         <div
           className={clsx(
-            "flex fixed bg-white w-full justify-evenly z-20",
+            "flex fixed bg-white w-full justify-evenly z-50",
             showNav ? "hidden" : "",
             position ? "top-0" : ""
           )}
@@ -156,13 +156,13 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* <div className="flex justify-center mt-20 items-center flex-col">
+        <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>
           <p>
             No matter what you feel like doing today, It’s better as a Member.
           </p>
           <a href="">Join us</a>
-        </div> */}
+        </div>
       </ConfigProvider>
     </>
   );
