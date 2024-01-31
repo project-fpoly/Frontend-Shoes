@@ -155,7 +155,9 @@ const NavBar = () => {
               items={items}
             />
 
-            <ShoppingCartOutlined sizes={"small"} />
+            <Link to={"/card"} >
+              <ShoppingCartOutlined sizes={"small"} />
+            </Link>
           </div>
         </div>
 

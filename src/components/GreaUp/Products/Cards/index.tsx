@@ -1,6 +1,7 @@
 import { IProduct } from "../../../../common/products";
 import style from "./index.module.scss";
 import { Link } from "react-router-dom";
+
 type Props = {
   shoes: IProduct[];
 };

@@ -1,0 +1,14 @@
+
+
+
+.button_checkout {
+    color: white;
+    margin-top: 20px;
+    height: 60px;
+    border-radius: 100px;
+    
+    &:hover {
+        background: rgba(0, 0, 0, 0.75);
+        // color: white
+    }
+}
