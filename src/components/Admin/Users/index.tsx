@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { fetchAllUsers } from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
-
+import { format } from "date-fns";
 const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>();
 
@@ -43,7 +43,7 @@ const UserManager: React.FC = () => {
       title: "No.",
       dataIndex: "index",
       render: (_, __, index) => index + 1,
-      align:"right"
+      align: "right",
     },
     {
       title: "userName",
@@ -57,6 +57,14 @@ const UserManager: React.FC = () => {
       title: "role",
       dataIndex: "role",
     },
+    {
+        title: "lastActivity",
+        dataIndex: "lastActivity",
+        render: (lastActivity: string | null | undefined) =>
+          lastActivity
+            ? format(new Date(lastActivity), " HH:mm:ss dd-MM-yyyy")
+            : "Chưa hoạt động",
+      },
     {
       title: "action",
       key: "action",
