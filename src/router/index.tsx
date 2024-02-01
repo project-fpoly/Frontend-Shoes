@@ -10,6 +10,8 @@ import SigninPage from "../pages/client/signin";
 import SignupPage from "../pages/client/signup";
 import Cart from "../pages/Cart";
 import Guest_Checkout from "../pages/Guest_Checkout";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboard from "../pages/Admin";
 
 const Router = () => {
   return (
@@ -22,6 +24,10 @@ const Router = () => {
           <Route path="/sizeguide" element={<SizeGuide />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
+        </Route>
+
+        <Route path="/admin/" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>
