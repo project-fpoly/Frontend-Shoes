@@ -1,14 +1,26 @@
-import intansce from "./intansce"
-import IUser from './../types/user';
+import intansce from "./intansce";
+import IUser from "./../types/user";
+import { AxiosResponse } from "axios";
+import instance from "../core/Api";
 
 export const Signup = (data: IUser) => {
-    return intansce.post('/auth/signup', data)
-}
+  return intansce.post("/auth/signup", data);
+};
 
 export const Signin = (data: IUser) => {
-    return intansce.post('/auth/signin', data)
-}
+  return intansce.post("/auth/signin", data);
+};
 
 export const ForgotPass = (data: IUser) => {
-    return intansce.post('/auth/forgotpassword', data)
-}
+  return intansce.post("/auth/forgotpassword", data);
+};
+export const getUsers = async () => {
+  try {
+    const response: AxiosResponse<{ docs: IUser[] }> = await instance.get(
+      "/api/auth/users"
+    );
+    return response.data.docs;
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -3,10 +3,10 @@ import instance from "../core/Api";
 import { AxiosResponse } from "axios";
 export const getProducts = async () => {
   try {
-    const respone: AxiosResponse<IProduct[]> = await instance.get("/shoe");
-    return respone.data || respone;
-  } catch (error: any) {
-    console.log(error.code);
+    const respone: AxiosResponse<{ data: IProduct[] }> = await instance.get("/api/product");
+    return respone.data.data || respone;
+  } catch (error) {
+    console.error(error);
   }
 };
 export const getProductById = async (id: number) => {

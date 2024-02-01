@@ -12,6 +12,7 @@ import Cart from "../pages/Cart";
 import Guest_Checkout from "../pages/Guest_Checkout";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/Admin";
+import UserManager from "../components/Admin/Users";
 
 const Router = () => {
   return (
@@ -26,8 +27,9 @@ const Router = () => {
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
         </Route>
 
-        <Route path="/admin/" element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManager />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import {
   AppstoreOutlined,
+  HomeOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Space } from "antd";
 import { SiNike } from "react-icons/si";
+import { Link } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -27,9 +29,10 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("User", "sub1", <UserOutlined />),
-  getItem("Order", "sub2", <AppstoreOutlined />),
-  getItem("Product", "sub3", <SettingOutlined />, [
+  getItem(<Link to="/admin">Home</Link>, "sub1", <HomeOutlined />),
+  getItem(<Link to="users">User</Link>, "sub2", <UserOutlined />),
+  getItem("Order", "sub3", <AppstoreOutlined />),
+  getItem("Product", "sub4", <SettingOutlined />, [
     getItem("Option 9", "9"),
     getItem("Option 10", "10"),
     getItem("Option 11", "11"),
@@ -38,7 +41,7 @@ const items: MenuItem[] = [
 ];
 
 // submenu keys of first level
-const rootSubmenuKeys = ["sub1", "sub2", "sub3"];
+const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4"];
 
 const NavAdmin: React.FC = () => {
   const [openKeys, setOpenKeys] = useState(["sub1"]);
@@ -54,7 +57,11 @@ const NavAdmin: React.FC = () => {
 
   return (
     <>
-      <Space style={{width:"100%",justifyContent:"center"}} align="center" size="middle">
+      <Space
+        style={{ width: "100%", justifyContent: "center" }}
+        align="center"
+        size="middle"
+      >
         <SiNike className="hover:opacity-75" size={50} />
       </Space>
 
