@@ -6,6 +6,7 @@ interface Props {
   isModalOpen: boolean;
   setIsModalOpen: any;
   children: ReactNode;
+  onCanCel?: any;
 }
 const ModalCustom: React.FC<Props> = ({
   isModalOpen,

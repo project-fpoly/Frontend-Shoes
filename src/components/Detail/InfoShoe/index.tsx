@@ -67,7 +67,6 @@ const InfoShoe = (props: Props) => {
               Add to Bag
             </button>
           </div>
-
           <p>{shoe.description}</p>
           <p
             className=" border-b-2 border-b-black w-[170px] font-bold text-lg cursor-pointer hover:opacity-70"
@@ -75,7 +74,6 @@ const InfoShoe = (props: Props) => {
           >
             View product detail
           </p>
-
           <Colspace shoe={shoe}></Colspace>
 
           <ModalCustom
