@@ -6,4 +6,5 @@ export interface IProduct {
   price: string;
   description: string;
   benefits: string;
+  CategoryId?: number;
 }

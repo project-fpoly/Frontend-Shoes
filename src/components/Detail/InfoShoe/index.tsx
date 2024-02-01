@@ -88,7 +88,7 @@ const InfoShoe = (props: Props) => {
                   <p>{shoe.price}</p>
                 </span>
               </div>
-              <h2 className="text-2xl ">{category.name}</h2>
+              <h2 className="text-2xl ">{category?.name}</h2>
               <p>{shoe.description}</p>
               <p>
                 <p className="font-bold text-xl mb-3">Benefits</p>

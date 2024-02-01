@@ -17,7 +17,6 @@ const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>();
   const shoe = useSelector((state: IStateProduct) => state.product.product);
   const shoes = useSelector((state: IStateProduct) => state.product.products);
-  console.log(shoes);
 
   const Loading = useSelector((state: IStateProduct) => state.product.loading);
 

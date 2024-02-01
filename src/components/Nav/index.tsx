@@ -145,7 +145,7 @@ const NavBar = () => {
             position ? "top-0" : ""
           )}
         >
-          <div className="flex justify-evenly py-2 mx-24 gap-[100px]">
+          <div className="flex justify-evenly py-2 mx-24 gap-[200px]">
             <Link to={"/"}>
               <SiNike className="hover:opacity-75" size={50} />
             </Link>
@@ -154,13 +154,13 @@ const NavBar = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
+        {/* <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>
           <p>
             No matter what you feel like doing today, It’s better as a Member.
           </p>
           <a href="">Join us</a>
-        </div>
+        </div> */}
       </ConfigProvider>
     </>
   );
