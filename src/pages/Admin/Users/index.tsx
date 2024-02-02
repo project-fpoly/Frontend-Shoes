@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import {  IUsers } from "../../../common/users";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import {  fetchAllUsers } from "../../../features/user";
+import {  createNewUser, fetchAllUsers } from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
 import { format } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
@@ -22,7 +22,7 @@ const UserManager: React.FC = () => {
   const handleCreateUser = (newUser: IUsers) => {
     console.log(newUser);
     
-    // dispact(createNewUser(newUser));
+    dispact(createNewUser(newUser));
     setIsModalOpen(false);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,10 +77,10 @@ const UserManager: React.FC = () => {
     _id: "",
     userName: "",
     password: "",
-    deliveryAddress: [""],
+    deliveryAddress: [{"adress":""}],
     email: "",
     role: "member",
-    phoneNumbers: [""],
+    phoneNumbers: [{"phoneNumber":""}],
     avt: "",
     dateOfBirth: "",
     gender: "",
@@ -116,7 +116,7 @@ const UserManager: React.FC = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <FormUser onSubmit={handleCreateUser} setIsModalOpen={setIsModalOpen(false)} {...defaultValue} />
+        <FormUser onSubmit={handleCreateUser} {...defaultValue} />
       </Modal>
       <Modal
         title={"Update"}

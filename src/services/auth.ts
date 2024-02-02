@@ -24,15 +24,15 @@ export const getUsers = async () => {
     console.error(error);
   }
 };
-// export const createUsers = async (newUser:IUsers) => {
-//   try {
-//     const response: AxiosResponse< IUsers[] > = await instance.post(
-//       "/api/auth/create",newUser
-//     );
-//     console.log(response);
+export const createUsers = async (newUser:IUser) => {
+  try {
+    const response: AxiosResponse< IUser[] > = await instance.post(
+      "/api/auth/create",newUser
+    );
+    console.log(response);
     
-//     return response.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
