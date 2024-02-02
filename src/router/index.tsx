@@ -12,7 +12,7 @@ import Cart from "../pages/Cart";
 import Guest_Checkout from "../pages/Guest_Checkout";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/Admin";
-import UserManager from "../components/Admin/Users";
+import UserManager from "../pages/Admin/Users";
 
 const Router = () => {
   return (

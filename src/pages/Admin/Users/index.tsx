@@ -1,44 +1,37 @@
-import { EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Modal, Space, Table, Tooltip } from "antd";
-import Search from "antd/es/input/Search";
+import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Modal, Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
-import { IUser } from "../../../common/users";
-import LoadingSkelethon from "../../Loading/LoadingSkelethonProduct";
+import {  IUsers } from "../../../common/users";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { fetchAllUsers } from "../../../features/user";
+import {  fetchAllUsers } from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
 import { format } from "date-fns";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
+import FormUser from "../../../components/Admin/User/FormUser";
 const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>();
-
-  const user = useSelector((state: IStateUser) => state.user.users);
-  const loading = useSelector((state: IStateUser) => state.user.loading);
+  const { users: user, loading } = useSelector(
+    (state: IStateUser) => state.user
+  );
 
   useEffect(() => {
     dispact(fetchAllUsers());
   }, []);
+  const handleCreateUser = (newUser: IUsers) => {
+    console.log(newUser);
+    
+    // dispact(createNewUser(newUser));
+    setIsModalOpen(false);
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const toggleModal = (user: IUser) => {
+  const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
     console.log(user);
   };
-  const columns: ColumnsType<IUser> = [
+  const columns: ColumnsType<IUsers> = [
     {
       title: "No.",
       dataIndex: "index",
@@ -58,13 +51,13 @@ const UserManager: React.FC = () => {
       dataIndex: "role",
     },
     {
-        title: "lastActivity",
-        dataIndex: "lastActivity",
-        render: (lastActivity: string | null | undefined) =>
-          lastActivity
-            ? format(new Date(lastActivity), " HH:mm:ss dd-MM-yyyy")
-            : "Chưa hoạt động",
-      },
+      title: "lastActivity",
+      dataIndex: "lastActivity",
+      render: (lastActivity: string | null | undefined) =>
+        lastActivity
+          ? format(new Date(lastActivity), " HH:mm:ss dd-MM-yyyy")
+          : "Chưa hoạt động",
+    },
     {
       title: "action",
       key: "action",
@@ -80,28 +73,25 @@ const UserManager: React.FC = () => {
       ),
     },
   ];
+  const defaultValue = {
+    _id: "",
+    userName: "",
+    password: "",
+    deliveryAddress: [""],
+    email: "",
+    role: "member",
+    phoneNumbers: [""],
+    avt: "",
+    dateOfBirth: "",
+    gender: "",
+  };
   return (
     <div>
-      <Space direction="vertical">
-        <Title level={3}>User</Title>
-        <Space direction="horizontal">
-          <Search
-            style={{ width: "30vw" }}
-            placeholder={"Search user"}
-            enterButton={<SearchOutlined />}
-            // onSearch={doSearch}
-            // value={searchText}
-            // onChange={(e) => handleSearchChange(e.target.value)}
-          />
-          <Button icon={<PlusOutlined />} onClick={showModal}>
-            New
-          </Button>
-        </Space>
-      </Space>
+      <HeaderTable showModal={() => setIsModalOpen(true)} name={"User"} />
       {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
-            <LoadingSkelethon></LoadingSkelethon>
+            <LoadingOutlined style={{ fontSize: 24 }} spin />
           </div>
         </>
       ) : (
@@ -120,13 +110,13 @@ const UserManager: React.FC = () => {
       <Modal
         title={"Create new user"}
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
         maskClosable={false}
         destroyOnClose={true}
       >
-        New
+        <FormUser onSubmit={handleCreateUser} setIsModalOpen={setIsModalOpen(false)} {...defaultValue} />
       </Modal>
       <Modal
         title={"Update"}

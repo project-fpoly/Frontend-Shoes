@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {  initialUser } from "../../common/redux/type";
 import { isRejected } from "@reduxjs/toolkit/react";
-import { getUsers } from "../../services/auth";
+import {  getUsers } from "../../services/auth";
 
 const initialState: initialUser = {
   loading: "idle",
@@ -24,6 +24,19 @@ export const fetchAllUsers = createAsyncThunk(
     }
   }
 );
+// export const createNewUser = createAsyncThunk(
+//   "/user/createNewUser",
+//   async (newUser: IUsers) => { 
+//     try {
+//       const response = await createUsers(newUser); 
+//       console.log(response);
+//       return response;
+//     } catch (error) {
+//       console.log("hi");
+//       return isRejected("Error fetching data");
+//     }
+//   }
+// );
 /// đây là chỗ chọc vào kho để lấy db
 export const userSlice = createSlice({
   name: "user",
@@ -40,6 +53,16 @@ export const userSlice = createSlice({
       state.loading = "fulfilled";
       state.users = action.payload;
     });
+    // builder.addCase(createNewUser.pending, (state) => {
+    //   state.loading = "pending";
+    // });
+    // builder.addCase(createNewUser.rejected, (state) => {
+    //   state.loading = "failed";
+    // });
+    // builder.addCase(createNewUser.fulfilled, (state, action: any) => {
+    //   state.loading = "fulfilled";
+    //   state.users = action.payload;
+    // });
   },
 });
 
