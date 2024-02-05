@@ -19,12 +19,10 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
   gender,
 }) => {
   const [form] = Form.useForm();
-  const [phone, setPhone] = useState([""]);
-  const [Adress, setAdress] = useState([""]);
+  const [phone, setPhone] = useState<{ phoneNumber: string }[]>([{ phoneNumber: "" }]);
+  const [Adress, setAdress] = useState<{ address: string }[]>([{ address: "" }]);
   const handleFormSubmitCreate = (values: IUsers) => {
-    const formattedPhoneNumbers = phone.map((phoneNumber) => ({ phoneNumber }));
-    const formattedAdress = Adress.map((address) => ({ address }));
-    const updatedValues = { ...values, phoneNumbers: formattedPhoneNumbers,deliveryAddress:formattedAdress };
+    const updatedValues = { ...values, phoneNumbers: phone,deliveryAddress:Adress };
     onSubmit(updatedValues);
   };
 

@@ -3,8 +3,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 
 interface PhoneNumberInputProps {
-  onChange: (updatedPhoneNumbers: string[]) => void;
-  value: string[];
+  onChange: (updatedPhoneNumbers: { phoneNumber: string }[]) => void;
+  value: { phoneNumber: string }[];
 }
 
 const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onChange, value }) => {
@@ -12,19 +12,19 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onChange, value }) 
 
   const handleAddPhoneNumber = () => {
     if (value.length < MAX_PHONE_NUMBERS) {
-      onChange([...value, ""]);
+      onChange([...value, { phoneNumber: "" }]);
     }
   };
 
   const handlePhoneNumberChange = (index: number, newValue: string) => {
     const updatedPhoneNumbers = [...value];
-    updatedPhoneNumbers[index] = newValue;
+    updatedPhoneNumbers[index] = { phoneNumber: newValue };
     onChange(updatedPhoneNumbers);
   };
 
   return (
     <Form>
-      {value.map((phoneNumber, index) => (
+      {value.map((phoneObj, index) => (
         <Form.Item
           key={index}
           label={`Phone Number ${index + 1}`}
@@ -33,7 +33,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onChange, value }) 
           ]}
         >
           <Input
-            value={phoneNumber}
+            value={phoneObj.phoneNumber}
             onChange={(e) => handlePhoneNumberChange(index, e.target.value)}
           />
         </Form.Item>

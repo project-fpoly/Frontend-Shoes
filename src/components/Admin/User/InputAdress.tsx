@@ -2,46 +2,46 @@ import React from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 
-interface PhoneNumberInputProps {
-  onChange: (updatedPhoneNumbers: string[]) => void;
-  value: string[];
+interface AddressInputProps {
+  onChange: (updatedAddresses: { address: string }[]) => void;
+  value: { address: string }[];
 }
 
-const AddressInput: React.FC<PhoneNumberInputProps> = ({ onChange, value }) => {
-  const MAX_PHONE_NUMBERS = 3;
+const AddressInput: React.FC<AddressInputProps> = ({ onChange, value }) => {
+  const MAX_ADDRESSES = 3;
 
-  const handleAddPhoneNumber = () => {
-    if (value.length < MAX_PHONE_NUMBERS) {
-      onChange([...value, ""]);
+  const handleAddAddress = () => {
+    if (value.length < MAX_ADDRESSES) {
+      onChange([...value, { address: "" }]);
     }
   };
 
-  const handlePhoneNumberChange = (index: number, newValue: string) => {
-    const updatedPhoneNumbers = [...value];
-    updatedPhoneNumbers[index] = newValue;
-    onChange(updatedPhoneNumbers);
+  const handleAddressChange = (index: number, newValue: string) => {
+    const updatedAddresses = [...value];
+    updatedAddresses[index] = { address: newValue };
+    onChange(updatedAddresses);
   };
 
   return (
     <Form>
-      {value.map((address, index) => (
+      {value.map((addressObj, index) => (
         <Form.Item
           key={index}
-          label={`address ${index + 1}`}
+          label={`Address ${index + 1}`}
           rules={[
             { required: true, message: "Please input address" },
           ]}
         >
           <Input
-            value={address}
-            onChange={(e) => handlePhoneNumberChange(index, e.target.value)}
+            value={addressObj.address}
+            onChange={(e) => handleAddressChange(index, e.target.value)}
           />
         </Form.Item>
       ))}
-      {value.length < MAX_PHONE_NUMBERS && (
+      {value.length < MAX_ADDRESSES && (
         <Form.Item>
-          <Button type="dashed" onClick={handleAddPhoneNumber} icon={<PlusOutlined />}>
-            Add address
+          <Button type="dashed" onClick={handleAddAddress} icon={<PlusOutlined />}>
+            Add Address
           </Button>
         </Form.Item>
       )}
