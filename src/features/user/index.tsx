@@ -3,6 +3,7 @@ import {  initialUser } from "../../common/redux/type";
 import { isRejected } from "@reduxjs/toolkit/react";
 import {  createUsers, getUsers } from "../../services/auth";
 import { IUsers } from "../../common/users";
+import { notification } from "antd";
 
 const initialState: initialUser = {
   loading: "idle",
@@ -30,8 +31,7 @@ export const createNewUser = createAsyncThunk(
       const response = await createUsers(newUser); 
       return response;
     } catch (error) {
-      console.log("hi");
-      return isRejected("Error fetching data");
+      return isRejected("Error create user");
     }
   }
 );
@@ -54,8 +54,13 @@ export const userSlice = createSlice({
     builder.addCase(createNewUser.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(createNewUser.rejected, (state) => {
+    builder.addCase(createNewUser.rejected, (state, action) => {
       state.loading = "failed";
+      const error = action.error.message as string;
+      notification.error({
+        message: "Error",
+        description: error || "Failed to create a new user.",
+      });
     });
     builder.addCase(createNewUser.fulfilled, (state, action) => {
       state.loading = "fulfilled";

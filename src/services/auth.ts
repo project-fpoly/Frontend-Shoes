@@ -33,6 +33,6 @@ export const createUsers = async (newUser:IUsers) => {
     console.log(response);
     return response.data.newUser;
   } catch (error) {
-    console.error(error);
+    return console.error(error);
   }
 };
