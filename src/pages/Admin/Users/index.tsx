@@ -20,8 +20,6 @@ const UserManager: React.FC = () => {
     dispact(fetchAllUsers());
   }, []);
   const handleCreateUser = (newUser: IUsers) => {
-    console.log(newUser);
-    
     dispact(createNewUser(newUser));
     setIsModalOpen(false);
   };
@@ -75,15 +73,15 @@ const UserManager: React.FC = () => {
   ];
   const defaultValue = {
     _id: "",
-    userName: "",
-    password: "",
-    deliveryAddress: [{"adress":""}],
-    email: "",
+    userName: "hahhaaa",
+    password: "123123",
+    deliveryAddress: [{"address":""}],
+    email: "la@gmail.com",
     role: "member",
     phoneNumbers: [{"phoneNumber":""}],
-    avt: "",
-    dateOfBirth: "",
-    gender: "",
+    avt: "hihia",
+    dateOfBirth: "2003",
+    gender: "male",
   };
   return (
     <div>

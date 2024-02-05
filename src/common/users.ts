@@ -3,7 +3,7 @@ export interface IUsers {
   userName: string;
   email: string;
   role: string;
-  deliveryAddress: { adress: string }[];
+  deliveryAddress: { address: string }[];
   phoneNumbers: { phoneNumber: string }[];
   lastActivity?: string;
   avt: string;

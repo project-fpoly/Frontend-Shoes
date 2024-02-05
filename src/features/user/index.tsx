@@ -16,8 +16,6 @@ export const fetchAllUsers = createAsyncThunk(
   async () => {
     try {
       const respone = await getUsers();
-      console.log(respone);
-      
       return respone;
     } catch (error) {
       console.log("hi");
@@ -30,7 +28,6 @@ export const createNewUser = createAsyncThunk(
   async (newUser: IUsers) => { 
     try {
       const response = await createUsers(newUser); 
-      console.log(response);
       return response;
     } catch (error) {
       console.log("hi");
@@ -50,9 +47,9 @@ export const userSlice = createSlice({
     builder.addCase(fetchAllUsers.rejected, (state) => {
       state.loading = "failed";
     });
-    builder.addCase(fetchAllUsers.fulfilled, (state, action: any) => {
+    builder.addCase(fetchAllUsers.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.users = action.payload;
+      state.users = Array.isArray(action.payload) ? action.payload : [];
     });
     builder.addCase(createNewUser.pending, (state) => {
       state.loading = "pending";
@@ -60,9 +57,10 @@ export const userSlice = createSlice({
     builder.addCase(createNewUser.rejected, (state) => {
       state.loading = "failed";
     });
-    builder.addCase(createNewUser.fulfilled, (state, action: any) => {
+    builder.addCase(createNewUser.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.users = action.payload;
+      const newUser = action.payload as never;
+      state.users.push(newUser);
     });
   },
 });

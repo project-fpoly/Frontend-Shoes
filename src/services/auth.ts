@@ -2,6 +2,7 @@ import intansce from "./intansce";
 import IUser from "./../types/user";
 import { AxiosResponse } from "axios";
 import instance from "../core/Api";
+import { IUsers } from "../common/users";
 
 export const Signup = (data: IUser) => {
   return intansce.post("/auth/signup", data);
@@ -24,14 +25,13 @@ export const getUsers = async () => {
     console.error(error);
   }
 };
-export const createUsers = async (newUser:IUser) => {
+export const createUsers = async (newUser:IUsers) => {
   try {
-    const response: AxiosResponse< IUser[] > = await instance.post(
+    const response: AxiosResponse< {newUser:IUsers[]} > = await instance.post(
       "/api/auth/create",newUser
     );
     console.log(response);
-    
-    return response.data;
+    return response.data.newUser;
   } catch (error) {
     console.error(error);
   }

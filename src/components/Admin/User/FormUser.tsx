@@ -111,7 +111,7 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
         name="phoneNumbers"
         rules={[{ required: true, message: "pls input phoneNumbers" }]}
       >
-        <PhoneNumberInput value={phoneNumbers[0].phoneNumber} onChange={setPhone} />
+        <PhoneNumberInput value={phoneNumbers} onChange={setPhone} />
       </Form.Item>
 
       <Form.Item
