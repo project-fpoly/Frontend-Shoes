@@ -8,10 +8,26 @@ import { useState } from "react";
 import { Image } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
+import { CiHeart } from "react-icons/ci";
 interface Props {
   shoe: IProduct;
   category: ICategory;
 }
+const sizesS = [
+  { size: "EU 40" },
+  { size: "EU 41" },
+  { size: "EU 42" },
+  { size: "EU 43" },
+  { size: "EU 44" },
+  { size: "EU 45" },
+  { size: "EU 46" },
+  { size: "EU 47" },
+  { size: "EU 48" },
+  { size: "EU 49" },
+  { size: "EU 50" },
+  { size: "EU 51" },
+  { size: "EU 52" },
+];
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props;
 
@@ -44,27 +60,30 @@ const InfoShoe = (props: Props) => {
             </Link>
           </span>
           <div className={style.sizes}>
-            <Button className={clsx(style.button, "hover:border-black ")}>
-              EU 40
-            </Button>
-            <Button className={style.button}>EU 40.5</Button>
-            <Button className={style.button}>EU 41</Button>
-            <Button className={style.button}>EU 41.5</Button>
-            <Button className={style.button}>EU 42</Button>
-            <Button className={style.button}>EU 42.5</Button>
-            <Button className={style.button}>EU 43</Button>
-            <Button className={style.button}>EU 43.5</Button>
-            <Button className={style.button}>EU 44</Button>
-            <Button className={style.button}>EU 44.5</Button>
-            <Button className={style.button}>EU 45</Button>
-            <Button className={style.button}>EU 45.5</Button>
+            {sizesS.map((item) => {
+              return (
+                <Button
+                  onClick={() => console.log(item.size)}
+                  key={item.size}
+                  className={clsx(style.button, "hover:border-black")}
+                >
+                  {item.size}
+                </Button>
+              );
+            })}
           </div>
           <div className="flex flex-col gap-5 justify-center items-center">
-            <button className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 ">
+            <button
+              onClick={() => console.log("hello")}
+              className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
+            >
               Add to Bag
             </button>{" "}
-            <button className="w-[100%] py-4 border border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 ">
-              Add to Bag
+            <button className="w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 ">
+              Favourite
+              <p className="mt-1 px-3">
+                <CiHeart />
+              </p>
             </button>
           </div>
           <p>{shoe.description}</p>

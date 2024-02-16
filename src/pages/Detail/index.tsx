@@ -25,6 +25,7 @@ const DetailShoe = () => {
   );
   const { id } = useParams();
   useEffect(() => {
+    document.title = "Detail";
     dispatch(fetchProductById(+id!));
     dispatch(fetchCategoryById(+id!));
   }, [id]);

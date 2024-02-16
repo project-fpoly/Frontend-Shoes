@@ -10,17 +10,19 @@ import SigninPage from "../pages/client/signin";
 import SignupPage from "../pages/client/signup";
 import Cart from "../pages/Cart";
 import Guest_Checkout from "../pages/Guest_Checkout";
+import Demo from "../pages/DEMO";
 
 const Router = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
+          <Route path="/" index element={<Home />} />
           <Route path="/greaup" element={<GreaUp />} />
           <Route path="/detail/:id" element={<DetailShoe />} />
           <Route path="/sizeguide" element={<SizeGuide />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/demo" element={<Demo />} />
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
         </Route>
 
