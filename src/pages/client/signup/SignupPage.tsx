@@ -36,6 +36,8 @@ const SignupPage = () => {
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
+          style={{ margin: '32px 0' }} // Thêm khoảng cách trên và dưới cho toàn bộ form
+
         >
           <h1 className="text-2xl font-normal sm:text-3xl">Let's make you a Nike member.</h1>
 
@@ -58,11 +60,12 @@ const SignupPage = () => {
             <Input className="border border-black" size="large" placeholder="E-mail" />
           </Form.Item>
 
+
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Form.Item
               name="firstName"
               rules={[{ required: true, message: 'Please input your first name!' }]}
-              style={{ width: '48%' }}
+              style={{ width: '48%', marginBottom: 0 }}
             >
               <Input className="border border-black" size="large" placeholder="First Name" />
             </Form.Item>
@@ -89,9 +92,11 @@ const SignupPage = () => {
 
           <Form.Item
             name="purchasingPreference"
-            rules={[{ required: true, message: 'Please select your purchasing preference!' }]}
+            rules={[
+              { required: true, message: 'Please select your purchasing preference!' }
+            ]}
           >
-            <Select className="border border-black" size="large" placeholder="Purchasing Preference">
+            <Select size="large" placeholder="Purchasing Preference">
               <Option value="online">Man</Option>
               <Option value="in-store">For women</Option>
             </Select>
@@ -126,7 +131,7 @@ const SignupPage = () => {
           </div>
         </Form>
       </section>
-    </div>
+    </div >
   );
 };
 
