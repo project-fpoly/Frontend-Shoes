@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSwiper } from 'swiper/react';
 import { GrPrevious } from "react-icons/gr";
 import { GrNext } from "react-icons/gr";
