@@ -6,11 +6,12 @@ import type { MenuProps } from "antd";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import MenuNav from "./Menu";
+import NavRight from "./NavRight";
 
 const NavBar = () => {
   const content = (
     <div>
-
       {/* <p>login</p> */}
       <Link to="/signin">
         <h1 className="font-bold">Login</h1>
@@ -144,20 +145,12 @@ const NavBar = () => {
             position ? "top-0" : ""
           )}
         >
-          <div className="flex gap-[270px]">
+          <div className="flex justify-evenly py-2 mx-24 gap-[100px]">
             <Link to={"/"}>
               <SiNike className="hover:opacity-75" size={50} />
             </Link>
-
-            <Menu
-              className="flex w-[800px] pl-10 "
-              mode="horizontal"
-              items={items}
-            />
-
-            <Link to={"/card"} >
-              <ShoppingCartOutlined sizes={"small"} />
-            </Link>
+            <MenuNav></MenuNav>
+            <NavRight></NavRight>
           </div>
         </div>
 
