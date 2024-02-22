@@ -36,3 +36,14 @@ export const createUsers = async (newUser:IUsers) => {
     return console.error(error);
   }
 };
+export const updateUsers = async (newUser:IUsers,id:string) => {
+  try {
+    const response: AxiosResponse< {newUser:IUsers[]} > = await instance.put(
+      `/api/auth/users/${id}`,newUser
+    );
+    console.log(response);
+    return response.data.newUser;
+  } catch (error) {
+    return console.error(error);
+  }
+};

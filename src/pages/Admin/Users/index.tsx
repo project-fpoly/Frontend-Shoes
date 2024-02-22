@@ -2,32 +2,40 @@ import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
-import {  IUsers } from "../../../common/users";
+import { IUsers } from "../../../common/users";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import {  createNewUser, fetchAllUsers } from "../../../features/user";
+import { createNewUser, fetchAllUsers, updateUser } from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
 import { format } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import FormUser from "../../../components/Admin/User/FormUser";
 const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>();
+  const [userss, setUser] = useState<IUsers>();
   const { users: user, loading } = useSelector(
     (state: IStateUser) => state.user
   );
 
   useEffect(() => {
     dispact(fetchAllUsers());
-  }, []);
+    console.log("hi");
+    
+  }, [dispact]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
     setIsModalOpen(false);
   };
+  const handleUpdateUser = (newUser: IUsers) => {
+    dispact(updateUser({ newUser, id: userss?._id as string }));
+    setIsModalUpdateOpen(false);
+  };
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
-    console.log(user);
+    setUser(user);
   };
   const columns: ColumnsType<IUsers> = [
     {
@@ -83,6 +91,17 @@ const UserManager: React.FC = () => {
     dateOfBirth: "2003",
     gender: "male",
   };
+  const Value = {
+    _id: userss?._id || "",
+    userName: userss?.userName || "hahhaaa",
+    deliveryAddress: userss?.deliveryAddress || "gia lai",
+    email: userss?.email || "la@gmail.com",
+    role: userss?.role || "member",
+    phoneNumbers: userss?.phoneNumbers || "0000000000",
+    avt: userss?.avt || "hihia",
+    dateOfBirth: userss?.dateOfBirth || "2003",
+    gender: userss?.gender || "male",
+  };
   return (
     <div>
       <HeaderTable showModal={() => setIsModalOpen(true)} name={"User"} />
@@ -114,7 +133,7 @@ const UserManager: React.FC = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <FormUser onSubmit={handleCreateUser} {...defaultValue} />
+        <FormUser mode={"create"} onSubmit={handleCreateUser} {...defaultValue} />
       </Modal>
       <Modal
         title={"Update"}
@@ -124,7 +143,7 @@ const UserManager: React.FC = () => {
         destroyOnClose={true}
         footer={null}
       >
-        Update
+        <FormUser mode={"update"} onSubmit={handleUpdateUser} {...Value} />
       </Modal>
     </div>
   );

@@ -1,8 +1,10 @@
 import { Button, Form } from "antd";
 import { IUsers } from "../../../common/users";
 import Input from "antd/es/input/Input";
-const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
-  _id,
+
+const FormUser: React.FC<
+  IUsers & { onSubmit: (values: IUsers) => void; mode: string }
+> = ({
   userName,
   password,
   deliveryAddress,
@@ -13,10 +15,12 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
   avt,
   dateOfBirth,
   gender,
+  mode,
 }) => {
   const [form] = Form.useForm();
   const handleFormSubmitCreate = (values: IUsers) => {
     onSubmit(values);
+    console.log(values);
   };
 
   return (
@@ -28,7 +32,6 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
       style={{ maxWidth: 600 }}
       autoComplete="off"
       initialValues={{
-        _id,
         userName,
         password,
         role,
@@ -48,27 +51,33 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
       >
         <Input defaultValue={userName} />
       </Form.Item>
-      <Form.Item
-        label={"email"}
-        name="email"
-        rules={[{ required: true, message: "pls input Email" }]}
-      >
-        <Input defaultValue={email} />
-      </Form.Item>
-      <Form.Item
-        label={"password"}
-        name="password"
-        rules={[{ required: true, message: "pls input password" }]}
-      >
-        <Input defaultValue={password} />
-      </Form.Item>
-      <Form.Item
-        label={"role"}
-        name="role"
-        rules={[{ required: true, message: "pls input role" }]}
-      >
-        <Input defaultValue={role} />
-      </Form.Item>
+      {mode === "create" && (
+        <>
+          <Form.Item
+            label={"email"}
+            name="email"
+            rules={[{ required: true, message: "pls input Email" }]}
+          >
+            <Input defaultValue={email} />
+          </Form.Item>
+
+          <Form.Item
+            label={"password"}
+            name="password"
+            rules={[{ required: true, message: "pls input password" }]}
+          >
+            <Input defaultValue={password} />
+          </Form.Item>
+
+          <Form.Item
+            label={"role"}
+            name="role"
+            rules={[{ required: true, message: "pls input role" }]}
+          >
+            <Input defaultValue={role} />
+          </Form.Item>
+        </>
+      )}
       <Form.Item
         label={"deliveryAddress"}
         name="deliveryAddress"
@@ -117,4 +126,5 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
     </Form>
   );
 };
+
 export default FormUser;
