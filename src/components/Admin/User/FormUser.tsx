@@ -1,10 +1,6 @@
 import { Button, Form } from "antd";
 import { IUsers } from "../../../common/users";
 import Input from "antd/es/input/Input";
-import PhoneNumberInput from "./InputNumberPhone";
-import { useState } from "react";
-import AddressInput from "./InputAdress";
-
 const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
   _id,
   userName,
@@ -19,11 +15,8 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
   gender,
 }) => {
   const [form] = Form.useForm();
-  const [phone, setPhone] = useState<{ phoneNumber: string }[]>([{ phoneNumber: "" }]);
-  const [Adress, setAdress] = useState<{ address: string }[]>([{ address: "" }]);
   const handleFormSubmitCreate = (values: IUsers) => {
-    const updatedValues = { ...values, phoneNumbers: phone,deliveryAddress:Adress };
-    onSubmit(updatedValues);
+    onSubmit(values);
   };
 
   return (
@@ -81,7 +74,7 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
         name="deliveryAddress"
         rules={[{ required: true, message: "pls input deliveryAddress" }]}
       >
-        <AddressInput value={deliveryAddress} onChange={setAdress}/>
+        <Input defaultValue={deliveryAddress} />
       </Form.Item>
       <Form.Item
         label={"gender"}
@@ -109,7 +102,7 @@ const FormUser: React.FC<IUsers & { onSubmit: (values: IUsers) => void }> = ({
         name="phoneNumbers"
         rules={[{ required: true, message: "pls input phoneNumbers" }]}
       >
-        <PhoneNumberInput value={phoneNumbers} onChange={setPhone} />
+        <Input defaultValue={phoneNumbers} />
       </Form.Item>
 
       <Form.Item
