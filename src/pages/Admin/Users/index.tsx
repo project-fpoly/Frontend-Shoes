@@ -23,13 +23,18 @@ import FormUser from "../../../components/Admin/User/FormUser";
 const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>();
   const [userss, setUser] = useState<IUsers>();
-  const { users: user, loading } = useSelector(
+  const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  const { users: user, loading,totalDocs } = useSelector(
     (state: IStateUser) => state.user
   );
 
   useEffect(() => {
-    dispact(fetchAllUsers());
-  }, [dispact]);
+    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }));
+  }, [dispact,currentPage, Search]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
     setIsModalOpen(false);
@@ -131,8 +136,7 @@ const UserManager: React.FC = () => {
     gender: userss?.gender || "male",
   };
   const searchUser=(value:string)=>{
-    console.log(value);
-    
+    setSearch(value);
   }
   return (
     <div>
@@ -152,7 +156,12 @@ const UserManager: React.FC = () => {
           dataSource={user}
           bordered
           size="small"
-          pagination={false}
+          pagination={{
+            current: currentPage,
+            total: totalDocs,
+            showTotal: (total) => ` ${total} items`,
+            onChange: handlePageChange,
+          }}
         />
       )}
 

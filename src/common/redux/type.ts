@@ -13,6 +13,7 @@ export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   users: IUser[] | [];
   user: IUser | {};
+  totalDocs:number
 }
 export interface initialCmt {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -33,6 +34,7 @@ export interface IStateUser {
     users: IUsers[];
     user: IUsers;
     loading: string;
+    totalDocs:number
   };
 }
 export interface IStateCmt {

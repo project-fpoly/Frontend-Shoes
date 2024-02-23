@@ -17,12 +17,12 @@ export const Signin = (data: IUser) => {
 export const ForgotPass = (data: IUser) => {
   return intansce.post("/auth/forgotpassword", data);
 };
-export const getUsers = async () => {
+export const getUsers = async (page = 1, pageSize = 10, search = "")=> {
   try {
-    const response: AxiosResponse<{ docs: IUser[] }> = await instance.get(
-      "/api/auth/users"
+    const response: AxiosResponse = await instance.get(
+      `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}`
     );
-    return response.data.docs;
+    return response.data;
   } catch (error) {
     console.error(error);
   }
