@@ -1,12 +1,11 @@
 import { AxiosResponse } from "axios";
 import instance from "../core/Api";
-import { ICmt } from "../common/products";
-export const getComment = async () => {
+export const getComment = async (page = 1, pageSize = 10, search = "") => {
   try {
-    const response: AxiosResponse<{ docs: ICmt[] }> = await instance.get(
-      "/api/comments/all"
+    const response: AxiosResponse = await instance.get(
+      `/api/comments/all?page=${page}&pageSize=${pageSize}&search=${search}`
     );
-    return response.data.docs;
+    return response.data;
   } catch (error) {
     console.error(error);
   }

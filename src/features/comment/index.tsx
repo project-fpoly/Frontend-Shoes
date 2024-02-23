@@ -7,14 +7,15 @@ const initialState: initialCmt = {
   loading: "idle",
   comments: [],
   comment: {},
+  totalDocs:0
 };
 
 ///// Đây là actions
 export const fetchAllComment = createAsyncThunk(
   "/comment/fetchAllComment",
-  async () => {
+  async ({ page, pageSize, search }: { page: number; pageSize: number; search: string }) => {
     try {
-      const respone = await getComment();
+      const respone = await getComment(page, pageSize, search);
       return respone;
     } catch (error) {
       console.log("hi");
@@ -72,7 +73,8 @@ export const commentSlice = createSlice({
     });
     builder.addCase(fetchAllComment.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.comments = Array.isArray(action.payload) ? action.payload : [];
+      state.comments = Array.isArray(action.payload.docs) ? action.payload.docs : [];
+      state.totalDocs = action.payload.totalDocs || 0;
     });
     // builder.addCase(createNewUser.pending, (state) => {
     //   state.loading = "pending";

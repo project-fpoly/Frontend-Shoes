@@ -16,12 +16,23 @@ import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 
 const CommentManager = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { comments: comment, loading } = useSelector(
-    (state: IStateCmt) => state.comment
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  const {
+    comments: comment,
+    loading,
+    totalDocs,
+  } = useSelector((state: IStateCmt) => state.comment);
   useEffect(() => {
-    dispatch(fetchAllComment());
-  }, [dispatch]);
+    dispatch(
+      fetchAllComment({ page: currentPage, pageSize: 10, search: Search })
+    );
+  }, [dispatch, currentPage, Search]);
+  console.log();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -39,7 +50,7 @@ const CommentManager = () => {
     {
       title: "userId",
       dataIndex: "userId",
-      render: (userId) => userId.userName
+      render: (userId) => userId.userName,
     },
     {
       title: "content",
@@ -65,23 +76,19 @@ const CommentManager = () => {
       title: "updatedAt",
       dataIndex: "updatedAt",
       render: (updatedAt: string | null | undefined) =>
-        updatedAt
-          ? format(new Date(updatedAt), " HH:mm:ss dd-MM-yyyy")
-          : "N/A",
+        updatedAt ? format(new Date(updatedAt), " HH:mm:ss dd-MM-yyyy") : "N/A",
     },
     {
       title: "createdAt",
       dataIndex: "createdAt",
       render: (createdAt: string | null | undefined) =>
-        createdAt
-          ? format(new Date(createdAt), " HH:mm:ss dd-MM-yyyy")
-          : "N/A",
+        createdAt ? format(new Date(createdAt), " HH:mm:ss dd-MM-yyyy") : "N/A",
     },
     {
       title: "action",
       key: "action",
       align: "center",
-      render: (_,record) => (
+      render: (_, record) => (
         <Space>
           <Tooltip title={"edit"}>
             <Button type="link" onClick={() => toggleModal(record)}>
@@ -105,34 +112,37 @@ const CommentManager = () => {
   const deleteComment = (record: ICmt) => {
     console.log(record);
   };
-  const searchCmt=(value:string)=>{
+  const searchCmt = (value: string) => {
     console.log(value);
-    
-  }
+    setSearch(value);
+  };
   return (
     <>
-      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchCmt(value)} name={"Comment"} />
+      <HeaderTable
+        showModal={() => setIsModalOpen(true)}
+        onSubmitt={(value) => searchCmt(value)}
+        name={"Comment"}
+      />
       {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
           <LoadingOutlined style={{ fontSize: 24 }} spin />
         </div>
       ) : (
-        <Table
-          style={{ marginTop: "15px" }}
-          columns={columns}
-          dataSource={comment}
-          bordered
-          size="small"
-          pagination={false}
-          onChange={(pagination, filters, sorter) => {
-            console.log("Sorter:", sorter);
-            console.log("pagination",pagination);
-            console.log("filters",filters);
-            
-            
-            // Thực hiện xử lý sắp xếp tại đây nếu cần
-          }}
-        />
+        <>
+          <Table
+            style={{ marginTop: "15px" }}
+            columns={columns}
+            dataSource={comment}
+            bordered
+            size="small"
+            pagination={{
+              current: currentPage,
+              total: totalDocs,
+              showTotal: (total) => ` ${total} items`,
+              onChange: handlePageChange,
+            }}
+          />
+        </>
       )}
       <Modal
         title="Create new comment"
