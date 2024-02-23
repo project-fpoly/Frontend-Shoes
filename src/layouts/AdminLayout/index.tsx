@@ -16,8 +16,8 @@ function AdminLayout() {
 
       <Layout>
         <AdminHeader />
-        <Content style={{ padding: "24px" }}>
-          <div style={{ minHeight: "500px" }}>
+        <Content  style={{ padding: "24px"}}>
+          <div style={{ minHeight: "500px" ,backgroundColor:"#fff" ,padding:24,borderRadius:"10px"}}>
             <Outlet />
           </div>
         </Content>

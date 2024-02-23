@@ -13,7 +13,7 @@ export interface ICmt{
   userId:string,
   rating:number,
   content:string,
-  like:string[],
+  likes:string[],
   createdAt:Date,
   updatedAt:Date
 }
