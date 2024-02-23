@@ -13,6 +13,7 @@ import Guest_Checkout from "../pages/Guest_Checkout";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/Admin";
 import UserManager from "../pages/Admin/Users";
+import CommentManager from "../pages/Admin/Comment";
 
 const Router = () => {
   return (
@@ -30,6 +31,7 @@ const Router = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManager />} />
+          <Route path="/admin/comment" element={<CommentManager />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

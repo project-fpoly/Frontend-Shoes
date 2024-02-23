@@ -34,7 +34,7 @@ const items: MenuItem[] = [
   getItem("Order", "sub3", <AppstoreOutlined />),
   getItem("Product", "sub4", <SettingOutlined />, [
     getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
+    getItem(<Link to="comment">Comment</Link>, "10"),
     getItem("Option 11", "11"),
     getItem("Option 12", "12"),
   ]),

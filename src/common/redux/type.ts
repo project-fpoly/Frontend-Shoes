@@ -1,5 +1,5 @@
 import { ICategory } from "../category";
-import { IProduct } from "../products";
+import { ICmt, IProduct } from "../products";
 import { IUser } from "../users";
 
 export interface initialProduct {
@@ -13,6 +13,11 @@ export interface initialUser {
   users: IUser[] | [];
   user: IUser | {};
 }
+export interface initialCmt {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  comments: ICmt[] | [];
+  comment: ICmt | {};
+}
 export interface IStateProduct {
   product: {
     products: IProduct[];
@@ -25,6 +30,13 @@ export interface IStateUser {
   user: {
     users: IUser[];
     user: IUser;
+    loading: string;
+  };
+}
+export interface IStateCmt {
+  comment: {
+    comments: ICmt[];
+    comment: ICmt;
     loading: string;
   };
 }
