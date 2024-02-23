@@ -31,7 +31,7 @@ function getItem(
 const items: MenuItem[] = [
   getItem(<Link to="/admin">Home</Link>, "sub1", <HomeOutlined />),
   getItem(<Link to="users">User</Link>, "sub2", <UserOutlined />),
-  getItem("Order", "sub3", <AppstoreOutlined />),
+  getItem(<Link to="orders">Order</Link>, "sub3", <AppstoreOutlined />),
   getItem("Product", "sub4", <SettingOutlined />, [
     getItem("Option 9", "9"),
     getItem("Option 10", "10"),
