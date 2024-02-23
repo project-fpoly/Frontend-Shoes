@@ -1,11 +1,21 @@
-import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Button, Modal, Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { IUsers } from "../../../common/users";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { createNewUser, fetchAllUsers, updateUser } from "../../../features/user";
+import {
+  createNewUser,
+  deleteeUser,
+  fetchAllUsers,
+  updateUser,
+} from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
 import { format } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
@@ -20,7 +30,6 @@ const UserManager: React.FC = () => {
   useEffect(() => {
     dispact(fetchAllUsers());
     console.log("hi");
-    
   }, [dispact]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
@@ -30,12 +39,27 @@ const UserManager: React.FC = () => {
     dispact(updateUser({ newUser, id: userss?._id as string }));
     setIsModalUpdateOpen(false);
   };
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
     setUser(user);
+  };
+  const deleteUsesr = (user: IUsers) => {
+    Modal.confirm({
+      title: 'Confirm Deletion',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to delete this user?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispact(deleteeUser([user._id]));
+      },
+      onCancel() {
+      },
+    });
   };
   const columns: ColumnsType<IUsers> = [
     {
@@ -73,6 +97,11 @@ const UserManager: React.FC = () => {
           <Tooltip title={"edit"}>
             <Button type="link" onClick={() => toggleModal(record)}>
               <EditOutlined />
+            </Button>
+          </Tooltip>
+          <Tooltip title={"delete"}>
+            <Button type="link" onClick={() => deleteUsesr(record)}>
+              <DeleteOutlined />
             </Button>
           </Tooltip>
         </div>
@@ -133,7 +162,11 @@ const UserManager: React.FC = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <FormUser mode={"create"} onSubmit={handleCreateUser} {...defaultValue} />
+        <FormUser
+          mode={"create"}
+          onSubmit={handleCreateUser}
+          {...defaultValue}
+        />
       </Modal>
       <Modal
         title={"Update"}

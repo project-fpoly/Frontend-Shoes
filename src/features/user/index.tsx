@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialUser } from "../../common/redux/type";
 import { isRejected } from "@reduxjs/toolkit/react";
-import { createUsers, getUsers, updateUsers } from "../../services/auth";
+import { createUsers, deleteUsers, getUsers, updateUsers } from "../../services/auth";
 import { IUsers } from "../../common/users";
 import { notification } from "antd";
 
@@ -41,6 +41,18 @@ export const updateUser = createAsyncThunk(
   async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
     try {
       const response = await updateUsers(newUser, id);
+      thunkApi.dispatch(fetchAllUsers());
+      return response;
+    } catch (error) {
+      return isRejected("Error updating user");
+    }
+  }
+);
+export const deleteeUser = createAsyncThunk(
+  "/user/deleteUser",
+  async ( id: string[] , thunkApi) => {
+    try {
+      const response = await deleteUsers(id);
       thunkApi.dispatch(fetchAllUsers());
       return response;
     } catch (error) {
@@ -107,6 +119,21 @@ export const userSlice = createSlice({
       if (index !== -1) {
         state.users[index] = updatedUser;
       }
+    });
+    builder.addCase(deleteeUser.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(deleteeUser.rejected, (state, action) => {
+      state.loading = "failed";
+      const error = action.error.message as string;
+      notification.error({
+        message: "Error",
+        description: error || "Failed to delete user.",
+      });
+    });
+    builder.addCase(deleteeUser.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.users = Array.isArray(action.payload) ? action.payload : [];
     });
   },
 });
