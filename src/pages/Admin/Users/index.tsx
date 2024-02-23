@@ -29,7 +29,6 @@ const UserManager: React.FC = () => {
 
   useEffect(() => {
     dispact(fetchAllUsers());
-    console.log("hi");
   }, [dispact]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
@@ -131,9 +130,13 @@ const UserManager: React.FC = () => {
     dateOfBirth: userss?.dateOfBirth || "2003",
     gender: userss?.gender || "male",
   };
+  const searchUser=(value:string)=>{
+    console.log(value);
+    
+  }
   return (
     <div>
-      <HeaderTable showModal={() => setIsModalOpen(true)} name={"User"} />
+      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchUser(value)} name={"User"} />
       {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">

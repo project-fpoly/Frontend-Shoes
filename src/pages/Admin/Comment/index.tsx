@@ -4,11 +4,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   LoadingOutlined,
-  PlusOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
-import Title from "antd/es/typography/Title";
-import Search from "antd/es/input/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateCmt } from "../../../common/redux/type";
@@ -16,6 +12,7 @@ import { fetchAllComment } from "../../../features/comment";
 import { ColumnsType } from "antd/es/table";
 import { ICmt } from "../../../common/products";
 import { format } from "date-fns";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 
 const CommentManager = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -103,28 +100,18 @@ const CommentManager = () => {
 
   const toggleModal = (record: ICmt) => {
     console.log(record);
-    
-    // Thực hiện logic khi nhấn nút edit, có thể hiển thị modal với dữ liệu của record
   };
 
   const deleteComment = (record: ICmt) => {
     console.log(record);
-    // Thực hiện logic xóa comment, có thể sử dụng dispatch để gọi action xóa
   };
-
+  const searchCmt=(value:string)=>{
+    console.log(value);
+    
+  }
   return (
     <>
-      <Title level={3}>Comment Manager</Title>
-      <Space direction="horizontal" style={{ marginBottom: "15px" }}>
-        <Search
-          style={{ width: "30vw" }}
-          placeholder="Search Comment"
-          enterButton={<SearchOutlined />}
-        />
-        <Button icon={<PlusOutlined />} onClick={() => setIsModalOpen(true)}>
-          New
-        </Button>
-      </Space>
+      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchCmt(value)} name={"Comment"} />
       {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
           <LoadingOutlined style={{ fontSize: 24 }} spin />

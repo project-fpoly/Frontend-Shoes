@@ -1,6 +1,6 @@
+import IUser from "../../types/user";
 import { ICategory } from "../category";
 import { ICmt, IProduct } from "../products";
-import { IUser } from "../users";
 
 export interface initialProduct {
   loading: "idle" | "pending" | "fulfilled" | "failed";
