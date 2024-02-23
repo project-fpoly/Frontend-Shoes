@@ -1,6 +1,7 @@
+import IUser from "../../types/user";
 import { ICategory } from "../category";
-import { IProduct } from "../products";
-import { IUser } from "../users";
+import { ICmt, IProduct } from "../products";
+import { IUsers } from "../users";
 
 export interface initialProduct {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -12,6 +13,13 @@ export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   users: IUser[] | [];
   user: IUser | {};
+  totalDocs:number
+}
+export interface initialCmt {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  comments: ICmt[] | [];
+  comment: ICmt | {};
+  totalDocs:number
 }
 export interface IStateProduct {
   product: {
@@ -23,8 +31,17 @@ export interface IStateProduct {
 }
 export interface IStateUser {
   user: {
-    users: IUser[];
-    user: IUser;
+    users: IUsers[];
+    user: IUsers;
     loading: string;
+    totalDocs:number
+  };
+}
+export interface IStateCmt {
+  comment: {
+    comments: ICmt[];
+    comment: ICmt;
+    loading: string;
+    totalDocs:number
   };
 }

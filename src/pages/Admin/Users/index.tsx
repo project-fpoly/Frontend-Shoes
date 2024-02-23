@@ -1,33 +1,69 @@
-import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Button, Modal, Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
-import {  IUsers } from "../../../common/users";
+import { IUsers } from "../../../common/users";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import {  createNewUser, fetchAllUsers } from "../../../features/user";
+import {
+  createNewUser,
+  deleteeUser,
+  fetchAllUsers,
+  updateUser,
+} from "../../../features/user";
 import { IStateUser } from "../../../common/redux/type";
 import { format } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import FormUser from "../../../components/Admin/User/FormUser";
 const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>();
-  const { users: user, loading } = useSelector(
+  const [userss, setUser] = useState<IUsers>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  const { users: user, loading,totalDocs } = useSelector(
     (state: IStateUser) => state.user
   );
 
   useEffect(() => {
-    dispact(fetchAllUsers());
-  }, []);
+    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }));
+  }, [dispact,currentPage, Search]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
     setIsModalOpen(false);
   };
+  const handleUpdateUser = (newUser: IUsers) => {
+    dispact(updateUser({ newUser, id: userss?._id as string }));
+    setIsModalUpdateOpen(false);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
-    console.log(user);
+    setUser(user);
+  };
+  const deleteUsesr = (user: IUsers) => {
+    Modal.confirm({
+      title: 'Confirm Deletion',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to delete this user?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispact(deleteeUser([user._id]));
+      },
+      onCancel() {
+      },
+    });
   };
   const columns: ColumnsType<IUsers> = [
     {
@@ -67,6 +103,11 @@ const UserManager: React.FC = () => {
               <EditOutlined />
             </Button>
           </Tooltip>
+          <Tooltip title={"delete"}>
+            <Button type="link" onClick={() => deleteUsesr(record)}>
+              <DeleteOutlined />
+            </Button>
+          </Tooltip>
         </div>
       ),
     },
@@ -83,9 +124,23 @@ const UserManager: React.FC = () => {
     dateOfBirth: "2003",
     gender: "male",
   };
+  const Value = {
+    _id: userss?._id || "",
+    userName: userss?.userName || "hahhaaa",
+    deliveryAddress: userss?.deliveryAddress || "gia lai",
+    email: userss?.email || "la@gmail.com",
+    role: userss?.role || "member",
+    phoneNumbers: userss?.phoneNumbers || "0000000000",
+    avt: userss?.avt || "hihia",
+    dateOfBirth: userss?.dateOfBirth || "2003",
+    gender: userss?.gender || "male",
+  };
+  const searchUser=(value:string)=>{
+    setSearch(value);
+  }
   return (
     <div>
-      <HeaderTable showModal={() => setIsModalOpen(true)} name={"User"} />
+      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchUser(value)} name={"User"} />
       {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
@@ -101,7 +156,12 @@ const UserManager: React.FC = () => {
           dataSource={user}
           bordered
           size="small"
-          pagination={false}
+          pagination={{
+            current: currentPage,
+            total: totalDocs,
+            showTotal: (total) => ` ${total} items`,
+            onChange: handlePageChange,
+          }}
         />
       )}
 
@@ -114,7 +174,11 @@ const UserManager: React.FC = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <FormUser onSubmit={handleCreateUser} {...defaultValue} />
+        <FormUser
+          mode={"create"}
+          onSubmit={handleCreateUser}
+          {...defaultValue}
+        />
       </Modal>
       <Modal
         title={"Update"}
@@ -124,7 +188,7 @@ const UserManager: React.FC = () => {
         destroyOnClose={true}
         footer={null}
       >
-        Update
+        <FormUser mode={"update"} onSubmit={handleUpdateUser} {...Value} />
       </Modal>
     </div>
   );

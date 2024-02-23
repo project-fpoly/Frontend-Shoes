@@ -13,10 +13,10 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { CartItem, IBill } from "../../../common/order";
-import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { ColumnsType } from "antd/es/table";
 import { getAllOrders } from "../../../services/order";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 
 const OrderListComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

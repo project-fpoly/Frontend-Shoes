@@ -7,3 +7,13 @@ export interface IProduct {
   description: string;
   benefits: string;
 }
+export interface ICmt{
+  _id:string,
+  shoeId:string,
+  userId:string,
+  rating:number,
+  content:string,
+  likes:string[],
+  createdAt:Date,
+  updatedAt:Date
+}
