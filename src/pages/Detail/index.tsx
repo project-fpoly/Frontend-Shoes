@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchAllProducts,
-  fetchCategoryById,
-  fetchProductById,
-} from "../../features/product";
+import { fetchProductById } from "../../features/product";
 import { AppDispatch } from "../../redux/store";
 import InfoShoe from "../../components/Detail/InfoShoe";
 import Slide from "../../components/Detail/Slide";
@@ -23,16 +19,12 @@ const DetailShoe = () => {
   const category = useSelector(
     (state: IStateProduct) => state.product.category
   );
+
   const { id } = useParams();
   useEffect(() => {
     document.title = "Detail";
-    dispatch(fetchProductById(+id!));
-    dispatch(fetchCategoryById(+id!));
-  }, [id]);
-
-  useEffect(() => {
-    dispatch(fetchAllProducts());
-  }, []);
+    dispatch(fetchProductById(id!));
+  }, [id, dispatch]);
 
   if (Loading === "pending") {
     return (

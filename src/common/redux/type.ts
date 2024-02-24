@@ -9,6 +9,7 @@ export interface initialProduct {
 }
 export interface IStateProduct {
   product: {
+    data: IProduct[];
     products: IProduct[];
     product: IProduct;
     loading: string;

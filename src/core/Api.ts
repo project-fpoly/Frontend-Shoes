@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 const instance = axios.create({
-  baseURL: "https://65b5551841db5efd28679b4d.mockapi.io/api/v1",
+  baseURL: "http://localhost:9000/api",
 });
 
 instance.interceptors.request.use(
@@ -18,7 +18,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     // console.log("Response Interceptor:", response);
-    return response;
+    return response.data.data;
   },
   (error) => {
     console.error("Response Interceptor Error:", error);

@@ -21,13 +21,15 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   const dispact = useDispatch<AppDispatch>();
   const [dataSearch, setData] = useState<IProduct[]>([]);
   const shoes = useSelector((state: IStateProduct) => state.product.products);
+  console.log(shoes);
+
   useEffect(() => {
     dispact(fetchAllProducts());
   }, []);
 
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = ({ resultSearch }) => {
-    const dataSearchFilm = shoes.filter((s) => s?.name.includes(resultSearch));
+    const dataSearchFilm = shoes.filter((s) => s?.name?.includes(resultSearch));
     setData(dataSearchFilm);
   };
 
@@ -36,7 +38,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   };
   const debonceSearch = debounce((data) => {
     if (data !== "") {
-      const dataSearchFilm = shoes.filter((s) => s?.name.includes(data));
+      const dataSearchFilm = shoes.filter((s) => s?.name?.includes(data));
       setData(dataSearchFilm);
     }
   }, 600);
@@ -82,14 +84,14 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
                       reset();
                       setData([]);
                     }}
-                    to={`detail/${data.id}`}
+                    to={`detail/${data._id}`}
                   >
                     <div className="flex justify-between hover:bg-[#f5f5f5] p-2 rounded-lg">
                       <span>
                         <h2 className="text-black">{data.name}</h2>
                         <p className="text-black">{data.price}</p>
                       </span>
-                      <Image preview={false} width={50} src={data.image} />
+                      {/* <Image preview={false} width={50} src={data.image} /> */}
                     </div>
                   </Link>
                 </Fragment>

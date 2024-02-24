@@ -20,18 +20,19 @@ export const fetchAllProducts = createAsyncThunk(
   async () => {
     try {
       const respone = await getProducts();
-      return respone;
+      return respone!;
     } catch (error: any) {
-      console.log("hi");
       return isRejected("Error fetching data");
     }
   }
 );
 export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
-  async (id: number) => {
+  async (id: string, thunkApi) => {
     try {
       const respone = await getProductById(id);
+      thunkApi.dispatch(fetchAllProducts());
+      thunkApi.dispatch(fetchCategoryById(respone?.categoryId!));
       return respone;
     } catch (error) {
       return isRejected("Error fetching data");
@@ -40,7 +41,7 @@ export const fetchProductById = createAsyncThunk(
 );
 export const fetchCategoryById = createAsyncThunk(
   "product/fetchCategoryById",
-  async (id: number) => {
+  async (id: string) => {
     try {
       const respone = await getCategoryById(id);
       return respone;
