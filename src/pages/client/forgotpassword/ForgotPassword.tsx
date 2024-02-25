@@ -1,89 +1,84 @@
-import { Button, Modal, FormItemProps, Form, Input, message } from 'antd';
-import { createContext, useContext, useState } from 'react'
-import IUser from '../../../types/user';
-import { useNavigate } from 'react-router-dom';
-import { ForgotPass } from '../../../services/auth';
-const MyFormItemContext = createContext<(string | number)[]>([]);
 
-function toArr(str: string | number | (string | number)[]): (string | number)[] {
-    return Array.isArray(str) ? str : [str];
-}
-const MyFormItem = ({ name, ...props }: FormItemProps) => {
-    const prefixPath = useContext(MyFormItemContext);
-    const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
-    return <Form.Item name={concatName} {...props} />;
-};
+import {Button, Form, Input} from "antd";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {SiNike} from "react-icons/si";
+
 const ForgotPassword = () => {
-    const [isVerified] = useState<boolean>(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-
-    const showModalForgot = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleOkForgot = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancelForgot = () => {
-        setIsModalOpen(false);
-    };
-    const onFinish = async (value: IUser) => {
-        if (isVerified == true) {
-            const key = 'loading'
-            if (value) {
-                try {
-                    const loading = await message.loading({ content: 'loading!', key, duration: 2 })
-                    if (loading) {
-                        const response = await ForgotPass(value);
-                        if (response) {
-                            message.success('successfully forgotpassword', 3);
-                            navigate('/')
-                        }
-                    }
-                } catch (error) {
-                    message.error('forgotpassword failed', 5);
-                }
+    const handleSubmit = async (values: any) => {
+        try {
+            const response = await axios.post("http://localhost:9000/api/auth/forgot-password", {
+                email: values?.email
+            });
+            if (response && response.status === 200) {
+                response.data.message && alert(response.data.message);
+                navigate('/signin');
             }
+        } catch (e) {
+            console.log(e);
         }
     };
+
     return (
-        <>
-            <p className='text-[14px]' onClick={showModalForgot}>
-                Forgot password
-            </p>
-            <Modal footer={null} open={isModalOpen} onOk={handleOkForgot} onCancel={handleCancelForgot}>
-                <Form className="mt-[30px] w-[400px] mx-auto" name="form_item_path" layout="vertical" onFinish={onFinish} autoComplete="off">
-                    <h1 className="text-center mt-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Forgot Password
-                    </h1>
-                    <MyFormItem className='text-black font-bold'
-                        name="email"
-                        label="Email"
-                        rules={[
-                            {
-                                message: 'vui lòng nhập email!',
-                                required: true,
-                                type: 'email'
-                            },
-                        ]}
+        <div className="flex items-center justify-center h-screen">
+            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-lg text-center flex items-center justify-center">
+                    <SiNike className="vertical-align: middle" size={50}/>
+                </div>
+                <section>
+                    <Form
+                        className="mx-auto mb-0 mt-8 max-w-md space-y-4"
+                        name="form_item_path"
+                        layout="vertical"
+                        onFinish={(e) => handleSubmit(e)}
+                        autoComplete="off"
                     >
-                        <Input className='border font-mono border-indigo-600 h-10' placeholder="nhập email" />
-                    </MyFormItem>
+                        <h1 className="text-2xl font-normal sm:text-4xl">Email your email address.</h1>
+                        <Form.Item
+                            className="text-black font-bold"
+                            name="email"
+                            rules={[
+                                { required: true, message: 'Please input a valid email!', type: 'email' },
+                            ]}
+                        >
+                            <Input
+                                className="border border-black"
+                                size="large"
+                                placeholder="Email"
+                            />
+                        </Form.Item>
+                        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <Button
+                                className="rounded-full btn-primary-dark btn-md"
+                                htmlType="submit"
+                                style={{
+                                    color: 'white',
+                                    backgroundColor: 'black',
+                                    borderColor: 'black',
+                                    padding: '24px',
+                                    fontSize: '18px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center', // Để căn giữa theo chiều ngang
+                                    marginLeft: 'auto', // Để nút sang bên phải
 
-                    <Button
-                        htmlType="submit"
-                        className="w-full h-[52px] text-center py-3 rounded bg-[#4a71c4] text-white hover:bg-green-dark focus:outline-none my-1"
-                    >
-                        Forgot password
-                    </Button>
-                </Form>
+                                }}
+                            >
+                                Continue
+                            </Button>
+                        </div>
 
-            </Modal>
-        </>
-    )
+                    </Form>
+                </section>
+
+            </div>
+
+        </div>
+
+
+    );
 }
 
-export default ForgotPassword
+export default ForgotPassword;

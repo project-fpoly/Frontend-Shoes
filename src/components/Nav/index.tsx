@@ -4,13 +4,14 @@ import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
 import type { MenuProps } from "antd";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import MenuNav from "./Menu";
+import NavRight from "./NavRight";
 
 const NavBar = () => {
   const content = (
     <div>
-
       {/* <p>login</p> */}
       <Link to="/signin">
         <h1 className="font-bold">Login</h1>
@@ -29,45 +30,25 @@ const NavBar = () => {
     },
     {
       label: (
-        <Link to="/demo">
-          <h1 className="font-bold">Men</h1>
+        <Link to="/greaup">
+          <h1 className="font-bold">DetailCart</h1>
         </Link>
       ),
-      key: "app",
+      key: "SubMenuCart",
+      children: [
+        {
+          type: "group",
+          label: (
+            <Link to="/greaup">
+              <h1 className="font-bold">DetailCart</h1>
+            </Link>
+          ),
+        },
+      ],
     },
     {
       label: <h1 className="font-bold">Women</h1>,
       key: "SubMenu",
-      children: [
-        {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:1",
-            },
-            {
-              label: "Option 2",
-              key: "setting:2",
-            },
-          ],
-        },
-        {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:3",
-            },
-            {
-              label: "Option 4",
-              key: "setting:4",
-            },
-          ],
-        },
-      ],
     },
     {
       label: <h1 className="font-bold">Kids</h1>,
@@ -89,7 +70,6 @@ const NavBar = () => {
 
   const [showNav, setShowNav] = useState<boolean>(false);
   const [position, setPosition] = useState<boolean>(false);
-  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -98,8 +78,6 @@ const NavBar = () => {
       } else {
         setPosition(false);
       }
-
-      // window.scrollY > 100 ? setShowNav(true) : setShowNav(false);
     };
     const handleScrollTop = (e: any) => {
       if (e.deltaY === 100) {
@@ -110,9 +88,12 @@ const NavBar = () => {
     };
     window.addEventListener("wheel", handleScrollTop);
     window.addEventListener("scroll", handleScroll);
-  }, []);
 
-  console.log(position);
+    return () => {
+      window.removeEventListener("wheel", handleScrollTop);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -125,8 +106,10 @@ const NavBar = () => {
           },
         }}
       >
-        <div className="flex justify-between px-16 py-5">
-          <SiJordan size={28} className="hover:opacity-70" />
+        <div className="flex justify-between px-16 py-4 bg-[#f5f5f5]">
+          <Link to={"/"}>
+            <SiJordan size={28} className="hover:opacity-70" />
+          </Link>
           <div className="flex gap-3 cursor-pointer ">
             <Popover
               className="hover:opacity-70"
@@ -157,25 +140,21 @@ const NavBar = () => {
 
         <div
           className={clsx(
-            "flex fixed bg-white w-full justify-evenly z-20",
+            "flex fixed bg-white w-full justify-evenly z-50",
             showNav ? "hidden" : "",
             position ? "top-0" : ""
           )}
         >
-          <div className="flex gap-[270px]">
-            <SiNike className="hover:opacity-75" size={50} />
-
-            <Menu
-              className="flex w-[800px] pl-10 "
-              mode="horizontal"
-              items={items}
-            />
-
-            <ShoppingCartOutlined sizes={"small"} />
+          <div className="flex justify-evenly py-2 mx-24 gap-[100px]">
+            <Link to={"/"}>
+              <SiNike className="hover:opacity-75" size={50} />
+            </Link>
+            <MenuNav></MenuNav>
+            <NavRight></NavRight>
           </div>
         </div>
 
-        <div className="flex justify-center mt-20 items-center flex-col">
+        <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>
           <p>
             No matter what you feel like doing today, It’s better as a Member.

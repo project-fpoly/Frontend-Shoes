@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { Button, Form, Input } from "antd";
-import axios from "axios";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import axios, {AxiosError} from "axios";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import { SiNike } from "react-icons/si";
+import React from "react";
 
 
 const Password = () => {
@@ -16,11 +17,16 @@ const Password = () => {
                 password: values.password
             });
             if (response && response.status === 200) {
+                alert(response.data.accessToken);
+                localStorage.setItem('accessToken', response.data.accessToken);
+                localStorage.setItem('email', email);
                 alert('Login successfully');
                 //redirect to signup page
                 navigate('/');
             }
-        } catch (e) {
+        } catch (e: any) {
+            e.response.data.message && alert(e.response.data.message);
+            // navigate('/signup');
             console.log(e);
         }
     }
@@ -52,13 +58,30 @@ const Password = () => {
                                 },
                             ]}
                         >
-                            <Input
-                                type="password" name="password"
-                                className="font-medium border h-10 hover:border-blue-500 focus:border-blue-500"
-                                style={{ borderColor: 'gray' }}
-                                placeholder="Password"
-                            />
+                            {/*<Input*/}
+                            {/*    type="password" name="password"*/}
+                            {/*    className="font-medium border h-10 hover:border-blue-500 focus:border-blue-500"*/}
+                            {/*    style={{ borderColor: 'gray' }}*/}
+                            {/*    placeholder="Password"*/}
+                            {/*/>*/}
+                            <Input.Password className="border border-black" size="large" placeholder="Password"/>
+
+
                         </Form.Item>
+                        <p className="text-sm mt-4 font-medium leading-none text-gray-500">
+                            <span
+                                tabIndex={0}
+                                role="link"
+                                aria-label="Sign up here"
+                                className="text-sm font-medium leading-none text-gray-800"
+                            >
+                {" "}
+                                <Link to="/forgotpassword">Forgot Password?</Link>
+                                <div style={{marginTop: "5px", textDecorationLine: "none"}}>
+                                    Don't have an account? <Link to="/signup">Sign up here</Link>
+                                </div>
+              </span>
+                        </p>
 
 
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
