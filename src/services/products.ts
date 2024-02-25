@@ -3,7 +3,9 @@ import instance from "../core/Api";
 import { AxiosResponse } from "axios";
 export const getProducts = async () => {
   try {
-    const respone: AxiosResponse<IProduct[]> = await instance.get("/product");
+    const respone: AxiosResponse<IProduct[]> = await instance.get(
+      "/api/product"
+    );
     console.log(respone);
 
     return respone;
@@ -14,7 +16,7 @@ export const getProducts = async () => {
 export const getProductById = async (id: string) => {
   try {
     const respone: AxiosResponse<IProduct> = await instance.get(
-      `/product/${id}`
+      `/api/product/${id}`
     );
 
     return respone.data || respone;
@@ -25,7 +27,7 @@ export const getProductById = async (id: string) => {
 
 export const getCategories = async () => {
   try {
-    const respone: AxiosResponse = await instance.get("/categories");
+    const respone: AxiosResponse = await instance.get("/api/categories");
     return respone.data || respone;
   } catch (error: any) {
     console.log(error.code);
@@ -34,7 +36,9 @@ export const getCategories = async () => {
 
 export const getCategoryById = async (id: string) => {
   try {
-    const respone: AxiosResponse<any> = await instance.get(`/categories/${id}`);
+    const respone: AxiosResponse<any> = await instance.get(
+      `/api/categories/${id}`
+    );
 
     return respone.data || respone;
   } catch (error: any) {
