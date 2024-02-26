@@ -15,6 +15,7 @@ import AdminDashboard from "../pages/Admin";
 import UserManager from "../pages/Admin/Users";
 import CommentManager from "../pages/Admin/Comment";
 import CategoriesManager from "../pages/Admin/Categories";
+import ProductsManager from "../pages/Admin/Products";
 const Router = () => {
   return (
     <>
@@ -31,6 +32,7 @@ const Router = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManager />} />
+          <Route path="/admin/product" element={<ProductsManager/>} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
         </Route>
