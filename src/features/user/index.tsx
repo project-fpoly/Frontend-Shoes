@@ -8,7 +8,7 @@ import { notification } from "antd";
 const initialState: initialUser = {
   loading: "idle",
   users: [],
-  user: {},
+  user: "",
   totalDocs:0
 };
 

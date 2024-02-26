@@ -6,7 +6,7 @@ import { getComment } from "../../services/comment";
 const initialState: initialCmt = {
   loading: "idle",
   comments: [],
-  comment: {},
+  comment: "",
   totalDocs:0
 };
 
