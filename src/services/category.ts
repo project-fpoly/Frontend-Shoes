@@ -4,9 +4,9 @@ import { ICategory } from "../common/category";
 import { notification } from "antd";
 import { CustomError } from "../common/error";
 
-export const getCategories = async () => {
+export const getCategories = async (page=1,limit=10,keyword="") => {
   try {
-    const response: AxiosResponse = await instance.get(`/api/categories`);
+    const response: AxiosResponse = await instance.get(`/api/categories?page=${page}&limit=${limit}&keyword=${keyword}`);
     return response.data || response;
   } catch (error) {
     console.log(error);
@@ -27,6 +27,7 @@ export const getCategoryById = async (id: string) => {
 export const addCategory = async (category: ICategory): Promise<ICategory | null> => {
   try {
     const response: AxiosResponse<ICategory> = await instance.post("/api/categories", category);
+    notification.success({ message: "Category added successfully" });
     return response.data || response;
   } catch (error) {
     console.log(error);
@@ -37,9 +38,10 @@ export const addCategory = async (category: ICategory): Promise<ICategory | null
   }
 };
 
-export const updateCategory = async (id: string, category: ICategory): Promise<ICategory | null> => {
+export const updateCate = async (id: string, category: ICategory): Promise<ICategory | null> => {
   try {
     const response: AxiosResponse<ICategory> = await instance.put(`/api/categories/${id}`, category);
+    notification.success({ message: "Category updated successfully" });
     return response.data || response;
   } catch (error) {
     console.log(error);

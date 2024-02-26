@@ -1,25 +1,20 @@
-import { Button, Form } from "antd";
-import { IUsers } from "../../../common/users";
-import Input from "antd/es/input/Input";
+import { Button, Form, Input, Select } from "antd";
+import { ICategory } from "../../../common/category";
 
+const { Option } = Select;
 
-const FormCategory: React.FC<
-  IUsers & { onSubmit: (values: IUsers) => void; mode: string }
-> = ({
-  userName,
-  password,
-  deliveryAddress,
-  email,
-  role,
+const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void; mode: string }> = ({
+  name,
+  description,
   onSubmit,
-  phoneNumbers,
-  avt,
-  dateOfBirth,
-  gender,
-  mode,
+  imageUrl,
+  status,
+  viewCount,
+  mode
 }) => {
   const [form] = Form.useForm();
-  const handleFormSubmitCreate = (values: IUsers) => {
+
+  const handleFormSubmitCreate = (values: ICategory) => {
     onSubmit(values);
     console.log(values);
   };
@@ -33,93 +28,62 @@ const FormCategory: React.FC<
       style={{ maxWidth: 600 }}
       autoComplete="off"
       initialValues={{
-        userName,
-        password,
-        role,
-        deliveryAddress,
-        email,
-        phoneNumbers,
-        avt,
-        dateOfBirth,
-        gender,
+        name,
+        description,
+        imageUrl,
+        status,
+        viewCount,
       }}
       onFinish={handleFormSubmitCreate}
     >
       <Form.Item
-        label={"userName"}
-        name="userName"
-        rules={[{ required: true, message: "pls input Full Name" }]}
+        label={"Name"}
+        name="name"
+        rules={[{ required: true, message: "Please input the name of the category" }]}
       >
-        <Input defaultValue={userName} />
+        <Input defaultValue={name} />
       </Form.Item>
-      {mode === "create" && (
+      {mode === "update" && (
         <>
           <Form.Item
-            label={"email"}
-            name="email"
-            rules={[{ required: true, message: "pls input Email" }]}
+            label={"Description"}
+            name="description"
+            rules={[{ required: false, message: "Please input the description" }]}
           >
-            <Input defaultValue={email} />
+            <Input defaultValue={description} />
           </Form.Item>
 
           <Form.Item
-            label={"password"}
-            name="password"
-            rules={[{ required: true, message: "pls input password" }]}
+            label={"Image URL"}
+            name="imageUrl"
+            rules={[{ required: false, message: "Please input the image URL" }]}
           >
-            <Input defaultValue={password} />
+            <Input defaultValue={imageUrl} />
           </Form.Item>
 
           <Form.Item
-            label={"role"}
-            name="role"
-            rules={[{ required: true, message: "pls input role" }]}
+            label={"Status"}
+            name="status"
+            rules={[{ required: false, message: "Please select the status" }]}
+            initialValue="active" 
           >
-            <Input defaultValue={role} />
+            <Select>
+              <Option value="active">Active</Option>
+              <Option value="inactive">Inactive</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label={"View Count"}
+            name="viewCount"
+            rules={[{ required: false, message: "Please input the view count" }]}
+          >
+            <Input defaultValue={viewCount} />
           </Form.Item>
         </>
       )}
-      <Form.Item
-        label={"deliveryAddress"}
-        name="deliveryAddress"
-        rules={[{ required: true, message: "pls input deliveryAddress" }]}
-      >
-        <Input defaultValue={deliveryAddress} />
-      </Form.Item>
-      <Form.Item
-        label={"gender"}
-        name="gender"
-        rules={[{ required: true, message: "pls input gender" }]}
-      >
-        <Input defaultValue={gender} />
-      </Form.Item>
-      <Form.Item
-        label={"dateOfBirth"}
-        name="dateOfBirth"
-        rules={[{ required: true, message: "pls input dateOfBirth" }]}
-      >
-        <Input defaultValue={dateOfBirth} />
-      </Form.Item>
-      <Form.Item
-        label={"avt"}
-        name="avt"
-        rules={[{ required: true, message: "pls input avt" }]}
-      >
-        <Input defaultValue={avt} />
-      </Form.Item>
-      <Form.Item
-        label={"phoneNumbers"}
-        name="phoneNumbers"
-        rules={[{ required: true, message: "pls input phoneNumbers" }]}
-      >
-        <Input defaultValue={phoneNumbers} />
-      </Form.Item>
-
-      <Form.Item
-        style={{ textAlign: "right" }}
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Button>cancel</Button>
+      <Form.Item style={{ textAlign: "right" }} wrapperCol={{ offset: 8, span: 16 }}>
+        <Button>Cancel</Button>
         <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
           Save
         </Button>
