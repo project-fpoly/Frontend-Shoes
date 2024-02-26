@@ -30,7 +30,11 @@ export const getUsers = async (page = 1, pageSize = 10, search = "")=> {
 export const createUsers = async (newUser:IUsers) => {
   try {
     const response: AxiosResponse< {newUser:IUsers[]} > = await instance.post(
-      "/api/auth/create",newUser
+      "/api/auth/create",newUser,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     console.log(response);
     return response.data.newUser;

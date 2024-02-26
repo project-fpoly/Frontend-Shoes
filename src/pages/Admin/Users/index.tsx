@@ -4,7 +4,7 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { Button, Modal, Table, Tooltip } from "antd";
+import { Button, Modal, Table, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { IUsers } from "../../../common/users";
@@ -28,13 +28,15 @@ const UserManager: React.FC = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  const { users: user, loading,totalDocs } = useSelector(
-    (state: IStateUser) => state.user
-  );
+  const {
+    users: user,
+    loading,
+    totalDocs,
+  } = useSelector((state: IStateUser) => state.user);
 
   useEffect(() => {
     dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }));
-  }, [dispact,currentPage, Search]);
+  }, [dispact, currentPage, Search]);
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser));
     setIsModalOpen(false);
@@ -52,17 +54,16 @@ const UserManager: React.FC = () => {
   };
   const deleteUsesr = (user: IUsers) => {
     Modal.confirm({
-      title: 'Confirm Deletion',
+      title: "Confirm Deletion",
       icon: <ExclamationCircleOutlined />,
-      content: 'Are you sure you want to delete this user?',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      content: "Are you sure you want to delete this user?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
         dispact(deleteeUser([user._id]));
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
   const columns: ColumnsType<IUsers> = [
@@ -79,6 +80,22 @@ const UserManager: React.FC = () => {
     {
       title: "email",
       dataIndex: "email",
+    },
+    {
+      title: "Email Verified",
+      align:"center",
+      dataIndex: "emailVerified",
+      render: (emailVerified) => (
+        emailVerified ? <Tag color="success">Đã xác thực</Tag> : <Tag color="warning">Chưa xác thực</Tag>
+      ),
+    },
+    {
+      title: "Phone Numbers",
+      align: "left",
+      dataIndex: "phoneNumbers",
+      render: (text) => (
+        text ? <span>{text}</span> : <Tag style={{ display: "flex", justifyContent: "center" }} color="warning">Chưa cập nhật</Tag>
+      ),
     },
     {
       title: "role",
@@ -135,12 +152,16 @@ const UserManager: React.FC = () => {
     dateOfBirth: userss?.dateOfBirth || "2003",
     gender: userss?.gender || "male",
   };
-  const searchUser=(value:string)=>{
+  const searchUser = (value: string) => {
     setSearch(value);
-  }
+  };
   return (
     <div>
-      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchUser(value)} name={"User"} />
+      <HeaderTable
+        showModal={() => setIsModalOpen(true)}
+        onSubmitt={(value) => searchUser(value)}
+        name={"User"}
+      />
       {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
