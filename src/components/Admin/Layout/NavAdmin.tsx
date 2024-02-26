@@ -4,6 +4,7 @@ import {
   HomeOutlined,
   SettingOutlined,
   UserOutlined,
+  DotChartOutlined 
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Space } from "antd";
@@ -38,10 +39,11 @@ const items: MenuItem[] = [
     getItem("Option 11", "11"),
     getItem("Option 12", "12"),
   ]),
+  getItem(<Link to="categories">Categories</Link>, "sub5", <DotChartOutlined />),
 ];
 
 // submenu keys of first level
-const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4"];
+const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4","sub5"];
 
 const NavAdmin: React.FC = () => {
   const [openKeys, setOpenKeys] = useState(["sub1"]);
