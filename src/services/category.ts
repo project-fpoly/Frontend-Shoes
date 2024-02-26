@@ -37,7 +37,7 @@ export const addCategory = async (category: ICategory): Promise<ICategory | null
   }
 };
 
-export const updateCategory = async (id: string, category: ICategory): Promise<ICategory | null> => {
+export const updateCate = async (id: string, category: ICategory): Promise<ICategory | null> => {
   try {
     const response: AxiosResponse<ICategory> = await instance.put(`/api/categories/${id}`, category);
     return response.data || response;
