@@ -13,12 +13,12 @@ const initialState: initialCategory = {
 
 export const fetchAllCategories = createAsyncThunk(
     "category/fetchAllCategories",
-    async () => {
+    async ({ page, limit, keyword }: { page: number; limit: number; keyword: string }) => {
         try {
-            const response = await getCategories();
-            return response.data; 
+            const response = await getCategories(page, limit, keyword);
+            return response.data;
         } catch (error) {
-            throw new Error("Lỗi khi lấy dữ liệu"); 
+            throw new Error("Lỗi khi lấy dữ liệu");
         }
     }
 );
@@ -27,7 +27,7 @@ export const deleteCategory = createAsyncThunk(
     async (id: string, thunkApi) => {
         try {
             const response = await deleteCate(id);
-            thunkApi.dispatch(fetchAllCategories());
+            thunkApi.dispatch(fetchAllCategories({ page: 1, limit: 10, keyword: "" }));
             return response;
         } catch (error) {
             throw new Error("Lỗi khi xóa danh mục");
@@ -36,9 +36,10 @@ export const deleteCategory = createAsyncThunk(
 );
 export const createCategory = createAsyncThunk(
     "category/createCategory",
-    async (newCategory: ICategory) => {
+    async (newCategory: ICategory, thunkApi) => {
         try {
             const response = await addCategory(newCategory);
+            thunkApi.dispatch(fetchAllCategories({ page: 1, limit: 10, keyword: "" }));
             return response;
         } catch (error) {
             throw new Error("Error create category");
@@ -51,7 +52,7 @@ export const updateCategory = createAsyncThunk(
     async ({ id, newCategory }: { id: string; newCategory: ICategory }, thunkApi) => {
         try {
             const response = await updateCate(id, newCategory);
-            thunkApi.dispatch(fetchAllCategories());
+            thunkApi.dispatch(fetchAllCategories({ page: 1, limit: 10, keyword: "" }));
             return response;
         } catch (error) {
             throw new Error("Error updating category");

@@ -3,7 +3,7 @@ import {
   EditOutlined,
   LoadingOutlined,
   ExclamationCircleOutlined,
-  
+
 } from "@ant-design/icons";
 import { Button, Table, Tooltip, Image, Modal, } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -30,8 +30,8 @@ const CategoriesManager: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchAllCategories());
-  }, [dispatch]);
+    dispatch(fetchAllCategories({ page: currentPage, limit: 10, keyword: Search }));
+  }, [dispatch, currentPage, Search]);
   const handleCreateCategory = (newCategory: ICategory) => {
     dispatch(createCategory(newCategory));
     setIsModalOpen(false);
@@ -59,11 +59,11 @@ const CategoriesManager: React.FC = () => {
   const Value = {
     _id: categoriesState?._id || "",
     name: categoriesState?.name || "Tên danh mục",
-    description: categoriesState?. description || "Mô tả của danh mục",
+    description: categoriesState?.description || "Mô tả của danh mục",
     imageUrl: categoriesState?.imageUrl || "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
-    status:  categoriesState?.status || "active",
+    status: categoriesState?.status || "active",
     viewCount: categoriesState?.viewCount || 123,
-   
+
   };
 
   const removeCategory = (record: ICategory) => {
@@ -119,7 +119,7 @@ const CategoriesManager: React.FC = () => {
         <div style={{ textAlign: "center" }}>
           <Tooltip title={"edit"}>
             <Button type="link">
-              <EditOutlined  onClick={() => toggleModal(record)}/>
+              <EditOutlined onClick={() => toggleModal(record)} />
             </Button>
           </Tooltip>
           <Tooltip title={"delete"}>
@@ -131,13 +131,14 @@ const CategoriesManager: React.FC = () => {
       ),
     },
   ];
-  const searchCategory=(value:string)=>{
+  const searchCategory = (value: string) => {
     setSearch(value);
-  }
-
+    // Gọi hàm searchCategory với giá trị tìm kiếm
+    console.log(value);
+  };
   return (
     <div>
-        <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value)=>searchCategory(value)} name={"Category"} />
+      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchCategory} name={"Category"} />
       {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
           <LoadingOutlined style={{ fontSize: 24 }} spin />
@@ -159,7 +160,7 @@ const CategoriesManager: React.FC = () => {
           }}
         />
       )}
-            <Modal
+      <Modal
         title={"Create new Category"}
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
