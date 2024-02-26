@@ -3,19 +3,23 @@ import {
   EditOutlined,
   LoadingOutlined,
   ExclamationCircleOutlined,
+
 } from "@ant-design/icons";
-import { Button, Table, Tooltip, Image, Modal } from "antd";
+import { Button, Table, Tooltip, Image, Modal, } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { fetchAllCategories, deleteCategory } from "../../../features/category";
+import { fetchAllCategories, deleteCategory, createCategory, updateCategory } from "../../../features/category";
 import { ICategory } from "../../../common/category";
 import { IStateCategory } from "../../../common/redux/type";
-
+import FormCategory from "../../../components/Admin/Categories";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 const CategoriesManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [categoriesState, setCategories] = useState<ICategory>();
   const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -26,8 +30,41 @@ const CategoriesManager: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchAllCategories());
-  }, [dispatch]);
+    dispatch(fetchAllCategories({ page: currentPage, limit: 10, keyword: Search }));
+  }, [dispatch, currentPage, Search]);
+  const handleCreateCategory = (newCategory: ICategory) => {
+    dispatch(createCategory(newCategory));
+    setIsModalOpen(false);
+  };
+  const handleUpdateCategory = (newCategory: ICategory) => {
+    dispatch(updateCategory({ id: categoriesState?._id as string, newCategory }));
+    setIsModalUpdateOpen(false);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const toggleModal = (category: ICategory) => {
+    setIsModalUpdateOpen(!isModalUpdateOpen);
+    setCategories(category);
+  };
+
+  const defaultValue = {
+    _id: "",
+    name: "Tên danh mục",
+    description: "Mô tả của danh mục",
+    imageUrl: "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
+    status: "active",
+    viewCount: 123,
+  };
+  const Value = {
+    _id: categoriesState?._id || "",
+    name: categoriesState?.name || "Tên danh mục",
+    description: categoriesState?.description || "Mô tả của danh mục",
+    imageUrl: categoriesState?.imageUrl || "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
+    status: categoriesState?.status || "active",
+    viewCount: categoriesState?.viewCount || 123,
+
+  };
 
   const removeCategory = (record: ICategory) => {
     Modal.confirm({
@@ -41,9 +78,10 @@ const CategoriesManager: React.FC = () => {
         if (!record._id) return;
         record._id && dispatch(deleteCategory(record._id));
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
+
 
   const columns: ColumnsType<ICategory> = [
     {
@@ -81,7 +119,7 @@ const CategoriesManager: React.FC = () => {
         <div style={{ textAlign: "center" }}>
           <Tooltip title={"edit"}>
             <Button type="link">
-              <EditOutlined />
+              <EditOutlined onClick={() => toggleModal(record)} />
             </Button>
           </Tooltip>
           <Tooltip title={"delete"}>
@@ -93,9 +131,14 @@ const CategoriesManager: React.FC = () => {
       ),
     },
   ];
-
+  const searchCategory = (value: string) => {
+    setSearch(value);
+    // Gọi hàm searchCategory với giá trị tìm kiếm
+    console.log(value);
+  };
   return (
     <div>
+      <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchCategory} name={"Category"} />
       {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
           <LoadingOutlined style={{ fontSize: 24 }} spin />
@@ -117,6 +160,31 @@ const CategoriesManager: React.FC = () => {
           }}
         />
       )}
+      <Modal
+        title={"Create new Category"}
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        maskClosable={false}
+        destroyOnClose={true}
+      >
+        <FormCategory
+          mode={"create"}
+          onSubmit={handleCreateCategory}
+          {...defaultValue}
+        />
+      </Modal>
+      <Modal
+        title={"Update Category"}
+        open={isModalUpdateOpen}
+        onOk={() => setIsModalUpdateOpen(false)}
+        onCancel={() => setIsModalUpdateOpen(false)}
+        destroyOnClose={true}
+        footer={null}
+      >
+        <FormCategory mode={"update"} onSubmit={handleUpdateCategory} {...Value} />
+      </Modal>
     </div>
   );
 };
