@@ -1,35 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialProduct } from "../../common/redux/type";
+
 import {
   getProducts,
   getProductById,
   getCategoryById,
+  deleteProduct
 } from "../../services/products";
 import { isRejected } from "@reduxjs/toolkit/react";
 
 const initialState: initialProduct = {
   loading: "idle",
   products: [],
-  product: {},
-  category: {},
+  product: "",
+  category: "",
+  totalProducts: 0
 };
 
-///// Đây là actions
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
   async () => {
     try {
       const respone = await getProducts();
       return respone;
-    } catch (error: any) {
-      console.log("hi");
-      return isRejected("Error fetching data");
+
+    } catch (error) {
+      throw new Error("Lỗi khi lấy dữ liệu");
     }
   }
 );
 export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
-  async (id: number) => {
+  async (id: string) => {
     try {
       const respone = await getProductById(id);
       return respone;
@@ -40,12 +42,24 @@ export const fetchProductById = createAsyncThunk(
 );
 export const fetchCategoryById = createAsyncThunk(
   "product/fetchCategoryById",
-  async (id: number) => {
+  async (id: string) => {
     try {
       const respone = await getCategoryById(id);
       return respone;
     } catch (error) {
       return isRejected("Error fetching data");
+    }
+  }
+);
+export const removeProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (id: string, thunkApi) => {
+    try {
+      const response = await deleteProduct(id);
+      thunkApi.dispatch(fetchAllProducts());
+      return response;
+    } catch (error) {
+      throw new Error("Lỗi khi xóa sản phẩm");
     }
   }
 );
@@ -61,23 +75,32 @@ export const productSlice = createSlice({
     builder.addCase(fetchAllProducts.rejected, (state) => {
       state.loading = "failed";
     });
-    builder.addCase(fetchAllProducts.fulfilled, (state, action: any) => {
+    builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = action.payload;
-    });
-    builder.addCase(fetchProductById.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchProductById.fulfilled, (state, action: any) => {
-      state.loading = "fulfilled";
-      state.product = action.payload;
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
     });
     builder.addCase(fetchCategoryById.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchCategoryById.fulfilled, (state, action: any) => {
+    builder.addCase(fetchCategoryById.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(fetchCategoryById.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.category = action.payload;
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
+    });
+    builder.addCase(removeProduct.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(removeProduct.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(removeProduct.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
     });
   },
 });
