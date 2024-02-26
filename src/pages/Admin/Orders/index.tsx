@@ -1,22 +1,28 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Modal, Table, Tag, Tooltip } from "antd";
+import { Button, DatePicker, Modal, Table, Tag, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   CarOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   LoadingOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
 import { CartItem, IBill } from "../../../common/order";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { ColumnsType } from "antd/es/table";
-import { getAllOrders } from "../../../services/order";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
+import { deleteOrder, fetchOrders, updateOrder } from "../../../features/order";
+import FormOrder from "../../../components/Admin/Order/FormOrder";
+import moment from "moment";
 
 const OrderListComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,32 +31,66 @@ const OrderListComponent: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [order, setOrder] = useState<IBill>();
+  const [dayStart, setDayStart] = useState("");
+  const [dayEnd, setDayEnd] = useState("");
+  const [Search, setSearch] = useState("");
   const orders = useSelector((state: RootState) => state.order.orders);
   const isLoading = useSelector((state: RootState) => state.order.isLoading);
   const pagination = useSelector((state: RootState) => state.order.pagination);
-
   useEffect(() => {
     dispatch(
-      getAllOrders({ page: pagination.currentPage, limit: pagination.limit })
+      fetchOrders({
+        page: currentPage,
+        limit: pageSize,
+        search: Search,
+        start: dayStart,
+        end: dayEnd,
+      })
     );
-  }, [dispatch, pagination.currentPage, pagination.limit]);
-  useEffect(() => {
-    dispatch(getAllOrders({ page: currentPage, limit: pageSize }));
-  }, [dispatch, currentPage, pageSize]);
+  }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd]);
 
   const toggleModal = (orders: IBill) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
+    setOrder(orders);
     console.log(orders);
   };
+
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
     setPageSize(pageSize);
     const url = `?page=${page}`;
     navigate(url);
 
-    dispatch(getAllOrders({ page: page, limit: pageSize }));
+    dispatch(
+      fetchOrders({
+        page: page,
+        limit: pageSize,
+        search: Search,
+        start: dayStart,
+        end: dayEnd,
+      })
+    );
   };
+  const handleUpdateOrder = (updateOrderData: any) => {
+    dispatch(updateOrder({ id: order?._id as string, updateOrderData }));
 
+    setIsModalUpdateOpen(false);
+  };
+  const deleteOneOrder = async (order: IBill) => {
+    Modal.confirm({
+      title: "Confirm Deletion",
+      icon: <ExclamationCircleOutlined />,
+      content: "Are you sure you want to delete this order?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      async onOk() {
+        await dispatch(deleteOrder(order._id as string));
+      },
+      onCancel() {},
+    });
+  };
   const columns: ColumnsType<IBill> = [
     {
       title: "No.",
@@ -75,7 +115,31 @@ const OrderListComponent: React.FC = () => {
     {
       title: "User",
       dataIndex: "user",
+      render: (user) => <span>{!user ? "Khách" : user}</span>,
       align: "center",
+    },
+    {
+      title: "Shipping address",
+      dataIndex: "shippingAddress",
+      render: (shippingAddress) => (
+        <span>
+          <>
+            <div>
+              <b>Full Name:</b> {shippingAddress.fullname}
+            </div>
+            <div>
+              <b>Address:</b> {shippingAddress.address}
+            </div>
+            <div>
+              <b>Email:</b> {shippingAddress.email}
+            </div>
+            <div>
+              <b>Phone Number:</b>
+              {shippingAddress.phone}
+            </div>
+          </>
+        </span>
+      ),
     },
     {
       title: "Payment meothod",
@@ -93,6 +157,14 @@ const OrderListComponent: React.FC = () => {
       align: "center",
       render: (isPaid) => (
         <span>{isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</span>
+      ),
+    },
+    {
+      title: "Create at",
+      dataIndex: "createdAt",
+      align: "center",
+      render: (createdAt) => (
+        <span>{moment(createdAt).format("DD/MM/YYYY")}</span>
       ),
     },
     {
@@ -155,36 +227,77 @@ const OrderListComponent: React.FC = () => {
               <EditOutlined />
             </Button>
           </Tooltip>
+          <Tooltip title={"delete"}>
+            <Button type="link" onClick={() => deleteOneOrder(record)}>
+              <DeleteOutlined className="text-red-600" />
+            </Button>
+          </Tooltip>
         </div>
       ),
     },
   ];
+  const Value = {
+    _id: order?._id || "",
+    cartItems: order?.cartItems || [],
+    shippingAddress: order?.shippingAddress || {
+      email: "la@gmail.com",
+      fullname: "Unknown",
+      address: "gia lai",
+      phone: 0,
+    },
+    user: order?.user || "la@gmail.com",
+    totalPrice: order?.totalPrice || 0,
+    isPaid: order?.isPaid || false,
+    isDelivered: order?.isDelivered || "0000000000",
+    createdAt: order?.createdAt || "2003",
+    updatedAt: order?.updatedAt || "male",
+  };
+  const searchOrder = (value: string) => {
+    setSearch(value);
+  };
   return (
     <>
       <div>
-        <HeaderTable showModal={() => setIsModalOpen(true)} name={"Orders"} />
-        {isLoading.toString() === "pending" ? (
+        <div className="flex items-end">
+          <HeaderTable
+            showModal={() => setIsModalOpen(true)}
+            onSubmitt={(value) => searchOrder(value)}
+            name={"Orders"}
+          />
+          <DatePicker
+            className="mx-2"
+            onChange={(date, dateString) => setDayStart(dateString)}
+            placeholder="Start Date"
+          />
+          <DatePicker
+            onChange={(date, dateString) => setDayEnd(dateString)}
+            placeholder="End Date"
+          />
+        </div>
+        {isLoading ? (
           <>
             <div className="flex justify-center items-center mt-16">
               <LoadingOutlined style={{ fontSize: 24 }} spin />
             </div>
           </>
         ) : (
-          <Table
-            style={{
-              marginTop: "15px",
-            }}
-            columns={columns}
-            dataSource={orders}
-            bordered
-            size="small"
-            pagination={{
-              current: currentPage,
-              pageSize: pageSize,
-              total: pagination.totalPages * pageSize,
-              onChange: handlePageChange,
-            }}
-          />
+          <>
+            <Table
+              style={{
+                marginTop: "15px",
+              }}
+              columns={columns}
+              dataSource={orders}
+              bordered
+              size="small"
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                total: pagination.totalPages * pageSize,
+                onChange: handlePageChange,
+              }}
+            />
+          </>
         )}
 
         <Modal
@@ -206,7 +319,7 @@ const OrderListComponent: React.FC = () => {
           destroyOnClose={true}
           footer={null}
         >
-          Update
+          <FormOrder mode={"update"} onSubmit={handleUpdateOrder} {...Value} />
         </Modal>
       </div>
     </>

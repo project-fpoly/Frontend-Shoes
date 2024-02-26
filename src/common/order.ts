@@ -11,6 +11,7 @@ export interface CartItem {
 }
 
 export interface IBill {
+  _id?: string;
   user: string;
   shippingAddress: ShippingAddress;
   cartItems: CartItem[];
