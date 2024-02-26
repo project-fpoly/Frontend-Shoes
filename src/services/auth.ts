@@ -29,7 +29,7 @@ export const getUsers = async (page = 1, pageSize = 10, search = "")=> {
 };
 export const createUsers = async (newUser:IUsers) => {
   try {
-    const response: AxiosResponse< {newUser:IUsers[]} > = await instance.post(
+    const response: AxiosResponse< {newUser:IUsers[]; message: string;} > = await instance.post(
       "/api/auth/create",newUser,{
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -37,6 +37,7 @@ export const createUsers = async (newUser:IUsers) => {
       }
     );
     console.log(response);
+    notification.success({message:response.data.message})
     return response.data.newUser;
   } catch (error) {
     return console.error(error);

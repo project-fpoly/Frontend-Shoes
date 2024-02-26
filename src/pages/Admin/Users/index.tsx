@@ -3,8 +3,9 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   LoadingOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Button, Modal, Table, Tag, Tooltip } from "antd";
+import { Avatar, Button, Modal, Table, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { IUsers } from "../../../common/users";
@@ -72,6 +73,14 @@ const UserManager: React.FC = () => {
       dataIndex: "index",
       render: (_, __, index) => index + 1,
       align: "right",
+    },
+    {
+      title: "Avatar",
+      dataIndex: "avt",
+      align:"center",
+      render: (record) => (
+        record ? <Avatar src={record.url} /> : <Avatar  icon={<UserOutlined />} />
+      ),
     },
     {
       title: "userName",
