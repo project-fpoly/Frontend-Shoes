@@ -16,7 +16,7 @@ export const getProducts = async () => {
 
 export const getProductById = async (id: string) => {
   try {
-    const response: AxiosResponse<IProduct> = await instance.get(`api/product/${id}`);
+    const response: AxiosResponse<IProduct> = await instance.get(`/api/product/${id}`);
     return response.data || response;
   } catch (error) {
     console.log(error);
