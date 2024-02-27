@@ -30,11 +30,15 @@ export const getUsers = async (page = 1, pageSize = 10, search = "") => {
 
 export const createUsers = async (newUser: IUsers) => {
   try {
-    const response: AxiosResponse<{ newUser: IUsers[] }> = await instance.post(
-      "/api/auth/create",
-      newUser
+    const response: AxiosResponse< {newUser:IUsers[]; message: string;} > = await instance.post(
+      "/api/auth/create",newUser,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     console.log(response);
+    notification.success({message:response.data.message})
     return response.data.newUser;
   } catch (error) {
     console.error(error);
@@ -44,8 +48,13 @@ export const createUsers = async (newUser: IUsers) => {
 
 export const updateUsers = async (newUser: IUsers, id: string) => {
   try {
-    const response: AxiosResponse<{ message: string; newUser: IUsers[] }> =
-      await instance.put(`/api/auth/users/${id}`, newUser);
+    const response: AxiosResponse<{ message: string; newUser: IUsers[] }> = await instance.put(
+      `/api/auth/users/${id}`, newUser,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
     notification.success({ message: response.data.message });
     return response.data.newUser;
   } catch (error) {
