@@ -1,5 +1,5 @@
 interface ISize {
-  id?:string,
+  id?: string,
   name: string;
   quantity?: number;
 }
@@ -9,15 +9,18 @@ export interface IProduct {
   SKU?: string;
   name?: string;
   description: string;
-  categoryId?: string;
+  categoryId: string | {
+    _id: string;
+    name?: string;
+  };
   price: number;
   sale: number;
   discount?: number;
   quantity: number;
   sold_count?: number;
   rating?: number;
-  sizes: ISize[];
-  color?: "red" | "green" | "blue" | "yellow" | "black" | "white";
+  sizes?: ISize[];
+  color?: string;
   material?: string;
   release_date?: Date;
   images?: string[];
@@ -26,8 +29,8 @@ export interface IProduct {
   warranty?: string;
   tech_specs?: string;
   stock_status?: string;
-  isPublished: boolean;
-  publishedDate?: Date;
+  isPublished?: boolean;
+  publishedDate?: string;
   hits?: number;
   updatedAt?: Date;
   createdAt?: Date
