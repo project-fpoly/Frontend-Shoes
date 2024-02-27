@@ -169,7 +169,7 @@ const ProductsManager: React.FC = () => {
         name: productsState?.name || "Tên của sản phẩm",
         description: productsState?.description || "Mô tả của sản phẩm",
         categoryId: productsState?.categoryId || "ID danh mục của sản phẩm",
-        price: productsState?.price || 999999,
+        price: productsState?.price || 0,
         sale: productsState?.sale || 10,
         discount: productsState?.discount || 0,
         quantity: productsState?.quantity || 0,
@@ -181,7 +181,7 @@ const ProductsManager: React.FC = () => {
                 quantity: 10
             }
         ],
-        color: productsState?.color || "",
+        color: productsState?.color || "red"|| "green"|| "blue"|| "yellow"|| "black"|| "white" ,
         material: productsState?.material || "da",
         release_date: productsState?.release_date || new Date("2022-02-11T00:00:00.000Z"),
         images: productsState?.images || [
@@ -190,7 +190,7 @@ const ProductsManager: React.FC = () => {
         ],
         video: productsState?.video || "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
         blog: productsState?.blog || "61f2a4c8e9a82f001f9e4a1c",
-        warranty: productsState?.warranty || "",
+        warranty: productsState?.warranty || new Date("2022-02-11T00:00:00.000Z"),
         tech_specs: productsState?.tech_specs || "",
         stock_status: productsState?.stock_status || "",
         isPublished: productsState?.isPublished || true,

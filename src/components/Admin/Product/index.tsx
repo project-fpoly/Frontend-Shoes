@@ -1,4 +1,4 @@
-import { Form, Input, Select, InputNumber, Button, Row, Col } from 'antd';
+import { Form, Input, Select, InputNumber, Button, Row, Col, Radio } from 'antd';
 import { IProduct } from "../../../common/products";
 import { fetchAllCategories } from "../../../features/category";
 import { useDispatch } from "react-redux";
@@ -239,8 +239,61 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
 
                 </Col>
             </Row>
-            {mode === "update" && (<></>
-            //mode
+            {mode === "update" && (
+                //mode
+                <>
+                    <Form.Item
+                        label="video"
+                        name="video"
+                        rules={[{ required: true, message: "Please enter the product video" }]}
+                    >
+                        <Input placeholder="Enter product video" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="blogId"
+                        name="blog"
+                        rules={[{ required: true, message: "Please enter the product blog" }]}
+                    >
+                        <Input placeholder="Enter product blog" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Warranty"
+                        name="warranty"
+                        rules={[{ required: true, message: "Please enter the product warranty" }]}
+                    >
+                        <Input placeholder="Enter product warranty" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Tech specs"
+                        name="tech_specs"
+                        rules={[{ required: true, message: "Please enter the product tech_specs" }]}
+                    >
+                        <Input placeholder="Enter product tech_specs" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Stock status"
+                        name="stock_status"
+                        rules={[{ required: true, message: "Please enter the product stock_status" }]}
+                    >
+                        <Input placeholder="Enter product stock_status" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="isPublished"
+                        name="isPublished"
+                        rules={[{ required: true, message: "Please enter the product isPublished" }]}
+                    >
+                        <Radio.Group>
+                            <Radio value={true}>Yes</Radio>
+                            <Radio value={false}>No</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                </>
+
             )}
             {/* Các trường còn lại */}
 
