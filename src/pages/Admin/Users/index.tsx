@@ -52,6 +52,8 @@ const UserManager: React.FC = () => {
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
     setUser(user);
+    console.log(user);
+    
   };
   const deleteUsesr = (user: IUsers) => {
     Modal.confirm({

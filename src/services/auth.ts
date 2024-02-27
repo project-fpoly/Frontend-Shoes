@@ -46,7 +46,11 @@ export const createUsers = async (newUser:IUsers) => {
 export const updateUsers = async (newUser: IUsers, id: string) => {
   try {
     const response: AxiosResponse<{ message: string; newUser: IUsers[] }> = await instance.put(
-      `/api/auth/users/${id}`, newUser
+      `/api/auth/users/${id}`, newUser,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     notification.success({ message: response.data.message });
     return response.data.newUser;

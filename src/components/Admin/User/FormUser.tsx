@@ -1,4 +1,12 @@
-import { Button, Form, GetProp, Image, Upload, UploadFile, UploadProps } from "antd";
+import {
+  Button,
+  Form,
+  GetProp,
+  Image,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from "antd";
 import { IUsers } from "../../../common/users";
 import Input from "antd/es/input/Input";
 import { PlusOutlined } from "@ant-design/icons";
@@ -54,22 +62,31 @@ const FormUser: React.FC<
     setShowUploadButton(true);
   };
   const handleFormSubmitCreate = (values: IUsers) => {
-    const formData  = new FormData() ;
-    formData.append('userName', values.userName);
-  formData.append('email', values.email);
-  formData.append('password', values.password|| '');
-  formData.append('role', values.role);
-  formData.append('deliveryAddress', values.deliveryAddress);
-  formData.append('gender', values.gender);
-  formData.append('dateOfBirth', values.dateOfBirth);
-  formData.append('phoneNumbers', values.phoneNumbers);
+    const formData = new FormData();
+    formData.append("userName", values.userName);
+    formData.append("deliveryAddress", values.deliveryAddress);
+    formData.append("gender", values.gender);
+    formData.append("dateOfBirth", values.dateOfBirth);
+    formData.append("phoneNumbers", values.phoneNumbers);
+    if (values.avt?.file?.originFileObj) {
+      formData.append("avt", values.avt.file.originFileObj);
+    }else{
+      formData.append("avt", avt);
+    }
 
-    formData.append('avt', values.avt.file.originFileObj);
-    const formDataObject: IUsers = Array.from(formData.entries()).reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {} as IUsers);
-  
+    if (mode === "create") {
+      formData.append("email", values.email);
+      formData.append("role", values.role);
+      formData.append("password", values.password || "");
+    }
+
+    const formDataObject: IUsers = Array.from(formData.entries()).reduce(
+      (acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      },
+      {} as IUsers
+    );
     onSubmit(formDataObject);
   };
 
@@ -156,7 +173,7 @@ const FormUser: React.FC<
       >
         {!showUploadButton ? (
           <div>
-            <Image  src={avt.url} alt="Avatar" />
+            <Image src={avt.url} alt="Avatar" />
             <Button onClick={handleRemoveImage}>Xóa ảnh</Button>
           </div>
         ) : (
