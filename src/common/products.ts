@@ -4,7 +4,7 @@ interface ISize {
   quantity?: number;
 }
 export interface IProduct {
-  _id?: string;
+    _id?: string;
   product_id: string;
   SKU?: string;
   name?: string;

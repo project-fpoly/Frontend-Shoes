@@ -6,8 +6,9 @@ export interface IUsers {
   deliveryAddress: string;
   phoneNumbers: string;
   lastActivity?: string;
-  avt: string;
+  avt: any;
   dateOfBirth: string;
   gender: string;
   password?: string;
+  [key: string]: any;
 }
