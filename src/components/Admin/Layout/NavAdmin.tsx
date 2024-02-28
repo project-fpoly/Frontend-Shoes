@@ -6,7 +6,7 @@ import {
   UserOutlined,
   DotChartOutlined,
   WechatOutlined,
-  CodeSandboxOutlined
+  CodeSandboxOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Space } from "antd";
@@ -34,15 +34,20 @@ function getItem(
 const items: MenuItem[] = [
   getItem(<Link to="/admin">Home</Link>, "sub1", <HomeOutlined />),
   getItem(<Link to="users">User</Link>, "sub2", <UserOutlined />),
-  getItem("Order", "sub3", <AppstoreOutlined />),
+  getItem(<Link to="orders">Order</Link>, "sub3", <AppstoreOutlined />),
+
   getItem(<Link to="product">Products</Link>, "sub4", <CodeSandboxOutlined />),
-  getItem(<Link to="categories">Categories</Link>, "sub5", <DotChartOutlined />),
-  getItem(<Link to="comment">Comments</Link>, "sub6", < WechatOutlined />),
-  getItem("Setting", "sub7", < SettingOutlined />),
+  getItem(
+    <Link to="categories">Categories</Link>,
+    "sub5",
+    <DotChartOutlined />
+  ),
+  getItem(<Link to="comment">Comments</Link>, "sub6", <WechatOutlined />),
+  getItem("Setting", "sub7", <SettingOutlined />),
 ];
 
 // submenu keys of first level
-const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4", "sub5", "sub6", "sub7"];
+const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4", "sub5"];
 
 const NavAdmin: React.FC = () => {
   const [openKeys, setOpenKeys] = useState(["sub1"]);
