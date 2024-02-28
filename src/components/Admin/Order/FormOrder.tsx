@@ -147,6 +147,7 @@ const FormOrder: React.FC<
         rules={[{ required: true, message: "pls input role" }]}
       >
         <Select defaultValue={isDelivered}>
+          <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
           <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
           <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
           <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>

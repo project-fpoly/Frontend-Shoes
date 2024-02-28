@@ -23,6 +23,8 @@ import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { deleteOrder, fetchOrders, updateOrder } from "../../../features/order";
 import FormOrder from "../../../components/Admin/Order/FormOrder";
 import moment from "moment";
+import { IStateProduct } from "../../../common/redux/type";
+import { IUsers } from "../../../common/users";
 
 const OrderManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,6 +40,8 @@ const OrderManager: React.FC = () => {
   const orders = useSelector((state: RootState) => state.order.orders);
   const isLoading = useSelector((state: RootState) => state.order.isLoading);
   const pagination = useSelector((state: RootState) => state.order.pagination);
+  const { products } = useSelector((state: IStateProduct) => state.product);
+  const { users } = useSelector((state: IUsers) => state.user);
   useEffect(() => {
     dispatch(
       fetchOrders({
@@ -88,6 +92,15 @@ const OrderManager: React.FC = () => {
       onCancel() {},
     });
   };
+  const getProductName = (shoeId: string) => {
+    const product = products.find((product) => product._id === shoeId);
+    return product ? product.name : "N/A";
+  };
+  const getUserName = (userId: string) => {
+    const user = users.find((user: IUsers) => user._id === userId);
+    console.log(user);
+    return user ? user.userName : "Khách";
+  };
   const columns: ColumnsType<IBill> = [
     {
       title: "No.",
@@ -101,8 +114,8 @@ const OrderManager: React.FC = () => {
       render: (cartItems) => (
         <span>
           {cartItems.map((cartItem: CartItem) => (
-            <div>
-              {cartItem.product} - {cartItem.quantity}
+            <div className="my-2">
+              {getProductName(cartItem.product)} - {cartItem.quantity}
             </div>
           ))}
         </span>
@@ -112,7 +125,7 @@ const OrderManager: React.FC = () => {
     {
       title: "User",
       dataIndex: "user",
-      render: (user) => <span>{!user ? "Khách" : user}</span>,
+      render: (user) => <span>{getUserName(user)}</span>,
       align: "center",
     },
     {
