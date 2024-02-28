@@ -3,13 +3,14 @@ import productSlice from "../features/product/index";
 import userSlice from "../features/user/index";
 import commentSlice from "../features/comment";
 import categorySlice from "../features/category/index";
-
+import orderReducer from "../features/order/index";
 export const store = configureStore({
   reducer: {
     product: productSlice,
     user: userSlice,
     comment: commentSlice,
     category: categorySlice,
+    order: orderReducer,
   },
 });
 
