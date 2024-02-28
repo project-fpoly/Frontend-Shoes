@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, Select } from "antd";
 import Input from "antd/es/input/Input";
 import { CartItem, IBill } from "../../../common/order";
@@ -16,9 +17,10 @@ const FormOrder: React.FC<
   user,
 }) => {
   const [form] = Form.useForm();
-  const handleFormSubmitCreate = (values: IBill) => {
-    onSubmit(values);
-    console.log(values);
+  const handleFormSubmitCreate = (values: any) => {
+    const { fullname, address, email, phone } = values;
+    const shippingAddress = { fullname, address, email, phone };
+    onSubmit({ ...values, shippingAddress });
   };
   const paid = isPaid ? "Chưa thanh toán" : "Đã thanh toán";
   const product = cartItems.map((item) => item.product);
