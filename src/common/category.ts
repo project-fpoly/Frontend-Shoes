@@ -1,4 +1,10 @@
 export interface ICategory {
-  id: number;
+  _id?: string;
   name: string;
+  description?: string;
+  imageUrl?: string;
+  status?: string;
+  viewCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }

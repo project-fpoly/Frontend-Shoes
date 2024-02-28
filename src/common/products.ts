@@ -1,30 +1,49 @@
+interface ISize {
+  id?: string;
+  name: string;
+  quantity?: number;
+}
 export interface IProduct {
-  _id: string;
+  _id?: string;
   product_id: string;
   SKU?: string;
   name?: string;
   description: string;
-  categoryId?: string | null;
+  categoryId:
+    | string
+    | {
+        _id: string;
+        name?: string;
+      };
   price: number;
-  sale?: number;
+  sale: number;
   discount?: number;
   quantity: number;
   sold_count?: number;
   rating?: number;
-  sizes?: {
-    name: string;
-    quantity: number;
-  }[];
-  color?: "red" | "green" | "blue" | "yellow" | "black" | "white";
+  sizes?: ISize[];
+  color?: string;
   material?: string;
-  release_date?: Date;
+  release_date?: string;
   images?: string[];
   video?: string;
-  blog?: string | null;
+  blog?: string;
   warranty?: string;
   tech_specs?: string;
   stock_status?: string;
   isPublished?: boolean;
-  publishedDate?: Date;
+  publishedDate?: string;
   hits?: number;
+  updatedAt?: Date;
+  createdAt?: Date;
+}
+export interface ICmt {
+  _id: string;
+  shoeId: string;
+  userId: string;
+  rating: number;
+  content: string;
+  likes: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
