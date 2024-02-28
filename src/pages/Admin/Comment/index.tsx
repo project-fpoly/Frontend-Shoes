@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Table, Tag, Tooltip, Space } from "antd";
+import { Button, Modal, Table, Tag, Tooltip, Space, Avatar } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -7,12 +7,13 @@ import {
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { IStateCmt } from "../../../common/redux/type";
+import { IStateCmt, IStateProduct } from "../../../common/redux/type";
 import { fetchAllComment } from "../../../features/comment";
 import { ColumnsType } from "antd/es/table";
 import { ICmt } from "../../../common/products";
 import { format } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
+import { fetchAllProducts } from "../../../features/product";
 
 const CommentManager = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,13 +28,20 @@ const CommentManager = () => {
     loading,
     totalDocs,
   } = useSelector((state: IStateCmt) => state.comment);
+  const { products } = useSelector(
+    (state: IStateProduct) => state.product
+);
   useEffect(() => {
     dispatch(
       fetchAllComment({ page: currentPage, pageSize: 10, search: Search })
     );
+    dispatch(fetchAllProducts());
   }, [dispatch, currentPage, Search]);
   console.log();
-
+  const getProductName = (shoeId: string) => {
+    const product = products.find((product) => product._id === shoeId);
+    return product ? product.name : "N/A";
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns: ColumnsType<ICmt> = [
@@ -44,13 +52,19 @@ const CommentManager = () => {
       align: "right",
     },
     {
-      title: "shoeId",
+      title: "Product Name",
       dataIndex: "shoeId",
+      render: (shoeId) => getProductName(shoeId),
     },
     {
-      title: "userId",
+      title: "User",
       dataIndex: "userId",
-      render: (userId) => userId.userName,
+      render: (userId) => (
+        <span>
+          <Avatar src={userId.avt?.url} alt={userId.userName} />
+          {userId.userName}
+        </span>
+      ),
     },
     {
       title: "content",

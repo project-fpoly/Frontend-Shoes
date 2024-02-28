@@ -17,7 +17,7 @@ const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>();
   const shoe = useSelector((state: IStateProduct) => state.product.product);
   const shoes = useSelector((state: IStateProduct) => state.product.products);
-  console.log(shoes);
+
 
   const Loading = useSelector((state: IStateProduct) => state.product.loading);
 
@@ -26,13 +26,13 @@ const DetailShoe = () => {
   );
   const { id } = useParams();
   useEffect(() => {
-    dispatch(fetchProductById(+id!));
-    dispatch(fetchCategoryById(+id!));
-  }, [id]);
+    dispatch(fetchProductById(id!));
+    dispatch(fetchCategoryById(id!));
+  }, [dispatch,id]);
 
   useEffect(() => {
     dispatch(fetchAllProducts());
-  }, []);
+  }, [dispatch]);
 
   if (Loading === "pending") {
     return (

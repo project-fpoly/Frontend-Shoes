@@ -7,8 +7,9 @@ import { IUsers } from "../users";
 export interface initialProduct {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   products: IProduct[] | [];
-  product: IProduct | [];
+  product: IProduct | "";
   category: ICategory | "";
+  totalProducts: number
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";

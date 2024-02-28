@@ -5,6 +5,8 @@ import {
   SettingOutlined,
   UserOutlined,
   DotChartOutlined,
+  WechatOutlined,
+  CodeSandboxOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Space } from "antd";
@@ -33,17 +35,15 @@ const items: MenuItem[] = [
   getItem(<Link to="/admin">Home</Link>, "sub1", <HomeOutlined />),
   getItem(<Link to="users">User</Link>, "sub2", <UserOutlined />),
   getItem(<Link to="orders">Order</Link>, "sub3", <AppstoreOutlined />),
-  getItem("Product", "sub4", <SettingOutlined />, [
-    getItem("Option 9", "9"),
-    getItem(<Link to="comment">Comment</Link>, "10"),
-    getItem("Option 11", "11"),
-    getItem("Option 12", "12"),
-  ]),
+
+  getItem(<Link to="product">Products</Link>, "sub4", <CodeSandboxOutlined />),
   getItem(
     <Link to="categories">Categories</Link>,
     "sub5",
     <DotChartOutlined />
   ),
+  getItem(<Link to="comment">Comments</Link>, "sub6", <WechatOutlined />),
+  getItem("Setting", "sub7", <SettingOutlined />),
 ];
 
 // submenu keys of first level
