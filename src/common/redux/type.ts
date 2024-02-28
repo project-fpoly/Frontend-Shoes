@@ -35,6 +35,7 @@ export interface IStateProduct {
     product: IProduct;
     loading: string;
     category: ICategory;
+    totalProducts: number
   };
 }
 export interface IStateUser {

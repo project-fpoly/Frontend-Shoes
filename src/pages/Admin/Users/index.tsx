@@ -53,7 +53,7 @@ const UserManager: React.FC = () => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
     setUser(user);
     console.log(user);
-    
+
   };
   const deleteUsesr = (user: IUsers) => {
     Modal.confirm({
@@ -66,7 +66,7 @@ const UserManager: React.FC = () => {
       onOk() {
         dispact(deleteeUser([user._id]));
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
   const columns: ColumnsType<IUsers> = [
@@ -79,9 +79,9 @@ const UserManager: React.FC = () => {
     {
       title: "Avatar",
       dataIndex: "avt",
-      align:"center",
+      align: "center",
       render: (record) => (
-        record ? <Avatar src={record.url} /> : <Avatar  icon={<UserOutlined />} />
+        record ? <Avatar src={record.url} /> : <Avatar icon={<UserOutlined />} />
       ),
     },
     {
@@ -94,7 +94,7 @@ const UserManager: React.FC = () => {
     },
     {
       title: "Email Verified",
-      align:"center",
+      align: "center",
       dataIndex: "emailVerified",
       render: (emailVerified) => (
         emailVerified ? <Tag color="success">Đã xác thực</Tag> : <Tag color="warning">Chưa xác thực</Tag>

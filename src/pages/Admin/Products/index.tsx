@@ -18,8 +18,11 @@ import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
 import ProducModal from './ProducModal';
 const ProductsManager: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [Search, setSearch] = useState("");
+
     const dispatch = useDispatch<AppDispatch>();
-    const { products, loading } = useSelector(
+    const { products, loading, totalProducts } = useSelector(
         (state: IStateProduct) => state.product
     );
 
@@ -37,10 +40,18 @@ const ProductsManager: React.FC = () => {
         setModalVisible(false);
 
     };
-
     useEffect(() => {
-        dispatch(fetchAllProducts());
-    }, [dispatch]);
+        dispatch(
+            fetchAllProducts({
+                page: currentPage,
+                pageSize: 10,
+                searchKeyword: Search
+            })
+        );
+    }, [dispatch, currentPage, Search]);
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     const [productsState, setProductsState] = useState<IProduct>();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,9 +140,9 @@ const ProductsManager: React.FC = () => {
             ),
         },
     ];
-    const [Search, setSearch] = useState("");
+
     const defaultValue: IProduct = {
-       
+
         product_id: "Mã số sản phẩm",
         SKU: "SKU012",
         name: "Giày Nike cap cấp",
@@ -144,26 +155,24 @@ const ProductsManager: React.FC = () => {
         sold_count: 0,
         rating: 5,
         sizes: [
-        
+
         ],
-        color: "red"|| "green"|| "blue"|| "yellow"|| "black"|| "white" ,
+        color: "red" || "green" || "blue" || "yellow" || "black" || "white",
         material: "Cao Cấp",
-        release_date: new Date("2022-02-11T00:00:00.000Z"),
+        release_date: "",
         images: [
-            "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
-            "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg"
         ],
         video: "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
         blog: "61f2a4c8e9a82f001f9e4a1c",
-        warranty: "",
-        tech_specs: "",
-        stock_status: "",
+        warranty: "Bảo hành của sản phẩm",
+        tech_specs: "Đặc tả kỹ thuật của sản phẩm",
+        stock_status: "Tình trạng hàng tồn kho của sản phẩm",
         isPublished: true,
-        publishedDate: "1-1-2001",
-        hits: 0,
+        publishedDate: "",
+        hits: 112,
     };
     const Value = {
-        _id: productsState?._id || "",
+
         product_id: productsState?.product_id || "Mã số sản phẩm",
         SKU: productsState?.SKU || "Mã tồn kho của sản phẩm",
         name: productsState?.name || "Tên của sản phẩm",
@@ -181,27 +190,25 @@ const ProductsManager: React.FC = () => {
                 quantity: 10
             }
         ],
-        color: productsState?.color || "red"|| "green"|| "blue"|| "yellow"|| "black"|| "white" ,
+        color: productsState?.color || "red" || "green" || "blue" || "yellow" || "black" || "white",
         material: productsState?.material || "da",
-        release_date: productsState?.release_date || new Date("2022-02-11T00:00:00.000Z"),
+        release_date: productsState?.release_date || "",
         images: productsState?.images || [
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg"
         ],
         video: productsState?.video || "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
         blog: productsState?.blog || "61f2a4c8e9a82f001f9e4a1c",
-        warranty: productsState?.warranty || new Date("2022-02-11T00:00:00.000Z"),
+        warranty: productsState?.warranty || "",
         tech_specs: productsState?.tech_specs || "",
         stock_status: productsState?.stock_status || "",
         isPublished: productsState?.isPublished || true,
-        publishedDate: productsState?.publishedDate || "1-1-2001",
-        hits: productsState?.hits || 0,
+        publishedDate: productsState?.publishedDate || "",
+        hits: productsState?.hits || 123,
 
     };
     const searchProduct = (value: string) => {
         setSearch(value);
-        // Gọi hàm searchCategory với giá trị tìm kiếm
-        console.log(value);
     };
 
     return (
@@ -221,7 +228,12 @@ const ProductsManager: React.FC = () => {
                         dataSource={products}
                         bordered
                         size="small"
-                        pagination={false}
+                        pagination={{
+                            current: currentPage,
+                            total: totalProducts,
+                            showTotal: (total) => ` ${total} items`,
+                            onChange: handlePageChange,
+                        }}
                         onRow={(record) => ({
                             onClick: (event) => {
                                 const target = event.target as Element;
@@ -258,6 +270,7 @@ const ProductsManager: React.FC = () => {
                     >
                         <ProductForm mode={"update"} onSubmit={handleUpdateProduct} {...Value} />
                     </Modal>
+                    
                     <Modal
                         title={selectedProduct?.name}
                         visible={modalVisible}
@@ -269,6 +282,7 @@ const ProductsManager: React.FC = () => {
                         )
                         }
                     </Modal>
+
                 </>
             )}
         </div>

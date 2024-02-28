@@ -22,7 +22,7 @@ export interface IProduct {
   sizes?: ISize[];
   color?: string;
   material?: string;
-  release_date?: Date;
+  release_date?: string;
   images?: string[];
   video?: string;
   blog?: string;

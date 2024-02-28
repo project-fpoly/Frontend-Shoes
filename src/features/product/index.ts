@@ -21,9 +21,9 @@ const initialState: initialProduct = {
 
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
-  async () => {
+  async ({ page, pageSize, searchKeyword }: { page: number; pageSize: number; searchKeyword: string }) => {
     try {
-      const respone = await getProducts();
+      const respone = await getProducts(page, pageSize, searchKeyword);
       return respone;
 
     } catch (error) {
@@ -42,23 +42,13 @@ export const fetchProductById = createAsyncThunk(
     }
   }
 );
-export const fetchCategoryById = createAsyncThunk(
-  "product/fetchCategoryById",
-  async (id: string) => {
-    try {
-      const respone = await getCategoryById(id);
-      return respone;
-    } catch (error) {
-      return isRejected("Error fetching data");
-    }
-  }
-);
+
 export const removeProduct = createAsyncThunk(
   "product/deleteProduct",
   async (id: string, thunkApi) => {
     try {
       const response = await deleteProduct(id);
-      thunkApi.dispatch(fetchAllProducts());
+      thunkApi.dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
       return response;
     } catch (error) {
       throw new Error("Lỗi khi xóa sản phẩm");
@@ -70,7 +60,7 @@ export const createProduct = createAsyncThunk(
   async (newProduct: IProduct, thunkApi) => {
     try {
       const response = await addProduct(newProduct);
-      thunkApi.dispatch(fetchAllProducts());
+      thunkApi.dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
       return response;
     } catch (error) {
       throw new Error("Error create Product");
@@ -83,10 +73,21 @@ export const update = createAsyncThunk(
   async ({ id, newProduct }: { id: string; newProduct: IProduct }, thunkApi) => {
     try {
       const response = await updatePrroduct(id, newProduct);
-      thunkApi.dispatch(fetchAllProducts());
+      thunkApi.dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
       return response;
     } catch (error) {
       throw new Error("Error updating Product");
+    }
+  }
+);
+export const fetchCategoryById = createAsyncThunk(
+  "product/fetchCategoryById",
+  async (id: string) => {
+    try {
+      const respone = await getCategoryById(id);
+      return respone;
+    } catch (error) {
+      return isRejected("Error fetching data");
     }
   }
 );
@@ -169,7 +170,7 @@ export const productSlice = createSlice({
       state.products = Array.isArray(action.payload) ? action.payload : [];
       state.totalProducts = state.products.length;
     });
-  
+
   },
 });
 

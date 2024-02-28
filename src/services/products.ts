@@ -4,9 +4,9 @@ import { AxiosResponse } from "axios";
 import { notification } from "antd";
 import { CustomError } from "../common/error";
 
-export const getProducts = async () => {
+export const getProducts = async (page = 1, pageSize = 10, searchKeyword = "") => {
   try {
-    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get("api/product");
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(`api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`);
     return response.data.data || response;
   } catch (error) {
     console.error(error);
