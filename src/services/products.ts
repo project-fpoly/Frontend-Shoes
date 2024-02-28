@@ -13,7 +13,7 @@ export const getProducts = async (
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
       `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`
     );
-    return response.data.data || response;
+    return response?.data || response;
   } catch (error) {
     console.error(error);
     throw new Error("Error while fetching products.");
