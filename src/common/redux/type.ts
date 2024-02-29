@@ -1,5 +1,6 @@
 import IUser from "../../types/user";
 import { ICategory } from "../category";
+import { INotification } from "../notification";
 import { ICmt, IProduct } from "../products";
 import { IUsers } from "../users";
 
@@ -29,6 +30,11 @@ export interface initialCategory {
   category: ICategory | "";
   totalDocs: number
 }
+export interface initialNotification {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  notifications: INotification[] | [];
+  notification: INotification | "";
+}
 export interface IStateProduct {
   product: {
     data: IProduct[];
@@ -51,6 +57,14 @@ export interface IStateCmt {
   comment: {
     comments: ICmt[];
     comment: ICmt;
+    loading: string;
+    totalDocs: number
+  };
+}
+export interface IStateNotification {
+  notification: {
+    notifications: INotification[];
+    notification: INotification;
     loading: string;
     totalDocs: number
   };
