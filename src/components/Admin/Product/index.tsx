@@ -15,7 +15,6 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
     material, release_date, images, video, blog, warranty, tech_specs, stock_status, isPublished, publishedDate, hits, onSubmit, mode,
 }) => {
     const [form] = Form.useForm();
-
     const handleFormSubmitCreate = (values: IProduct) => {
         onSubmit(values);
         console.log(values);
@@ -212,10 +211,14 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     {mode === "create" && (
 
                         <>
-                            <Form.Item label="Release Date" name="release_date" initialValue={publishedDate}>
+                            <Form.Item
+                                rules={[{ required: true, message: "Please enter the Release Date" }]}
+                                label="Release Date" name="release_date" initialValue={publishedDate}>
                                 <DatePicker format="DD-MM-YYYY" />
                             </Form.Item>
-                            <Form.Item label="Published Date" name="publishedDate" initialValue={publishedDate}>
+                            <Form.Item
+                                rules={[{ required: true, message: "Please enter the Published Date" }]}
+                                label="Published Date" name="publishedDate" initialValue={publishedDate}>
                                 <DatePicker format="DD-MM-YYYY" />
                             </Form.Item>
                         </>

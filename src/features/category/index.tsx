@@ -16,7 +16,7 @@ export const fetchAllCategories = createAsyncThunk(
     async ({ page, limit, keyword }: { page: number; limit: number; keyword: string }) => {
         try {
             const response = await getCategories(page, limit, keyword);
-            return response.data;
+           return response;
         } catch (error) {
             throw new Error("Lỗi khi lấy dữ liệu");
         }
@@ -73,8 +73,8 @@ export const categorySlice = createSlice({
         });
         builder.addCase(fetchAllCategories.fulfilled, (state, action) => {
             state.loading = "fulfilled";
-            state.categories = Array.isArray(action.payload) ? action.payload : [];
-            state.totalDocs = state.categories.length;
+            state.categories = Array.isArray(action.payload.data) ? action.payload.data : [];
+            state.totalDocs = action.payload.totalDocs;
         });
         builder.addCase(deleteCategory.pending, (state) => {
             state.loading = "pending";

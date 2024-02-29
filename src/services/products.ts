@@ -10,13 +10,22 @@ export const getProducts = async (
   searchKeyword = ""
 ) => {
   try {
-    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+    const response: AxiosResponse = await instance.get(
       `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`
     );
+    notification.success({
+      message: "Success",
+      description: "Product while fetching products successfully.",
+    });
     return response?.data || response;
+
   } catch (error) {
-    console.error(error);
-    throw new Error("Error while fetching products.");
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message || "Error Product while fetching products ";
+    notification.error({ message: errorMessage });
+    throw new Error("Error Product while fetching products ");
   }
 };
 

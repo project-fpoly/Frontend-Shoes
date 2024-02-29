@@ -179,7 +179,7 @@ const ProductsManager: React.FC = () => {
         description: productsState?.description || "Mô tả của sản phẩm",
         categoryId: productsState?.categoryId || "ID danh mục của sản phẩm",
         price: productsState?.price || 0,
-        sale: productsState?.sale || 10,
+        sale: productsState?.sale || 0,
         discount: productsState?.discount || 0,
         quantity: productsState?.quantity || 0,
         sold_count: productsState?.sold_count || 0,
@@ -210,6 +210,7 @@ const ProductsManager: React.FC = () => {
     const searchProduct = (value: string) => {
         setSearch(value);
     };
+
 
     return (
         <div>

@@ -127,8 +127,8 @@ export const productSlice = createSlice({
     });
     builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload) ? action.payload : [];
-      state.totalProducts = state.products.length;
+      state.products = Array.isArray(action.payload.data) ? action.payload.data : [];
+      state.totalProducts = action.payload.totalProducts ;
     });
     // get one Product
     builder.addCase(fetchProductById.pending, (state) => {
