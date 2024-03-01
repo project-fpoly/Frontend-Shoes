@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, DatePicker, Modal, Table, Tag, Tooltip } from "antd";
+import { Button, DatePicker, Modal, Select, Table, Tag, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   CarOutlined,
@@ -25,6 +25,8 @@ import FormOrder from "../../../components/Admin/Order/FormOrder";
 import moment from "moment";
 import { IStateProduct } from "../../../common/redux/type";
 import { IUsers } from "../../../common/users";
+import DetailOrder from "../../../components/Admin/Order/DetailOrder";
+import FormUpdateMany from "../../../components/Admin/Order/FormUpdateMany";
 
 const OrderManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,10 +35,16 @@ const OrderManager: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [order, setOrder] = useState<IBill>();
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
   const [Search, setSearch] = useState("");
+  const [_, setSelectedValue] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const orders = useSelector((state: RootState) => state.order.orders);
   const isLoading = useSelector((state: RootState) => state.order.isLoading);
   const pagination = useSelector((state: RootState) => state.order.pagination);
@@ -76,6 +84,7 @@ const OrderManager: React.FC = () => {
   };
   const handleUpdateOrder = async (updateOrderData: any) => {
     await dispatch(updateOrder({ id: order?._id as string, updateOrderData }));
+
     setIsModalUpdateOpen(false);
   };
   const deleteOneOrder = async (order: IBill) => {
@@ -86,6 +95,7 @@ const OrderManager: React.FC = () => {
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
+
       async onOk() {
         await dispatch(deleteOrder(order._id as string));
       },
@@ -98,9 +108,32 @@ const OrderManager: React.FC = () => {
   };
   const getUserName = (userId: string) => {
     const user = users.find((user: IUsers) => user._id === userId);
-    console.log(user);
     return user ? user.userName : "Khách";
   };
+  const handleRowClick = (order: IBill) => {
+    setSelectedOrder(order);
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setSelectedOrder(null);
+    setModalVisible(false);
+  };
+  const hanldeUpdateManyOrder = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+    return newSelectedRowKeys;
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
   const columns: ColumnsType<IBill> = [
     {
       title: "No.",
@@ -178,7 +211,21 @@ const OrderManager: React.FC = () => {
       ),
     },
     {
-      title: "Is Delivered",
+      title: (
+        <span>
+          <Select
+            placeholder="is Delevered"
+            onChange={(value) => searchOrder(value)}
+          >
+            <Select.Option value="">Tất cả trạng thái</Select.Option>
+            <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
+            <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
+            <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
+            <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
+            <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+          </Select>
+        </span>
+      ),
       dataIndex: "isDelivered",
       align: "center",
       render: (isDelivered: string) => {
@@ -230,6 +277,7 @@ const OrderManager: React.FC = () => {
       title: "Action",
       key: "action",
       align: "center",
+      className: "action-cell",
       render: (_, record) => (
         <div style={{ textAlign: "center" }}>
           <Tooltip title={"edit"}>
@@ -264,19 +312,21 @@ const OrderManager: React.FC = () => {
   };
   const searchOrder = (value: string) => {
     setSearch(value);
+    setSelectedValue(value);
   };
+
   return (
     <>
       <div>
         <div className="flex items-end">
           <HeaderTable
-            showModal={() => setIsModalOpen(true)}
+            showModal={() => {}}
             onSubmitt={(value) => searchOrder(value)}
             name={"Orders"}
           />
           <DatePicker
             className="mx-2"
-            onChange={(date, dateString) =>
+            onChange={(_, dateString) =>
               setDayStart(
                 Array.isArray(dateString) ? dateString.join(",") : dateString
               )
@@ -284,13 +334,26 @@ const OrderManager: React.FC = () => {
             placeholder="Start Date"
           />
           <DatePicker
-            onChange={(date, dateString) =>
+            onChange={(_, dateString) =>
               setDayEnd(
                 Array.isArray(dateString) ? dateString.join(",") : dateString
               )
             }
             placeholder="End Date"
           />
+          <div className="flex itmes-center ml-2">
+            <Button
+              type="default"
+              onClick={() => setIsModalOpen(true)}
+              disabled={!hasSelected}
+              loading={loading}
+            >
+              Update
+            </Button>
+            <span style={{ marginLeft: 8 }} className="flex items-center">
+              {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            </span>
+          </div>
         </div>
         {isLoading ? (
           <>
@@ -304,8 +367,10 @@ const OrderManager: React.FC = () => {
               style={{
                 marginTop: "15px",
               }}
+              rowSelection={rowSelection}
               columns={columns}
               dataSource={orders}
+              rowKey="_id"
               bordered
               size="small"
               pagination={{
@@ -314,12 +379,31 @@ const OrderManager: React.FC = () => {
                 total: pagination.totalPages * pageSize,
                 onChange: handlePageChange,
               }}
+              onRow={(record) => ({
+                onClick: (event) => {
+                  const target = event.target as Element;
+                  const isAction =
+                    target.classList.contains("action-cell") ||
+                    target.closest(".action-cell");
+                  if (!isAction) {
+                    handleRowClick(record);
+                  }
+                },
+              })}
             />
           </>
         )}
-
         <Modal
-          title={"Create new order"}
+          title="details"
+          visible={modalVisible}
+          onCancel={closeModal}
+          footer={null}
+          destroyOnClose={true}
+        >
+          {!isModalUpdateOpen && selectedOrder && DetailOrder(selectedOrder)}
+        </Modal>
+        <Modal
+          title={"updateMany"}
           open={isModalOpen}
           onOk={() => setIsModalOpen(false)}
           onCancel={() => setIsModalOpen(false)}
@@ -327,7 +411,13 @@ const OrderManager: React.FC = () => {
           maskClosable={false}
           destroyOnClose={true}
         >
-          {/* <FormUser onSubmit={handleCreateUser} {...defaultValue} /> */}
+          {/* <FormOrder onSubmit={hanldeUpdateManyOrder} {...Value} /> */}
+          <FormUpdateMany
+            onSubmit={hanldeUpdateManyOrder}
+            {...rowSelection}
+            setIsModalOpen={setIsModalOpen}
+            {...setSelectedRowKeys}
+          />
         </Modal>
         <Modal
           title={"Update"}

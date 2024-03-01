@@ -22,6 +22,7 @@ const FormOrder: React.FC<
     const shippingAddress = { fullname, address, email, phone };
     onSubmit({ ...values, shippingAddress });
   };
+
   const paid = isPaid ? "Chưa thanh toán" : "Đã thanh toán";
   const product = cartItems.map((item) => item.product);
   const quantity = cartItems.map((item: CartItem) => item.quantity).toString();
@@ -36,7 +37,7 @@ const FormOrder: React.FC<
       address,
       phone,
     });
-  }, [form, product, quantity, email, fullname, address, phone]);
+  }, [form, product, quantity, email, fullname, address, phone, paid]);
 
   return (
     <Form
@@ -77,89 +78,118 @@ const FormOrder: React.FC<
         </>
       )}
       <Form.Item
-        label={"product"}
+        label="Product"
         name="product"
         rules={[{ required: true, message: "Vui lòng nhập sản phẩm" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"quantity"}
+        label="Quantity"
         name="quantity"
         rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"user"}
+        label="User"
         name="user"
         rules={[{ required: true, message: "Vui lòng nhập người dùng" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"fullname"}
+        label="Full Name"
         name="fullname"
         rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"email"}
+        label="Email"
         name="email"
         rules={[{ required: true, message: "Vui lòng nhập email" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"phone"}
+        label="Phone"
         name="phone"
         rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"address"}
+        label="Address"
         name="address"
         rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"totalPrice"}
+        label="Total Price"
         name="totalPrice"
         rules={[{ required: true, message: "Vui lòng nhập tổng giá" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"isPaid"}
+        label="Is Paid"
         name="isPaid"
         rules={[
           { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
         ]}
       >
-        <Input defaultValue={paid} />
+        <Input />
       </Form.Item>
       <Form.Item
-        label={"isDelivered"}
+        label="Is Delivered"
         name="isDelivered"
-        rules={[{ required: true, message: "pls input role" }]}
+        rules={[
+          { required: true, message: "Vui lòng nhập trạng thái giao hàng" },
+        ]}
       >
-        <Select defaultValue={isDelivered}>
-          <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
-          <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
-          <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
-          <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-          <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+        <Select>
+          {isDelivered === "Chờ xác nhận" && (
+            <>
+              <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
+          {isDelivered === "Chờ lấy hàng" && (
+            <>
+              <Select.Option value="Đang giao hàng">
+                Đang giao hàng
+              </Select.Option>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
+          {isDelivered === "Đang giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã huỷ" && (
+            <>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
         </Select>
       </Form.Item>
-      <Form.Item
-        style={{ textAlign: "right" }}
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Button>cancel</Button>
-        <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button className="hover:bg-red-600 hover:!text-white">Cancel</Button>
+        <Button
+          style={{ marginLeft: "5px" }}
+          type="default"
+          className="hover:bg-blue-600 hover:!text-white"
+          htmlType="submit"
+        >
           Save
         </Button>
       </Form.Item>

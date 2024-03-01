@@ -82,7 +82,38 @@ export const deleteOrder = createAsyncThunk(
     }
   }
 );
-
+export const updateManyOrders = createAsyncThunk(
+  "bills/updateMany",
+  async (
+    {
+      ids,
+      isPaid,
+      isDelivered,
+    }: {
+      ids: string[];
+      isPaid: boolean;
+      isDelivered: string;
+    },
+    { dispatch }
+  ) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:9000/api/order/admin/bills`,
+        {
+          ids,
+          isPaid,
+          isDelivered,
+        }
+      );
+      console.log(response);
+      await dispatch(fetchOrders({ page: 1, limit: 10 }));
+      notification.success({ message: response.data.message });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+);
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -150,7 +181,7 @@ const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
-        const orderToDelete = action.payload; // Đối tượng order cần xóa
+        const orderToDelete = action.payload;
 
         state.isLoading = false;
         state.orders = state.orders.filter(
@@ -158,6 +189,27 @@ const orderSlice = createSlice({
         );
       })
       .addCase(deleteOrder.rejected, (state: any, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateManyOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateManyOrders.fulfilled, (state: any, action) => {
+        state.isLoading = false;
+        const updateManyOrders = action.payload;
+        const { updates } = updateManyOrders;
+        state.orders = state.orders.map((order: IBill) => {
+          if (updates.ids.includes(order._id)) {
+            return { ...order, ...updateManyOrders };
+          }
+          console.log(order);
+          return order;
+        });
+      })
+      .addCase(updateManyOrders.rejected, (state: any, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

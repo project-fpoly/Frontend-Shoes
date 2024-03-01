@@ -8,6 +8,9 @@ interface ShippingAddress {
 export interface CartItem {
   product: string;
   quantity: number;
+  images?: string;
+  price?: number;
+  size?: string;
 }
 
 export interface IBill {
