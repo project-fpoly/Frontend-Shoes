@@ -36,11 +36,10 @@ export const fetchNotificationById = createAsyncThunk(
 );
 export const updateNotificationById = createAsyncThunk(
   "notification/updateNotificationById",
-  async (id: string,thunkApi) => {
+  async (id: string) => {
     try {
       // Gọi API để lấy thông báo theo `id`
       updateNotification(id)
-      thunkApi.dispatch(fetchAllNotification());
       return ;
     } catch (error) {
       return isRejected("Error fetching data");

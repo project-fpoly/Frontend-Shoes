@@ -22,6 +22,7 @@ const AllNotification=()=>{
     const handleItemClick = async  (item:INotification) => {
       if(!item.isRead){
         await  dispatch(updateNotificationById(item._id));
+        dispatch(fetchAllNotification());
       }
         navigate(`/admin/notification/${item._id}`);
       };
