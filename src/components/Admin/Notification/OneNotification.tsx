@@ -1,4 +1,4 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
@@ -20,6 +20,11 @@ const OneNotification = () => {
     }
   }, [dispatch, id]);
 
+  // Check if notification object is defined before accessing its properties
+  if (!notification || !notification.message) {
+    return <div>Loading...</div>; // or handle loading state accordingly
+  }
+
   return (
     <>
       <Descriptions
@@ -30,12 +35,14 @@ const OneNotification = () => {
         <Descriptions.Item label="Message" span={3}>
           {notification.message}
         </Descriptions.Item>
-        <Descriptions.Item label="Loại thông báo"span={3}>{notification.type}</Descriptions.Item>
+        <Descriptions.Item label="Loại thông báo" span={3}>
+          {notification.type}
+        </Descriptions.Item>
         <Descriptions.Item label="Đối tượng nhận thông báo" span={3}>
           {notification.recipientType}
         </Descriptions.Item>
-        <Descriptions.Item label="Tạo lúc"span={3}>
-        {format(new Date(notification.createdAt), " HH:mm:ss dd-MM-yyyy")}
+        <Descriptions.Item label="Tạo lúc" span={3}>
+          {notification.createdAt && format(new Date(notification.createdAt), "HH:mm:ss dd-MM-yyyy")}
         </Descriptions.Item>
       </Descriptions>
     </>

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialNotification } from "../../common/redux/type";
 import { isRejected } from "@reduxjs/toolkit/react";
-import { getAllNotification, getOneNotification } from "../../services/notification";
+import { getAllNotification, getOneNotification, updateNotification } from "../../services/notification";
 
 const initialState: initialNotification = {
   loading: "idle",
@@ -28,9 +28,20 @@ export const fetchNotificationById = createAsyncThunk(
     try {
       // Gọi API để lấy thông báo theo `id`
       const response = await getOneNotification(id)
-      console.log(response);
-      
       return response;
+    } catch (error) {
+      return isRejected("Error fetching data");
+    }
+  }
+);
+export const updateNotificationById = createAsyncThunk(
+  "notification/updateNotificationById",
+  async (id: string,thunkApi) => {
+    try {
+      // Gọi API để lấy thông báo theo `id`
+      updateNotification(id)
+      thunkApi.dispatch(fetchAllNotification());
+      return ;
     } catch (error) {
       return isRejected("Error fetching data");
     }
@@ -61,6 +72,15 @@ export const notificationSlice = createSlice({
     builder.addCase(fetchNotificationById.fulfilled, (state, action) => {
       state.loading = "fulfilled";
       state.notification = action.payload; 
+    });
+    builder.addCase(updateNotificationById.pending, (state) => {
+      state.loading = "pending";
+    })
+    builder.addCase(updateNotificationById.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(updateNotificationById.fulfilled, (state) => {
+      state.loading = "fulfilled";
     });
   },
 });

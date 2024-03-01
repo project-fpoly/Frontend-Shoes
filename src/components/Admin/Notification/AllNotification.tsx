@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateNotification } from "../../../common/redux/type";
 import { useEffect } from "react";
-import { fetchAllNotification } from "../../../features/notification";
+import { fetchAllNotification, updateNotificationById } from "../../../features/notification";
 import styles from "../../../App.module.scss";
 import { useNavigate } from "react-router-dom";
+import { INotification } from "../../../common/notification";
 const AllNotification=()=>{
   const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -18,8 +19,11 @@ const AllNotification=()=>{
       dispatch(fetchAllNotification());
     }, [dispatch]);
     const currentDateTime: Date = new Date();
-    const handleItemClick = (item:string) => {
-        navigate(`/admin/notification/${item}`);
+    const handleItemClick = async  (item:INotification) => {
+      if(!item.isRead){
+        await  dispatch(updateNotificationById(item._id));
+      }
+        navigate(`/admin/notification/${item._id}`);
       };
     return(
         <>
@@ -52,7 +56,7 @@ const AllNotification=()=>{
                 className={`${styles.notificationItem} ${
                   item.isRead ? styles.readItem : styles.unreadItem
                 }`}
-                onClick={() => handleItemClick(item._id)}
+                onClick={() => handleItemClick(item)}
               >
                 <div style={{ marginBottom: "16px",padding:5 }}>
                   <h3>{iconMap[item.type]}</h3>
