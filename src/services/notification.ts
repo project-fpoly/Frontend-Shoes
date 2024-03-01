@@ -11,6 +11,16 @@ export const getAllNotification = async () => {
     console.error(error);
   }
 };
+export const getOneNotification = async (id:string) => {
+  try {
+    const response: AxiosResponse = await instance.get(
+      `/api/notification/one/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // export const createNotification = async (data: INotification) => {
 //   try {

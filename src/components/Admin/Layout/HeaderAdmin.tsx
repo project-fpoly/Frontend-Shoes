@@ -32,10 +32,14 @@ import {
   format,
   formatDistanceToNow,
 } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 
 const AdminHeader: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { notifications: notification } = useSelector(
     (state: IStateNotification) => state.notification
@@ -43,7 +47,9 @@ const AdminHeader: React.FC = () => {
   useEffect(() => {
     dispatch(fetchAllNotification());
   }, [dispatch]);
-
+  const handleItemClick = (item: string) => {
+    navigate(`/admin/notification/${item}`);
+  };
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">Profile</Menu.Item>
@@ -52,11 +58,6 @@ const AdminHeader: React.FC = () => {
     </Menu>
   );
 
-  const [visible, setVisible] = useState(false);
-
-  const handleVisibleChange = (visible: boolean) => {
-    setVisible(visible);
-  };
   const currentDateTime: Date = new Date();
   const unreadNotificationsCount = notification.filter(
     (item) => !item.isRead
@@ -92,8 +93,9 @@ const AdminHeader: React.FC = () => {
                 className={`${styles.notificationItem} ${
                   item.isRead ? styles.readItem : styles.unreadItem
                 }`}
+                onClick={() => handleItemClick(item._id)}
               >
-                <div style={{ marginBottom: "16px",padding:5 }}>
+                <div style={{ marginBottom: "16px", padding: 5 }}>
                   <h3>{iconMap[item.type]}</h3>
                   <p>{item.message}</p>
                 </div>
@@ -111,7 +113,23 @@ const AdminHeader: React.FC = () => {
       </div>
     </>
   );
+  const handleVisibleChange = (isVisible: boolean) => {
+    setVisible(isVisible);
+  };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (visible) {
+        setVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [visible]);
   return (
     <Row
       className="items-center justify-between p-4 bg-white border-b"
@@ -131,7 +149,7 @@ const AdminHeader: React.FC = () => {
             <Popover
               content={notificationContent}
               title="Notifications"
-              trigger="hover"
+              trigger="click"
               visible={visible}
               onVisibleChange={handleVisibleChange}
             >

@@ -65,7 +65,7 @@ export interface IStateNotification {
   notification: {
     notifications: INotification[];
     notification: INotification;
-    loading: string;
+    loading: "idle" | "pending" | "fulfilled" | "failed";
     totalDocs: number
   };
 }
