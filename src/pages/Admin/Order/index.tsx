@@ -19,7 +19,6 @@ import {
 import { CartItem, IBill } from "../../../common/order";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { ColumnsType } from "antd/es/table";
-import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { deleteOrder, fetchOrders, updateOrder } from "../../../features/order";
 import FormOrder from "../../../components/Admin/Order/FormOrder";
 import moment from "moment";
@@ -27,6 +26,7 @@ import { IStateProduct } from "../../../common/redux/type";
 import { IUsers } from "../../../common/users";
 import DetailOrder from "../../../components/Admin/Order/DetailOrder";
 import FormUpdateMany from "../../../components/Admin/Order/FormUpdateMany";
+import HeaderTableAdminOrder from "../../../components/Admin/Layout/HeaderTableAdminOrder";
 
 const OrderManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -118,14 +118,13 @@ const OrderManager: React.FC = () => {
     setSelectedOrder(null);
     setModalVisible(false);
   };
-  const hanldeUpdateManyOrder = () => {
+  const handleUpdateManyOrder: () => void = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
     return newSelectedRowKeys;
   };
@@ -145,9 +144,9 @@ const OrderManager: React.FC = () => {
       title: "Items",
       dataIndex: "cartItems",
       render: (cartItems) => (
-        <span>
-          {cartItems.map((cartItem: CartItem) => (
-            <div className="my-2">
+        <span key={cartItems._id}>
+          {cartItems.map((cartItem: CartItem, index: number) => (
+            <div className="my-2" key={index}>
               {getProductName(cartItem.product)} - {cartItem.quantity}
             </div>
           ))}
@@ -301,12 +300,13 @@ const OrderManager: React.FC = () => {
       email: "la@gmail.com",
       fullname: "Unknown",
       address: "gia lai",
-      phone: 0,
+      phone: "0",
     },
     user: order?.user || "la@gmail.com",
     totalPrice: order?.totalPrice || 0,
     isPaid: order?.isPaid || false,
     isDelivered: order?.isDelivered || "0000000000",
+    trackingNumber: order?.trackingNumber || "Abcxyz",
     createdAt: order?.createdAt || "2003",
     updatedAt: order?.updatedAt || "male",
   };
@@ -319,10 +319,10 @@ const OrderManager: React.FC = () => {
     <>
       <div>
         <div className="flex items-end">
-          <HeaderTable
+          <HeaderTableAdminOrder
             showModal={() => {}}
             onSubmitt={(value) => searchOrder(value)}
-            name={"Orders"}
+            name={"Orders "}
           />
           <DatePicker
             className="mx-2"
@@ -394,13 +394,14 @@ const OrderManager: React.FC = () => {
           </>
         )}
         <Modal
-          title="details"
-          visible={modalVisible}
+          open={modalVisible}
           onCancel={closeModal}
           footer={null}
           destroyOnClose={true}
         >
-          {!isModalUpdateOpen && selectedOrder && DetailOrder(selectedOrder)}
+          {!isModalUpdateOpen &&
+            selectedOrder &&
+            DetailOrder(selectedOrder, products, users)}
         </Modal>
         <Modal
           title={"updateMany"}
@@ -413,10 +414,10 @@ const OrderManager: React.FC = () => {
         >
           {/* <FormOrder onSubmit={hanldeUpdateManyOrder} {...Value} /> */}
           <FormUpdateMany
-            onSubmit={hanldeUpdateManyOrder}
-            {...rowSelection}
+            onSubmit={handleUpdateManyOrder}
+            selectedRowKeys={selectedRowKeys}
             setIsModalOpen={setIsModalOpen}
-            {...setSelectedRowKeys}
+            onSelectChange={onSelectChange}
           />
         </Modal>
         <Modal
@@ -427,7 +428,13 @@ const OrderManager: React.FC = () => {
           destroyOnClose={true}
           footer={null}
         >
-          <FormOrder mode={"update"} onSubmit={handleUpdateOrder} {...Value} />
+          <FormOrder
+            mode={"update"}
+            onSubmit={handleUpdateOrder}
+            {...Value}
+            {...products}
+            {...users}
+          />
         </Modal>
       </div>
     </>

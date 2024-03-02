@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, Select } from "antd";
 import Input from "antd/es/input/Input";
-import { CartItem, IBill } from "../../../common/order";
+import { IBill } from "../../../common/order";
 import React from "react";
 
 const FormOrder: React.FC<
@@ -11,10 +11,10 @@ const FormOrder: React.FC<
   totalPrice,
   mode,
   onSubmit,
-  cartItems,
   isPaid,
   shippingAddress,
   user,
+  trackingNumber,
 }) => {
   const [form] = Form.useForm();
   const handleFormSubmitCreate = (values: any) => {
@@ -23,21 +23,17 @@ const FormOrder: React.FC<
     onSubmit({ ...values, shippingAddress });
   };
 
-  const paid = isPaid ? "Chưa thanh toán" : "Đã thanh toán";
-  const product = cartItems.map((item) => item.product);
-  const quantity = cartItems.map((item: CartItem) => item.quantity).toString();
   const { address, phone, email, fullname } = shippingAddress;
-
   React.useEffect(() => {
     form.setFieldsValue({
-      product,
-      quantity,
       email,
       fullname,
       address,
       phone,
+      trackingNumber,
+      isPaid,
     });
-  }, [form, product, quantity, email, fullname, address, phone, paid]);
+  }, [form, email, fullname, address, phone, isPaid, trackingNumber]);
 
   return (
     <Form
@@ -78,19 +74,13 @@ const FormOrder: React.FC<
         </>
       )}
       <Form.Item
-        label="Product"
-        name="product"
+        label="Tracking number"
+        name="trackingNumber"
         rules={[{ required: true, message: "Vui lòng nhập sản phẩm" }]}
       >
-        <Input />
+        <Input disabled />
       </Form.Item>
-      <Form.Item
-        label="Quantity"
-        name="quantity"
-        rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
-      >
-        <Input />
-      </Form.Item>
+
       <Form.Item
         label="User"
         name="user"
@@ -140,7 +130,10 @@ const FormOrder: React.FC<
           { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
         ]}
       >
-        <Input />
+        <Select defaultValue={isPaid ? "Chưa thanh toán" : "Đã thanh toán"}>
+          <Select.Option value={false}>Chưa thanh toán</Select.Option>
+          <Select.Option value={true}>Đã thanh toán</Select.Option>
+        </Select>
       </Form.Item>
       <Form.Item
         label="Is Delivered"

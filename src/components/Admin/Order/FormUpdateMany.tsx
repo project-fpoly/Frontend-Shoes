@@ -8,9 +8,11 @@ import { AppDispatch } from "../../../redux/store";
 const FormUpdateMany = ({
   selectedRowKeys,
   setIsModalOpen,
+  onSelectChange,
 }: {
   selectedRowKeys: any;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSelectChange: (newSelectedRowKeys: React.Key[]) => React.Key[];
   onSubmit: () => void;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,7 +21,7 @@ const FormUpdateMany = ({
   const handleFormSubmit = (formValues: any) => {
     console.log(formValues);
     dispatch(updateManyOrders(formValues));
-    console.log(selectedRowKeys);
+    onSelectChange([]);
     setIsModalOpen(false);
   };
   const isPaid = false;

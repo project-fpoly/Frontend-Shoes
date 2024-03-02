@@ -5,21 +5,28 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { IBill } from "../../common/order";
 import { notification } from "antd";
+import { fetchAllUsers } from "../user";
+import { fetchAllProducts } from "../product";
 
 export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
-  async (params: {
-    page?: number;
-    limit?: number;
-    start?: string;
-    end?: string;
-    search?: string;
-  }) => {
+  async (
+    params: {
+      page?: number;
+      limit?: number;
+      start?: string;
+      end?: string;
+      search?: string;
+    },
+    { dispatch }
+  ) => {
     try {
       const response = await axios.get(
         "http://localhost:9000/api/order/admin/bills",
         { params }
       );
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
 
       return response.data;
     } catch (error: any) {

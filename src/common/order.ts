@@ -2,7 +2,7 @@ interface ShippingAddress {
   email: string;
   fullname: string;
   address: string;
-  phone: number;
+  phone: string;
 }
 
 export interface CartItem {
@@ -21,6 +21,7 @@ export interface IBill {
   totalPrice: number;
   isPaid: boolean;
   isDelivered: string;
+  trackingNumber: string;
   createdAt: string;
   updatedAt: string;
 }
