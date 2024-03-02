@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Table, Tag, Tooltip, Space, Avatar } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { Modal, Table, Tag, Avatar } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateCmt, IStateProduct } from "../../../common/redux/type";
@@ -28,16 +24,13 @@ const CommentManager = () => {
     loading,
     totalDocs,
   } = useSelector((state: IStateCmt) => state.comment);
-  const { products } = useSelector(
-    (state: IStateProduct) => state.product
-);
+  const { products } = useSelector((state: IStateProduct) => state.product);
   useEffect(() => {
     dispatch(
       fetchAllComment({ page: currentPage, pageSize: 10, search: Search })
     );
-    dispatch(fetchAllProducts());
+    dispatch(fetchAllProducts({ page: 0, pageSize: 0, searchKeyword: "" }));
   }, [dispatch, currentPage, Search]);
-  console.log();
   const getProductName = (shoeId: string) => {
     const product = products.find((product) => product._id === shoeId);
     return product ? product.name : "N/A";
@@ -98,34 +91,34 @@ const CommentManager = () => {
       render: (createdAt: string | null | undefined) =>
         createdAt ? format(new Date(createdAt), " HH:mm:ss dd-MM-yyyy") : "N/A",
     },
-    {
-      title: "action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip title={"edit"}>
-            <Button type="link" onClick={() => toggleModal(record)}>
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-          <Tooltip title={"delete"}>
-            <Button type="link" onClick={() => deleteComment(record)}>
-              <DeleteOutlined />
-            </Button>
-          </Tooltip>
-        </Space>
-      ),
-    },
+    // {
+    //   title: "action",
+    //   key: "action",
+    //   align: "center",
+    //   render: (_, record) => (
+    //     <Space>
+    //       <Tooltip title={"edit"}>
+    //         <Button type="link" onClick={() => toggleModal(record)}>
+    //           <EditOutlined />
+    //         </Button>
+    //       </Tooltip>
+    //       <Tooltip title={"delete"}>
+    //         <Button type="link" onClick={() => deleteComment(record)}>
+    //           <DeleteOutlined />
+    //         </Button>
+    //       </Tooltip>
+    //     </Space>
+    //   ),
+    // },
   ];
 
-  const toggleModal = (record: ICmt) => {
-    console.log(record);
-  };
+  // const toggleModal = (record: ICmt) => {
+  //   console.log(record);
+  // };
 
-  const deleteComment = (record: ICmt) => {
-    console.log(record);
-  };
+  // const deleteComment = (record: ICmt) => {
+  //   console.log(record);
+  // };
   const searchCmt = (value: string) => {
     console.log(value);
     setSearch(value);
