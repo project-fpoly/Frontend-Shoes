@@ -10,7 +10,14 @@ import SigninPage from "../pages/client/signin";
 import SignupPage from "../pages/client/signup";
 import Cart from "../pages/Cart";
 import Guest_Checkout from "../pages/Guest_Checkout";
-
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboard from "../pages/Admin";
+import UserManager from "../pages/Admin/Users";
+import CommentManager from "../pages/Admin/Comment";
+import CategoriesManager from "../pages/Admin/Categories";
+import ProductsManager from "../pages/Admin/Products";
+import OrderManager from "../pages/Admin/Order";
+import NotificationsAdmin from "../pages/Admin/Notification";
 const Router = () => {
   return (
     <>
@@ -22,6 +29,16 @@ const Router = () => {
           <Route path="/sizeguide" element={<SizeGuide />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
+        </Route>
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManager />} />
+          <Route path="/admin/product" element={<ProductsManager />} />
+          <Route path="/admin/categories" element={<CategoriesManager />} />
+          <Route path="/admin/comment" element={<CommentManager />} />
+          <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/notification/:id" element={<NotificationsAdmin />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

@@ -18,12 +18,13 @@ const GreaUp = () => {
 
   useEffect(() => {
     dispact(fetchAllProducts());
+    document.title = "Greaup";
   }, []);
 
   const [hideFilter, setHideFilter] = useState<boolean>(false);
   return (
     <>
-      <span className={clsx("flex gap-5  justify-end mr-5 mb-5 pt-12")}>
+      <span className={clsx("flex gap-5 mt-5  justify-end mr-5 mb-5 pt-12")}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "

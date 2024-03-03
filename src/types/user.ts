@@ -5,7 +5,7 @@ interface IUser {
   email: string;
   password: string;
   role: "admin" | "member";
-  deliveryAddress?: array;
+  deliveryAddress?: string;
   gender?: string;
   phoneNumbers?: string;
   dateOfBirth: string;

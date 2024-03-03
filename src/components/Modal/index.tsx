@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import React, { ReactNode } from "react";
 
 import "./index.scss";
@@ -6,7 +6,6 @@ interface Props {
   isModalOpen: boolean;
   setIsModalOpen: any;
   children: ReactNode;
-  onCanCel?: any;
 }
 const ModalCustom: React.FC<Props> = ({
   isModalOpen,
