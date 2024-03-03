@@ -9,6 +9,7 @@ import {
   addProduct,
   updatePrroduct,
 } from "../../services/products";
+import { getProductsWithFilter } from "../../services/productsQuery";
 import { isRejected } from "@reduxjs/toolkit/react";
 
 const initialState: initialProduct = {
@@ -18,6 +19,35 @@ const initialState: initialProduct = {
   category: "",
   totalProducts: 0,
 };
+
+export const getProductsWithFilters = createAsyncThunk(
+  "product/getProductsWithFilters",
+  async ({
+    page, pageSize, searchKeyword, sort, categoryId, size,
+    minPrice, maxPrice, material, startDate, endDate, color,
+  }: {
+    page: number,
+    pageSize: number;
+    searchKeyword: string,
+    sort?: "asc" | "desc" | "asc_views" | "desc_views" | "asc_sold" | "desc_sold" | "asc_sale" | "desc_sale" | "asc_rate" | "desc_rate";
+    categoryId?: string;
+    size?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    material?: string;
+    startDate?: Date;
+    endDate?: Date;
+    color?: string;
+  }) => {
+    try {
+      const response = await getProductsWithFilter(page, pageSize, searchKeyword, sort, categoryId, size, minPrice, maxPrice, material, startDate, endDate, color);
+      console.log(response);
+      return response
+    } catch (error) {
+      throw new Error("Lỗi khi lấy dữ liệu");
+    }
+  }
+);
 
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
@@ -128,7 +158,19 @@ export const productSlice = createSlice({
     builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
       state.loading = "fulfilled";
       state.products = Array.isArray(action.payload.data) ? action.payload.data : [];
-      state.totalProducts = action.payload.totalProducts ;
+      state.totalProducts = action.payload.totalProducts;
+    });
+    //fetch product
+    builder.addCase(getProductsWithFilters.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getProductsWithFilters.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(getProductsWithFilters.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload.data) ? action.payload.data : [];
+      state.totalProducts = action.payload.totalProducts;
     });
     // get one Product
     builder.addCase(fetchProductById.pending, (state) => {
