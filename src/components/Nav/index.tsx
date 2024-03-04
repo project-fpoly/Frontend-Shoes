@@ -1,8 +1,7 @@
 import { SiJordan } from "react-icons/si";
-import { Popover, Menu, Avatar, ConfigProvider, Badge } from "antd";
-import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Popover, Avatar, ConfigProvider } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
-import type { MenuProps } from "antd";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
@@ -19,54 +18,6 @@ const NavBar = () => {
       <p>logout</p>
     </div>
   );
-  const items: MenuProps["items"] = [
-    {
-      label: (
-        <Link to="/">
-          <h1 className="font-bold">New & Features</h1>
-        </Link>
-      ),
-      key: "mail",
-    },
-    {
-      label: (
-        <Link to="/greaup">
-          <h1 className="font-bold">DetailCart</h1>
-        </Link>
-      ),
-      key: "SubMenuCart",
-      children: [
-        {
-          type: "group",
-          label: (
-            <Link to="/greaup">
-              <h1 className="font-bold">DetailCart</h1>
-            </Link>
-          ),
-        },
-      ],
-    },
-    {
-      label: <h1 className="font-bold">Women</h1>,
-      key: "SubMenu",
-    },
-    {
-      label: <h1 className="font-bold">Kids</h1>,
-      key: "Kids",
-    },
-    {
-      label: <h1 className="font-bold">Sale</h1>,
-      key: "Sale",
-    },
-    {
-      label: <h1 className="font-bold">Customise</h1>,
-      key: "Customise",
-    },
-    {
-      label: <h1 className="font-bold">SNKRS</h1>,
-      key: "SNKRS",
-    },
-  ];
 
   const [showNav, setShowNav] = useState<boolean>(false);
   const [position, setPosition] = useState<boolean>(false);
@@ -145,7 +96,7 @@ const NavBar = () => {
             position ? "top-0" : ""
           )}
         >
-          <div className="flex justify-evenly py-2 mx-24 gap-[100px]">
+          <div className="flex justify-evenly py-2 mx-24 gap-[200px]">
             <Link to={"/"}>
               <SiNike className="hover:opacity-75" size={50} />
             </Link>
@@ -154,13 +105,13 @@ const NavBar = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
+        {/* <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>
           <p>
             No matter what you feel like doing today, It’s better as a Member.
           </p>
           <a href="">Join us</a>
-        </div>
+        </div> */}
       </ConfigProvider>
     </>
   );

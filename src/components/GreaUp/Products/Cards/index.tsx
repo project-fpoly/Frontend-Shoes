@@ -8,6 +8,7 @@ type Props = {
 
 const Card = (props: Props) => {
   const { shoes } = props;
+  console.log(shoes);
 
   return (
     <>
@@ -15,7 +16,7 @@ const Card = (props: Props) => {
         {shoes.map((item, index) => {
           return (
             <div key={index + 1} className="mb-28">
-              <Link className="flex flex-col gap-6" to={`/detail/${item.id}`}>
+              <Link className="flex flex-col gap-6" to={`/detail/${item._id}`}>
                 <img
                   className={style.image}
                   src={"/src/assets/air-jordan-1-low-se-shoes-ZbxSRp.jpg"}
