@@ -1,15 +1,25 @@
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { Button, Form, Input } from "antd";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import { SiNike } from "react-icons/si";
-import React from "react";
+import {setUser} from "../../../features/auth";
 
 
 const Password = () => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
-    const email = useSelector(state => state.auth.username) || params.get('email');
+    const dispatch = useDispatch();
+    const email = useSelector(state => state.auth.user)?.email || params.get('email');
+
+    const getUserID = (token: string) => {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload)['_id'];
+    }
     const handleSubmit = async (values: {password: string}) => {
         try {
             const response = await axios.post('http://localhost:9000/api/auth/signin', {
@@ -17,17 +27,34 @@ const Password = () => {
                 password: values.password
             });
             if (response && response.status === 200) {
-                alert(response.data.accessToken);
+                const userID = getUserID(response.data.accessToken);
+                response.data.accessToken && localStorage.setItem('userID', userID);
                 localStorage.setItem('accessToken', response.data.accessToken);
                 localStorage.setItem('email', email);
-                alert('Login successfully');
-                //redirect to signup page
-                navigate('/');
+                const config = {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Authorization": `Bearer ${response.data.accessToken}`,
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                }
+                axios.get(`http://localhost:9000/api/auth/user/${userID}`, config)
+                    .then(res => {
+                        dispatch(setUser(res.data.user));
+                        alert('Login successfully');
+                        //redirect to signup page
+                        navigate('/');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
         } catch (e: any) {
             e.response.data.message && alert(e.response.data.message);
-            // navigate('/signup');
-            console.log(e);
+            if (e.response.data.code === 404) {
+                navigate('/signup');
+            }
+            // console.log(e);
         }
     }
 
@@ -100,7 +127,6 @@ const Password = () => {
                                     marginLeft: 'auto', // Để nút sang bên phải
 
                                 }}
-                                variant="outlined"
                                 // onMouseEnter={handleMouseEnter}
                                 // onMouseLeave={handleMouseLeave}
                             >
@@ -120,3 +146,4 @@ const Password = () => {
 }
 
 export default Password;
+

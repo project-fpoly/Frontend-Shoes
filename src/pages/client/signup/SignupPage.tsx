@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Select, DatePicker } from 'antd';
+import { useState } from 'react';
+import { Form, Input, Button } from 'antd';
 import { SiNike } from 'react-icons/si';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
-const { Option } = Select;
 
 const SignupPage = () => {
   const [passwordHelp, setPasswordHelp] = useState<string | undefined>(undefined);
@@ -17,6 +15,9 @@ const SignupPage = () => {
           const response = await axios.post('http://localhost:9000/api/auth/signup', data);
           if (response && response.status === 200) {
               alert('Signup successfully');
+              localStorage.setItem('accessToken', response.data.accessToken);
+
+
               //redirect to signup page
               navigate(`/verify-email?email=${values?.email}`);
           }
@@ -132,7 +133,6 @@ const SignupPage = () => {
                 justifyContent: 'center',
                 marginLeft: 'auto',
               }}
-              variant="outlined"
             >
               Create an account
             </Button>

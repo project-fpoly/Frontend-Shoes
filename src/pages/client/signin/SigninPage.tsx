@@ -1,20 +1,13 @@
 import { useState } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
-import IUser, { LoginResponse } from "../../../types/user";
-// import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import axios, { AxiosResponse } from "axios";
-// import { Signin } from "../../../services/auth";
-// import ForgotPassword from "../forgotpassword/ForgotPassword";
 import { SiNike } from "react-icons/si";
 import { useDispatch } from "react-redux";
-import { setUsername } from "../../../features/auth";
+import { setUser } from "../../../features/auth";
 
 
 const SigninPage = () => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isVerified, setIsVerified] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,7 +25,7 @@ const SigninPage = () => {
   };
 
   const onFinish = async (values: { email: string }) => {
-    dispatch(setUsername(values.email));
+    dispatch(setUser({email: values.email}));
     navigate(`/password?email=${values.email}`);
     // try {
     //   if (!isValidEmail(values.email)) {
@@ -148,7 +141,6 @@ const SigninPage = () => {
                   marginLeft: 'auto', // Để nút sang bên phải
 
                 }}
-                variant="outlined"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
