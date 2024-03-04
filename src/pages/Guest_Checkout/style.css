@@ -1,0 +1,21 @@
+.deliver_btn {
+    border: 1px solid black;
+}
+
+.deliver_btn:hover,
+.deliver_btn:focus {
+    border: 1px solid rgb(232, 9, 9);
+    background: #fff;
+    color: black;
+}
+
+.ant-select-selector {
+    background-color: #fff !important;
+    border: 1px solid #cccccc !important;
+}
+
+.ant-select-selector:hover,
+.ant-select-selector:hover {
+    /* background-color: #fff !important; */
+    border: 1px solid black !important;
+}
