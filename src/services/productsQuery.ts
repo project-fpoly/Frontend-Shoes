@@ -4,6 +4,187 @@ import { AxiosResponse } from "axios";
 import { notification } from "antd";
 import { CustomError } from "../common/error";
 
+export const getProductsWithFilter = async (
+  page: number,
+  pageSize: number,
+  searchKeyword: string,
+  sort?:
+    | "asc"
+    | "desc"
+    | "asc_views"
+    | "desc_views"
+    | "asc_sold"
+    | "desc_sold"
+    | "asc_sale"
+    | "desc_sale"
+    | "asc_rate"
+    | "desc_rate",
+  categoryId?: string,
+  size?: string,
+  minPrice?: number,
+  maxPrice?: number,
+  material?: string,
+  startDate?: Date,
+  endDate?: Date,
+  color?: string,
+  gender?: string
+) => {
+  try {
+    let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
+
+    if (sort) {
+      if (sort === "asc" || sort === "desc") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_views" || sort === "desc_views") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_sold" || sort === "desc_sold") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_sale" || sort === "desc_sale") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_rate" || sort === "desc_rate") {
+        url += `&sortOrder=${sort}`;
+      }
+    }
+    if (categoryId) {
+      url += `&categoryFilter=${categoryId}`;
+    }
+    if (size) {
+      url += `&sizeFilter=${size}`;
+    }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      url += `&priceFilter=${minPrice}->${maxPrice}`;
+    }
+    if (material) {
+      url += `&materialFilter=${material}`;
+    }
+    if (startDate && endDate) {
+      url += `&releaseDateFilter=${startDate}->${endDate}`;
+    }
+    if (color) {
+      url += `&colorFilter=${color}`;
+    }
+    if (gender) {
+      url += `&genderFilter=${gender}`;
+    }
+
+    const response: AxiosResponse = await instance.get(url);
+    notification.success({
+      message: "Success",
+      description:
+        response?.data?.message || "Products have been filtered successfully.",
+    });
+    return response?.data || response;
+  } catch (error) {
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message || "Error while fetching products";
+    notification.error({ message: errorMessage });
+    throw new Error("Error while fetching products");
+  }
+};
+// Lọc theo Giới tính
+
+export const genderFilterProducts = async (gender: string) => {
+  try {
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+      `api/product?genderFilter=${gender}`
+    );
+    const data = response.data || [];
+    notification.success({
+      message: "Success",
+      description: "Products have been filtered by gender successfully.",
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message ||
+      "Error while fetching Products have been filtered by gender";
+    notification.error({ message: errorMessage });
+    throw new Error(
+      "Error while fetching Products have been filtered by gender"
+    );
+  }
+};
+
+// fiter Product
+export const filterProducts = async (
+  pageSize: number,
+  sort?:
+    | "asc"
+    | "desc"
+    | "asc_views"
+    | "desc_views"
+    | "asc_sold"
+    | "desc_sold"
+    | "asc_sale"
+    | "desc_sale"
+    | "asc_rate"
+    | "desc_rate",
+  categoryId?: string,
+  size?: string,
+  minPrice?: number,
+  maxPrice?: number,
+  material?: string,
+  startDate?: Date,
+  endDate?: Date,
+  color?: string
+) => {
+  try {
+    let url = `api/product?pageSize=${pageSize}`;
+    if (sort) {
+      if (sort === "asc" || sort === "desc") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_views" || sort === "desc_views") {
+        url += `&viewsFilter=${sort}`;
+      } else if (sort === "asc_sold" || sort === "desc_sold") {
+        url += `&soldFilter=${sort}`;
+      } else if (sort === "asc_sale" || sort === "desc_sale") {
+        url += `&saleFilter=${sort}`;
+      } else if (sort === "asc_rate" || sort === "desc_rate") {
+        url += `&rateFilter=${sort}`;
+      }
+    }
+    if (categoryId) {
+      url += `&categoryFilter=${categoryId}`;
+    }
+    if (size) {
+      url += `&sizeFilter=${size}`;
+    }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      url += `&priceFilter=${minPrice}->${maxPrice}`;
+    }
+    if (material) {
+      url += `&materialFilter=${material}`;
+    }
+    if (startDate && endDate) {
+      url += `&releaseDateFilter=${startDate}->${endDate}`;
+    }
+    if (color) {
+      url += `&colorFilter=${color}`;
+    }
+
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+      url
+    );
+    const data = response.data || [];
+    notification.success({
+      message: "Success",
+      description: "Products have been filtered successfully.",
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message ||
+      "Error while fetching filtered products";
+    notification.error({ message: errorMessage });
+    throw new Error("Error while fetching filtered products");
+  }
+};
 //Lọc theo id Category
 export const categoryFilterProducts = async (CategoryId: string) => {
   try {

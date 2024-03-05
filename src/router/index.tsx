@@ -17,6 +17,7 @@ import CommentManager from "../pages/Admin/Comment";
 import CategoriesManager from "../pages/Admin/Categories";
 import ProductsManager from "../pages/Admin/Products";
 import OrderManager from "../pages/Admin/Order";
+import NotificationsAdmin from "../pages/Admin/Notification";
 const Router = () => {
   return (
     <>
@@ -37,6 +38,7 @@ const Router = () => {
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
           <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/notification/:id" element={<NotificationsAdmin />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

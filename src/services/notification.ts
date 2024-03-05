@@ -11,6 +11,16 @@ export const getAllNotification = async () => {
     console.error(error);
   }
 };
+export const getOneNotification = async (id:string) => {
+  try {
+    const response: AxiosResponse = await instance.get(
+      `/api/notification/one/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // export const createNotification = async (data: INotification) => {
 //   try {
@@ -30,20 +40,16 @@ export const getAllNotification = async () => {
 //   }
 // };
 
-// export const updateNotification = async (data: INotification, id: string) => {
-//   try {
-//     const response: AxiosResponse<{ message: string; data: INotification[] }> = await instance.put(
-//       `/api/notification/users/${id}`, data
-//     );
-//     notification.success({ message: response.data.message });
-//     return response.data.data;
-//   } catch (error) {
-//     const customError = error as CustomError;
-//     const errorMessage = customError.response?.data?.message || "Update failed";
-//     notification.error({ message: errorMessage });
-//     throw error;
-//   }
-// };
+export const updateNotification = async (id: string) => {
+  try {
+    const response: AxiosResponse = await instance.put(
+      `/api/notification/update/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // export const deleteUsers = async (userIds: string[]) => {
 //   try {

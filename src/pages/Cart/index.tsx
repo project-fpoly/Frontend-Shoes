@@ -128,5 +128,3 @@ const Cart = (props: Props) => {
     </div>
   );
 };
-
-export default Cart;

@@ -14,6 +14,7 @@ import {
   addProduct,
   updatePrroduct,
 } from "../../services/products";
+import { getProductsWithFilter } from "../../services/productsQuery";
 import { isRejected } from "@reduxjs/toolkit/react";
 import { categoryFilterProducts } from "../../services/productsQuery";
 
@@ -24,6 +25,71 @@ const initialState: initialProduct = {
   category: "",
   totalProducts: 0,
 };
+
+export const getProductsWithFilters = createAsyncThunk(
+  "product/getProductsWithFilters",
+  async ({
+    page,
+    pageSize,
+    searchKeyword,
+    sort,
+    categoryId,
+    size,
+    minPrice,
+    maxPrice,
+    material,
+    startDate,
+    endDate,
+    color,
+    gender,
+  }: {
+    page: number;
+    pageSize: number;
+    searchKeyword: string;
+    sort?:
+      | "asc"
+      | "desc"
+      | "asc_views"
+      | "desc_views"
+      | "asc_sold"
+      | "desc_sold"
+      | "asc_sale"
+      | "desc_sale"
+      | "asc_rate"
+      | "desc_rate";
+    categoryId?: string;
+    size?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    material?: string;
+    startDate?: Date;
+    endDate?: Date;
+    color?: string;
+    gender?: string;
+  }) => {
+    try {
+      const response = await getProductsWithFilter(
+        page,
+        pageSize,
+        searchKeyword,
+        sort,
+        categoryId,
+        size,
+        minPrice,
+        maxPrice,
+        material,
+        startDate,
+        endDate,
+        color,
+        gender
+      );
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw new Error("Lỗi khi lấy dữ liệu");
+    }
+  }
+);
 
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",

@@ -12,7 +12,7 @@ const { Option } = Select;
 
 const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; mode: string }> = ({
     product_id, SKU, name, description, categoryId, price, sale, discount, quantity, sold_count, rating, sizes, color,
-    material, release_date, images, video, blog, warranty, tech_specs, stock_status, isPublished, publishedDate, hits, onSubmit, mode,
+    material, release_date, images, video, blog, warranty, tech_specs, stock_status, gender, isPublished, publishedDate, hits, onSubmit, mode,
 }) => {
     const [form] = Form.useForm();
     const handleFormSubmitCreate = (values: IProduct) => {
@@ -259,6 +259,17 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         <Radio.Group>
                             <Radio value={true}>Yes</Radio>
                             <Radio value={false}>No</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+
+                    <Form.Item
+                        label="gender"
+                        name="gender"
+                        rules={[{ required: true, message: "Please enter the product gender" }]}
+                    >
+                        <Radio.Group defaultValue={gender ? gender : 'nam'}>
+                            <Radio value={'nam'}>Nam</Radio>
+                            <Radio value={'nữ'}>Nữ</Radio>
                         </Radio.Group>
                     </Form.Item>
 

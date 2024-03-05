@@ -8,15 +8,16 @@ import {
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
 import { Button, Table, Tooltip, Image, Modal } from "antd";
-import { fetchAllProducts, removeProduct, createProduct, update } from "../../../features/product";
+import { removeProduct, createProduct, update } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
 import ProducModal from './ProducModal';
+import Filter from './ProductFilter';
 const ProductsManager: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [Search, setSearch] = useState("");
@@ -40,15 +41,7 @@ const ProductsManager: React.FC = () => {
         setModalVisible(false);
 
     };
-    useEffect(() => {
-        dispatch(
-            fetchAllProducts({
-                page: currentPage,
-                pageSize: 10,
-                searchKeyword: Search
-            })
-        );
-    }, [dispatch, currentPage, Search]);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
@@ -167,6 +160,7 @@ const ProductsManager: React.FC = () => {
         warranty: "Bảo hành của sản phẩm",
         tech_specs: "Đặc tả kỹ thuật của sản phẩm",
         stock_status: "Tình trạng hàng tồn kho của sản phẩm",
+        gender: "Nam",
         isPublished: true,
         publishedDate: "",
         hits: 112,
@@ -202,6 +196,7 @@ const ProductsManager: React.FC = () => {
         warranty: productsState?.warranty || "",
         tech_specs: productsState?.tech_specs || "",
         stock_status: productsState?.stock_status || "",
+        gender: productsState?.gender || "",
         isPublished: productsState?.isPublished || true,
         publishedDate: productsState?.publishedDate || "",
         hits: productsState?.hits || 123,
@@ -215,6 +210,7 @@ const ProductsManager: React.FC = () => {
     return (
         <div>
             <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
+            <Filter page={currentPage} searchKeyword={Search} />
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
                     <LoadingOutlined style={{ fontSize: 14 }} spin />
@@ -271,7 +267,7 @@ const ProductsManager: React.FC = () => {
                     >
                         <ProductForm mode={"update"} onSubmit={handleUpdateProduct} {...Value} />
                     </Modal>
-                    
+
                     <Modal
                         title={selectedProduct?.name}
                         visible={modalVisible}
