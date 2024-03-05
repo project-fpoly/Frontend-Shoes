@@ -36,6 +36,7 @@ export interface IProduct {
   hits?: number;
   updatedAt?: Date;
   createdAt?: Date;
+  quantityCart?: number;
 }
 export interface ICmt {
   _id: string;

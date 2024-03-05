@@ -1,3 +1,8 @@
+import {
+  priceFilterProducts,
+  searchByKeyword,
+  sortOrderProducts,
+} from "./../../services/productsQuery";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialProduct } from "../../common/redux/type";
 import { IProduct } from "../../common/products";
@@ -10,11 +15,12 @@ import {
   updatePrroduct,
 } from "../../services/products";
 import { isRejected } from "@reduxjs/toolkit/react";
+import { categoryFilterProducts } from "../../services/productsQuery";
 
 const initialState: initialProduct = {
   loading: "idle",
   products: [],
-  product: "",
+  product: {},
   category: "",
   totalProducts: 0,
 };
@@ -43,17 +49,26 @@ export const fetchProductById = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const respone = await getProductById(id);
-      thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
-      );
-      thunkApi.dispatch(fetchCategoryById(respone?.categoryId!));
-      return respone;
+      thunkApi.dispatch(fetchProductsByCategory(respone?.data?.categoryId!));
+      thunkApi.dispatch(fetchCategoryById(respone?.data?.categoryId!));
+
+      return respone.data;
     } catch (error) {
       return isRejected("Error fetching data");
     }
   }
 );
-
+export const fetchProductsByPriceLowOrHight = createAsyncThunk(
+  "product/fetchProductsByPriceLowOrHight",
+  async (sort: string) => {
+    try {
+      const respone = await sortOrderProducts(sort);
+      return respone.data;
+    } catch (error) {
+      throw new Error("Lỗi khi lấy dữ liệu");
+    }
+  }
+);
 export const removeProduct = createAsyncThunk(
   "product/deleteProduct",
   async (id: string, thunkApi) => {
@@ -82,7 +97,6 @@ export const createProduct = createAsyncThunk(
     }
   }
 );
-
 export const update = createAsyncThunk(
   "product/updateProduct",
   async (
@@ -105,7 +119,40 @@ export const fetchCategoryById = createAsyncThunk(
   async (id: string) => {
     try {
       const respone = await getCategoryById(id);
-      return respone;
+      return respone.data;
+    } catch (error) {
+      return isRejected("Error fetching data");
+    }
+  }
+);
+export const fetchProductsByCategory = createAsyncThunk(
+  "product/fetchProductsByCategory",
+  async (id: string) => {
+    try {
+      const respone = await categoryFilterProducts(id);
+      return respone.data;
+    } catch (error) {
+      return isRejected("Error fetching data");
+    }
+  }
+);
+export const searchProductsByKeyword = createAsyncThunk(
+  "product/searchProductsByKeyword",
+  async (keyword: string) => {
+    try {
+      const respone = await searchByKeyword(keyword);
+      return respone.data;
+    } catch (error) {
+      return isRejected("Error fetching data");
+    }
+  }
+);
+export const featchProductByPrice = createAsyncThunk(
+  "product/featchProductByPrice",
+  async ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) => {
+    try {
+      const respone = await priceFilterProducts(minPrice, maxPrice);
+      return respone.data;
     } catch (error) {
       return isRejected("Error fetching data");
     }
@@ -127,8 +174,10 @@ export const productSlice = createSlice({
     });
     builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload.data) ? action.payload.data : [];
-      state.totalProducts = action.payload.totalProducts ;
+      state.products = Array.isArray(action.payload.data)
+        ? action.payload.data
+        : [];
+      state.totalProducts = action.payload.totalProducts;
     });
     // get one Product
     builder.addCase(fetchProductById.pending, (state) => {
@@ -139,7 +188,7 @@ export const productSlice = createSlice({
     });
     builder.addCase(fetchProductById.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.product = action.payload;
       state.totalProducts = state.products.length;
     });
     // add product
@@ -187,9 +236,55 @@ export const productSlice = createSlice({
     });
     builder.addCase(fetchCategoryById.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload) ? action.payload : [];
-      state.totalProducts = state.products.length;
+      state.category = action.payload;
     });
+    // get products by categoryID
+    builder.addCase(fetchProductsByCategory.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchProductsByCategory.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+    });
+    // search product by keyword
+    builder.addCase(searchProductsByKeyword.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(searchProductsByKeyword.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(searchProductsByKeyword.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+    });
+    ///Filter products by price
+    builder.addCase(featchProductByPrice.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(featchProductByPrice.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(featchProductByPrice.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+    });
+    //Filter product by price order
+    builder.addCase(fetchProductsByPriceLowOrHight.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchProductsByPriceLowOrHight.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      fetchProductsByPriceLowOrHight.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload;
+      }
+    );
   },
 });
 

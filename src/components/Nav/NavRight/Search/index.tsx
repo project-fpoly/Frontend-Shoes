@@ -1,16 +1,17 @@
 import { CiSearch } from "react-icons/ci";
 import style from "./index.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Fragment, useEffect, useState } from "react";
-import { fetchAllProducts } from "../../../../features/product";
+import { Fragment, useState } from "react";
+import {searchProductsByKeyword } from "../../../../features/product";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../redux/store";
 import { IStateProduct } from "../../../../common/redux/type";
 import { debounce } from "lodash";
 import { IProduct } from "../../../../common/products";
 import { Link } from "react-router-dom";
-import { Image } from "antd";
 import { MdOutlineClear } from "react-icons/md";
+import LoadingProduct from "../../../Loading/LoadingProduct";
+import LoadingDefault from "../../../Loading/LoadingDefault";
 
 type Inputs = {
   resultSearch: string;
@@ -21,16 +22,10 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   const dispact = useDispatch<AppDispatch>();
   const [dataSearch, setData] = useState<IProduct[]>([]);
   const shoes = useSelector((state: IStateProduct) => state.product.products);
-  console.log(shoes);
-
-  useEffect(() => {
-    dispact(fetchAllProducts());
-  }, []);
-
+  const Loading = useSelector((state: IStateProduct) => state.product.loading);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = ({ resultSearch }) => {
-    const dataSearchFilm = shoes.filter((s) => s?.name?.includes(resultSearch));
-    setData(dataSearchFilm);
+   searchProductsByKeyword(resultSearch)
   };
 
   const searchInput = (e: any) => {
@@ -38,8 +33,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   };
   const debonceSearch = debounce((data) => {
     if (data !== "") {
-      const dataSearchFilm = shoes.filter((s) => s?.name?.includes(data));
-      setData(dataSearchFilm);
+    dispact(searchProductsByKeyword(data))
     }
   }, 600);
 
@@ -73,9 +67,10 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
         </form>
       </div>
       <div className={style.resultSearch}>
-        {dataSearch && (
+        {Loading=='pending' ? <LoadingDefault></LoadingDefault> :''} 
+        {(shoes && Loading=='fulfilled')  && (
           <div className="flex flex-col gap-2 mt-5">
-            {dataSearch.map((data, index) => {
+            {shoes.map((data, index) => {
               return (
                 <Fragment key={index + 1}>
                   <Link

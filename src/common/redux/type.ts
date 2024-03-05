@@ -4,31 +4,30 @@ import { INotification } from "../notification";
 import { ICmt, IProduct } from "../products";
 import { IUsers } from "../users";
 
-
 export interface initialProduct {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   products: IProduct[] | [];
-  product: IProduct | "";
-  category: ICategory | "";
-  totalProducts: number
+  product: IProduct | {};
+  category: ICategory | {};
+  totalProducts: number;
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   users: IUser[] | [];
   user: IUser | "";
-  totalDocs: number
+  totalDocs: number;
 }
 export interface initialCmt {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   comments: ICmt[] | [];
   comment: ICmt | "";
-  totalDocs: number
+  totalDocs: number;
 }
 export interface initialCategory {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   categories: ICategory[] | [];
   category: ICategory | "";
-  totalDocs: number
+  totalDocs: number;
 }
 export interface initialNotification {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -42,7 +41,7 @@ export interface IStateProduct {
     product: IProduct;
     loading: string;
     category: ICategory;
-    totalProducts: number
+    totalProducts: number;
   };
 }
 export interface IStateUser {
@@ -50,7 +49,7 @@ export interface IStateUser {
     users: IUsers[];
     user: IUsers;
     loading: string;
-    totalDocs: number
+    totalDocs: number;
   };
 }
 export interface IStateCmt {
@@ -58,7 +57,7 @@ export interface IStateCmt {
     comments: ICmt[];
     comment: ICmt;
     loading: string;
-    totalDocs: number
+    totalDocs: number;
   };
 }
 export interface IStateNotification {
@@ -66,7 +65,7 @@ export interface IStateNotification {
     notifications: INotification[];
     notification: INotification;
     loading: string;
-    totalDocs: number
+    totalDocs: number;
   };
 }
 export interface IStateCategory {

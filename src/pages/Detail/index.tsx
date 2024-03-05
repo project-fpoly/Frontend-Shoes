@@ -13,19 +13,14 @@ const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>();
   const shoe = useSelector((state: IStateProduct) => state.product.product);
   const shoes = useSelector((state: IStateProduct) => state.product.products);
-  console.log(shoes);
-
   const Loading = useSelector((state: IStateProduct) => state.product.loading);
-
   const category = useSelector(
     (state: IStateProduct) => state.product.category
   );
-
   const { id } = useParams();
   useEffect(() => {
     dispatch(fetchProductById(id!));
   }, [dispatch, id]);
-
   if (Loading === "pending") {
     return (
       <div className="flex justify-center items-center mt-36">
