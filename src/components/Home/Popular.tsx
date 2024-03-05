@@ -1,31 +1,37 @@
-import { Card, Col, Space, Typography } from "antd";
+import { Card, Col, Space, Typography, notification } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { SwiperNavButtons } from "./SwiperNavButton";
 import { A11y, Navigation, Pagination } from "swiper/modules";
 import Meta from "antd/es/card/Meta";
 import "swiper/css";
 import "swiper/css/pagination";
-import { AppDispatch } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { IStateProduct } from "../../common/redux/type";
-import { useEffect } from "react";
-import { fetchAllProducts } from "../../features/product";
+import { useEffect, useState } from "react";
 import "./index.css";
-
+import { viewsFilterProducts } from "../../services/productsQuery";
+import { IProduct } from "../../common/products";
 
 const Popular = () => {
-
-  // dispact một action
-  const dispact = useDispatch<AppDispatch>();
-
-  const products = useSelector(
-    (state: IStateProduct) => state.product.products
-  );
-//   const loading = useSelector((state: IStateProduct) => state.product.loading);
+  // const dispatch = useDispatch<AppDispatch>();
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispact(fetchAllProducts());
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await viewsFilterProducts(10, "desc_views");
+        setProducts(data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        notification.error({ message: "Error", description: "Failed to fetch products." });
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
+
   return (
     <>
       <Space direction="vertical" style={{ width: "100%" }}>
@@ -41,23 +47,31 @@ const Popular = () => {
           }}
         >
           <div style={{ float: "right" }} className="flex items-center">
-            <a href="" className="font-bold text-slate-600 mr-2">
+            <p className="font-bold text-slate-600 mr-2">
               Shop
-            </a>
+            </p>
             <SwiperNavButtons />
           </div>
 
-          {products.map((item, index) => {
-            return (
-              <SwiperSlide className="" style={{ width: "400px" }}>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            products.map((item, index) => (
+              <SwiperSlide key={index} className="" style={{ width: "400px" }}>
                 <Col span={8}>
-                  <div key={index + 1} className="mb-5">
+                  <div className="mb-5">
                     <Card
                       hoverable
                       style={{ width: 400 }}
-                      cover={<img alt="example" src={item.image} />}
+                      cover={
+                        <img
+                          alt="example"
+                          src={item.images ? item.images[0] : ""}
+                          style={{ maxWidth: "100%", height: "300px" }}
+                        />
+                      }
                     >
-                      <Meta title={item.name} description="Men's Shoes" />
+                      <Meta title={item.name} description="Men's Shoe" />
                       <Typography
                         style={{
                           margin: "10px 0 0 0",
@@ -71,8 +85,8 @@ const Popular = () => {
                   </div>
                 </Col>
               </SwiperSlide>
-            );
-          })}
+            ))
+          )}
         </Swiper>
       </Space>
     </>

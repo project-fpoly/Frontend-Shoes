@@ -10,7 +10,7 @@ const contentStyle: React.CSSProperties = {
 
 const Banner = () => {
     return (
-        <Carousel autoplay autoplaySpeed={2500}>
+        <Carousel autoplay autoplaySpeed={3000} style={{ width: '100%' }}>
             <div>
                 <img className="img_banner" src="../../../banner.jpg" alt="Banner 1" style={{ ...contentStyle }} />
             </div>
