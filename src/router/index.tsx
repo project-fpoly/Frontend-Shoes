@@ -18,6 +18,7 @@ import CategoriesManager from "../pages/Admin/Categories";
 import ProductsManager from "../pages/Admin/Products";
 import OrderManager from "../pages/Admin/Order";
 import NotificationsAdmin from "../pages/Admin/Notification";
+import Help from "../pages/Help/Help";
 const Router = () => {
   return (
     <>
@@ -29,6 +30,7 @@ const Router = () => {
           <Route path="/sizeguide" element={<SizeGuide />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
+          <Route path="/help" element={<Help />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
