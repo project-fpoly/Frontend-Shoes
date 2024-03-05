@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { viewsFilterProducts } from "../../services/productsQuery";
 import { IProduct } from "../../common/products";
+import { Link } from "react-router-dom";
 
 const Popular = () => {
   // const dispatch = useDispatch<AppDispatch>();
@@ -60,28 +61,30 @@ const Popular = () => {
               <SwiperSlide key={index} className="" style={{ width: "400px" }}>
                 <Col span={8}>
                   <div className="mb-5">
-                    <Card
-                      hoverable
-                      style={{ width: 400 }}
-                      cover={
-                        <img
-                          alt="example"
-                          src={item.images ? item.images[0] : ""}
-                          style={{ maxWidth: "100%", height: "300px" }}
-                        />
-                      }
-                    >
-                      <Meta title={item.name} description="Men's Shoe" />
-                      <Typography
-                        style={{
-                          margin: "10px 0 0 0",
-                          fontSize: "16px",
-                          fontWeight: "400",
-                        }}
+                    <Link to={`/detail/${item._id}`}>
+                      <Card
+                        hoverable
+                        style={{ width: 400 }}
+                        cover={
+                          <img
+                            alt="example"
+                            src={item.images ? item.images[0] : ""}
+                            style={{ maxWidth: "100%", height: "350px" }}
+                          />
+                        }
                       >
-                        {item.price}
-                      </Typography>
-                    </Card>
+                        <Meta title={item.name} description="Men's Shoe" />
+                        <Typography
+                          style={{
+                            margin: "10px 0 0 0",
+                            fontSize: "16px",
+                            fontWeight: "400",
+                          }}
+                        >
+                          {item.price}
+                        </Typography>
+                      </Card>
+                    </Link>
                   </div>
                 </Col>
               </SwiperSlide>
