@@ -18,7 +18,8 @@ export const getProductsWithFilter = async (
     material?: string,
     startDate?: Date,
     endDate?: Date,
-    color?: string
+    color?: string,
+    gender?: string
 ) => {
     try {
         let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
@@ -54,6 +55,10 @@ export const getProductsWithFilter = async (
         if (color) {
             url += `&colorFilter=${color}`;
         }
+        if (gender) {
+            url += `&genderFilter=${gender}`;
+        }
+
 
         const response: AxiosResponse = await instance.get(url);
         notification.success({
@@ -70,6 +75,29 @@ export const getProductsWithFilter = async (
         throw new Error("Error while fetching products");
     }
 };
+// Lọc theo Giới tính
+
+export const genderFilterProducts = async (gender: string) => {
+    try {
+        const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+            `api/product?genderFilter=${gender}`
+        );
+        const data = response.data || [];
+        notification.success({
+            message: "Success",
+            description: "Products have been filtered by gender successfully.",
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        const customError = error as CustomError;
+        const errorMessage =
+            customError.response?.data?.message || "Error while fetching Products have been filtered by gender";
+        notification.error({ message: errorMessage });
+        throw new Error("Error while fetching Products have been filtered by gender");
+    }
+};
+
 // fiter Product
 export const filterProducts = async (
     pageSize: number,

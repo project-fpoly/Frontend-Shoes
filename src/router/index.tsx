@@ -20,9 +20,14 @@ import SizeGuide from "../pages/SizeGuide";
 import ResetPassword from "../pages/client/reset-password.tsx";
 import ForgotPassword from "../pages/client/forgotpassword/ForgotPassword.tsx";
 import VerifyEmail from "../pages/client/verify-email";
+import {PrivateRoute} from "./privateRoutes.tsx";
+import {useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getUserByID} from "../features/auth";
 
 
 const Router = () => {
+
   return (
     <>
       <Routes>
@@ -35,7 +40,11 @@ const Router = () => {
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
         </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={
+          <PrivateRoute>
+            <AdminLayout />
+          </PrivateRoute>
+        }>
           <Route index element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManager />} />
           <Route path="/admin/product" element={<ProductsManager />} />

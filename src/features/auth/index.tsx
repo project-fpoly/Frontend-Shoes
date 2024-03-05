@@ -1,4 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import {AppDispatch} from "../../redux/store.ts";
+import axios from "axios";
 
 interface AuthState {
     user: any | null;
@@ -19,5 +21,21 @@ const authSlice = createSlice({
 });
 
 export const { setUser } = authSlice.actions;
+
+export const getUserByID = (id: string) => async (dispatch: AppDispatch) => {
+    try {
+        const config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json; charset=UTF-8"
+            }
+        }
+        const response = await  axios.get(`http://localhost:9000/api/auth/user/${id}`, config);
+        dispatch(setUser(response.data.user))
+    } catch (err: any) {
+        throw new Error(err);
+    }
+}
 
 export default authSlice.reducer;

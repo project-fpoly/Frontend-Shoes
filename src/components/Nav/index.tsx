@@ -119,8 +119,8 @@
 //
 // export default NavBar;
 
-import
-{ SiJordan } from "react-icons/si";
+import { SiJordan } from "react-icons/si";
+
 import {Popover, Avatar, ConfigProvider, Button} from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
@@ -130,7 +130,7 @@ import clsx from "clsx";
 import MenuNav from "./Menu";
 import NavRight from "./NavRight";
 import {useDispatch, useSelector} from "react-redux";
-import {setUser} from "../../features/auth";
+import {getUserByID, setUser} from "../../features/auth";
 
 const NavBar = () => {
   const content = (
@@ -138,15 +138,14 @@ const NavBar = () => {
         <Link to="/signin">
           <h1 className="font-bold">Login</h1>
         </Link>
-        <p>Logout</p>
+        {/*<p>Logout</p>*/}
       </div>
   );
 
   const [showNav, setShowNav] = useState<boolean>(false);
   const [position, setPosition] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
-  console.log('user', user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -213,15 +212,20 @@ const NavBar = () => {
                   <Popover
                       className="flex gap-2 hover:opacity-70"
                       content={
-                        <div>
-                          <p onClick={handleLogout}>Logout</p>
-                        </div>
+                        <>
+                          {user?.role === 'admin' && <Link to="/admin">
+                            <h1 className="font-bold">Admin</h1>
+                          </Link>}
+                          <Link to="">
+                            <h1 className="font-bold" onClick={handleLogout}>Logout</h1>
+                          </Link>
+                        </>
                       }
                       title="Account"
                   >
                     Hi, {user.userName}
-                    <Avatar size={30} icon={<UserOutlined/>}/>
-                    <Button onClick={handleLogout}>Logout</Button>
+                    <Avatar size={30} icon={<UserOutlined/>} src={user?.avt?.url}/>
+                    {/*<Button onClick={handleLogout}>Logout</Button>*/}
                   </Popover>
               ) : (
                   <Popover

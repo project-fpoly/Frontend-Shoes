@@ -24,7 +24,7 @@ export const getProductsWithFilters = createAsyncThunk(
   "product/getProductsWithFilters",
   async ({
     page, pageSize, searchKeyword, sort, categoryId, size,
-    minPrice, maxPrice, material, startDate, endDate, color,
+    minPrice, maxPrice, material, startDate, endDate, color, gender
   }: {
     page: number,
     pageSize: number;
@@ -38,9 +38,10 @@ export const getProductsWithFilters = createAsyncThunk(
     startDate?: Date;
     endDate?: Date;
     color?: string;
+    gender?: string;
   }) => {
     try {
-      const response = await getProductsWithFilter(page, pageSize, searchKeyword, sort, categoryId, size, minPrice, maxPrice, material, startDate, endDate, color);
+      const response = await getProductsWithFilter(page, pageSize, searchKeyword, sort, categoryId, size, minPrice, maxPrice, material, startDate, endDate, color, gender);
       console.log(response);
       return response
     } catch (error) {
