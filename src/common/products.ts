@@ -10,11 +10,11 @@ export interface IProduct {
   name?: string;
   description: string;
   categoryId:
-    | string
-    | {
-        _id: string;
-        name?: string;
-      };
+  | string
+  | {
+    _id: string;
+    name?: string;
+  };
   price: number;
   sale: number;
   discount?: number;
@@ -31,6 +31,7 @@ export interface IProduct {
   warranty?: string;
   tech_specs?: string;
   stock_status?: string;
+  gender?: string;
   isPublished?: boolean;
   publishedDate?: string;
   hits?: number;
