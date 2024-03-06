@@ -7,7 +7,7 @@ export const PrivateRoute = ({children}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user && user.role !== 'admin') {
+        if ((user && user.role !== 'admin') || !user) {
             navigate('/');
         }
     }, [user]);

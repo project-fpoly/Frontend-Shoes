@@ -22,7 +22,7 @@ const authSlice = createSlice({
 
 export const { setUser } = authSlice.actions;
 
-export const getUserByID = (id: string) => async (dispatch: AppDispatch) => {
+export const getUserByID = () => async (dispatch: AppDispatch) => {
     try {
         const config = {
             headers: {
@@ -31,7 +31,7 @@ export const getUserByID = (id: string) => async (dispatch: AppDispatch) => {
                 "Content-Type": "application/json; charset=UTF-8"
             }
         }
-        const response = await  axios.get(`http://localhost:9000/api/auth/user/${id}`, config);
+        const response = await  axios.get(`http://localhost:9000/api/auth/user`, config);
         dispatch(setUser(response.data.user))
     } catch (err: any) {
         throw new Error(err);
