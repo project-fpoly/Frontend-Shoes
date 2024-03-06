@@ -23,7 +23,14 @@ export const fetchOrders = createAsyncThunk(
     try {
       const response = await axios.get(
         "http://localhost:9000/api/order/admin/bills",
-        { params }
+        {
+          params,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
       dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
@@ -44,7 +51,14 @@ export const updateOrder = createAsyncThunk(
       if (typeof id === "string") {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
-          updateOrderData
+          updateOrderData,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+          }
         );
         await dispatch(fetchOrders({ page: 1, limit: 10 }));
         notification.success({ message: response.data.message });
@@ -64,7 +78,14 @@ export const fetchOneOrder = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/order/admin/bills/${id}`
+        `http://localhost:9000/api/order/admin/bills/${id}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
       return response.data;
     } catch (error: any) {
@@ -77,7 +98,14 @@ export const deleteOrder = createAsyncThunk(
   async (id: string, { dispatch }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:9000/api/order/admin/bills/${id}`
+        `http://localhost:9000/api/order/admin/bills/${id}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
 
       await dispatch(fetchOrders({ page: 1, limit: 10 }));
@@ -110,6 +138,13 @@ export const updateManyOrders = createAsyncThunk(
           ids,
           isPaid,
           isDelivered,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
         }
       );
       console.log(response);

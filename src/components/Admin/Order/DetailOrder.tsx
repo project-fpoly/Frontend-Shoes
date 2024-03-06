@@ -22,11 +22,10 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
   const productImage = order.cartItems.map((item) =>
     getProductImage(item.product)
   );
-  console.log(productImage.join(","));
   // Tạo một mảng chứa tên sản phẩm
-  const productNames = order.cartItems.map((item) =>
-    getProductName(item.product)
-  );
+  const productNames = order.cartItems.map((item) => {
+    return getProductName(item.product);
+  });
   const quantity = order.cartItems.map((item) => item.quantity);
   const { fullname, address, email, phone } = order.shippingAddress;
 
