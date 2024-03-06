@@ -33,6 +33,23 @@ export const getUsers = async (page = 1, pageSize = 10, search = "") => {
     console.error(error);
   }
 };
+export const getOneUsers = async () => {
+  try {
+    const response: AxiosResponse = await instance.get(
+      `/api/auth/user`,{
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return 
+  }
+};
 
 export const createUsers = async (newUser: IUsers) => {
   try {
