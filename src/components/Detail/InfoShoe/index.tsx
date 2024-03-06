@@ -9,27 +9,36 @@ import { Image } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
+import useLocalStorage from "../../../hooks";
+
 interface Props {
   shoe: IProduct;
   category: ICategory;
 }
-const sizesS = [
-  { size: "EU 40" },
-  { size: "EU 41" },
-  { size: "EU 42" },
-  { size: "EU 43" },
-  { size: "EU 44" },
-  { size: "EU 45" },
-  { size: "EU 46" },
-  { size: "EU 47" },
-  { size: "EU 48" },
-  { size: "EU 49" },
-  { size: "EU 50" },
-  { size: "EU 51" },
-  { size: "EU 52" },
-];
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props;
+  const [size, setSize] = useState("");
+
+  const [cart, setCart] = useLocalStorage<IProduct[]>("cart", []);
+  const { sizes, ...shoeCart } = shoe;
+
+  const addToCart = () => {
+    const updatedCart = cart?.map((item: IProduct) => {
+      if (item._id == shoe._id) {
+        // If product with the same ID already exists, increase its quantity
+        return { ...item, quantity: item?.quantity! + 1 };
+      }
+      return item;
+    });
+
+    // If the product was not found in the cart, add it with quantity 1
+    if (!updatedCart?.find((item: IProduct) => item._id === shoe._id)) {
+      updatedCart?.push({ ...shoe, quantity: 1 });
+    }
+    setCart(updatedCart);
+  };
+  const storedData = localStorage.getItem("cart");
+  console.log(JSON.parse(storedData));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -47,7 +56,9 @@ const InfoShoe = (props: Props) => {
           },
         }}
       >
-        <div className={clsx("flex flex-col gap-6", style.containerInfo)}>
+        <div
+          className={clsx("flex flex-col gap-6 w-[500px]", style.containerInfo)}
+        >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{category.name}</p>
@@ -60,21 +71,21 @@ const InfoShoe = (props: Props) => {
             </Link>
           </span>
           <div className={style.sizes}>
-            {sizesS.map((item) => {
+            {shoe?.sizes?.map((item) => {
               return (
                 <Button
-                  onClick={() => console.log(item.size)}
-                  key={item.size}
+                  onClick={() => setSize(item.name)}
+                  key={item.name}
                   className={clsx(style.button, "hover:border-black")}
                 >
-                  {item.size}
+                  {item.name}
                 </Button>
               );
             })}
           </div>
           <div className="flex flex-col gap-5 justify-center items-center">
             <button
-              onClick={() => console.log("hello")}
+              onClick={() => addToCart()}
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
               Add to Bag
@@ -101,7 +112,7 @@ const InfoShoe = (props: Props) => {
           >
             <div className="flex flex-col gap-5">
               <div className="flex gap-3">
-                <Image width={70} src={shoe.image} />
+                <Image width={70} src={shoe?.image!} />
                 <span>
                   <p>{shoe.name}</p>
                   <p>{shoe.price}</p>
@@ -111,7 +122,7 @@ const InfoShoe = (props: Props) => {
               <p>{shoe.description}</p>
               <p>
                 <p className="font-bold text-xl mb-3">Benefits</p>
-                {shoe.benefits}
+                {shoe.stock_status}
               </p>
             </div>
           </ModalCustom>

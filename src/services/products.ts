@@ -13,10 +13,6 @@ export const getProducts = async (
     const response: AxiosResponse = await instance.get(
       `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`
     );
-    notification.success({
-      message: "Success",
-      description: "Product while fetching products successfully.",
-    });
     return response?.data || response;
 
   } catch (error) {

@@ -1,7 +1,10 @@
 import React from "react";
-import type { MenuProps } from "antd";
+import { ConfigProvider, MenuProps } from "antd";
 import { Menu } from "antd";
 import style from "./index.module.scss";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
+import { featchProductByPrice } from "../../../features/product";
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
@@ -21,23 +24,17 @@ function getItem(
 }
 
 const items: MenuProps["items"] = [
-  getItem("Gender", "sub1", "", [getItem("Option 5", "5")]),
+  getItem("Gender", "gender", "", [
+    getItem("Men", "Men"),
+    getItem("Women", "Women"),
+  ]),
 
   getItem("Shop by price", "sub2", "", [
-    getItem("Option 25", "25"),
-    getItem("Option 6", "6"),
-    getItem("Submenu", "sub3", null, [
-      getItem("Option 7", "7"),
-      getItem("Option 8", "8"),
-    ]),
+    getItem("Under 5,000,000", "Under"),
+    getItem("Over 5,000,000đ", "Over"),
   ]),
 
-  getItem("Sale & offers", "offers", "", [
-    getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
-    getItem("Option 11", "11"),
-    getItem("Option 12", "12"),
-  ]),
+  getItem("Sale & offers", "offers", "", [getItem("Sale", "9")]),
 
   getItem("Size", "sub4", "", [getItem("Option h", "sad")]),
   getItem("Colour", "sub58", "", [getItem("Option ss7", "a7")]),
@@ -59,44 +56,67 @@ interface Props {
   hideFilter: boolean;
 }
 const Sidebar = (props: Props) => {
+  const dispact = useDispatch<AppDispatch>();
+  // const shoes = useSelector((state: IStateProduct) => state.product.products);
   const { hideFilter } = props;
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
+    switch (e.key) {
+      case "Under":
+        dispact(featchProductByPrice({ minPrice: 0, maxPrice: 500000 }));
+        break;
+      case "Over":
+        dispact(
+          featchProductByPrice({ minPrice: 500000, maxPrice: 999999999999999 })
+        );
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <>
-      <div className={hideFilter ? "" : "hidden"}>
-        <h1>Name </h1>
-        <Menu
-          className={style.sideBar}
-          onClick={onClick}
-          style={{ width: 256 }}
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={[
-            "sub1",
-            "sub2",
-            "sub3",
-            "sub4",
-            "sub5",
-            "sub6",
-            "sub7",
-            "sub8",
-            "sub9",
-            "sub10",
-            "sub11",
-            "sub12",
-            "sub13",
-            "sub14",
-            "sub15",
-            "sub16",
-            "sub17",
-          ]}
-          mode="inline"
-          items={items}
-        />
-      </div>
-    </>
+    <ConfigProvider
+      theme={{
+        components: {
+          Menu: {
+            dangerItemActiveBg: "#fff2f0",
+          },
+        },
+      }}
+    >
+      <>
+        <div className={hideFilter ? "" : "hidden"}>
+          <h1>Name </h1>
+          <Menu
+            className={style.sideBar}
+            onClick={onClick}
+            style={{ width: 256 }}
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={[
+              "sub1",
+              "sub2",
+              "sub3",
+              "sub4",
+              "sub5",
+              "sub6",
+              "sub7",
+              "sub8",
+              "sub9",
+              "sub10",
+              "sub11",
+              "sub12",
+              "sub13",
+              "sub14",
+              "sub15",
+              "sub16",
+              "sub17",
+            ]}
+            mode="inline"
+            items={items}
+          />
+        </div>
+      </>
+    </ConfigProvider>
   );
 };
 
