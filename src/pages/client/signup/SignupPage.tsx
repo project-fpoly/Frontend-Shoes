@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { SiNike } from 'react-icons/si';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -14,7 +14,7 @@ const SignupPage = () => {
           const data = {...values};
           const response = await axios.post('http://localhost:9000/api/auth/signup', data);
           if (response && response.status === 200) {
-              alert('Signup successfully');
+              message.success('Signup successfully');
               localStorage.setItem('accessToken', response.data.accessToken);
 
 

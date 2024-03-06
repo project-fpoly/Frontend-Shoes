@@ -8,12 +8,11 @@ import {getUserByID} from "./features/auth";
 
 function App() {
     const user = useSelector(state => state.auth.user);
-    const userID = localStorage.getItem('userID');
     const dispatch = useDispatch();
 
     useEffect(() => {
-        !user && dispatch(getUserByID(userID));
-    }, [userID]);
+        !user && dispatch(getUserByID());
+    }, []);
 
     return (
         <>

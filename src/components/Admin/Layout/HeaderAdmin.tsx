@@ -10,7 +10,7 @@ import {
   Row,
   Col,
   Popover,
-  List,
+  List, message,
 } from "antd";
 import {
   AlertOutlined,
@@ -34,12 +34,15 @@ import {
 } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { INotification } from "../../../common/notification";
+import {getUserByID, setUser} from "../../../features/auth";
+import user from "../../../features/user";
 
 const { Search } = Input;
 
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate();
 
+  const user = useSelector(state => state.auth.user);
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { notifications: notification } = useSelector(
@@ -48,6 +51,7 @@ const AdminHeader: React.FC = () => {
   useEffect(() => {
     dispatch(fetchAllNotification());
   }, [dispatch]);
+
   const handleItemClick = async  (item:INotification) => {
     if(!item.isRead){
       await  dispatch(updateNotificationById(item._id));
@@ -55,11 +59,19 @@ const AdminHeader: React.FC = () => {
     }
       navigate(`/admin/notification/${item._id}`);
     };
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(setUser(null));
+    message.success('Logout successfully');
+    navigate('/');
+
+  };
+
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">Profile</Menu.Item>
       <Menu.Item key="settings">Settings</Menu.Item>
-      <Menu.Item key="logout">Logout</Menu.Item>
+      <Menu.Item key="logout" onClick={handleLogout}>Logout</Menu.Item>
     </Menu>
   );
 
@@ -135,6 +147,9 @@ const AdminHeader: React.FC = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [visible]);
+
+
+
   return (
     <Row
       className="items-center justify-between p-4 bg-white border-b"
@@ -166,8 +181,8 @@ const AdminHeader: React.FC = () => {
           <Col span={12} className="text-center">
             <Dropdown overlay={userMenu} placement="bottomRight">
               <Space align="center" style={{ cursor: "pointer" }}>
-                <Avatar size="small" icon={<UserOutlined />} />
-                <span className="ml-2">Username</span>
+                <Avatar size="small" icon={<UserOutlined />} src={user?.avt?.url} />
+                <span className="ml-2">Hi, {user.userName}</span>
               </Space>
             </Dropdown>
           </Col>

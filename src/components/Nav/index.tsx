@@ -121,7 +121,7 @@
 
 import { SiJordan } from "react-icons/si";
 
-import {Popover, Avatar, ConfigProvider, Button} from "antd";
+import {Popover, Avatar, ConfigProvider, message, Button} from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { SiNike } from "react-icons/si";
 import { Link } from "react-router-dom";
@@ -174,6 +174,8 @@ const NavBar = () => {
   const handleLogout = () => {
     localStorage.clear();
     dispatch(setUser(null));
+    message.success('Logout successfully');
+
   };
 
   return (

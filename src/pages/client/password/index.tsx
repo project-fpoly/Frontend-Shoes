@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import { SiNike } from "react-icons/si";
@@ -38,10 +38,12 @@ const Password = () => {
                         "Content-Type": "application/json; charset=UTF-8"
                     }
                 }
-                axios.get(`http://localhost:9000/api/auth/user/${userID}`, config)
+                axios.get(`http://localhost:9000/api/auth/user`, config)
                     .then(res => {
                         dispatch(setUser(res.data.user));
-                        alert('Login successfully');
+                        // alert('Login successfully');
+                        message.success('Login successfully');
+
                         //redirect to signup page
                         navigate('/');
                     })
