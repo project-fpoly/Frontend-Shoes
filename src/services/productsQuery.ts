@@ -68,11 +68,6 @@ export const getProductsWithFilter = async (
     }
 
     const response: AxiosResponse = await instance.get(url);
-    notification.success({
-      message: "Success",
-      description:
-        response?.data?.message || "Products have been filtered successfully.",
-    });
     return response?.data || response;
   } catch (error) {
     console.log(error);

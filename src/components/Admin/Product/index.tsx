@@ -267,7 +267,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         name="gender"
                         rules={[{ required: true, message: "Please enter the product gender" }]}
                     >
-                        <Radio.Group defaultValue={gender ? gender : 'nam'}>
+                        <Radio.Group defaultValue={gender}>
                             <Radio value={'nam'}>Nam</Radio>
                             <Radio value={'nữ'}>Nữ</Radio>
                         </Radio.Group>
