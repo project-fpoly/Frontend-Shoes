@@ -73,12 +73,23 @@ const CommentManager = () => {
       title: "parentId",
       align: "center",
       dataIndex: "parentId",
-      render: (parentId) => (
-        <Tag color={parentId ? "blue" : "green"}>
-          {parentId ? "Reply Comment" : "Comment"}
-        </Tag>
-      ),
+      render: (parentId) => {
+        const correspondingComment = comment.find(
+          (cmt) => cmt._id === parentId?._id
+        );
+
+        return (
+          <>
+            <Tag color={parentId ? "blue" : "green"}>
+              {parentId
+                ? `Reply Comment: ${correspondingComment?.content || "N/A"}`
+                : "Comment"}
+            </Tag>
+          </>
+        );
+      },
     },
+
     {
       title: "updatedAt",
       dataIndex: "updatedAt",
