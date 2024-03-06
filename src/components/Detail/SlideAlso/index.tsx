@@ -23,7 +23,7 @@ const SlideAlso = ({ shoes }: Props) => {
         {shoes.map((shoe, index) => {
           return (
             <SwiperSlide className="mb-10 flex flex-col gap-5" key={index + 1}>
-              <Link to={`/detail/${shoe.id}`}>
+              <Link to={`/detail/${shoe._id}`}>
                 <img
                   className="rounded-lg"
                   width={459}

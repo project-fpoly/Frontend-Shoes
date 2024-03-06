@@ -16,7 +16,7 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/greaup">
-          <h1 className="font-bold">DetailCart</h1>
+          <h1 className="font-bold">Products</h1>
         </Link>
       ),
       key: "SubMenuCart",

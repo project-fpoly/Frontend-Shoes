@@ -2,29 +2,43 @@ import { useEffect, useState } from "react";
 import ListProduct from "../../components/GreaUp/Products";
 import Sidebar from "../../components/GreaUp/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllProducts } from "../../features/product";
+import {
+  fetchAllProducts,
+  fetchProductsByPriceLowOrHight,
+} from "../../features/product";
 import { AppDispatch } from "../../redux/store";
 import { IStateProduct } from "../../common/redux/type";
-
+import { Select } from "antd";
 import { GrTransaction } from "react-icons/gr";
-import { Dropdown, Space } from "antd";
 import clsx from "clsx";
 import LoadingSkelethon from "../../components/Loading/LoadingSkelethonProduct";
 const GreaUp = () => {
   const dispact = useDispatch<AppDispatch>();
-
   const shoes = useSelector((state: IStateProduct) => state.product.products);
   const loading = useSelector((state: IStateProduct) => state.product.loading);
-
   useEffect(() => {
-    dispact(fetchAllProducts());
+    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
     document.title = "Greaup";
   }, []);
 
+  const handleChange = (value: string) => {
+    switch (value) {
+      case "Newest":
+        break;
+      case "High-Low":
+        dispact(fetchProductsByPriceLowOrHight("desc"));
+        break;
+      case "Low-High":
+        dispact(fetchProductsByPriceLowOrHight("asc"));
+        break;
+      default:
+        break;
+    }
+  };
   const [hideFilter, setHideFilter] = useState<boolean>(false);
   return (
     <>
-      <span className={clsx("flex gap-5 mt-5  justify-end mr-5 mb-5 pt-12")}>
+      <span className={clsx("flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14")}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
@@ -34,11 +48,27 @@ const GreaUp = () => {
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
-        <Dropdown className="cursor-pointer" trigger={["click"]}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>Sort by</Space>
-          </a>
-        </Dropdown>
+
+        <button>Sort by :</button>
+        <Select
+          defaultValue="Options"
+          style={{ width: 150 }}
+          onChange={handleChange}
+          options={[
+            {
+              value: "Newest",
+              label: "Newest",
+            },
+            {
+              value: "High-Low",
+              label: "Price: High-Low",
+            },
+            {
+              value: "Low-High",
+              label: "Price: Low-High",
+            },
+          ]}
+        />
       </span>
       <div className="flex  mx-10 justify-center items-center">
         <div className="w-[auto] ">
