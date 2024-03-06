@@ -1,15 +1,15 @@
-import { Button, ConfigProvider } from "antd";
 import { ICategory } from "../../../common/category";
 import { IProduct } from "../../../common/products";
 import style from "./index.module.scss";
 import clsx from "clsx";
 import ModalCustom from "../../Modal";
 import { useState } from "react";
-import { Image } from "antd";
+import { Image, notification, Button, ConfigProvider } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
 import useLocalStorage from "../../../hooks";
+type NotificationType = "success" | "info" | "warning" | "error";
 
 interface Props {
   shoe: IProduct;
@@ -18,28 +18,49 @@ interface Props {
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props;
   const [size, setSize] = useState("");
+  const [activeButton, setActiveButton] = useState(null);
 
+  const handleClick = (index: any) => {
+    setActiveButton(index === activeButton ? null : index);
+  };
+  const openNotification = (type: NotificationType) => {
+    switch (type) {
+      case "error":
+        notification[type]({
+          message: "Không thêm được sản phẩm",
+          description: "Bạn cần phải chọn size",
+        });
+        break;
+      default:
+        "success";
+        notification[type]({
+          message: "Thêm sản phẩm thành công",
+          description: "Sản phẩm đã được thêm vào giỏ hàng",
+        });
+        break;
+    }
+  };
   const [cart, setCart] = useLocalStorage<IProduct[]>("cart", []);
   const { sizes, ...shoeCart } = shoe;
 
   const addToCart = () => {
+    if (!size) return openNotification("error");
     const updatedCart = cart?.map((item: IProduct) => {
-      if (item._id == shoe._id) {
+      if (item._id == shoeCart._id) {
         // If product with the same ID already exists, increase its quantity
+        openNotification("success");
         return { ...item, quantity: item?.quantity! + 1 };
       }
       return item;
     });
 
     // If the product was not found in the cart, add it with quantity 1
-    if (!updatedCart?.find((item: IProduct) => item._id === shoe._id)) {
-      updatedCart?.push({ ...shoe, quantity: 1 });
+    if (!updatedCart?.find((item: IProduct) => item._id === shoeCart._id)) {
+      updatedCart?.push({ ...shoeCart, quantity: 1, size: size });
     }
     setCart(updatedCart);
   };
   const storedData = localStorage.getItem("cart");
-  console.log(JSON.parse(storedData));
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -51,7 +72,8 @@ const InfoShoe = (props: Props) => {
           components: {
             Button: {
               contentFontSize: 18,
-              textHoverBg: "red",
+              defaultHoverBorderColor: "black",
+              defaultHoverColor: "black",
             },
           },
         }}
@@ -71,12 +93,18 @@ const InfoShoe = (props: Props) => {
             </Link>
           </span>
           <div className={style.sizes}>
-            {shoe?.sizes?.map((item) => {
+            {shoe?.sizes?.map((item, index) => {
               return (
                 <Button
-                  onClick={() => setSize(item.name)}
+                  onClick={() => {
+                    handleClick(index);
+                    setSize(item.name);
+                  }}
                   key={item.name}
-                  className={clsx(style.button, "hover:border-black")}
+                  className={clsx(
+                    style.button,
+                    index === activeButton ? "border-black" : ""
+                  )}
                 >
                   {item.name}
                 </Button>
