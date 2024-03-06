@@ -23,12 +23,10 @@ import ForgotPassword from "../pages/client/forgotpassword/ForgotPassword.tsx";
 import VerifyEmail from "../pages/client/verify-email";
 import {PrivateRoute} from "./privateRoutes.tsx";
 import {useSelector} from "react-redux";
-import {useEffect} from "react";
-import {getUserByID} from "../features/auth";
-
 
 const Router = () => {
-
+  const user = useSelector((state:any) => state.auth.user);
+  
   return (
     <>
       <Routes>
@@ -43,7 +41,7 @@ const Router = () => {
         </Route>
 
         <Route path="/admin" element={
-          <PrivateRoute>
+          <PrivateRoute user={user}>
             <AdminLayout />
           </PrivateRoute>
         }>
