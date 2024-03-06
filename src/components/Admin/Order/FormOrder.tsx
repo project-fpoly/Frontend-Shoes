@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Form, Select } from "antd";
+import { Button, Form, Select, Tag } from "antd";
 import Input from "antd/es/input/Input";
 import { IBill } from "../../../common/order";
 import React from "react";
+import {
+  CarOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 const FormOrder: React.FC<
   IBill & { onSubmit: (values: IBill) => void; mode: string }
@@ -145,32 +151,61 @@ const FormOrder: React.FC<
         <Select>
           {isDelivered === "Chờ xác nhận" && (
             <>
-              <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
-              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+              <Select.Option value="Chờ lấy hàng">
+                <Tag icon={<SyncOutlined spin />} color="purple">
+                  Chờ lấy hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
             </>
           )}
           {isDelivered === "Chờ lấy hàng" && (
             <>
               <Select.Option value="Đang giao hàng">
-                Đang giao hàng
+                <Tag icon={<CarOutlined />} color="processing">
+                  Đang giao hàng
+                </Tag>
               </Select.Option>
-              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
             </>
           )}
           {isDelivered === "Đang giao hàng" && (
             <>
-              <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
+              <Select.Option value="Đã giao hàng">
+                {" "}
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
               <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
             </>
           )}
           {isDelivered === "Đã giao hàng" && (
             <>
-              <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
+              <Select.Option value="Đã giao hàng">
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
             </>
           )}
           {isDelivered === "Đã huỷ" && (
             <>
-              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
             </>
           )}
         </Select>

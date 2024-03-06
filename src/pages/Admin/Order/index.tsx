@@ -14,6 +14,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   LoadingOutlined,
+  RocketOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
 import { CartItem, IBill } from "../../../common/order";
@@ -347,8 +348,9 @@ const OrderManager: React.FC = () => {
               onClick={() => setIsModalOpen(true)}
               disabled={!hasSelected}
               loading={loading}
+              className="flex items-center"
             >
-              Update
+              <RocketOutlined /> Update
             </Button>
             <span style={{ marginLeft: 8 }} className="flex items-center">
               {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
@@ -433,7 +435,6 @@ const OrderManager: React.FC = () => {
             onSubmit={handleUpdateOrder}
             {...Value}
             {...products}
-            {...users}
           />
         </Modal>
       </div>
