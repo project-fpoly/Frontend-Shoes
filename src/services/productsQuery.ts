@@ -364,10 +364,6 @@ export const viewsFilterProducts = async (
       `api/product?pageSize=${pageSize}&viewsFilter=${sort}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by views successfully.",
-    });
     return data;
   } catch (error) {
     console.log(error);
