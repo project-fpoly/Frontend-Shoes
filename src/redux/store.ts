@@ -4,7 +4,8 @@ import userSlice from "../features/user/index";
 import commentSlice from "../features/comment";
 import categorySlice from "../features/category/index";
 import orderReducer from "../features/order/index";
-import  notificationSlice  from "../features/notification";
+import notificationSlice from "../features/notification";
+import cartSlice from "../features/cart";
 export const store = configureStore({
   reducer: {
     product: productSlice,
@@ -12,7 +13,8 @@ export const store = configureStore({
     comment: commentSlice,
     category: categorySlice,
     order: orderReducer,
-    notification:notificationSlice
+    notification: notificationSlice,
+    cart: cartSlice,
   },
 });
 

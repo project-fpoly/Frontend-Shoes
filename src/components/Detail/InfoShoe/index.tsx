@@ -1,36 +1,66 @@
-import { Button, ConfigProvider } from "antd";
 import { ICategory } from "../../../common/category";
 import { IProduct } from "../../../common/products";
 import style from "./index.module.scss";
 import clsx from "clsx";
 import ModalCustom from "../../Modal";
 import { useState } from "react";
-import { Image } from "antd";
+import { Image, notification, Button, ConfigProvider } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
+import useLocalStorage from "../../../hooks";
+type NotificationType = "success" | "info" | "warning" | "error";
+
 interface Props {
   shoe: IProduct;
   category: ICategory;
 }
-const sizesS = [
-  { size: "EU 40" },
-  { size: "EU 41" },
-  { size: "EU 42" },
-  { size: "EU 43" },
-  { size: "EU 44" },
-  { size: "EU 45" },
-  { size: "EU 46" },
-  { size: "EU 47" },
-  { size: "EU 48" },
-  { size: "EU 49" },
-  { size: "EU 50" },
-  { size: "EU 51" },
-  { size: "EU 52" },
-];
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props;
+  const [size, setSize] = useState("");
+  const [activeButton, setActiveButton] = useState(null);
 
+  const handleClick = (index: any) => {
+    setActiveButton(index === activeButton ? null : index);
+  };
+  const openNotification = (type: NotificationType) => {
+    switch (type) {
+      case "error":
+        notification[type]({
+          message: "Không thêm được sản phẩm",
+          description: "Bạn cần phải chọn size",
+        });
+        break;
+      default:
+        "success";
+        notification[type]({
+          message: "Thêm sản phẩm thành công",
+          description: "Sản phẩm đã được thêm vào giỏ hàng",
+        });
+        break;
+    }
+  };
+  const [cart, setCart] = useLocalStorage<IProduct[]>("cart", []);
+  const { sizes, ...shoeCart } = shoe;
+
+  const addToCart = () => {
+    if (!size) return openNotification("error");
+    const updatedCart = cart?.map((item: IProduct) => {
+      if (item._id == shoeCart._id) {
+        // If product with the same ID already exists, increase its quantity
+        openNotification("success");
+        return { ...item, quantity: item?.quantity! + 1 };
+      }
+      return item;
+    });
+
+    // If the product was not found in the cart, add it with quantity 1
+    if (!updatedCart?.find((item: IProduct) => item._id === shoeCart._id)) {
+      updatedCart?.push({ ...shoeCart, quantity: 1, size: size });
+    }
+    setCart(updatedCart);
+  };
+  const storedData = localStorage.getItem("cart");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -42,12 +72,15 @@ const InfoShoe = (props: Props) => {
           components: {
             Button: {
               contentFontSize: 18,
-              textHoverBg: "red",
+              defaultHoverBorderColor: "black",
+              defaultHoverColor: "black",
             },
           },
         }}
       >
-        <div className={clsx("flex flex-col gap-6", style.containerInfo)}>
+        <div
+          className={clsx("flex flex-col gap-6 w-[500px]", style.containerInfo)}
+        >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{category.name}</p>
@@ -60,21 +93,27 @@ const InfoShoe = (props: Props) => {
             </Link>
           </span>
           <div className={style.sizes}>
-            {sizesS.map((item) => {
+            {shoe?.sizes?.map((item, index) => {
               return (
                 <Button
-                  onClick={() => console.log(item.size)}
-                  key={item.size}
-                  className={clsx(style.button, "hover:border-black")}
+                  onClick={() => {
+                    handleClick(index);
+                    setSize(item.name);
+                  }}
+                  key={item.name}
+                  className={clsx(
+                    style.button,
+                    index === activeButton ? "border-black" : ""
+                  )}
                 >
-                  {item.size}
+                  {item.name}
                 </Button>
               );
             })}
           </div>
           <div className="flex flex-col gap-5 justify-center items-center">
             <button
-              onClick={() => console.log("hello")}
+              onClick={() => addToCart()}
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
               Add to Bag
@@ -101,7 +140,7 @@ const InfoShoe = (props: Props) => {
           >
             <div className="flex flex-col gap-5">
               <div className="flex gap-3">
-                <Image width={70} src={shoe.image} />
+                <Image width={70} src={shoe?.image!} />
                 <span>
                   <p>{shoe.name}</p>
                   <p>{shoe.price}</p>
@@ -111,7 +150,7 @@ const InfoShoe = (props: Props) => {
               <p>{shoe.description}</p>
               <p>
                 <p className="font-bold text-xl mb-3">Benefits</p>
-                {shoe.benefits}
+                {shoe.stock_status}
               </p>
             </div>
           </ModalCustom>

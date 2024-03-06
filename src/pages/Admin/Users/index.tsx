@@ -53,7 +53,6 @@ const UserManager: React.FC = () => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
     setUser(user);
     console.log(user);
-
   };
   const deleteUsesr = (user: IUsers) => {
     Modal.confirm({
@@ -66,7 +65,7 @@ const UserManager: React.FC = () => {
       onOk() {
         dispact(deleteeUser([user._id]));
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
   const columns: ColumnsType<IUsers> = [
@@ -80,9 +79,12 @@ const UserManager: React.FC = () => {
       title: "Avatar",
       dataIndex: "avt",
       align: "center",
-      render: (record) => (
-        record ? <Avatar src={record.url} /> : <Avatar icon={<UserOutlined />} />
-      ),
+      render: (record) =>
+        record ? (
+          <Avatar src={record.url} />
+        ) : (
+          <Avatar icon={<UserOutlined />} />
+        ),
     },
     {
       title: "userName",
@@ -96,17 +98,28 @@ const UserManager: React.FC = () => {
       title: "Email Verified",
       align: "center",
       dataIndex: "emailVerified",
-      render: (emailVerified) => (
-        emailVerified ? <Tag color="success">Đã xác thực</Tag> : <Tag color="warning">Chưa xác thực</Tag>
-      ),
+      render: (emailVerified) =>
+        emailVerified ? (
+          <Tag color="success">Đã xác thực</Tag>
+        ) : (
+          <Tag color="warning">Chưa xác thực</Tag>
+        ),
     },
     {
       title: "Phone Numbers",
       align: "left",
       dataIndex: "phoneNumbers",
-      render: (text) => (
-        text ? <span>{text}</span> : <Tag style={{ display: "flex", justifyContent: "center" }} color="warning">Chưa cập nhật</Tag>
-      ),
+      render: (text) =>
+        text ? (
+          <span>{text}</span>
+        ) : (
+          <Tag
+            style={{ display: "flex", justifyContent: "center" }}
+            color="warning"
+          >
+            Chưa cập nhật
+          </Tag>
+        ),
     },
     {
       title: "role",
@@ -131,11 +144,13 @@ const UserManager: React.FC = () => {
               <EditOutlined />
             </Button>
           </Tooltip>
-          <Tooltip title={"delete"}>
-            <Button type="link" onClick={() => deleteUsesr(record)}>
-              <DeleteOutlined />
-            </Button>
-          </Tooltip>
+          {record.role !== "admin" && (
+            <Tooltip title={"delete"}>
+              <Button type="link" onClick={() => deleteUsesr(record)}>
+                <DeleteOutlined />
+              </Button>
+            </Tooltip>
+          )}
         </div>
       ),
     },
