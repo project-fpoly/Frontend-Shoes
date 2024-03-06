@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialUser } from "../../common/redux/type";
 import { isRejected } from "@reduxjs/toolkit/react";
-import { createUsers, deleteUsers, getUsers, updateUsers } from "../../services/auth";
+import { createUsers, deleteUsers, getOneUsers, getUsers, updateUsers } from "../../services/auth";
 import { IUsers } from "../../common/users";
 import { notification } from "antd";
 
@@ -18,10 +18,23 @@ export const fetchAllUsers = createAsyncThunk(
   async ({ page, pageSize, search }: { page: number; pageSize: number; search: string }) => {
     try {
       const respone = await getUsers(page, pageSize, search);
-      console.log(respone);
       return respone;
     } catch (error) {
-      console.log("hi");
+      console.log("error");
+      return isRejected("Error fetching data");
+    }
+  }
+);
+export const fetchOneUsers = createAsyncThunk(
+  "/user/fetchOneUsers",
+  async () => {
+    try {
+      const respone = await getOneUsers();
+      console.log(respone);
+      
+      return respone;
+    } catch (error) {
+      console.log("error");
       return isRejected("Error fetching data");
     }
   }
@@ -78,6 +91,16 @@ export const userSlice = createSlice({
       state.loading = "fulfilled";
       state.users = Array.isArray(action.payload.docs) ? action.payload.docs : [];
       state.totalDocs = action.payload.totalDocs || 0;
+    });
+    builder.addCase(fetchOneUsers.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchOneUsers.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(fetchOneUsers.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.user = action.payload.user
     });
     builder.addCase(createNewUser.pending, (state) => {
       state.loading = "pending";

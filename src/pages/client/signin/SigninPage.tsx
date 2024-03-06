@@ -1,56 +1,73 @@
 import { useState } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
-import IUser, { LoginResponse } from "../../../types/user";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import axios, { AxiosResponse } from "axios";
-import { Signin } from "../../../services/auth";
-import ForgotPassword from "../forgotpassword/ForgotPassword";
 import { SiNike } from "react-icons/si";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../features/auth";
 
 
 const SigninPage = () => {
-  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const onFinish = async (value: string) => {
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const onFinish = async (values: { email: string }) => {
-    console.log(values);
-    try {
-      const response = await axios.post('http://localhost:4000/signup', { email: values.email });
-      if (response) {
-        //redirect to signup page
-        navigate('/signup');
-      }
-      setIsVerified(true);
-    } catch (error) {
-      console.log(error);
-    }
-    if (isVerified == true) {
-      const key = "loading";
-      if (values) {
-        try {
-          const loading = await message.loading({
-            content: "đang xử lý!",
-            key,
-            duration: 2,
-          });
-          if (loading) {
-            const response: AxiosResponse<LoginResponse> = await signin(values);
-            if (response) {
-              const data: any = response;
-              localStorage.setItem("accessToken", data.accessToken);
-              localStorage.setItem("refreshToken", data.refreshToken);
-              localStorage.setItem("user", JSON.stringify(data.user));
-              message.success(data.message, 3);
-              navigate("/");
-            }
-          }
-        } catch (error: any) {
-          message.error(error.response.data.message, 5);
-        }
-      }
-    }
+    dispatch(setUser({email: values.email}));
+    navigate(`/password?email=${values.email}`);
+    // try {
+    //   if (!isValidEmail(values.email)) {
+    //     message.error("Invalid email format. Please enter a valid email address.", 5);
+    //     return;
+    //   }
+
+    //   const response = await axios.post('http://localhost:9000/api/auth/signin', { email: values.email });
+    //   if (response && response.status === 200) {
+    //     //redirect to signup page
+    //     setIsVerified(true);
+    //     navigate('/signup');
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    // if (isVerified == true) {
+    //   const key = "loading";
+    //   if (values) {
+    //     try {
+    //       const loading = await message.loading({
+    //         content: "đang xử lý!",
+    //         key,
+    //         duration: 2,
+    //       });
+    //       if (loading) {
+    //         const response: AxiosResponse<LoginResponse> = await signin(values);
+    //         if (response) {
+    //           const data: any = response;
+    //           localStorage.setItem("accessToken", data.accessToken);
+    //           localStorage.setItem("refreshToken", data.refreshToken);
+    //           localStorage.setItem("user", JSON.stringify(data.user));
+    //           message.success(data.message, 3);
+    //           navigate("/");
+    //         }
+    //       }
+    //     } catch (error: any) {
+    //       message.error(error.response.data.message, 5);
+    //     }
+    //   }
+    // }
   };
 
   return (
@@ -101,6 +118,11 @@ const SigninPage = () => {
                 placeholder="E-mail"
               />
             </Form.Item>
+            <h1 className="text-sm sm:text-xl mt-4 font-inherit leading-none text-gray-500">
+              By continuing, I agree to Nike's <a href="" className="underline" target="_blank">Privacy Policy</a> and <a href="" className="underline" target="_blank">Terms of Use.</a>
+            </h1>
+
+
 
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -109,7 +131,7 @@ const SigninPage = () => {
                 htmlType="submit"
                 style={{
                   color: 'white',
-                  backgroundColor: 'black',
+                  backgroundColor: isHovered ? 'gray' : 'black',
                   borderColor: 'black',
                   padding: '24px',
                   fontSize: '18px',
@@ -117,25 +139,23 @@ const SigninPage = () => {
                   alignItems: 'center',
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
+
                 }}
-                variant="outlined"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 Continue
               </Button>
             </div>
             {/* <div>
-            <ForgotPassword />
-          </div> */}
+              <ForgotPassword />
+            </div> */}
           </Form>
         </section>
 
 
       </div>
     </div>
-
-
-
-
   );
 };
 
