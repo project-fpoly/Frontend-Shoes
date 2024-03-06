@@ -4,7 +4,13 @@ import instance from "../core/Api";
 export const getAllNotification = async () => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/all`
+      `/api/notification/all`,{
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
     );
     return response.data;
   } catch (error) {
@@ -14,7 +20,13 @@ export const getAllNotification = async () => {
 export const getOneNotification = async (id:string) => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/one/${id}`
+      `/api/notification/one/${id}`,{
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
     );
     return response.data;
   } catch (error) {
@@ -43,7 +55,13 @@ export const getOneNotification = async (id:string) => {
 export const updateNotification = async (id: string) => {
   try {
     const response: AxiosResponse = await instance.put(
-      `/api/notification/update/${id}`
+      `/api/notification/update/${id}`,{
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
     );
     return response.data;
   } catch (error) {

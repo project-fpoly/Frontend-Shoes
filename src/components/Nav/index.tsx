@@ -144,7 +144,7 @@ const NavBar = () => {
 
   const [showNav, setShowNav] = useState<boolean>(false);
   const [position, setPosition] = useState<boolean>(false);
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector((state:any) => state.auth.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -268,5 +268,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-

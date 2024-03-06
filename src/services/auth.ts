@@ -20,7 +20,13 @@ export const ForgotPass = (data: IUser) => {
 export const getUsers = async (page = 1, pageSize = 10, search = "") => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}`
+      `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}`,{
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
     );
     return response.data;
   } catch (error) {
@@ -34,6 +40,7 @@ export const createUsers = async (newUser: IUsers) => {
       await instance.post("/api/auth/create", newUser, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
     console.log(response);
@@ -51,6 +58,7 @@ export const updateUsers = async (newUser: IUsers, id: string) => {
       await instance.put(`/api/auth/users/${id}`, newUser, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
     notification.success({ message: response.data.message });
@@ -68,7 +76,11 @@ export const deleteUsers = async (userIds: string[]) => {
     const response: AxiosResponse = await instance.delete(
       "/api/auth/more-users",
       {
-        data: { userIds },
+        data: { userIds }, 
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+        },
       }
     );
     notification.success(response.data);

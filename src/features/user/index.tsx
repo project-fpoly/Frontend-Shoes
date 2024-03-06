@@ -18,10 +18,9 @@ export const fetchAllUsers = createAsyncThunk(
   async ({ page, pageSize, search }: { page: number; pageSize: number; search: string }) => {
     try {
       const respone = await getUsers(page, pageSize, search);
-      console.log(respone);
       return respone;
     } catch (error) {
-      console.log("hi");
+      console.log("error");
       return isRejected("Error fetching data");
     }
   }
