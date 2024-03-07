@@ -4,6 +4,7 @@ import instance from "../core/Api";
 import { CustomError } from "../common/error";
 import { IUsers } from "../common/users";
 import IUser from "./../types/user";
+import io from "socket.io-client";
 
 export const Signup = (data: IUser) => {
   return instance.post("/auth/signup", data);
@@ -100,6 +101,8 @@ export const deleteUsers = async (userIds: string[]) => {
         },
       }
     );
+    const socket = io("http://localhost:9000", { transports: ["websocket"] });
+        socket.emit("newNotification", { message: `có người đã xoá user có id là ${userIds}` });
     notification.success(response.data);
     return response.data;
   } catch (error) {
