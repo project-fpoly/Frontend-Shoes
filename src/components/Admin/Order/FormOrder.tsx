@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Form, Select } from "antd";
+import { Button, Form, Select, Tag } from "antd";
 import Input from "antd/es/input/Input";
-import { CartItem, IBill } from "../../../common/order";
+import { IBill } from "../../../common/order";
 import React from "react";
+import {
+  CarOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 const FormOrder: React.FC<
   IBill & { onSubmit: (values: IBill) => void; mode: string }
@@ -11,10 +17,10 @@ const FormOrder: React.FC<
   totalPrice,
   mode,
   onSubmit,
-  cartItems,
   isPaid,
   shippingAddress,
   user,
+  trackingNumber,
 }) => {
   const [form] = Form.useForm();
   const handleFormSubmitCreate = (values: any) => {
@@ -22,21 +28,18 @@ const FormOrder: React.FC<
     const shippingAddress = { fullname, address, email, phone };
     onSubmit({ ...values, shippingAddress });
   };
-  const paid = isPaid ? "Chưa thanh toán" : "Đã thanh toán";
-  const product = cartItems.map((item) => item.product);
-  const quantity = cartItems.map((item: CartItem) => item.quantity).toString();
-  const { address, phone, email, fullname } = shippingAddress;
 
+  const { address, phone, email, fullname } = shippingAddress;
   React.useEffect(() => {
     form.setFieldsValue({
-      product,
-      quantity,
       email,
       fullname,
       address,
       phone,
+      trackingNumber,
+      isPaid,
     });
-  }, [form, product, quantity, email, fullname, address, phone]);
+  }, [form, email, fullname, address, phone, isPaid, trackingNumber]);
 
   return (
     <Form
@@ -77,89 +80,144 @@ const FormOrder: React.FC<
         </>
       )}
       <Form.Item
-        label={"product"}
-        name="product"
+        label="Tracking number"
+        name="trackingNumber"
         rules={[{ required: true, message: "Vui lòng nhập sản phẩm" }]}
       >
-        <Input />
+        <Input disabled />
       </Form.Item>
+
       <Form.Item
-        label={"quantity"}
-        name="quantity"
-        rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label={"user"}
+        label="User"
         name="user"
         rules={[{ required: true, message: "Vui lòng nhập người dùng" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"fullname"}
+        label="Full Name"
         name="fullname"
         rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"email"}
+        label="Email"
         name="email"
         rules={[{ required: true, message: "Vui lòng nhập email" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"phone"}
+        label="Phone"
         name="phone"
         rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"address"}
+        label="Address"
         name="address"
         rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"totalPrice"}
+        label="Total Price"
         name="totalPrice"
         rules={[{ required: true, message: "Vui lòng nhập tổng giá" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"isPaid"}
+        label="Is Paid"
         name="isPaid"
         rules={[
           { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
         ]}
       >
-        <Input defaultValue={paid} />
-      </Form.Item>
-      <Form.Item
-        label={"isDelivered"}
-        name="isDelivered"
-        rules={[{ required: true, message: "pls input role" }]}
-      >
-        <Select defaultValue={isDelivered}>
-          <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
-          <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
-          <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
-          <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-          <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+        <Select defaultValue={isPaid ? "Chưa thanh toán" : "Đã thanh toán"}>
+          <Select.Option value={false}>Chưa thanh toán</Select.Option>
+          <Select.Option value={true}>Đã thanh toán</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item
-        style={{ textAlign: "right" }}
-        wrapperCol={{ offset: 8, span: 16 }}
+        label="Is Delivered"
+        name="isDelivered"
+        rules={[
+          { required: true, message: "Vui lòng nhập trạng thái giao hàng" },
+        ]}
       >
-        <Button>cancel</Button>
-        <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
+        <Select>
+          {isDelivered === "Chờ xác nhận" && (
+            <>
+              <Select.Option value="Chờ lấy hàng">
+                <Tag icon={<SyncOutlined spin />} color="purple">
+                  Chờ lấy hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Chờ lấy hàng" && (
+            <>
+              <Select.Option value="Đang giao hàng">
+                <Tag icon={<CarOutlined />} color="processing">
+                  Đang giao hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Đang giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">
+                {" "}
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã huỷ" && (
+            <>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+        </Select>
+      </Form.Item>
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button className="hover:bg-red-600 hover:!text-white">Cancel</Button>
+        <Button
+          style={{ marginLeft: "5px" }}
+          type="default"
+          className="hover:bg-blue-600 hover:!text-white"
+          htmlType="submit"
+        >
           Save
         </Button>
       </Form.Item>

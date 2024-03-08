@@ -2,12 +2,15 @@ interface ShippingAddress {
   email: string;
   fullname: string;
   address: string;
-  phone: number;
+  phone: string;
 }
 
 export interface CartItem {
   product: string;
   quantity: number;
+  images?: string;
+  price?: number;
+  size?: string;
 }
 
 export interface IBill {
@@ -18,6 +21,7 @@ export interface IBill {
   totalPrice: number;
   isPaid: boolean;
   isDelivered: string;
+  trackingNumber: string;
   createdAt: string;
   updatedAt: string;
 }

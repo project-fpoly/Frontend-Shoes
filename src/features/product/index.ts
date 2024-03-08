@@ -47,16 +47,16 @@ export const getProductsWithFilters = createAsyncThunk(
     pageSize: number;
     searchKeyword: string;
     sort?:
-      | "asc"
-      | "desc"
-      | "asc_views"
-      | "desc_views"
-      | "asc_sold"
-      | "desc_sold"
-      | "asc_sale"
-      | "desc_sale"
-      | "asc_rate"
-      | "desc_rate";
+    | "asc"
+    | "desc"
+    | "asc_views"
+    | "desc_views"
+    | "asc_sold"
+    | "desc_sold"
+    | "asc_sale"
+    | "desc_sale"
+    | "asc_rate"
+    | "desc_rate";
     categoryId?: string;
     size?: string;
     minPrice?: number;
@@ -83,7 +83,7 @@ export const getProductsWithFilters = createAsyncThunk(
         color,
         gender
       );
-      console.log(response);
+      console.log("hi", response);
       return response;
     } catch (error) {
       throw new Error("Lỗi khi lấy dữ liệu");
@@ -239,6 +239,20 @@ export const productSlice = createSlice({
       state.loading = "failed";
     });
     builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload.data)
+        ? action.payload.data
+        : [];
+      state.totalProducts = action.payload.totalProducts;
+    });
+    //fetch products with filters
+    builder.addCase(getProductsWithFilters.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getProductsWithFilters.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(getProductsWithFilters.fulfilled, (state, action) => {
       state.loading = "fulfilled";
       state.products = Array.isArray(action.payload.data)
         ? action.payload.data

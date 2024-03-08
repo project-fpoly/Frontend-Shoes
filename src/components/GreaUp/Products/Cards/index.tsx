@@ -8,7 +8,6 @@ type Props = {
 
 const Card = (props: Props) => {
   const { shoes } = props;
-  console.log(shoes);
 
   return (
     <>

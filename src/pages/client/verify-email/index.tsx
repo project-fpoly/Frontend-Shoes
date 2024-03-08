@@ -1,25 +1,30 @@
-
+import {SiNike} from "react-icons/si";
 import {Button, Form, Input} from "antd";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import {SiNike} from "react-icons/si";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
-const ForgotPassword = () => {
+const VerifyEmail = () => {
     const navigate = useNavigate();
-
-    const handleSubmit = async (values: any) => {
-        try {
-            const response = await axios.post("http://localhost:9000/api/auth/forgot-password", {
-                email: values?.email
-            });
-            if (response && response.status === 200) {
-                response.data.message && alert(response.data.message);
-                navigate('/signin');
+    const [params] = useSearchParams();
+    const onFinish = async (values: any) => {
+        if (!params.get('email')) {
+            alert('Missing email from URL');
+        } else {
+            try {
+                const response = await axios.post('http://localhost:9000/api/auth/verify-email', {
+                    email: params.get('email'),
+                    emailVerificationToken: values?.code ?? ''
+                });
+                if (response && response.status === 200) {
+                    alert(response.data?.message);
+                    //redirect to home page
+                    navigate('/signin');
+                }
+            } catch (error: any) {
+                error.response.data.error && alert(error.response.data.error);
             }
-        } catch (e) {
-            console.log(e);
         }
-    };
+    }
 
     return (
         <div className="flex items-center justify-center h-screen">
@@ -32,23 +37,27 @@ const ForgotPassword = () => {
                         className="mx-auto mb-0 mt-8 max-w-md space-y-4"
                         name="form_item_path"
                         layout="vertical"
-                        onFinish={(e) => handleSubmit(e)}
+                        onFinish={onFinish}
                         autoComplete="off"
                     >
-                        <h1 className="text-2xl font-normal sm:text-4xl">Email your email address.</h1>
+                        <h1 className="text-2xl font-normal sm:text-4xl">Enter verify code that sent to your email.</h1>
                         <Form.Item
                             className="text-black font-bold"
-                            name="email"
+                            name="code"
                             rules={[
-                                { required: true, message: 'Please input a valid email!', type: 'email' },
+                                {
+                                    message: "Mandatory!",
+                                    required: true
+                                },
                             ]}
                         >
                             <Input
-                                className="border border-black"
-                                size="large"
-                                placeholder="Email"
+                                className="font-medium border h-10 hover:border-blue-500 focus:border-blue-500"
+                                style={{borderColor: 'gray'}}
+                                placeholder="Verify code"
                             />
                         </Form.Item>
+
                         <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                             <Button
                                 className="rounded-full btn-primary-dark btn-md"
@@ -63,22 +72,21 @@ const ForgotPassword = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center', // Để căn giữa theo chiều ngang
                                     marginLeft: 'auto', // Để nút sang bên phải
-
                                 }}
                             >
-                                Continue
+                                Verify
                             </Button>
                         </div>
-
+                        {/* <div>
+              <ForgotPassword />
+            </div> */}
                     </Form>
                 </section>
 
+
             </div>
-
         </div>
-
-
     );
-}
+};
 
-export default ForgotPassword;
+export default VerifyEmail;

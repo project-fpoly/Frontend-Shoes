@@ -5,21 +5,35 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { IBill } from "../../common/order";
 import { notification } from "antd";
+import { fetchAllUsers } from "../user";
+import { fetchAllProducts } from "../product";
 
 export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
-  async (params: {
-    page?: number;
-    limit?: number;
-    start?: string;
-    end?: string;
-    search?: string;
-  }) => {
+  async (
+    params: {
+      page?: number;
+      limit?: number;
+      start?: string;
+      end?: string;
+      search?: string;
+    },
+    { dispatch }
+  ) => {
     try {
       const response = await axios.get(
         "http://localhost:9000/api/order/admin/bills",
-        { params }
+        {
+          params,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
 
       return response.data;
     } catch (error: any) {
@@ -37,7 +51,14 @@ export const updateOrder = createAsyncThunk(
       if (typeof id === "string") {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
-          updateOrderData
+          updateOrderData,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+          }
         );
         await dispatch(fetchOrders({ page: 1, limit: 10 }));
         notification.success({ message: response.data.message });
@@ -57,7 +78,14 @@ export const fetchOneOrder = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/order/admin/bills/${id}`
+        `http://localhost:9000/api/order/admin/bills/${id}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
       return response.data;
     } catch (error: any) {
@@ -70,7 +98,14 @@ export const deleteOrder = createAsyncThunk(
   async (id: string, { dispatch }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:9000/api/order/admin/bills/${id}`
+        `http://localhost:9000/api/order/admin/bills/${id}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
       );
 
       await dispatch(fetchOrders({ page: 1, limit: 10 }));
@@ -82,7 +117,45 @@ export const deleteOrder = createAsyncThunk(
     }
   }
 );
-
+export const updateManyOrders = createAsyncThunk(
+  "bills/updateMany",
+  async (
+    {
+      ids,
+      isPaid,
+      isDelivered,
+    }: {
+      ids: string[];
+      isPaid: boolean;
+      isDelivered: string;
+    },
+    { dispatch }
+  ) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:9000/api/order/admin/bills`,
+        {
+          ids,
+          isPaid,
+          isDelivered,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      console.log(response);
+      await dispatch(fetchOrders({ page: 1, limit: 10 }));
+      notification.success({ message: response.data.message });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+);
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -150,7 +223,7 @@ const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
-        const orderToDelete = action.payload; // Đối tượng order cần xóa
+        const orderToDelete = action.payload;
 
         state.isLoading = false;
         state.orders = state.orders.filter(
@@ -158,6 +231,27 @@ const orderSlice = createSlice({
         );
       })
       .addCase(deleteOrder.rejected, (state: any, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateManyOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateManyOrders.fulfilled, (state: any, action) => {
+        state.isLoading = false;
+        const updateManyOrders = action.payload;
+        const { updates } = updateManyOrders;
+        state.orders = state.orders.map((order: IBill) => {
+          if (updates.ids.includes(order._id)) {
+            return { ...order, ...updateManyOrders };
+          }
+          console.log(order);
+          return order;
+        });
+      })
+      .addCase(updateManyOrders.rejected, (state: any, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

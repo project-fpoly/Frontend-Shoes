@@ -68,11 +68,6 @@ export const getProductsWithFilter = async (
     }
 
     const response: AxiosResponse = await instance.get(url);
-    notification.success({
-      message: "Success",
-      description:
-        response?.data?.message || "Products have been filtered successfully.",
-    });
     return response?.data || response;
   } catch (error) {
     console.log(error);
@@ -364,10 +359,6 @@ export const viewsFilterProducts = async (
       `api/product?pageSize=${pageSize}&viewsFilter=${sort}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by views successfully.",
-    });
     return data;
   } catch (error) {
     console.log(error);

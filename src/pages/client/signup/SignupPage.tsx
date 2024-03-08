@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Select, DatePicker } from 'antd';
+import { useState } from 'react';
+import { Form, Input, Button, message } from 'antd';
 import { SiNike } from 'react-icons/si';
-
-const { Option } = Select;
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const SignupPage = () => {
   const [passwordHelp, setPasswordHelp] = useState<string | undefined>(undefined);
+  const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<string | undefined>(undefined);
+  const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
+      try {
+          const data = {...values};
+          const response = await axios.post('http://localhost:9000/api/auth/signup', data);
+          if (response && response.status === 200) {
+              message.success('Signup successfully');
+              localStorage.setItem('accessToken', response.data.accessToken);
+
+
+              //redirect to signup page
+              navigate(`/verify-email?email=${values?.email}`);
+          }
+      } catch (e: any) {
+          e.response.data.message && alert(e.response.data.message);
+          console.log(e);
+      }
     console.log('Received values:', values);
   };
 
@@ -25,6 +42,25 @@ const SignupPage = () => {
     setPasswordHelp(undefined);
     return Promise.resolve();
   };
+  const validateConfirmPassword = (_: any, value: string) => {
+    if (value.length < 8) {
+      setConfirmPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
+      return Promise.reject('');
+    }
+
+    if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
+        setConfirmPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
+      return Promise.reject('');
+    }
+
+    if (value.trim() !== document.getElementById('password')?.value?.trim()) {
+        setConfirmPasswordHelp('Confirm password does not match password.');
+      return Promise.reject('');
+    }
+
+      setConfirmPasswordHelp(undefined);
+    return Promise.resolve();
+  };
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 flex items-center justify-center flex-col">
@@ -36,73 +72,51 @@ const SignupPage = () => {
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
+          style={{ margin: '32px 0' }} // Thêm khoảng cách trên và dưới cho toàn bộ form
+
         >
           <h1 className="text-2xl font-normal sm:text-3xl">Let's make you a Nike member.</h1>
 
           <Form.Item
-            name="coded"
+            name="userName"
             rules={[
               {
                 required: true,
-                message: 'Please input your coded!',
+                message: 'Please input your user name!',
               },
             ]}
           >
-            <Input className="border border-black" size="large" placeholder="Coded" />
+            <Input className="border border-black" size="large" placeholder="User name" />
           </Form.Item>
 
           <Form.Item
             name="email"
             rules={[{ required: true, message: 'Please input your email!' }]}
           >
-            <Input className="border border-black" size="large" placeholder="E-mail" />
+            <Input className="border border-black" size="large" placeholder="Email" />
           </Form.Item>
 
-          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Form.Item
-              name="firstName"
-              rules={[{ required: true, message: 'Please input your first name!' }]}
-              style={{ width: '48%' }}
+                name="password"
+                rules={[
+                    { required: true, message: 'Please input your password!' },
+                    { validator: validatePassword },
+                ]}
+                extra={passwordHelp && <div style={{ color: 'blue' }}>{passwordHelp}</div>}
             >
-              <Input className="border border-black" size="large" placeholder="First Name" />
+                <Input.Password id="password" className="border border-black" size="large" placeholder="Password" />
             </Form.Item>
 
             <Form.Item
-              name="lastName"
-              rules={[{ required: true, message: 'Please input your last name!' }]}
-              style={{ width: '48%' }}
+                name="confirmPassword"
+                rules={[
+                    { required: true, message: 'Please input your confirm password!' },
+                    { validator: validateConfirmPassword },
+                ]}
+                extra={confirmPasswordHelp && <div style={{ color: 'blue' }}>{confirmPasswordHelp}</div>}
             >
-              <Input className="border border-black" size="large" placeholder="Last Name" />
+                <Input.Password className="border border-black" size="large" placeholder="Confirm password" />
             </Form.Item>
-          </div>
-
-          <Form.Item
-            name="password"
-            rules={[
-              { required: true, message: 'Please input your password!' },
-              { validator: validatePassword },
-            ]}
-            extra={passwordHelp && <div style={{ color: 'blue' }}>{passwordHelp}</div>}
-          >
-            <Input.Password className="border border-black" size="large" placeholder="Password" />
-          </Form.Item>
-
-          <Form.Item
-            name="purchasingPreference"
-            rules={[{ required: true, message: 'Please select your purchasing preference!' }]}
-          >
-            <Select className="border border-black" size="large" placeholder="Purchasing Preference">
-              <Option value="online">Man</Option>
-              <Option value="in-store">For women</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="dob"
-            rules={[{ required: true, message: 'Please select your date of birth!' }]}
-          >
-            <DatePicker className="border border-black" size="large" placeholder="Date of Birth" />
-          </Form.Item>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
@@ -119,14 +133,13 @@ const SignupPage = () => {
                 justifyContent: 'center',
                 marginLeft: 'auto',
               }}
-              variant="outlined"
             >
               Create an account
             </Button>
           </div>
         </Form>
       </section>
-    </div>
+    </div >
   );
 };
 
