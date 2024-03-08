@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Table, Tag, Avatar } from "antd";
+import { Modal, Table, Tag, Avatar, Rate } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
@@ -68,6 +68,13 @@ const CommentManager = () => {
       dataIndex: "likes",
       render: (likes) => likes.length,
       sorter: (a, b) => a.likes.length - b.likes.length,
+    },
+    {
+      title: "rating",
+      dataIndex: "rating",
+      render:(rate)=>{
+        return  <Rate disabled defaultValue={rate} />
+      }
     },
     {
       title: "parentId",
