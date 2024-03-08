@@ -17,9 +17,7 @@ function App() {
       console.log("Connected to Socket io");
     });
     socket.on("new_user_login", (data) => {
-      notification.success({ message: data.message });
-      // console.log("hi1",data);
-      // console.log(user);
+      console.log("update trạng thái đang hoạt động của user",data);
     });
     if(user?.role=="admin"){
       socket.on("newNotification", (data) => {
