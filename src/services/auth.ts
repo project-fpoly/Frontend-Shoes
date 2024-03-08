@@ -101,8 +101,6 @@ export const deleteUsers = async (userIds: string[]) => {
         },
       }
     );
-    const socket = io("http://localhost:9000", { transports: ["websocket"] });
-        socket.emit("newNotification", { message: `có người đã xoá user có id là ${userIds}` });
     notification.success(response.data);
     return response.data;
   } catch (error) {

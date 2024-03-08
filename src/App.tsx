@@ -10,20 +10,22 @@ import { message, notification } from "antd";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    !user && dispatch(getUserByID());
-  }, []);
 
   useEffect(() => {
     const socket = io("http://localhost:9000", { transports: ["websocket"] });
     socket.on("connection", () => {
       console.log("Connected to Socket io");
     });
-    socket.on("newNotification", (data) => {
+    socket.on("new_user_login", (data) => {
       notification.success({ message: data.message });
+      // console.log("hi1",data);
+      // console.log(user);
     });
+    if(user?.role=="admin"){
+      socket.on("newNotification", (data) => {
+        notification.success({ message: data.message });
+      });
+    }
     return () => {
       socket.disconnect();
     };
