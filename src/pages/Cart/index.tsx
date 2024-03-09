@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GrFavorite } from "react-icons/gr";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
@@ -8,12 +8,30 @@ import Slider from "react-slick";
 
 import { FaQuestionCircle } from "react-icons/fa";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { getCartItems } from "../../features/cart";
+import { CartItem } from "../../common/order";
+import { IStateProduct } from "../../common/redux/type";
 
 type Props = {};
 
 const Cart = (props: Props) => {
   const ref = useRef<any>({});
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { cart } = useSelector((state: any) => state.cart.cartItems);
+  const { products } = useSelector((state: IStateProduct) => state.product);
+  const getProductName = (shoeId: string) => {
+    const product = products.find((product: any) => product._id === shoeId);
+    return product ? product.name : "N/A";
+  };
+  const getCateName = (shoeId: string) => {
+    const product = products.find((product: any) => product._id === shoeId);
+    return product ? product.categoryId.name : "N/A";
+  };
+  useEffect(() => {
+    dispatch(getCartItems());
+  }, []);
   const next = () => {
     ref.current.slickNext();
   };
@@ -63,67 +81,84 @@ const Cart = (props: Props) => {
             <h2 className="text-3xl font-semibold text-center lg:text-left lg:my-4">
               Bag
             </h2>
-            <div className="text-center mb-12 lg:hidden">
+            <div className="text-center mb-12 sm:hidden lg:flex">
               <p>
                 <span className="text-[#6b7280] pr-2 mr-2 border-r-2">
-                  1 Item
+                  {cart?.cartItems.length} items
                 </span>
-                3,179,000đ
+                {cart?.totalPrice} <span className="font-light">VND</span>
               </p>
             </div>
-            <div className="cart-item flex mb-8">
-              <figure className="w-[220px]">
-                <Link to={"/"}>
-                  <img src="https://picsum.photos/200" alt="" />
-                </Link>
-              </figure>
-              <div className="cart-item-content flex w-full ml-4">
-                <div className="flex flex-1 flex-col justify-between">
-                  <div className="">
-                    <div className="flex justify-between">
-                      <h2 className="font-semibold text-xl">Product 1</h2>
-                      <p className="text-xl font-semibold">
-                        3.000.000 <span className="font-light">đ</span>
+            {cart?.cartItems.map((cartItem: CartItem) => (
+              <div className="cart-item flex mb-8">
+                <figure className="w-[220px]">
+                  <Link to={"/"}>
+                    <img src={cartItem.images[0]} alt="" />
+                  </Link>
+                </figure>
+                <div className="cart-item-content flex w-full ml-4">
+                  <div className="flex flex-1 flex-col justify-between">
+                    <div className="">
+                      <div className="flex justify-between">
+                        <h2 className="font-semibold text-xl">
+                          {getProductName(cartItem.product)}
+                        </h2>
+                        <p className="text-xl font-semibold">
+                          {cartItem.price}
+                          <span className="font-light">VND</span>
+                        </p>
+                      </div>
+                      <p className="text-lg text-[#565656]">
+                        {getCateName(cartItem.product)}
                       </p>
-                    </div>
-                    <p className="text-lg text-[#6b7280]">Lorem ipsum.</p>
-                    <p className="text-lg text-[#6b7280]">White</p>
-                    <div className="flex text-lg text-[#6b7280]">
-                      <div>
-                        <label htmlFor="">Size</label>
-                        <select name="size" id="" className="px-2 ml-1">
-                          <option value="38">38</option>
-                          <option value="39">39</option>
-                          <option value="40">40</option>
-                          <option value="41">41</option>
-                        </select>
+
+                      <div className="flex text-lg text-[#6b7280]">
+                        <div>
+                          <label htmlFor="">Size</label>
+                          <select
+                            defaultValue={cartItem.size}
+                            name="size"
+                            id=""
+                            className="px-2 ml-1"
+                          >
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                          </select>
+                        </div>
+                        <div className="ml-2">
+                          <label htmlFor="">Quanlity</label>
+                          <select
+                            defaultValue={cartItem.quantity}
+                            name="quanlity"
+                            id=""
+                            className="px-2 ml-1"
+                          >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                          </select>
+                        </div>
                       </div>
-                      <div className="ml-2">
-                        <label htmlFor="">Quanlity</label>
-                        <select name="quanlity" id="" className="px-2 ml-1">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                      </div>
                     </div>
-                  </div>
-                  <div className="cart-item-content-action">
-                    <ul className="flex">
-                      <li>
-                        <GrFavorite
-                          style={{ fontSize: "24px", marginRight: "12px" }}
-                        />
-                      </li>
-                      <li>
-                        <RiDeleteBin6Line style={{ fontSize: "24px" }} />
-                      </li>
-                    </ul>
+                    <div className="cart-item-content-action">
+                      <ul className="flex">
+                        <li>
+                          <GrFavorite
+                            style={{ fontSize: "24px", marginRight: "12px" }}
+                          />
+                        </li>
+                        <li>
+                          <RiDeleteBin6Line style={{ fontSize: "24px" }} />
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
             <hr />
           </div>
           <div className="shopping-cart-summary lg:w-[35%]">
@@ -136,7 +171,8 @@ const Cart = (props: Props) => {
                     <FaQuestionCircle className="ml-2" />
                   </div>
                   <div>
-                    3.000.000 <span className="font-light">VND</span>
+                    {cart?.totalPrice}
+                    <span className="font-light">VND</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
@@ -149,14 +185,14 @@ const Cart = (props: Props) => {
                 <div className="flex justify-between items-center my-4 lg:my-5">
                   <div>Total</div>
                   <div>
-                    3.000.000 <span className="font-light">VND</span>
+                    {cart?.totalPrice}
+                    <span className="font-light">VND</span>
                   </div>
                 </div>
                 <div className="hidden lg:block">
                   <hr />
                 </div>
               </div>
-
               <div className="mt-5 hidden lg:block">
                 <Button
                   style={{ background: "rgb(17, 17, 17)" }}
