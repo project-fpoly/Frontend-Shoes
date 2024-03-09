@@ -32,7 +32,19 @@ const MenuNav = () => {
       ],
     },
     {
-      label: <h1 className="font-bold">Women</h1>,
+      label: (
+        <Link to="/men">
+          <h1 className="font-bold">Men</h1>
+        </Link>
+      ),
+      key: "SubMenu",
+    },
+    {
+      label: (
+        <Link to="/women">
+          <h1 className="font-bold">Women</h1>
+        </Link>
+      ),
       key: "SubMenu",
     },
     {
