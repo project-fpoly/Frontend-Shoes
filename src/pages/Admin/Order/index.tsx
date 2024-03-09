@@ -369,7 +369,15 @@ const OrderManager: React.FC = () => {
               style={{
                 marginTop: "15px",
               }}
-              rowSelection={rowSelection}
+              rowSelection={{
+                ...rowSelection,
+                getCheckboxProps: (record) => {
+                  console.log("Checkbox props:", record.isDelivered);
+                  return {
+                    disabled: record.isDelivered === "Đã giao hàng",
+                  };
+                },
+              }}
               columns={columns}
               dataSource={orders}
               rowKey="_id"
