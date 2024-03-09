@@ -8,7 +8,7 @@ import { Image, notification, Button, ConfigProvider } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
-import useLocalStorage from "../../../hooks";
+import usesessionStorage from "../../../hooks";
 import { addToCart } from "../../../features/cart";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
@@ -44,18 +44,40 @@ const InfoShoe = (props: Props) => {
         break;
     }
   };
-  const { sizes, ...shoeCart } = shoe;
 
+  const [cart, setCart] = usesessionStorage<IProduct[]>("cart", []);
+  const {  _id : product ,sizes , color,images,price, ...shoeCart } = shoe;
+
+
+  const accessToken= localStorage.getItem('accessToken')
+
+  
   const addToCartt = () => {
-    if (!size) return openNotification("error");
+     if (!size) return openNotification("error");
+       const cartItem = {product, size: size };
+     if(accessToken){
+     dispatch(addToCart(cartItem));
+     }
 
-    const { _id } = shoe;
-    const cartItem = { product: _id, size: size };
-    dispatch(addToCart(cartItem));
+    const updatedCart = cart?.map((item: any) => {
+      if (item.product === shoe._id && item.size === size ) {
+        // If product with the same ID already exists, increase its quantity
+        return {...item, quantity: item?.quantity! + 1 };
+      }
+      return(item);
+    });
 
+    
     // If the product was not found in the cart, add it with quantity 1
+    if (!updatedCart?.find((item) => item.product  == product && item.size === size)) {
+          updatedCart?.push({product ,size:size , color,images,price, quantity: 1 });
+        }
+
+        openNotification('success')
+    setCart(updatedCart);
   };
   const storedData = localStorage.getItem("cart");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -112,7 +134,7 @@ const InfoShoe = (props: Props) => {
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
               Add to Bag
-            </button>{" "}
+            </button>
             <button className="w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 ">
               Favourite
               <p className="mt-1 px-3">

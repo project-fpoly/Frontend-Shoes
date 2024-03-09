@@ -48,6 +48,7 @@ export const addToCart = createAsyncThunk(
             },
           }
         );
+        notification.success({ message: response.data.message });
         return response.data.cart;
       } else {
         response = await axios.post(
@@ -121,7 +122,7 @@ const cartSlice = createSlice({
       .addCase(addToCart.fulfilled, (state: any, action) => {
         state.loading = false;
         state.cartItems.push(action.payload);
-        state.totalPrice = action.payload.cart.totalPrice;
+        state.totalPrice = action.payload.cart?.totalPrice;
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
