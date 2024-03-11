@@ -26,6 +26,7 @@ import {useSelector} from "react-redux";
 import Women from "../pages/Women/index.tsx";
 import Men from "../pages/Men/index.tsx";
 import OrderPage from "../pages/Order/OrderPage.tsx";
+import Favorites from "../pages/Favorite/index.tsx";
 
 const Router = () => {
   const user = useSelector((state:any) => state.auth.user);
@@ -43,6 +44,7 @@ const Router = () => {
           <Route path="/help" element={<Help />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
           
         </Route>
