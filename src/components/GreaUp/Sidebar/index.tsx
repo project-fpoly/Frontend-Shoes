@@ -4,7 +4,8 @@ import { Menu } from "antd";
 import style from "./index.module.scss";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { featchProductByPrice } from "../../../features/product";
+import { featchProductByGender, featchProductByPrice } from "../../../features/product";
+import { genderFilterProducts } from "../../../services/productsQuery";
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
@@ -60,7 +61,14 @@ const Sidebar = (props: Props) => {
   // const shoes = useSelector((state: IStateProduct) => state.product.products);
   const { hideFilter } = props;
   const onClick: MenuProps["onClick"] = (e) => {
+    console.log(e.key)
     switch (e.key) {
+       case "Men":
+        dispact(featchProductByGender('nam'));
+        break;
+         case "Women":
+        dispact(featchProductByGender('nữ'));
+        break;
       case "Under":
         dispact(featchProductByPrice({ minPrice: 0, maxPrice: 500000 }));
         break;
