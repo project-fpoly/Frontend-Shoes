@@ -1,4 +1,5 @@
 import { Col, Row, Space, Typography } from "antd";
+import { Link } from "react-router-dom";
 
 const Featured = () => {
   return (
@@ -8,11 +9,11 @@ const Featured = () => {
         <Col span={12}>
           <div style={{ position: "relative" }}>
             <img
-              src="../../../public/featured1.jpg"
+              src="../../../public/nam.jpg"
               style={{ height: "650px", width: "100%" }}
             />
             <Typography
-              className="text-2xl font-bold"
+              className="text-3xl font-bold"
               style={{
                 position: "absolute",
                 bottom: 100,
@@ -21,26 +22,26 @@ const Featured = () => {
                 color: "white",
               }}
             >
-              Running Shoes <br />
+              Men's Shoes <br />
               Collection
             </Typography>
-            <a
-              href=""
+            <Link
+              to={'/men'}
               style={{ position: "absolute", bottom: 50, left: 40 }}
               className="bg-white font-medium text-lg px-5 py-3 leading-4 rounded-full"
             >
               Go
-            </a>
+            </Link>
           </div>
         </Col>
         <Col span={12}>
           <div style={{ position: "relative" }}>
             <img
-              src="../../../public/featured3.jpg"
+              src="../../../public/women.jpg"
               style={{ height: "650px", width: "100%" }}
             />
             <Typography
-              className="text-2xl font-bold"
+              className="text-3xl font-bold"
               style={{
                 position: "absolute",
                 bottom: 100,
@@ -49,16 +50,16 @@ const Featured = () => {
                 color: "white",
               }}
             >
-              Nike Versair <br />
-              For Wherever Your Fitness
+              Women's <br />
+              Shoes
             </Typography>
-            <a
-              href=""
+            <Link
+              to={'/women'}
               style={{ position: "absolute", bottom: 50, left: 40 }}
               className="bg-white font-medium text-lg px-5 py-3 leading-4 rounded-full"
             >
               Go
-            </a>
+            </Link>
           </div>
         </Col>
       </Row>

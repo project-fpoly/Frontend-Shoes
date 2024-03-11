@@ -202,13 +202,15 @@ const NavBar = () => {
                 Find a store
               </Popover>
               <span>|</span>
-              <Popover
-                  className="hover:opacity-70"
-                  content={content}
-                  title="Help"
-              >
-                Help
-              </Popover>
+              <Link to={'/help'}>
+                <Popover
+                    className="hover:opacity-70"
+                    content={content}
+                    title="Help"
+                >
+                  Help
+                </Popover>
+              </Link>
               <span>|</span>
               {user ? (
                   <Popover
