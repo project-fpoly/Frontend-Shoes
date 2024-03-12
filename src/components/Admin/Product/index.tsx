@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { IStateCategory } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, StarFilled } from "@ant-design/icons";
+import ImageUploader from './uploadImage';
 
 const { Option } = Select;
 
@@ -105,7 +106,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     >
                         <Input placeholder="Enter product video" />
                     </Form.Item>
-
+                    <ImageUploader></ImageUploader>
                     <Form.Item
                         label="ID blog"
                         name="blog"
