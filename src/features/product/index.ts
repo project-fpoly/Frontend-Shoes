@@ -1,4 +1,5 @@
 import {
+  genderFilterProducts,
   priceFilterProducts,
   searchByKeyword,
   sortOrderProducts,
@@ -224,6 +225,18 @@ export const featchProductByPrice = createAsyncThunk(
     }
   }
 );
+///////
+export const featchProductByGender = createAsyncThunk(
+  "product/featchProductByGender",
+  async (gender:string) => {
+    try {
+      const respone = await genderFilterProducts(gender);
+      return respone.data  || [];
+    } catch (error) {
+      return isRejected("Error fetching data");
+    }
+  }
+);
 
 /// đây là chỗ chọc vào kho để lấy db
 export const productSlice = createSlice({
@@ -365,7 +378,22 @@ export const productSlice = createSlice({
         state.products = action.payload;
       }
     );
+    //Filter product by price gender
+    builder.addCase(featchProductByGender.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(featchProductByGender.rejected, (state) => {
+      state.loading = "failed";
+    });
+      builder.addCase(
+      featchProductByGender.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload;
+      }
+    );
   },
+
 });
 
 export default productSlice.reducer;
