@@ -5,7 +5,7 @@ import {
   LoadingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Modal, Table, Tag, Tooltip } from "antd";
+import { Avatar, Button, Modal, Table, Tag, Tooltip, notification } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { IUsers } from "../../../common/users";
@@ -34,7 +34,6 @@ const UserManager: React.FC = () => {
     loading,
     totalDocs,
   } = useSelector((state: IStateUser) => state.user);
-
   useEffect(() => {
     dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }));
   }, [dispact, currentPage, Search]);
@@ -126,6 +125,15 @@ const UserManager: React.FC = () => {
       dataIndex: "role",
     },
     {
+      title: "isActive",
+      dataIndex: "isActive",
+      render: (isActive) => (
+        <span style={{ color: isActive ? 'green' : 'red' }}>
+          {isActive ? 'On' : 'Off'}
+        </span>
+      ),
+    },
+    {
       title: "lastActivity",
       dataIndex: "lastActivity",
       render: (lastActivity: string | null | undefined) =>
@@ -188,13 +196,13 @@ const UserManager: React.FC = () => {
         onSubmitt={(value) => searchUser(value)}
         name={"User"}
       />
-      {loading === "pending" ? (
+      {/* {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
             <LoadingOutlined style={{ fontSize: 24 }} spin />
           </div>
         </>
-      ) : (
+      ) : ( */}
         <Table
           style={{
             marginTop: "15px",
@@ -210,7 +218,7 @@ const UserManager: React.FC = () => {
             onChange: handlePageChange,
           }}
         />
-      )}
+      {/* )} */}
 
       <Modal
         title={"Create new user"}

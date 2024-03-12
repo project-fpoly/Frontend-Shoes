@@ -41,39 +41,6 @@ export const fetchOrders = createAsyncThunk(
     }
   }
 );
-export const fetchOrderUser = createAsyncThunk(
-  "order/fetchOrderUser",
-  async (
-    params: {
-      page?: number;
-      limit?: number;
-      start?: string;
-      end?: string;
-      search?: string;
-    },
-    { dispatch }
-  ) => {
-    try {
-      const response = await axios.get(
-        "http://localhost:9000/api/order/bills",
-        {
-          params,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-
-      return response.data;
-    } catch (error: any) {
-      throw error.response.data;
-    }
-  }
-);
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
   async (
@@ -189,6 +156,28 @@ export const updateManyOrders = createAsyncThunk(
     }
   }
 );
+
+// get order by user
+export const getOrderByUsers = createAsyncThunk(
+  "order/getOrderByUsers",
+  async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/order/bills`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  }
+);
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -219,16 +208,16 @@ const orderSlice = createSlice({
         state.error = action.error.message;
       });
     builder
-      .addCase(fetchOrderUser.pending, (state) => {
+      .addCase(getOrderByUsers.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchOrderUser.fulfilled, (state, action) => {
+      .addCase(getOrderByUsers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.orders;
         state.pagination = action.payload.pagination;
       })
-      .addCase(fetchOrderUser.rejected, (state: any, action) => {
+      .addCase(getOrderByUsers.rejected, (state: any, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

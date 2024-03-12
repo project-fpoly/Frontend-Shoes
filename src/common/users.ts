@@ -11,4 +11,5 @@ export interface IUsers {
   gender: string;
   password?: string;
   [key: string]: any;
+  isActive?:boolean
 }
