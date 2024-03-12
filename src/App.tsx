@@ -8,6 +8,7 @@ import { getUserByID } from "./features/auth";
 import io from "socket.io-client";
 import { message, notification } from "antd";
 import { AppDispatch } from "./redux/store";
+import { fetchAllUsers } from "./features/user";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
@@ -18,11 +19,12 @@ function App() {
     socket.on("connection", () => {
       console.log("Connected to Socket io");
     });
-    socket.on("new_user_login", (data) => {
-      console.log("update trạng thái đang hoạt động của user",data);
+    socket.on("new_user_login", () => {
     });
     socket.on("log_out", () => {
-      console.log("update trạng thái đang hoạt động của user");
+    });
+    socket.on("update_user_status", () => {
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
     });
     if(user?.role=="admin"){
       socket.on("newNotification", (data) => {

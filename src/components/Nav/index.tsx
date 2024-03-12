@@ -176,7 +176,7 @@ const NavBar = () => {
     dispatch(setUser(null));
     message.success('Logout successfully');
     const socket = io("http://localhost:9000", { transports: ["websocket"] });
-    socket.emit("log_out")
+    socket.emit("log_out",{userId:user._id})
   };
 
   return (

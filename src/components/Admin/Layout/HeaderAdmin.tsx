@@ -65,7 +65,7 @@ const AdminHeader: React.FC = () => {
     message.success('Logout successfully');
     navigate('/');
     const socket = io("http://localhost:9000", { transports: ["websocket"] });
-    socket.emit("log_out")
+    socket.emit("log_out",{userId:user._id})
   };
 
   const userMenu = (
