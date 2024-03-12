@@ -206,7 +206,7 @@ const NavBar = () => {
                 <Popover
                     className="hover:opacity-70"
                     content={content}
-                    title="Help"
+                    title=""
                 >
                   Help
                 </Popover>

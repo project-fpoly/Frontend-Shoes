@@ -25,6 +25,8 @@ import {PrivateRoute} from "./privateRoutes.tsx";
 import {useSelector} from "react-redux";
 import Women from "../pages/Women/index.tsx";
 import Men from "../pages/Men/index.tsx";
+import Delivery from "../components/Help/Delivery.tsx";
+import Voucher from "../pages/Voucher";
 
 const Router = () => {
   const user = useSelector((state:any) => state.auth.user);
@@ -40,8 +42,10 @@ const Router = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/guest_checkout" element={<Guest_Checkout />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/help/a/free-shipping" element={<Delivery />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
+          <Route path="/voucher" element={<Voucher />} />
         </Route>
 
         <Route path="/admin" element={
