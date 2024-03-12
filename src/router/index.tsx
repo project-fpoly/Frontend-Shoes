@@ -27,6 +27,7 @@ import Women from "../pages/Women/index.tsx";
 import Men from "../pages/Men/index.tsx";
 import OrderPage from "../pages/Order/OrderPage.tsx";
 import Favorites from "../pages/Favorite/index.tsx";
+import ParentComponent from "../components/Admin/test/index.tsx";
 
 const Router = () => {
   const user = useSelector((state:any) => state.auth.user);
@@ -56,6 +57,7 @@ const Router = () => {
         }>
           <Route index element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManager />} />
+          <Route path="/admin/test" element={<ParentComponent />} />
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
