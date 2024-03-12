@@ -7,17 +7,22 @@ import { useEffect } from "react";
 import { getUserByID } from "./features/auth";
 import io from "socket.io-client";
 import { message, notification } from "antd";
+import { AppDispatch } from "./redux/store";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
-
+  const dispatch=useDispatch<AppDispatch>()
   useEffect(() => {
+    dispatch(getUserByID())
     const socket = io("http://localhost:9000", { transports: ["websocket"] });
     socket.on("connection", () => {
       console.log("Connected to Socket io");
     });
     socket.on("new_user_login", (data) => {
       console.log("update trạng thái đang hoạt động của user",data);
+    });
+    socket.on("log_out", () => {
+      console.log("update trạng thái đang hoạt động của user");
     });
     if(user?.role=="admin"){
       socket.on("newNotification", (data) => {

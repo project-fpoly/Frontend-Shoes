@@ -4,7 +4,7 @@ import instance from "../core/Api";
 export const getAllNotification = async () => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/all`,{
+      `/api/notification/role`,{
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,

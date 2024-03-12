@@ -36,7 +36,7 @@ import { useNavigate } from "react-router-dom";
 import { INotification } from "../../../common/notification";
 import {getUserByID, setUser} from "../../../features/auth";
 import user from "../../../features/user";
-
+import io from "socket.io-client";
 const { Search } = Input;
 
 const AdminHeader: React.FC = () => {
@@ -64,7 +64,8 @@ const AdminHeader: React.FC = () => {
     dispatch(setUser(null));
     message.success('Logout successfully');
     navigate('/');
-
+    const socket = io("http://localhost:9000", { transports: ["websocket"] });
+    socket.emit("log_out")
   };
 
   const userMenu = (

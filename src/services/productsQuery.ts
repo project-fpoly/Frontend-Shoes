@@ -407,10 +407,10 @@ export const saleFilterProducts = async (
       `api/product?pageSize=${pageSize}&saleFilter=${sort}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by sale quantity successfully.",
-    });
+    // notification.success({
+    //   message: "Success",
+    //   description: "Products have been filtered by sale quantity successfully.",
+    // });
     return data;
   } catch (error) {
     console.log(error);
