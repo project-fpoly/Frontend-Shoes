@@ -25,7 +25,7 @@ const Cart = () => {
   const ref = useRef<any>({});
   const dispatch = useDispatch<AppDispatch>();
   const { cart } = useSelector((state: any) => state.cart.cartItems);
-  const cartSession = JSON.parse(sessionStorage.getItem("cart") ?? "");
+  const cartSession = JSON.parse(sessionStorage.getItem("cart"));
   const [forceRender, setForceRender] = useState(0);
   let totalPrice = 0;
 
