@@ -1,5 +1,5 @@
 import { Button, Modal, notification } from "antd";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GrFavorite } from "react-icons/gr";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
@@ -21,13 +21,12 @@ import { fetchAllProducts } from "../../features/product";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { toInteger } from "lodash";
 
-type Props = {};
-
-const Cart = (props: Props) => {
+const Cart = () => {
   const ref = useRef<any>({});
   const dispatch = useDispatch<AppDispatch>();
   const { cart } = useSelector((state: any) => state.cart.cartItems);
-  const cartSession = JSON.parse(sessionStorage.getItem("cart"));
+  const cartSession = JSON.parse(sessionStorage.getItem("cart") ?? "");
+  const [forceRender, setForceRender] = useState(0);
   let totalPrice = 0;
 
   cartSession?.cartItems.forEach((item: any) => {
@@ -56,6 +55,7 @@ const Cart = (props: Props) => {
   };
   const removeItemFromCart = (productId: string) => {
     dispatch(removeFromCart(productId));
+    setForceRender(forceRender + 1); // Gọi setState để force render lại component
   };
   const removeItemFromCartSession = (productId: string, size: string) => {
     const { cartItems } = cartSession;
@@ -70,10 +70,7 @@ const Cart = (props: Props) => {
       };
       sessionStorage.setItem("cart", JSON.stringify(updatedCartData));
       notification.success({ message: "Sản phẩm đã được xóa khỏi giỏ hàng" });
-
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
+      setForceRender(forceRender + 1); // Gọi setState để force render lại component
     }
   };
   const handleSizeChange = (
@@ -90,6 +87,7 @@ const Cart = (props: Props) => {
           .quantity,
       })
     );
+    setForceRender(forceRender + 1); // Gọi setState để force render lại component
   };
   const handleQuantityChange = (
     productId: string,
@@ -105,6 +103,22 @@ const Cart = (props: Props) => {
           .size,
       })
     );
+    setForceRender(forceRender + 1); // Gọi setState để force render lại component
+  };
+  const updateCartItem = (
+    index: number,
+    field: any,
+    value: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const updatedCart = { ...cartSession }; // Sao chép đối tượng cartSession
+    console.log(updatedCart);
+    // Cập nhật giá trị của trường field trong mục thứ index
+    updatedCart.cartItems[index][field] = value;
+    // Lưu cartSession đã cập nhật vào session storage
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Force render lại component (nếu cần)
+    setForceRender(forceRender + 1); // Gọi setState để force render lại component
   };
   const settings = {
     dots: true,
@@ -278,6 +292,13 @@ const Cart = (props: Props) => {
                                 name="size"
                                 id=""
                                 className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    "size",
+                                    e.target.value as any
+                                  )
+                                }
                               >
                                 <option value="38">38</option>
                                 <option value="39">39</option>
@@ -292,6 +313,13 @@ const Cart = (props: Props) => {
                                 name="quanlity"
                                 id=""
                                 className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    "quantity",
+                                    e.target.value as any
+                                  )
+                                }
                               >
                                 <option value="1">1</option>
                                 <option value="2">2</option>
