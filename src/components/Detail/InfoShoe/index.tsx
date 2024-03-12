@@ -8,7 +8,10 @@ import { Image, notification, Button, ConfigProvider } from "antd";
 import Colspace from "./Colspace";
 import { Link } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
-import useLocalStorage from "../../../hooks";
+import usesessionStorage from "../../../hooks";
+import { addToCart } from "../../../features/cart";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
 type NotificationType = "success" | "info" | "warning" | "error";
 
 interface Props {
@@ -19,6 +22,7 @@ const InfoShoe = (props: Props) => {
   const { shoe, category } = props;
   const [size, setSize] = useState("");
   const [activeButton, setActiveButton] = useState(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleClick = (index: any) => {
     setActiveButton(index === activeButton ? null : index);
@@ -40,27 +44,40 @@ const InfoShoe = (props: Props) => {
         break;
     }
   };
-  const [cart, setCart] = useLocalStorage<IProduct[]>("cart", []);
-  const { sizes, ...shoeCart } = shoe;
 
-  const addToCart = () => {
-    if (!size) return openNotification("error");
-    const updatedCart = cart?.map((item: IProduct) => {
-      if (item._id == shoeCart._id) {
+  const [cart, setCart] = usesessionStorage<IProduct[]>("cart", []);
+  const {  _id : product ,sizes , color,images,price, ...shoeCart } = shoe;
+
+
+  const accessToken= localStorage.getItem('accessToken')
+
+  
+  const addToCartt = () => {
+     if (!size) return openNotification("error");
+       const cartItem = {product, size: size };
+     if(accessToken){
+     dispatch(addToCart(cartItem));
+     }
+
+    const updatedCart = cart?.map((item: any) => {
+      if (item.product === shoe._id && item.size === size ) {
         // If product with the same ID already exists, increase its quantity
-        openNotification("success");
-        return { ...item, quantity: item?.quantity! + 1 };
+        return {...item, quantity: item?.quantity! + 1 };
       }
-      return item;
+      return(item);
     });
 
+    
     // If the product was not found in the cart, add it with quantity 1
-    if (!updatedCart?.find((item: IProduct) => item._id === shoeCart._id)) {
-      updatedCart?.push({ ...shoeCart, quantity: 1, size: size });
-    }
+    if (!updatedCart?.find((item) => item.product  == product && item.size === size)) {
+          updatedCart?.push({product ,size:size , color,images,price, quantity: 1 });
+        }
+
+        openNotification('success')
     setCart(updatedCart);
   };
   const storedData = localStorage.getItem("cart");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -113,11 +130,11 @@ const InfoShoe = (props: Props) => {
           </div>
           <div className="flex flex-col gap-5 justify-center items-center">
             <button
-              onClick={() => addToCart()}
+              onClick={() => addToCartt()}
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
               Add to Bag
-            </button>{" "}
+            </button>
             <button className="w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 ">
               Favourite
               <p className="mt-1 px-3">
@@ -140,7 +157,7 @@ const InfoShoe = (props: Props) => {
           >
             <div className="flex flex-col gap-5">
               <div className="flex gap-3">
-                <Image width={70} src={shoe?.image!} />
+                <Image width={70} src={shoe?.images!} />
                 <span>
                   <p>{shoe.name}</p>
                   <p>{shoe.price}</p>

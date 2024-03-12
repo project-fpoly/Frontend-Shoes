@@ -13,9 +13,6 @@ const icons: Shoe[]= [
     category: "Huarache"
   },
   {
-    category: "Air Max 90"
-  },
-  {
     category: 'Air Max 95'
   }
 ]
@@ -25,9 +22,6 @@ const shoes: Shoe[]= [
   },
   {
     category: "Custom Shoes"
-  },
-  {
-    category: "Jordan Shoes"
   },
   {
     category: 'Running Shoes'
@@ -41,9 +35,6 @@ const clothing: Shoe[]= [
     category: "Modest Wear"
   },
   {
-    category: "Hoodies & Pullover"
-  },
-  {
     category: 'Shirt & Tops'
   }
 ]
@@ -53,9 +44,6 @@ const kid: Shoe[]= [
   },
   {
     category: "Kid's Shoes"
-  },
-  {
-    category: "Kid's Jordan Shoes"
   },
   {
     category: "Kid's Basketball Shoes"
