@@ -131,7 +131,7 @@ import MenuNav from "./Menu";
 import NavRight from "./NavRight";
 import {useDispatch, useSelector} from "react-redux";
 import {getUserByID, setUser} from "../../features/auth";
-
+import io from "socket.io-client";
 const NavBar = () => {
   const content = (
       <div>
@@ -175,7 +175,8 @@ const NavBar = () => {
     localStorage.clear();
     dispatch(setUser(null));
     message.success('Logout successfully');
-
+    const socket = io("http://localhost:9000", { transports: ["websocket"] });
+    socket.emit("log_out",{userId:user._id})
   };
 
   return (
