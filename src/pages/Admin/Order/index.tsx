@@ -45,7 +45,7 @@ const OrderManager: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [isSelect, SetIsSelect] = useState(false);
   const orders = useSelector((state: RootState) => state.order.orders);
   const isLoading = useSelector((state: RootState) => state.order.isLoading);
   const pagination = useSelector((state: RootState) => state.order.pagination);
@@ -124,6 +124,10 @@ const OrderManager: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
+  };
+  const getIsDelivered = (orderId: string) => {
+    const order = orders.find((order: IBill) => order._id === orderId);
+    return order ? order.isDelivered : "";
   };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -278,20 +282,26 @@ const OrderManager: React.FC = () => {
       key: "action",
       align: "center",
       className: "action-cell",
-      render: (_, record) => (
-        <div style={{ textAlign: "center" }}>
-          <Tooltip title={"edit"}>
-            <Button type="link" onClick={() => toggleModal(record)}>
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-          <Tooltip title={"delete"}>
-            <Button type="link" onClick={() => deleteOneOrder(record)}>
-              <DeleteOutlined className="text-red-600" />
-            </Button>
-          </Tooltip>
-        </div>
-      ),
+      render: (_, record) => {
+        if (record.isDelivered === "Đã giao hàng") {
+          return null;
+        } else {
+          return (
+            <div style={{ textAlign: "center" }}>
+              <Tooltip title={"edit"}>
+                <Button type="link" onClick={() => toggleModal(record)}>
+                  <EditOutlined />
+                </Button>
+              </Tooltip>
+              <Tooltip title={"delete"}>
+                <Button type="link" onClick={() => deleteOneOrder(record)}>
+                  <DeleteOutlined className="text-red-600" />
+                </Button>
+              </Tooltip>
+            </div>
+          );
+        }
+      },
     },
   ];
   const Value = {
@@ -372,10 +382,23 @@ const OrderManager: React.FC = () => {
               rowSelection={{
                 ...rowSelection,
                 getCheckboxProps: (record) => {
-                  console.log("Checkbox props:", record.isDelivered);
-                  return {
-                    disabled: record.isDelivered === "Đã giao hàng",
-                  };
+                  const selectedOrderId = rowSelection
+                    .selectedRowKeys[0] as string;
+                  const selectOrder = getIsDelivered(selectedOrderId);
+                  if (rowSelection.selectedRowKeys.length !== 0) {
+                    return {
+                      disabled:
+                        record.isDelivered === "Đã giao hàng" ||
+                        record.isDelivered !== selectOrder ||
+                        record.isDelivered === "Đã hủy",
+                    };
+                  } else {
+                    return {
+                      disabled:
+                        record.isDelivered === "Đã giao hàng" ||
+                        record.isDelivered === "Đã hủy",
+                    };
+                  }
                 },
               }}
               columns={columns}
@@ -414,7 +437,7 @@ const OrderManager: React.FC = () => {
             DetailOrder(selectedOrder, products, users)}
         </Modal>
         <Modal
-          title={"updateMany"}
+          title={"Update many"}
           open={isModalOpen}
           onOk={() => setIsModalOpen(false)}
           onCancel={() => setIsModalOpen(false)}
@@ -428,6 +451,7 @@ const OrderManager: React.FC = () => {
             selectedRowKeys={selectedRowKeys}
             setIsModalOpen={setIsModalOpen}
             onSelectChange={onSelectChange}
+            orders={orders}
           />
         </Modal>
         <Modal
