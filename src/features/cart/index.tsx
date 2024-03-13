@@ -6,6 +6,7 @@ import axios from "axios";
 import { notification } from "antd";
 import { fetchAllProducts } from "../product";
 import { RootState } from "../../redux/store";
+import { fetchAllUsers } from "../user";
 
 const initialState: any = {
   cartItems: [] as CartItem[],
@@ -223,6 +224,7 @@ export const updateProductCart = createAsyncThunk(
     }
   }
 );
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,

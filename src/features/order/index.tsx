@@ -157,11 +157,10 @@ export const updateManyOrders = createAsyncThunk(
   }
 );
 
-
 // get order by user
 export const getOrderByUsers = createAsyncThunk(
   "order/getOrderByUsers",
-  async ( ) => {
+  async () => {
     try {
       const response = await axios.get(
         `http://localhost:9000/api/order/bills`,
