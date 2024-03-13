@@ -31,8 +31,10 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.3",
     "react-slick": "^0.30.2",
+    "recharts": "^2.12.2",
     "sass": "^1.70.0",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.7.4",
     "swiper": "^11.0.5",
     "swiper-react": "^1.0.0"
   },

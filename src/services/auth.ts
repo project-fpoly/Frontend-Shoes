@@ -4,6 +4,7 @@ import instance from "../core/Api";
 import { CustomError } from "../common/error";
 import { IUsers } from "../common/users";
 import IUser from "./../types/user";
+import io from "socket.io-client";
 
 export const Signup = (data: IUser) => {
   return instance.post("/auth/signup", data);
