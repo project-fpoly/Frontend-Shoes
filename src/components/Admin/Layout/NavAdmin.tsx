@@ -68,7 +68,9 @@ const NavAdmin: React.FC = () => {
         align="center"
         size="middle"
       >
+        <Link to={"/"}>
         <SiNike className="hover:opacity-75" size={50} />
+        </Link>
       </Space>
 
       <Menu
