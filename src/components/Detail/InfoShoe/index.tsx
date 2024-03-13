@@ -46,34 +46,34 @@ const InfoShoe = (props: Props) => {
   };
 
   const [cart, setCart] = usesessionStorage<IProduct[]>("cart", []);
-  const {  _id : product ,sizes , color,images,price, ...shoeCart } = shoe;
+  const { _id: product, sizes, color, images, price, ...shoeCart } = shoe;
 
 
-  const accessToken= localStorage.getItem('accessToken')
+  const accessToken = localStorage.getItem('accessToken')
 
-  
+
   const addToCartt = () => {
-     if (!size) return openNotification("error");
-       const cartItem = {product, size: size };
-     if(accessToken){
-     dispatch(addToCart(cartItem));
-     }
+    if (!size) return openNotification("error");
+    const cartItem = { product, size: size };
+    if (accessToken) {
+      dispatch(addToCart(cartItem));
+    }
 
     const updatedCart = cart?.map((item: any) => {
-      if (item.product === shoe._id && item.size === size ) {
+      if (item.product === shoe._id && item.size === size) {
         // If product with the same ID already exists, increase its quantity
-        return {...item, quantity: item?.quantity! + 1 };
+        return { ...item, quantity: item?.quantity! + 1 };
       }
-      return(item);
+      return (item);
     });
 
-    
-    // If the product was not found in the cart, add it with quantity 1
-    if (!updatedCart?.find((item) => item.product  == product && item.size === size)) {
-          updatedCart?.push({product ,size:size , color,images,price, quantity: 1 });
-        }
 
-        openNotification('success')
+    // If the product was not found in the cart, add it with quantity 1
+    if (!updatedCart?.find((item) => item.product == product && item.size === size)) {
+      updatedCart?.push({ product, size: size, color, images, price, quantity: 1 });
+    }
+
+    openNotification('success')
     setCart(updatedCart);
   };
   const storedData = localStorage.getItem("cart");

@@ -61,7 +61,6 @@ const Sidebar = (props: Props) => {
   // const shoes = useSelector((state: IStateProduct) => state.product.products);
   const { hideFilter } = props;
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log(e.key)
     switch (e.key) {
        case "Men":
         dispact(featchProductByGender('nam'));
