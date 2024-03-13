@@ -35,6 +35,7 @@ export interface IProduct {
   isPublished?: boolean;
   publishedDate?: string;
   hits?: number;
+  delete:boolean;
   updatedAt?: Date;
   createdAt?: Date;
   quantityCart?: number;

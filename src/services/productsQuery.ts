@@ -27,7 +27,8 @@ export const getProductsWithFilter = async (
   startDate?: Date,
   endDate?: Date,
   color?: string,
-  gender?: string
+  gender?: string,
+  deleteFilter?: false
 ) => {
   try {
     let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
@@ -66,6 +67,9 @@ export const getProductsWithFilter = async (
     if (gender) {
       url += `&genderFilter=${gender}`;
     }
+    if (deleteFilter) {
+      url += `&deleteFilter=${deleteFilter}`;
+    }
 
     const response: AxiosResponse = await instance.get(url);
     return response?.data || response;
@@ -85,8 +89,8 @@ export const genderFilterProducts = async (gender: string) => {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
       `api/product?genderFilter=${gender}`
     );
-       return response?.data || response;
-    
+    return response?.data || response;
+
   } catch (error) {
     console.log(error);
     const customError = error as CustomError;
@@ -196,6 +200,32 @@ export const categoryFilterProducts = async (CategoryId: string) => {
     );
   }
 };
+
+// Lọc theo tryDelete
+export const tryDeleteFilterProducts = async (deleteFilter: boolean) => {
+  try {
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+      `api/product?deleteFilter=${deleteFilter}`
+    );
+    const data = response.data || [];
+    notification.success({
+      message: "Success",
+      description: "Products have been filtered by deleteFilter successfully.",
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message ||
+      "Error while fetching Products have been filtered by delelte ";
+    notification.error({ message: errorMessage });
+    throw new Error(
+      "Error while fetching Products have been filtered by delelte "
+    );
+  }
+};
+
 
 // Lọc theo size
 export const sizeFilterProducts = async (size: string) => {

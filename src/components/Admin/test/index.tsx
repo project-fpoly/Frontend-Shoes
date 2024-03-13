@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import UploadImage from '../Product/upload';
 import axios from 'axios';
-import { message } from 'antd';
+import { message, Modal, Button } from 'antd';
 
-const ParentComponent = () => {
-    const [selectedFiles, setSelectedFiles] = useState([]);
+interface ParentComponentProps {
+    name: string;
+}
 
-    const handleFileChange = (files:any) => {
+const ParentComponent: React.FC<ParentComponentProps> = ({ name }) => {
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [processing, setProcessing] = useState(false);
+
+    const handleFileChange = (files: File[]) => {
         setSelectedFiles(files);
     };
 
-    const handleSubmit = (e:any) => {
-        e.preventDefault();
-        // Xử lý logic khi submit form
-        console.log(selectedFiles);
-        uploadFiles(selectedFiles)
-    };
-    const uploadFiles = async (files: any) => {
+    const handleUpload = async (files: File[]) => {
         const CLOUD_NAME = 'dxspp5ba5';
         const PRESET_NAME = 'upload';
         const FOLDER_NAME = 'Upload';
-        const urls = [];
+        const urls: string[] = [];
         const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
         for (const file of files) {
@@ -45,15 +45,60 @@ const ParentComponent = () => {
 
         console.log(urls);
         message.success('Images uploaded successfully!');
+        return urls;
     };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (selectedFiles.length === 0) {
+            // Xử lý khi không có file được chọn
+            return;
+        }
+
+        try {
+            setProcessing(true);
+
+            console.log(selectedFiles);
+            const urls = await handleUpload(selectedFiles);
+            name(urls);
+        } catch (error) {
+            console.error('Error during file upload:', error);
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const handleOpenModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+    };
+
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Ảnh</label>
-                <UploadImage value={selectedFiles} onChange={handleFileChange} />
-            </div>
-            <button type="submit">Tải lên</button>
-        </form>
+        <>
+            <Button type="primary" onClick={handleOpenModal}>
+                Mở form
+            </Button>
+            <Modal
+                title="Upload ảnh"
+                visible={isModalVisible}
+                onCancel={handleCloseModal}
+                footer={null}
+            >
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>Ảnh</label>
+                        <UploadImage value={selectedFiles} onChange={handleFileChange} />
+                    </div>
+                    <Button type="primary" htmlType="submit" disabled={processing}>
+                        {processing ? 'Đang tải lên...' : 'Tải lên'}
+                    </Button>
+                </form>
+            </Modal>
+        </>
     );
 };
 

@@ -14,6 +14,7 @@ import {
   deleteProduct,
   addProduct,
   updatePrroduct,
+  tryDeleteProduct
 } from "../../services/products";
 import { getProductsWithFilter } from "../../services/productsQuery";
 import { isRejected } from "@reduxjs/toolkit/react";
@@ -181,6 +182,22 @@ export const update = createAsyncThunk(
     }
   }
 );
+
+export const tryDelete = createAsyncThunk(
+  "product/tryDeleteProduct",
+  async (id: string, thunkApi) => {
+    try {
+      const response = await tryDeleteProduct(id);
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
+      return response;
+    } catch (error) {
+      throw new Error("Error updating Product");
+    }
+  }
+);
+
 export const fetchCategoryById = createAsyncThunk(
   "product/fetchCategoryById",
   async (id: string) => {
@@ -228,10 +245,10 @@ export const featchProductByPrice = createAsyncThunk(
 ///////
 export const featchProductByGender = createAsyncThunk(
   "product/featchProductByGender",
-  async (gender:string) => {
+  async (gender: string) => {
     try {
       const respone = await genderFilterProducts(gender);
-      return respone.data  || [];
+      return respone.data || [];
     } catch (error) {
       return isRejected("Error fetching data");
     }
@@ -304,6 +321,18 @@ export const productSlice = createSlice({
       state.loading = "failed";
     });
     builder.addCase(update.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
+    });
+    // try delete product
+    builder.addCase(tryDelete.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(tryDelete.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(tryDelete.fulfilled, (state, action) => {
       state.loading = "fulfilled";
       state.products = Array.isArray(action.payload) ? action.payload : [];
       state.totalProducts = state.products.length;
@@ -385,7 +414,7 @@ export const productSlice = createSlice({
     builder.addCase(featchProductByGender.rejected, (state) => {
       state.loading = "failed";
     });
-      builder.addCase(
+    builder.addCase(
       featchProductByGender.fulfilled,
       (state, action) => {
         state.loading = "fulfilled";

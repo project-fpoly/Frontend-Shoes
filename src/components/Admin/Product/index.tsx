@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { IStateCategory } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, StarFilled } from "@ant-design/icons";
+import ParentComponent from '../test';
 
 const { Option } = Select;
 
@@ -123,11 +124,19 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     </Form.Item>
 
                     <Form.Item
-                        label="material"
+                        label="Material"
                         name="material"
-                        rules={[{ required: true, message: "Please enter the product material" }]}
+                        rules={[{ required: true, message: "Please select a material" }]}
                     >
-                        <Input placeholder="Enter product material" />
+                        <Select placeholder="Select a material" defaultValue="leather">
+                            <Option value="leather">Leather</Option>
+                            <Option value="fabric">Fabric</Option>
+                            <Option value="rubber">Rubber</Option>
+                            <Option value="plastic">Plastic</Option>
+                            <Option value="velvet">Velvet</Option>
+                            <Option value="EVA">EVA</Option>
+                            <Option value="mesh">Mesh</Option>
+                        </Select>
                     </Form.Item>
 
 
@@ -286,7 +295,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                 <Input.TextArea placeholder="Enter product description" />
             </Form.Item>
 
-            <Form.List name="images" >
+            {/* <Form.List name="images" >
                 {(fields, { add, remove }) => (
                     <div style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px', marginTop: '20px' }}>
                         {fields.map((field, index) => (
@@ -325,8 +334,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         </Form.Item>
                     </div>
                 )}
-            </Form.List>
-
+            </Form.List> */}
+            <ParentComponent name="images" />
             <Form.List name="sizes">
                 {(fields, { add, remove }) => (
                     <div style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px', marginTop: '20px' }}>

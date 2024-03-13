@@ -82,6 +82,28 @@ export const updatePrroduct = async (
   }
 };
 
+export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => {
+  try {
+    const product: Partial<IProduct> = {
+      delete: true
+    };
+
+    const response: AxiosResponse<IProduct> = await instance.patch(
+      `/api/product/${id}`,
+      product
+    );
+    notification.success({ message: "Product marked for deletion successfully" });
+    return response.data || response;
+  } catch (error) {
+    console.log(error);
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message || "Error while marking product for deletion.";
+    notification.error({ message: errorMessage });
+    throw new Error("Error while marking product for deletion.");
+  }
+};
+
 export const deleteProduct = async (id: string): Promise<IProduct | null> => {
   try {
     const response: AxiosResponse<IProduct> = await instance.delete(

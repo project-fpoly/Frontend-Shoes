@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FilterOutlined } from "@ant-design/icons";
-import { Collapse, Radio, Button, RadioChangeEvent } from "antd";
+import { Collapse, Radio, Button, RadioChangeEvent, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateProduct } from "../../../common/redux/type";
@@ -61,25 +61,28 @@ const Filter = (props: FilterProps) => {
         handleFilter();
     }, [dispatch, selectedSort, props.page, props.searchKeyword]);
 
-
     return (
-        <Collapse defaultActiveKey={["0"]}>
-            <Panel
-                header={
-                    <span onClick={handleToggleFilter}>
-                        <FilterOutlined /> Bộ lọc
-                    </span>
-                }
-                key="1"
+        <>
+            <span onClick={handleToggleFilter}>
+                <FilterOutlined /> Bộ lọc
+            </span>
+            <Modal
+                title="Bộ lọc"
+                visible={showFilter}
+                onCancel={handleToggleFilter}
+                footer={[
+                    <Button key="reset" onClick={handleResetFilter} loading={loading === "pending"}>
+                        Reset
+                    </Button>,
+                ]}
             >
-
-                <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
-
-                <Button onClick={handleResetFilter} loading={loading === "pending"}>
-                    Reset
-                </Button>
-            </Panel>
-        </Collapse>
+                <Collapse defaultActiveKey={["0"]}>
+                    <Panel header="Sắp xếp" key="1">
+                        <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
+                    </Panel>
+                </Collapse>
+            </Modal>
+        </>
     );
 };
 

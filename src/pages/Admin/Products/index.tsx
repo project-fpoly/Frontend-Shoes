@@ -4,6 +4,7 @@ import {
     EditOutlined,
     LoadingOutlined,
     ExclamationCircleOutlined,
+    EyeOutlined,
 
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,8 +12,8 @@ import { AppDispatch } from "../../../redux/store";
 import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
-import { Button, Table, Tooltip, Image, Modal } from "antd";
-import { removeProduct, createProduct, update } from "../../../features/product";
+import { Button, Table, Tooltip, Image, Modal, Row, Col } from "antd";
+import { removeProduct, createProduct, update, tryDelete } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
@@ -63,7 +64,7 @@ const ProductsManager: React.FC = () => {
         setProductsState(product);
     };
 
-    const deleteProduct = (record: IProduct) => {
+    const tryDeleteProduct = (record: IProduct) => {
         Modal.confirm({
             title: "Confirm Delete",
             icon: <ExclamationCircleOutlined />,
@@ -73,11 +74,29 @@ const ProductsManager: React.FC = () => {
             cancelText: "No",
             onOk() {
                 if (!record._id) return;
-                record._id && dispatch(removeProduct(record._id));
+                record._id && dispatch(tryDelete(record._id));
             },
             onCancel() { },
         });
     };
+    const isRowDisabled = (record: IProduct) => {
+        return record.delete === true;
+    };
+    const rowClassName = (record: IProduct) => {
+        return isRowDisabled(record) ? 'table-row-disabled' : '';
+    };
+    const rowStyle = (record: IProduct) => {
+        if (isRowDisabled(record)) {
+            return {
+                style: {
+                    opacity: 0.5
+                }
+            };
+        }
+
+        return {};
+    }
+
     const columns: ColumnsType<IProduct> = [
         {
             title: "No.",
@@ -96,8 +115,8 @@ const ProductsManager: React.FC = () => {
             render: (images) => <Image src={images[0]} width={50} className="action-cell" />,
         },
         {
-            title: "Description",
-            dataIndex: "description",
+            title: "quantity",
+            dataIndex: "quantity",
         },
         {
             title: 'Category',
@@ -119,6 +138,11 @@ const ProductsManager: React.FC = () => {
             className: "action-cell",
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
+                    <Tooltip title={"Views"}>
+                        <Button type="link" >
+                            <EyeOutlined onClick={() => handleRowClick(record)} />
+                        </Button>
+                    </Tooltip>
                     <Tooltip title={"Edit"}>
                         <Button type="link" >
                             <EditOutlined onClick={() => toggleModal(record)} />
@@ -126,7 +150,7 @@ const ProductsManager: React.FC = () => {
                     </Tooltip>
                     <Tooltip title={"Delete"}>
                         <Button type="link" >
-                            <DeleteOutlined onClick={() => deleteProduct(record)} />
+                            <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
                         </Button>
                     </Tooltip>
                 </div>
@@ -164,6 +188,7 @@ const ProductsManager: React.FC = () => {
         isPublished: true,
         publishedDate: "",
         hits: 112,
+        delete: false
     };
     const Value = {
 
@@ -200,6 +225,7 @@ const ProductsManager: React.FC = () => {
         isPublished: productsState?.isPublished || true,
         publishedDate: productsState?.publishedDate || "",
         hits: productsState?.hits || 123,
+        delete: productsState?.delete || false
 
     };
     const searchProduct = (value: string) => {
@@ -209,8 +235,16 @@ const ProductsManager: React.FC = () => {
 
     return (
         <div>
-            <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
-            <Filter page={currentPage} searchKeyword={Search} />
+
+            <Row gutter={10}>
+                <Col span={13}>
+                    <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
+                </Col>
+                <Col span={12}>
+                    <Filter
+                        page={currentPage} searchKeyword={Search} />
+                </Col>
+            </Row>
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
                     <LoadingOutlined style={{ fontSize: 14 }} spin />
@@ -224,6 +258,7 @@ const ProductsManager: React.FC = () => {
                         columns={columns}
                         dataSource={products}
                         bordered
+                        rowClassName={rowClassName}
                         size="small"
                         pagination={{
                             current: currentPage,
@@ -231,15 +266,6 @@ const ProductsManager: React.FC = () => {
                             showTotal: (total) => ` ${total} items`,
                             onChange: handlePageChange,
                         }}
-                        onRow={(record) => ({
-                            onClick: (event) => {
-                                const target = event.target as Element;
-                                const isAction = target.classList.contains("action-cell") || target.closest(".action-cell");
-                                if (!isAction) {
-                                    handleRowClick(record);
-                                }
-                            },
-                        })}
                     />
                     <Modal
                         title={"Create new Product"}
