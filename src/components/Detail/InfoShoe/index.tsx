@@ -48,7 +48,7 @@ const InfoShoe = (props: Props) => {
     cartItems: [],
   });
 
-  const { _id: product, sizes, color, images, price, ...shoeCart } = shoe;
+const { _id: product, sizes, color, images, price, ...shoeCart } = shoe;
 
   const accessToken = localStorage.getItem("accessToken");
 
