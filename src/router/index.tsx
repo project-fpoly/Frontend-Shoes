@@ -29,6 +29,7 @@ import Delivery from "../components/Help/Delivery.tsx";
 import Voucher from "../pages/Admin/Voucher";
 import OrderPage from "../pages/Order/OrderPage.tsx";
 import Favorites from "../pages/Favorite/index.tsx";
+import Sale from "../pages/Sale/index.tsx";
 
 const Router = () => {
   const user = useSelector((state:any) => state.auth.user);
@@ -49,7 +50,7 @@ const Router = () => {
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
-          
+          <Route path="/sale" element={<Sale />} />
         </Route>
 
         <Route path="/admin" element={
