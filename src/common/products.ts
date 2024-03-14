@@ -41,11 +41,11 @@ export interface IProduct {
 }
 export interface ICmt {
   _id: string;
-  shoeId: string;
-  userId: string;
-  rating: number;
-  content: string;
-  likes: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  shoeId?: string;
+  userId?: string;
+  rating?: number;
+  content?: string;
+  likes?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

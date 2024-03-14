@@ -1,23 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useDispatch } from "react-redux";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Tag } from "antd";
 import { updateManyOrders } from "../../../features/order";
 import React from "react";
 import { AppDispatch } from "../../../redux/store";
+import {
+  CarOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 const FormUpdateMany = ({
   selectedRowKeys,
   setIsModalOpen,
   onSelectChange,
+  orders,
 }: {
   selectedRowKeys: any;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSelectChange: (newSelectedRowKeys: React.Key[]) => React.Key[];
   onSubmit: () => void;
+  orders: any;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [form] = Form.useForm();
-
+  const getIsDelivered = (orderId: string) => {
+    const order = orders.find((order: any) => order._id === orderId);
+    return order
+      ? order.isDelivered
+      : "Chờ xác nhận" && "Chờ lấy hàng" && "Đang giao hàng" && "Đã hủy";
+  };
   const handleFormSubmit = (formValues: any) => {
     console.log(formValues);
     dispatch(updateManyOrders(formValues));
@@ -25,8 +38,9 @@ const FormUpdateMany = ({
     setIsModalOpen(false);
   };
   const isPaid = false;
-  const isDelivered = "Chờ xác nhận";
+  const isDelivered = getIsDelivered(selectedRowKeys[0]);
   const ids = selectedRowKeys;
+
   React.useEffect(() => {
     form.setFieldsValue({
       ids,
@@ -51,6 +65,7 @@ const FormUpdateMany = ({
         rules={[
           { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
         ]}
+        className="hidden"
       >
         <Input />
       </Form.Item>
@@ -74,11 +89,65 @@ const FormUpdateMany = ({
         ]}
       >
         <Select placeholder="is Delevered">
-          <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
-          <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
-          <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
-          <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-          <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+          {isDelivered === "Chờ xác nhận" && (
+            <>
+              <Select.Option value="Chờ lấy hàng">
+                <Tag icon={<SyncOutlined spin />} color="purple">
+                  Chờ lấy hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Chờ lấy hàng" && (
+            <>
+              <Select.Option value="Đang giao hàng">
+                <Tag icon={<CarOutlined />} color="processing">
+                  Đang giao hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Đang giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">
+                {" "}
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
+              <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã giao hàng" && (
+            <>
+              <Select.Option value="Đã giao hàng">
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  Đã giao hàng
+                </Tag>
+              </Select.Option>
+            </>
+          )}
+          {isDelivered === "Đã huỷ" && (
+            <>
+              <Select.Option value="Đã huỷ">
+                {" "}
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  Đã hủy
+                </Tag>
+              </Select.Option>
+            </>
+          )}
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

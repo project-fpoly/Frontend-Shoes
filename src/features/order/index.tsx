@@ -156,6 +156,28 @@ export const updateManyOrders = createAsyncThunk(
     }
   }
 );
+
+// get order by user
+export const getOrderByUsers = createAsyncThunk(
+  "order/getOrderByUsers",
+  async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/order/bills`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  }
+);
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -182,6 +204,20 @@ const orderSlice = createSlice({
         state.pagination = action.payload.pagination;
       })
       .addCase(fetchOrders.rejected, (state: any, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(getOrderByUsers.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getOrderByUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.orders = action.payload.orders;
+        state.pagination = action.payload.pagination;
+      })
+      .addCase(getOrderByUsers.rejected, (state: any, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

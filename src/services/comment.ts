@@ -1,3 +1,4 @@
+import { ICmt } from './../common/products';
 import { AxiosResponse } from "axios";
 import instance from "../core/Api";
 export const getComment = async (page = 1, pageSize = 10, search = "") => {
@@ -10,6 +11,35 @@ export const getComment = async (page = 1, pageSize = 10, search = "") => {
     console.error(error);
   }
 };
+export const getCommentByProduct = async (shoeId:string) => {
+  try {
+    const response: AxiosResponse = await instance.get(
+      `/api/comments/all?shoeId=${shoeId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createComment = async (commnets: ICmt) => {
+  try {
+    const response: AxiosResponse = await instance.post(
+      `/api/comments/create`,commnets ,{
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+      }
+      
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // export const createUsers = async (newUser:IUsers) => {
 //   try {
 //     const response: AxiosResponse< {newUser:IUsers[]} > = await instance.post(

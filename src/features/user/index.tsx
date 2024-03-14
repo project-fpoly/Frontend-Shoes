@@ -4,6 +4,7 @@ import { isRejected } from "@reduxjs/toolkit/react";
 import { createUsers, deleteUsers, getOneUsers, getUsers, updateUsers } from "../../services/auth";
 import { IUsers } from "../../common/users";
 import { notification } from "antd";
+import { fetchAllNotification } from "../notification";
 
 const initialState: initialUser = {
   loading: "idle",
@@ -69,6 +70,7 @@ export const deleteeUser = createAsyncThunk(
     try {
       const response = await deleteUsers(id);
       thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
+      thunkApi.dispatch(fetchAllNotification());
       return response;
     } catch (error) {
       return isRejected("Error updating user");

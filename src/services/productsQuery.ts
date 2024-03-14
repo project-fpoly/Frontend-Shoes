@@ -85,12 +85,8 @@ export const genderFilterProducts = async (gender: string) => {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
       `api/product?genderFilter=${gender}`
     );
-    const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by gender successfully.",
-    });
-    return data;
+       return response?.data || response;
+    
   } catch (error) {
     console.log(error);
     const customError = error as CustomError;
@@ -411,10 +407,10 @@ export const saleFilterProducts = async (
       `api/product?pageSize=${pageSize}&saleFilter=${sort}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by sale quantity successfully.",
-    });
+    // notification.success({
+    //   message: "Success",
+    //   description: "Products have been filtered by sale quantity successfully.",
+    // });
     return data;
   } catch (error) {
     console.log(error);
