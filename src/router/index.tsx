@@ -26,7 +26,7 @@ import {useSelector} from "react-redux";
 import Women from "../pages/Women/index.tsx";
 import Men from "../pages/Men/index.tsx";
 import Delivery from "../components/Help/Delivery.tsx";
-import Voucher from "../pages/Voucher";
+import Voucher from "../pages/Admin/Voucher";
 
 const Router = () => {
   const user = useSelector((state:any) => state.auth.user);
@@ -45,7 +45,6 @@ const Router = () => {
           <Route path="/help/a/free-shipping" element={<Delivery />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
-          <Route path="/voucher" element={<Voucher />} />
         </Route>
 
         <Route path="/admin" element={
@@ -60,6 +59,7 @@ const Router = () => {
           <Route path="/admin/comment" element={<CommentManager />} />
           <Route path="/admin/orders" element={<OrderManager />} />
           <Route path="/admin/notification/:id" element={<NotificationsAdmin />} />
+          <Route path="/admin/voucher" element={<Voucher />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>
