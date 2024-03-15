@@ -22,7 +22,7 @@ export const fetchOrders = createAsyncThunk(
   ) => {
     try {
       const response = await axios.get(
-        "http://localhost:9000/api/order/admin/bills",
+        "http://localhost:9000/api/order/bills",
         {
           params,
           headers: {
