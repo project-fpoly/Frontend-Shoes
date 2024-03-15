@@ -37,7 +37,7 @@ const MenuNav = () => {
           <h1 className="font-bold">Men</h1>
         </Link>
       ),
-      key: "SubMenu",
+      key: "Men",
     },
     {
       label: (
@@ -45,14 +45,14 @@ const MenuNav = () => {
           <h1 className="font-bold">Women</h1>
         </Link>
       ),
-      key: "SubMenu",
+      key: "Women",
     },
     {
-      label: <h1 className="font-bold">Kids</h1>,
-      key: "Kids",
-    },
-    {
-      label: <h1 className="font-bold">Sale</h1>,
+      label: (
+        <Link to="/sale">
+          <h1 className="font-bold">Sale</h1>
+        </Link>
+      ),
       key: "Sale",
     },
     {

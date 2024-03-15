@@ -1,9 +1,10 @@
 import { EnvironmentOutlined, MessageOutlined, MobileOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space, Typography } from "antd";
+import {Link} from "react-router-dom";
 
 const { Title } = Typography;
 
-const Help = () => {
+const   Help = () => {
 
     return(
         <div className="px-20">
@@ -49,8 +50,8 @@ const Help = () => {
             <Space direction="vertical" className="mt-10 mb-5" style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr'}}>
                 <Space direction="vertical">
                     <Title level={4}>Dispatch & delivery</Title>
-                    <a href="">How do I get free delivery on Nike orders?</a>
-                    <a href="">What are Nike's delivery options?</a>
+                    <Link to="/help/a/free-shipping">How do I get free delivery on Nike orders?</Link>
+                    <Link to="">What are Nike's delivery options?</Link>
                     <a href="">Can my Nike order be dispatched internationally?</a>
                 </Space>
                 <Space direction="vertical">

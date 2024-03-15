@@ -10,6 +10,7 @@ export interface initialProduct {
   product: IProduct | {};
   category: ICategory | {};
   totalProducts: number;
+  comments?: [];
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";

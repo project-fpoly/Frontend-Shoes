@@ -8,14 +8,13 @@ import { AppDispatch } from "../../redux/store";
 import { IStateProduct } from "../../common/redux/type";
 import { createOrder, getCartItems } from "../../features/cart";
 import { fetchAllProducts } from "../../features/product";
+import { IUsers } from "../../common/users";
 
-const Guest_Checkout = () => {
+const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   const { cart } = useSelector((state: any) => state.cart.cartItems);
   const cartSession = JSON.parse(sessionStorage.getItem("cart"));
-
   const accessToken = localStorage.getItem("accessToken");
 
   let totalPrice = 0;
@@ -25,6 +24,8 @@ const Guest_Checkout = () => {
   });
 
   const { products } = useSelector((state: IStateProduct) => state.product);
+  const { users } = useSelector((state: IUsers) => state.user);
+
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId);
     return product ? product.name : "N/A";
@@ -32,6 +33,10 @@ const Guest_Checkout = () => {
   const getCateName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId);
     return product ? product.categoryId.name : "N/A";
+  };
+  const getIsDelivered = (userId: string) => {
+    const user = users.find((user: any) => user._id === userId);
+    return user ? user.deliveryAddress : "";
   };
   useEffect(() => {
     dispatch(getCartItems());
@@ -81,6 +86,7 @@ const Guest_Checkout = () => {
             <h2 className="text-xl mb-4">
               How would you like to get your order?
             </h2>
+
             <Button
               block
               className="h-20 rounded-xl mb-12 border-black hover:!border-black hover:!text-black"
@@ -104,7 +110,7 @@ const Guest_Checkout = () => {
               onFinish={handleFormSubmit}
             >
               <div className="">
-                <h2 className="text-2xl mb-4">Enter your name and address:</h2>
+                <h2 className="text-2xl mb-4">Your delivery information</h2>
 
                 <Form.Item
                   name="fullname"
@@ -232,11 +238,7 @@ const Guest_Checkout = () => {
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
                         <Link to={"/"}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={cartItem.images[0]}
-                            alt=""
-                          />
+                          <img src={cartItem.images[0]} alt="" />
                         </Link>
                       </figure>
                     </div>
@@ -258,11 +260,7 @@ const Guest_Checkout = () => {
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
                         <Link to={"/"}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={item.images[0]}
-                            alt=""
-                          />
+                          <img src={item.images[0]} alt="" />
                         </Link>
                       </figure>
                     </div>
@@ -288,4 +286,4 @@ const Guest_Checkout = () => {
   );
 };
 
-export default Guest_Checkout;
+export default CheckOut;

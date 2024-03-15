@@ -7,6 +7,7 @@ import {
   DotChartOutlined,
   WechatOutlined,
   CodeSandboxOutlined,
+  GiftOutlined, ShoppingCartOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Space } from "antd";
@@ -42,8 +43,14 @@ const items: MenuItem[] = [
     "sub5",
     <DotChartOutlined />
   ),
-  getItem(<Link to="comment">Comments</Link>, "sub6", <WechatOutlined />),
-  getItem("Setting", "sub7", <SettingOutlined />),
+  getItem(
+      <Link to="categories">Sale</Link>,
+      "sub6",
+      <ShoppingCartOutlined />
+  ),
+  getItem(<Link to="comment">Comments</Link>, "sub7", <WechatOutlined />),
+  getItem(<Link to="voucher">Voucher</Link>, "sub8", <GiftOutlined />),
+  getItem(<Link to="setting">Setting</Link>, "sub9", <SettingOutlined />),
 ];
 
 // submenu keys of first level

@@ -28,7 +28,7 @@ export const fetchProducts = createAsyncThunk(
 );
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async (cartItem: CartItem, { getState }) => {
+  async (cartItem: CartItem) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       let response;
@@ -126,25 +126,68 @@ export const createOrder = createAsyncThunk(
             },
           }
         );
-        console.log(shippingAddress);
         notification.success({ message: response.data.message });
         return response.data.cart;
       } else {
-        const cookie = document.cookie; // Lấy giá trị của cookie từ trình duyệt
-        console.log(cookie);
         const response = await axios.post(
           "http://localhost:9000/api/order/bills/",
           { cartItems, shippingAddress, totalPrice },
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
-              Cookie: cookie,
               "Content-Type": "application/json; charset=UTF-8",
             },
           }
         );
         notification.success({ message: response.data.message });
-        return response.data.cart;
+        var request = indexedDB.open("my_database", 1);
+
+        // Xử lý sự kiện khi cơ sở dữ liệu được mở hoặc tạo mới thành công
+        request.onsuccess = function (event: any) {
+          var db = event.target.result;
+
+          // Tạo hoặc mở lưu trữ đối tượng
+          var transaction = db.transaction(["my_object_store"], "readwrite");
+          var objectStore = transaction.objectStore("my_object_store");
+
+          // Lưu trữ dữ liệu từ response.data.data vào IndexedDB
+          objectStore.add({
+            key: response.data.data.trackingNumber,
+            value: response.data.data,
+          });
+
+          // Hoàn thành giao dịch
+          transaction.oncomplete = function () {
+            console.log("Dữ liệu đã được lưu vào IndexedDB.");
+          };
+
+          // Xử lý lỗi giao dịch
+          transaction.onerror = function (event: any) {
+            console.error(
+              "Lỗi khi lưu dữ liệu vào IndexedDB: " + event.target.errorCode
+            );
+          };
+        };
+
+        // Xử lý sự kiện khi có lỗi mở hoặc tạo cơ sở dữ liệu
+        request.onerror = function (event: any) {
+          console.error(
+            "Lỗi khi mở hoặc tạo cơ sở dữ liệu: " + event.target.errorCode
+          );
+        };
+
+        // Xử lý sự kiện khi cần tạo lại cơ sở dữ liệu hoặc lưu trữ đối tượng
+        request.onupgradeneeded = function (event: any) {
+          var db = event.target.result;
+
+          // Tạo lưu trữ đối tượng nếu chưa tồn tại
+          var objectStore = db.createObjectStore("my_object_store", {
+            keyPath: "id",
+          });
+          // Tạo chỉ mục nếu cần thiết
+          // objectStore.createIndex('index_name', 'property_name', { unique: false });
+        };
+        return response.data.data;
       }
     } catch (error: any) {
       notification.error({ message: error.message });
@@ -155,7 +198,7 @@ export const createOrder = createAsyncThunk(
 );
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async (product: string, { dispatch }) => {
+  async (product: string, thunkApi) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
@@ -170,7 +213,8 @@ export const removeFromCart = createAsyncThunk(
           }
         );
         notification.success({ message: response.data.message });
-        dispatch(getCartItems());
+        thunkApi.dispatch(getCartItems());
+
         return response.data;
       } else {
         const response = await axios.delete(
@@ -194,19 +238,24 @@ export const removeFromCart = createAsyncThunk(
 );
 export const updateProductCart = createAsyncThunk(
   "cart/updateProductCart",
-  async ({
-    productId,
-    size,
-    quantity,
-  }: {
-    productId: string;
-    size: string;
-    quantity: number;
-  }) => {
+  async (
+    {
+      index,
+      productId,
+      size,
+      quantity,
+    }: {
+      index: number;
+      productId: string;
+      size: string;
+      quantity: number;
+    },
+    thunkApi
+  ) => {
     try {
       const response = await axios.put(
         `http://localhost:9000/api/order/carts/${productId}`,
-        { size, quantity },
+        { index, size, quantity },
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -215,7 +264,8 @@ export const updateProductCart = createAsyncThunk(
           },
         }
       );
-      notification.success({ message: response.data.message });
+      thunkApi.dispatch(getCartItems());
+
       return response.data;
     } catch (error: any) {
       notification.error({ message: error.message });
@@ -293,11 +343,7 @@ const cartSlice = createSlice({
         state.error = null;
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
-        const productId = action.meta.arg;
-
-        state.cartItems = state.cartItems.filter(
-          (item: any) => item.product !== productId
-        );
+        state.cartItems = action.payload;
         state.loading = false;
         state.error = null;
       })
@@ -312,12 +358,9 @@ const cartSlice = createSlice({
       })
       .addCase(updateProductCart.fulfilled, (state, action) => {
         state.loading = false;
-        const productId = action.meta.arg;
 
         // Cập nhật lại giỏ hàng sau khi cập nhật thành công
-        state.cartItems = state.cartItems.filter(
-          (item: any) => item.product === productId
-        );
+        state.cartItems = action.payload;
       })
       .addCase(updateProductCart.rejected, (state, action) => {
         state.loading = false;
