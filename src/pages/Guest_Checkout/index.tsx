@@ -51,19 +51,19 @@ const Guest_Checkout = () => {
         const { cartItems } = cart;
         dispatch(createOrder({ cartItems, shippingAddress }));
         sessionStorage.removeItem("cart");
-        navigate("./order");
+        navigate("../../order");
       } else {
         const { cartItems } = cartSession;
         dispatch(createOrder({ cartItems, shippingAddress }));
         sessionStorage.removeItem("cart");
-        navigate("./order");
+        navigate("../../order");
       }
     } else {
       const { cartItems } = cartSession;
 
       dispatch(createOrder({ cartItems, shippingAddress, totalPrice }));
       sessionStorage.removeItem("cart");
-      navigate("./order");
+      navigate("../../order");
     }
   };
   // React.useEffect(() => {
