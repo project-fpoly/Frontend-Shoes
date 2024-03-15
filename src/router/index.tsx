@@ -21,8 +21,8 @@ import SizeGuide from "../pages/SizeGuide";
 import ResetPassword from "../pages/client/reset-password.tsx";
 import ForgotPassword from "../pages/client/forgotpassword/ForgotPassword.tsx";
 import VerifyEmail from "../pages/client/verify-email";
-import {PrivateRoute} from "./privateRoutes.tsx";
-import {useSelector} from "react-redux";
+import { PrivateRoute } from "./privateRoutes.tsx";
+import { useSelector } from "react-redux";
 import Women from "../pages/Women/index.tsx";
 import Men from "../pages/Men/index.tsx";
 import Delivery from "../components/Help/Delivery.tsx";
@@ -30,10 +30,11 @@ import Voucher from "../pages/Admin/Voucher";
 import OrderPage from "../pages/Order/OrderPage.tsx";
 import Favorites from "../pages/Favorite/index.tsx";
 import Sale from "../pages/Sale/index.tsx";
+import CheckOut from "../pages/CheckOut/index.tsx";
 
 const Router = () => {
-  const user = useSelector((state:any) => state.auth.user);
-  
+  const user = useSelector((state: any) => state.auth.user);
+
   return (
     <>
       <Routes>
@@ -51,20 +52,27 @@ const Router = () => {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/sale" element={<Sale />} />
+          <Route path="/cart/checkout" element={<CheckOut />} />
         </Route>
 
-        <Route path="/admin" element={
-          <PrivateRoute user={user}>
-            <AdminLayout />
-          </PrivateRoute>
-        }>
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute user={user}>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManager />} />
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
           <Route path="/admin/orders" element={<OrderManager />} />
-          <Route path="/admin/notification/:id" element={<NotificationsAdmin />} />
+          <Route
+            path="/admin/notification/:id"
+            element={<NotificationsAdmin />}
+          />
           <Route path="/admin/voucher" element={<Voucher />} />
         </Route>
 
