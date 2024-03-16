@@ -24,8 +24,7 @@ const CheckOut = () => {
   });
 
   const { products } = useSelector((state: IStateProduct) => state.product);
-  const { users } = useSelector((state: IUsers) => state.user);
-
+  const {user} = useSelector((state: IUsers) => state.auth);
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId);
     return product ? product.name : "N/A";
@@ -34,10 +33,7 @@ const CheckOut = () => {
     const product = products.find((product: any) => product._id === shoeId);
     return product ? product.categoryId.name : "N/A";
   };
-  const getIsDelivered = (userId: string) => {
-    const user = users.find((user: any) => user._id === userId);
-    return user ? user.deliveryAddress : "";
-  };
+ 
   useEffect(() => {
     dispatch(getCartItems());
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
@@ -49,35 +45,41 @@ const CheckOut = () => {
     phone: string;
     address: string;
   }) => {
-    const address = { shippingAddress: formValues };
-    const { shippingAddress } = address;
+    const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method };
+
     if (accessToken) {
       if (cart) {
         const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, shippingAddress }));
+        dispatch(createOrder({ cartItems, request }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       } else {
         const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, shippingAddress }));
+        dispatch(createOrder({ cartItems, request }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       }
     } else {
       const { cartItems } = cartSession;
 
-      dispatch(createOrder({ cartItems, shippingAddress, totalPrice }));
+      dispatch(createOrder({ cartItems, request, totalPrice }));
       sessionStorage.removeItem("cart");
       navigate("../../order");
     }
   };
-  // React.useEffect(() => {
-  //   form.setFieldsValue({
-  //     name,
-  //     isPaid,
-  //     isDelivered,
-  //   });
-  // }, [form, ids, isPaid, isDelivered]);
+  const fullname = user?.userName
+  const address = user?.deliveryAddress
+  const email = user?.email
+  const phone = user?.phoneNumbers
+
+  React.useEffect(() => {
+    form.setFieldsValue({
+      fullname,
+      address,
+      email,
+      phone,
+    });
+  }, [form, fullname]);
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
       <div className="grid grid-cols-2">
@@ -123,6 +125,7 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Fullname"
+                    
                   />
                 </Form.Item>
 
@@ -139,6 +142,8 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Address Line 1"
+                    
+                 
                   />
                 </Form.Item>
 
@@ -170,6 +175,7 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Phone Number"
+
                   />
                 </Form.Item>
               </div>
@@ -196,7 +202,16 @@ const CheckOut = () => {
               {/* <Form.Item name="fieldA" valuePropName="checked">
                                 <Checkbox />
                             </Form.Item> */}
-
+              <Form.Item
+            name="payment_method"
+            rules={[{ required: true, message: "Please select payment method!" }]}
+            initialValue="Thanh toán tiền mặt"
+          >
+            <Radio.Group defaultValue="Thanh toán tiền mặt">
+              <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
+              <Radio value="vnpay">VNPAY</Radio>
+            </Radio.Group>
+          </Form.Item>
               <Button
                 type="default"
                 htmlType="submit"

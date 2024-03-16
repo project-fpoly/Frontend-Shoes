@@ -29,7 +29,7 @@ const NavRight = () => {
         className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"
         size={43}
       />
-      <Link to="http://127.0.0.1:5173/cart">
+      <Link to="./cart">
         <IoBagOutline
           className="mt-1 cursor-pointer hover:bg-[#e5e5e5] rounded-full p-2 "
           size={43}

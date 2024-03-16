@@ -44,24 +44,24 @@ const Guest_Checkout = () => {
     phone: string;
     address: string;
   }) => {
-    const address = { shippingAddress: formValues };
-    const { shippingAddress } = address;
+    const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method };
+    
     if (accessToken) {
       if (cart) {
         const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, shippingAddress }));
+        dispatch(createOrder({ cartItems, request }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       } else {
         const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, shippingAddress }));
+        dispatch(createOrder({ cartItems, request }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       }
     } else {
       const { cartItems } = cartSession;
 
-      dispatch(createOrder({ cartItems, shippingAddress, totalPrice }));
+      dispatch(createOrder({ cartItems, request, totalPrice }));
       sessionStorage.removeItem("cart");
       navigate("../../order");
     }
@@ -190,7 +190,16 @@ const Guest_Checkout = () => {
               {/* <Form.Item name="fieldA" valuePropName="checked">
                                 <Checkbox />
                             </Form.Item> */}
-
+               <Form.Item
+            name="payment_method"
+            rules={[{ required: true, message: "Please select payment method!" }]}
+            initialValue="Thanh toán tiền mặt"
+          >
+            <Radio.Group defaultValue="Thanh toán tiền mặt">
+              <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
+              <Radio value="vnpay">VNPAY</Radio>
+            </Radio.Group>
+          </Form.Item>
               <Button
                 type="default"
                 htmlType="submit"

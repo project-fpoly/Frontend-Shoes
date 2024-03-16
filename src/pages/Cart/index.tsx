@@ -102,9 +102,8 @@ const Cart = () => {
       updateProductCart({
         index,
         productId,
-        size,
-        quantity: cart.cartItems.find((item: any) => item.product === productId)
-          .quantity,
+        size
+       
       })
     );
     setForceRender(forceRender + 1); // Gọi setState để force render lại component
@@ -120,8 +119,7 @@ const Cart = () => {
         index,
         productId,
         quantity,
-        size: cart.cartItems.find((item: any) => item.product === productId)
-          .size,
+        size: cart.cartItems[index].size
       })
     );
     setForceRender(forceRender + 1); // Gọi setState để force render lại component

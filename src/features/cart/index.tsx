@@ -247,8 +247,8 @@ export const updateProductCart = createAsyncThunk(
     }: {
       index: number;
       productId: string;
-      size: string;
-      quantity: number;
+      size?: string;
+      quantity?: number;
     },
     thunkApi
   ) => {
