@@ -1,5 +1,5 @@
 // usesessionStorage.ts
-import { useState } from "react";
+import { useState } from 'react'
 
 function usesessionStorage<T>(
   key: string,
@@ -7,24 +7,24 @@ function usesessionStorage<T>(
 ): [T, (value: T) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = sessionStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      const item = sessionStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
     } catch (error) {
-      console.error(error);
-      return initialValue;
+      console.error(error)
+      return initialValue
     }
-  });
+  })
 
   const setValue = (value: T) => {
     try {
-      setStoredValue(value);
-      sessionStorage.setItem(key, JSON.stringify(value));
+      setStoredValue(value)
+      sessionStorage.setItem(key, JSON.stringify(value))
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
-  return [storedValue, setValue];
+  return [storedValue, setValue]
 }
 
-export default usesessionStorage;
+export default usesessionStorage

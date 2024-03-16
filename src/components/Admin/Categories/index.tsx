@@ -1,23 +1,17 @@
-import { Button, Form, Input, Select } from "antd";
-import { ICategory } from "../../../common/category";
+import { Button, Form, Input, Select } from 'antd'
+import { ICategory } from '../../../common/category'
 
-const { Option } = Select;
+const { Option } = Select
 
-const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void; mode: string }> = ({
-  name,
-  description,
-  onSubmit,
-  imageUrl,
-  status,
-  viewCount,
-  mode
-}) => {
-  const [form] = Form.useForm();
+const FormCategory: React.FC<
+  ICategory & { onSubmit: (values: ICategory) => void; mode: string }
+> = ({ name, description, onSubmit, imageUrl, status, viewCount, mode }) => {
+  const [form] = Form.useForm()
 
   const handleFormSubmitCreate = (values: ICategory) => {
-    onSubmit(values);
-    console.log(values);
-  };
+    onSubmit(values)
+    console.log(values)
+  }
 
   return (
     <Form
@@ -37,35 +31,39 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
       onFinish={handleFormSubmitCreate}
     >
       <Form.Item
-        label={"Name"}
+        label={'Name'}
         name="name"
-        rules={[{ required: true, message: "Please input the name of the category" }]}
+        rules={[
+          { required: true, message: 'Please input the name of the category' },
+        ]}
       >
         <Input defaultValue={name} />
       </Form.Item>
-      {mode === "update" && (
+      {mode === 'update' && (
         <>
           <Form.Item
-            label={"Description"}
+            label={'Description'}
             name="description"
-            rules={[{ required: false, message: "Please input the description" }]}
+            rules={[
+              { required: false, message: 'Please input the description' },
+            ]}
           >
             <Input defaultValue={description} />
           </Form.Item>
 
           <Form.Item
-            label={"Image URL"}
+            label={'Image URL'}
             name="imageUrl"
-            rules={[{ required: false, message: "Please input the image URL" }]}
+            rules={[{ required: false, message: 'Please input the image URL' }]}
           >
             <Input defaultValue={imageUrl} />
           </Form.Item>
 
           <Form.Item
-            label={"Status"}
+            label={'Status'}
             name="status"
-            rules={[{ required: false, message: "Please select the status" }]}
-            initialValue="active" 
+            rules={[{ required: false, message: 'Please select the status' }]}
+            initialValue="active"
           >
             <Select>
               <Option value="active">Active</Option>
@@ -74,22 +72,27 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
           </Form.Item>
 
           <Form.Item
-            label={"View Count"}
+            label={'View Count'}
             name="viewCount"
-            rules={[{ required: false, message: "Please input the view count" }]}
+            rules={[
+              { required: false, message: 'Please input the view count' },
+            ]}
           >
             <Input defaultValue={viewCount} />
           </Form.Item>
         </>
       )}
-      <Form.Item style={{ textAlign: "right" }} wrapperCol={{ offset: 8, span: 16 }}>
+      <Form.Item
+        style={{ textAlign: 'right' }}
+        wrapperCol={{ offset: 8, span: 16 }}
+      >
         <Button>Cancel</Button>
-        <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
+        <Button style={{ marginLeft: '5px' }} type="primary" htmlType="submit">
           Save
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormCategory;
+export default FormCategory
