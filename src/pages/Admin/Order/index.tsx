@@ -28,8 +28,10 @@ import { IUsers } from "../../../common/users";
 import DetailOrder from "../../../components/Admin/Order/DetailOrder";
 import FormUpdateMany from "../../../components/Admin/Order/FormUpdateMany";
 import HeaderTableAdminOrder from "../../../components/Admin/Layout/HeaderTableAdminOrder";
-
-const OrderManager: React.FC = () => {
+interface Props {
+  data: any;
+}
+const OrderManager = ({ data }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -226,7 +228,7 @@ const OrderManager: React.FC = () => {
             <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
             <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
             <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-            <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            <Select.Option value="Đã hủy">Đã hủy</Select.Option>
           </Select>
         </span>
       ),

@@ -22,7 +22,7 @@ export const fetchOrders = createAsyncThunk(
   ) => {
     try {
       const response = await axios.get(
-        "http://localhost:9000/api/order/bills",
+        "http://localhost:9000/api/order/admin/bills",
         {
           params,
           headers: {
@@ -156,15 +156,63 @@ export const updateManyOrders = createAsyncThunk(
     }
   }
 );
+export const updateIsDeliveredOrder = createAsyncThunk(
+  "order/updateIsDeliveredOrder",
+  async (
+    {
+      id,
+      isDelivered,
+    }: {
+      id: string;
+      isDelivered: string;
+    },
+    thunkApi
+  ) => {
+    try {
+      if (typeof id === "string") {
+        const response = await axios.put(
+          `http://localhost:9000/api/order/bills/${id}`,
+          { isDelivered },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+          }
+        );
+        notification.success({ message: "Đã hủy đơn hàng" });
 
+        thunkApi.dispatch(getOrderByUsers({}));
+
+        return response.data;
+      } else {
+        throw new Error("Invalid id"); // Xử lý trường hợp id không hợp lệ (undefined)
+      }
+    } catch (error: any) {
+      notification.error({ message: error.message });
+      throw error.response.data;
+    }
+  }
+);
 // get order by user
 export const getOrderByUsers = createAsyncThunk(
   "order/getOrderByUsers",
-  async () => {
+  async (
+    params: {
+      page?: number;
+      limit?: number;
+      start?: string;
+      end?: string;
+      search?: string;
+    },
+    { dispatch }
+  ) => {
     try {
       const response = await axios.get(
         `http://localhost:9000/api/order/bills`,
         {
+          params,
           headers: {
             "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -172,6 +220,9 @@ export const getOrderByUsers = createAsyncThunk(
           },
         }
       );
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
+
       return response.data;
     } catch (error: any) {
       throw error.response.data;
@@ -288,6 +339,25 @@ const orderSlice = createSlice({
         });
       })
       .addCase(updateManyOrders.rejected, (state: any, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateIsDeliveredOrder.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateIsDeliveredOrder.fulfilled, (state: any, action) => {
+        state.isLoading = false;
+        const updateIsDeliveredOrder = action.payload;
+        const index = state.orders.findIndex(
+          (order: IBill) => order._id === updateIsDeliveredOrder._id
+        );
+        if (index !== -1) {
+          state.orders[index] = updateIsDeliveredOrder;
+        }
+      })
+      .addCase(updateIsDeliveredOrder.rejected, (state: any, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

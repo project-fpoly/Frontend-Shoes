@@ -5,18 +5,16 @@
 import { Tabs, TabsProps } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderByUsers } from "../../features/order";
-import { AppDispatch, RootState } from "../../redux/store";
-import OrderItem from "./OrderItem";
-
+import { AppDispatch, RootState } from "../../../redux/store";
+import { fetchOrders } from "../../../features/order";
+import OrderManager from "./index";
 export default function OrderPage() {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    dispatch(getOrderByUsers({}));
+    dispatch(fetchOrders({}));
   }, [dispatch]);
+  const orders = useSelector((state: RootState) => state.order.orders);
 
-  const { orders } = useSelector((state: RootState) => state.order);
-  console.log(orders);
   const dataGet = (data: string) =>
     orders?.filter((item: any) => item.isDelivered === data);
   const data1 = dataGet("Chờ xác nhận");
@@ -29,27 +27,27 @@ export default function OrderPage() {
     {
       key: "0",
       label: "Chờ xác nhận",
-      children: <OrderItem data={data1} />,
+      children: <OrderManager data={data1} />,
     },
     {
       key: "Chờ lấy hàng",
       label: "Chờ lấy hàng",
-      children: <OrderItem data={data2} />,
+      children: <OrderManager data={data2} />,
     },
     {
       key: "Đang giao hàng",
       label: "Đang giao hàng",
-      children: <OrderItem data={data3} />,
+      children: <OrderManager data={data3} />,
     },
     {
       key: "Đã giao hàng",
       label: "Đã giao hàng",
-      children: <OrderItem data={data4} />,
+      children: <OrderManager data={data4} />,
     },
     {
       key: "Đã hủy",
       label: "Đã hủy",
-      children: <OrderItem data={data5} />,
+      children: <OrderManager data={data5} />,
     },
   ];
 

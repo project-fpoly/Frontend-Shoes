@@ -7,12 +7,17 @@ import { CartItem, IBill } from "../../common/order";
 import { useDispatch, useSelector } from "react-redux";
 import { IStateProduct } from "../../common/redux/type";
 import HeaderTableAdminOrder from "../../components/Admin/Layout/HeaderTableAdminOrder";
-import { fetchOrders } from "../../features/order";
+import {
+  fetchOrders,
+  getOrderByUsers,
+  updateIsDeliveredOrder,
+} from "../../features/order";
 import { AppDispatch } from "../../redux/store";
 import DetailOrder from "../../components/Admin/Order/DetailOrder";
 import { IUsers } from "../../common/users";
 import { fetchAllUsers } from "../../features/user";
 import { fetchAllProducts } from "../../features/product";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 interface Props {
   data: any;
@@ -72,10 +77,10 @@ export default function OrderItem({ data }: Props) {
       );
     };
   }, []);
-  console.log();
+  console.log(data);
   useEffect(() => {
     dispatch(
-      fetchOrders({
+      getOrderByUsers({
         page: currentPage,
         limit: pageSize,
         search: Search,
@@ -89,6 +94,7 @@ export default function OrderItem({ data }: Props) {
 
   const handleRowClick = (order: IBill) => {
     setSelectedOrder(order);
+    console.log(order);
     setModalVisible(true);
   };
 
@@ -115,7 +121,22 @@ export default function OrderItem({ data }: Props) {
     setSearch(value);
     setSelectedValue(value);
   };
+  const handleCancelOrder = (order: IBill) => {
+    Modal.confirm({
+      title: "Confirm Deletion",
+      icon: <ExclamationCircleOutlined />,
+      content: "Are you sure you want to delete this order?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
 
+      async onOk() {
+        const isDelivered = "Đã hủy";
+        await dispatch(updateIsDeliveredOrder({ id: order?._id, isDelivered }));
+      },
+      onCancel() {},
+    });
+  };
   const columns: ColumnsType<IBill> = [
     {
       title: "No.",
@@ -197,7 +218,16 @@ export default function OrderItem({ data }: Props) {
         const isCancel = record.isDelivered === "Chờ xác nhận";
         return (
           <div style={{ textAlign: "center" }}>
-            <Button type="link" disabled={!isCancel}>
+            <Button
+              onClick={() => handleCancelOrder(record)}
+              type="link"
+              disabled={!isCancel}
+              className={
+                record.isDelivered === "Đã hủy"
+                  ? "hidden"
+                  : "block w-full mx-auto"
+              }
+            >
               Hủy dơn
             </Button>
           </div>
