@@ -4,7 +4,7 @@ const Banner = () => {
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
       <img
-        src="../../../sale.gif"
+        src="../../../salebanner.jpg"
         alt=""
         className="w-full"
         style={{ height: 700 }}

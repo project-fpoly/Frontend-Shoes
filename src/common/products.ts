@@ -10,11 +10,11 @@ export interface IProduct {
   name?: string;
   description: string;
   categoryId:
-  | string
-  | {
-    _id: string;
-    name?: string;
-  };
+    | string
+    | {
+        _id: string;
+        name?: string;
+      };
   price: number;
   sale: number;
   discount?: number;
@@ -48,4 +48,14 @@ export interface ICmt {
   likes?: string[];
   createdAt?: Date;
   updatedAt?: Date;
+}
+export interface ISale {
+  _id?: string;
+  name?: string;
+  description: string;
+  sale: number;
+  discount?: number;
+  quantity: number;
+  create_date: Date;
+  expiration_date: Date;
 }

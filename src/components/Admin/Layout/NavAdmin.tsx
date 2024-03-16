@@ -44,7 +44,7 @@ const items: MenuItem[] = [
     <DotChartOutlined />
   ),
   getItem(
-      <Link to="categories">Sale</Link>,
+      <Link to="sale">Sale</Link>,
       "sub6",
       <ShoppingCartOutlined />
   ),
