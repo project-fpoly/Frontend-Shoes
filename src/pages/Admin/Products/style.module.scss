@@ -1,10 +1,10 @@
 label {
-    font-weight: bold;
-    color: red;
+  font-weight: bold;
+  color: red;
 }
 
 .grid-item {
-    display: grid ; 
-    grid-template-columns: 1fr 1fr; /* Chia hàng thành 2 cột có chiều rộng bằng nhau */
-    gap: 16px; /* Khoảng cách giữa các phần tử trong hàng */
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia hàng thành 2 cột có chiều rộng bằng nhau */
+  gap: 16px; /* Khoảng cách giữa các phần tử trong hàng */
+}

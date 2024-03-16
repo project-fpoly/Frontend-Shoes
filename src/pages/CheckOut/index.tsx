@@ -1,72 +1,80 @@
-import React, { useEffect } from "react";
-import { Button, Checkbox, Form, Input, Radio } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import "./style.css";
-import { TbTruckDelivery } from "react-icons/tb";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { IStateProduct } from "../../common/redux/type";
-import { createOrder, getCartItems } from "../../features/cart";
-import { fetchAllProducts } from "../../features/product";
-import { IUsers } from "../../common/users";
+import React, { useEffect } from 'react'
+import { Button, Checkbox, Form, Input, Radio } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
+import './style.css'
+import { TbTruckDelivery } from 'react-icons/tb'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../redux/store'
+import { IStateProduct } from '../../common/redux/type'
+import { createOrder, getCartItems } from '../../features/cart'
+import { fetchAllProducts } from '../../features/product'
+import { IUsers } from '../../common/users'
 
 const CheckOut = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const { cart } = useSelector((state: any) => state.cart.cartItems);
-  const cartSession = JSON.parse(sessionStorage.getItem("cart"));
-  const accessToken = localStorage.getItem("accessToken");
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const cartSession = JSON.parse(sessionStorage.getItem('cart'))
+  const accessToken = localStorage.getItem('accessToken')
 
-  let totalPrice = 0;
+  let totalPrice = 0
 
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity;
-  });
+    totalPrice += item.price * item.quantity
+  })
 
-  const { products } = useSelector((state: IStateProduct) => state.product);
-  const {user} = useSelector((state: IUsers) => state.auth);
+  const { products } = useSelector((state: IStateProduct) => state.product)
+  const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
   const getCateName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.categoryId.name : "N/A";
-  };
- 
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.categoryId.name : 'N/A'
+  }
+
   useEffect(() => {
-    dispatch(getCartItems());
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-  }, []);
-  const [form] = Form.useForm();
+    dispatch(getCartItems())
+    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+  }, [])
+  const [form] = Form.useForm()
   const handleFormSubmit = (formValues: {
-    fullname: string;
-    email: string;
-    phone: string;
-    address: string;
+    fullname: string
+    email: string
+    phone: string
+    address: string
   }) => {
-    const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method };
+    const request = {
+      shippingAddress: {
+        fullname: formValues.fullname,
+        address: formValues.address,
+        email: formValues.email,
+        phone: formValues.phone,
+      },
+      payment_method: formValues.payment_method,
+    }
 
     if (accessToken) {
       if (cart) {
-        const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, request }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cart
+        dispatch(createOrder({ cartItems, request }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       } else {
-        const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, request }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cartSession
+        dispatch(createOrder({ cartItems, request }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       }
     } else {
-      const { cartItems } = cartSession;
+      const { cartItems } = cartSession
 
-      dispatch(createOrder({ cartItems, request, totalPrice }));
-      sessionStorage.removeItem("cart");
-      navigate("../../order");
+      dispatch(createOrder({ cartItems, request, totalPrice }))
+      sessionStorage.removeItem('cart')
+      navigate('../../order')
     }
-  };
+  }
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
@@ -78,8 +86,8 @@ const CheckOut = () => {
       address,
       email,
       phone,
-    });
-  }, [form, fullname]);
+    })
+  }, [form, fullname])
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
       <div className="grid grid-cols-2">
@@ -95,7 +103,7 @@ const CheckOut = () => {
             >
               <p className="flex items-center text-left text-xl px-3">
                 <TbTruckDelivery
-                  style={{ fontSize: "32px", marginRight: "12px" }}
+                  style={{ fontSize: '32px', marginRight: '12px' }}
                 />
                 Deliver It
               </p>
@@ -117,7 +125,7 @@ const CheckOut = () => {
                 <Form.Item
                   name="fullname"
                   rules={[
-                    { required: true, message: "Please enter your last name!" },
+                    { required: true, message: 'Please enter your last name!' },
                   ]}
                 >
                   <Input
@@ -125,7 +133,6 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Fullname"
-                    
                   />
                 </Form.Item>
 
@@ -134,7 +141,7 @@ const CheckOut = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please enter your address details!",
+                      message: 'Please enter your address details!',
                     },
                   ]}
                 >
@@ -142,15 +149,13 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Address Line 1"
-                    
-                 
                   />
                 </Form.Item>
 
                 <Form.Item
                   name="email"
                   rules={[
-                    { required: true, message: "Please enter your Email!" },
+                    { required: true, message: 'Please enter your Email!' },
                   ]}
                 >
                   <Input
@@ -166,7 +171,7 @@ const CheckOut = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please enter your phone number!",
+                      message: 'Please enter your phone number!',
                     },
                   ]}
                 >
@@ -175,7 +180,6 @@ const CheckOut = () => {
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
                     placeholder="Phone Number"
-
                   />
                 </Form.Item>
               </div>
@@ -203,15 +207,17 @@ const CheckOut = () => {
                                 <Checkbox />
                             </Form.Item> */}
               <Form.Item
-            name="payment_method"
-            rules={[{ required: true, message: "Please select payment method!" }]}
-            initialValue="Thanh toán tiền mặt"
-          >
-            <Radio.Group defaultValue="Thanh toán tiền mặt">
-              <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
-              <Radio value="vnpay">VNPAY</Radio>
-            </Radio.Group>
-          </Form.Item>
+                name="payment_method"
+                rules={[
+                  { required: true, message: 'Please select payment method!' },
+                ]}
+                initialValue="Thanh toán tiền mặt"
+              >
+                <Radio.Group defaultValue="Thanh toán tiền mặt">
+                  <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
+                  <Radio value="vnpay">VNPAY</Radio>
+                </Radio.Group>
+              </Form.Item>
               <Button
                 type="default"
                 htmlType="submit"
@@ -240,7 +246,7 @@ const CheckOut = () => {
             <div className="flex justify-between items-center my-5">
               <div>Total</div>
               <div>
-                {cart ? cart?.totalPrice : totalPrice}{" "}
+                {cart ? cart?.totalPrice : totalPrice}{' '}
                 <span className="font-light">VND</span>
               </div>
             </div>
@@ -252,7 +258,7 @@ const CheckOut = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={"/"}>
+                        <Link to={'/'}>
                           <img src={cartItem.images[0]} alt="" />
                         </Link>
                       </figure>
@@ -274,7 +280,7 @@ const CheckOut = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={"/"}>
+                        <Link to={'/'}>
                           <img src={item.images[0]} alt="" />
                         </Link>
                       </figure>
@@ -298,7 +304,7 @@ const CheckOut = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CheckOut;
+export default CheckOut

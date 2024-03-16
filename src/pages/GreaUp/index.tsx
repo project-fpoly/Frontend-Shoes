@@ -1,49 +1,49 @@
-import { useEffect, useState } from "react";
-import ListProduct from "../../components/GreaUp/Products";
-import Sidebar from "../../components/GreaUp/Sidebar";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from 'react'
+import ListProduct from '../../components/GreaUp/Products'
+import Sidebar from '../../components/GreaUp/Sidebar'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchAllProducts,
   fetchProductsByPriceLowOrHight,
-} from "../../features/product";
-import { AppDispatch } from "../../redux/store";
-import { IStateProduct } from "../../common/redux/type";
-import { Select } from "antd";
-import { GrTransaction } from "react-icons/gr";
-import clsx from "clsx";
-import LoadingSkelethon from "../../components/Loading/LoadingSkelethonProduct";
+} from '../../features/product'
+import { AppDispatch } from '../../redux/store'
+import { IStateProduct } from '../../common/redux/type'
+import { Select } from 'antd'
+import { GrTransaction } from 'react-icons/gr'
+import clsx from 'clsx'
+import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
 const GreaUp = () => {
-  const dispact = useDispatch<AppDispatch>();
-  const shoes = useSelector((state: IStateProduct) => state.product.products);
-  const loading = useSelector((state: IStateProduct) => state.product.loading);
+  const dispact = useDispatch<AppDispatch>()
+  const shoes = useSelector((state: IStateProduct) => state.product.products)
+  const loading = useSelector((state: IStateProduct) => state.product.loading)
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-    document.title = "Greaup";
-  }, []);
+    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    document.title = 'Greaup'
+  }, [])
 
   const handleChange = (value: string) => {
     switch (value) {
-      case "Newest":
-        break;
-      case "High-Low":
-        dispact(fetchProductsByPriceLowOrHight("desc"));
-        break;
-      case "Low-High":
-        dispact(fetchProductsByPriceLowOrHight("asc"));
-        break;
+      case 'Newest':
+        break
+      case 'High-Low':
+        dispact(fetchProductsByPriceLowOrHight('desc'))
+        break
+      case 'Low-High':
+        dispact(fetchProductsByPriceLowOrHight('asc'))
+        break
       default:
-        break;
+        break
     }
-  };
-  const [hideFilter, setHideFilter] = useState<boolean>(false);
+  }
+  const [hideFilter, setHideFilter] = useState<boolean>(false)
   return (
     <>
-      <span className={clsx("flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14")}>
+      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
         >
-          {hideFilter ? "Hide fillter" : "Show filter"}
+          {hideFilter ? 'Hide fillter' : 'Show filter'}
           <button>
             <GrTransaction className="mt-1" size={20} />
           </button>
@@ -56,16 +56,16 @@ const GreaUp = () => {
           onChange={handleChange}
           options={[
             {
-              value: "Newest",
-              label: "Newest",
+              value: 'Newest',
+              label: 'Newest',
             },
             {
-              value: "High-Low",
-              label: "Price: High-Low",
+              value: 'High-Low',
+              label: 'Price: High-Low',
             },
             {
-              value: "Low-High",
-              label: "Price: Low-High",
+              value: 'Low-High',
+              label: 'Price: Low-High',
             },
           ]}
         />
@@ -75,7 +75,7 @@ const GreaUp = () => {
           <Sidebar hideFilter={hideFilter} />
         </div>
 
-        {loading === "pending" ? (
+        {loading === 'pending' ? (
           <>
             <div className="flex justify-center items-center mt-16">
               <LoadingSkelethon></LoadingSkelethon>
@@ -94,7 +94,7 @@ const GreaUp = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default GreaUp;
+export default GreaUp

@@ -1,18 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAllProducts } from "../../features/product";
-import { AppDispatch } from "../../redux/store";
-import { useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroller";
-import { IStateProduct } from "../../common/redux/type";
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAllProducts } from '../../features/product'
+import { AppDispatch } from '../../redux/store'
+import { useEffect } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
+import { IStateProduct } from '../../common/redux/type'
 const Demo = () => {
-  const dispact = useDispatch<AppDispatch>();
-  const shoes = useSelector((state: IStateProduct) => state.product.products);
+  const dispact = useDispatch<AppDispatch>()
+  const shoes = useSelector((state: IStateProduct) => state.product.products)
 
-  console.log(shoes);
+  console.log(shoes)
 
   useEffect(() => {
-    dispact(fetchAllProducts());
-  }, []);
+    dispact(fetchAllProducts())
+  }, [])
 
   return (
     <>
@@ -31,7 +31,7 @@ const Demo = () => {
         </InfiniteScroll>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Demo;
+export default Demo
