@@ -11,8 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ColumnsType } from 'antd/es/table';
 import { format } from 'date-fns';
 import HeaderTable from '../../../components/Admin/Layout/HeaderTable';
-import FormUser from '../../../components/Admin/User/FormUser';
-import { IUsers } from '../../../common/users';
 import { AppDispatch } from '../../../redux/store';
 import {
     createNewUser,
@@ -21,6 +19,7 @@ import {
     updateUser,
 } from '../../../features/user';
 import { IStateUser } from '../../../common/redux/type';
+import FormVoucher from "../../../components/Admin/Voucher/FormVoucher.tsx";
 
 const VoucherManager: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -82,7 +81,14 @@ const VoucherManager: React.FC = () => {
         {
             title: 'Code Name',
             align: 'center',
-
+        },
+        {
+            title: 'Code',
+            align: 'center',
+        },
+        {
+            title: 'Quantity',
+            align: 'center',
         },
         {
             title: 'Reduced amount',
@@ -122,41 +128,20 @@ const VoucherManager: React.FC = () => {
                             <DeleteOutlined />
                         </Button>
                     </Tooltip>
-                    {record.role !== 'admin' && (
-                        <Tooltip title="Delete">
-                            <Button type="link" onClick={() => deleteUsesr(record)}>
-                                <DeleteOutlined />
-                            </Button>
-                        </Tooltip>
-                    )}
+                    <Tooltip title="Delete">
+                        <Button type="link" onClick={() => deleteUsesr(record)}>
+
+                        </Button>
+                    </Tooltip>
+                    {/*{record.role !== 'admin' && (*/}
+
+                    {/*)}*/}
                 </div>
             ),
         },
     ];
 
-    const defaultValue: Partial<IUsers> = {
-        userName: 'hahhaaa',
-        password: '123123',
-        deliveryAddress: 'gia lai',
-        email: 'la@gmail.com',
-        role: 'member',
-        phoneNumbers: '0000000000',
-        avt: 'hihia',
-        dateOfBirth: '2003',
-        gender: 'male',
-    };
 
-    const Value: Partial<IUsers> = {
-        _id: userss?._id || '',
-        userName: userss?.userName || 'hahhaaa',
-        deliveryAddress: userss?.deliveryAddress || 'gia lai',
-        email: userss?.email || 'la@gmail.com',
-        role: userss?.role || 'member',
-        phoneNumbers: userss?.phoneNumbers || '0000000000',
-        avt: userss?.avt || 'hihia',
-        dateOfBirth: userss?.dateOfBirth || '2003',
-        gender: userss?.gender || 'male',
-    };
 
     const searchUser = (value: string) => {
         setSearch(value);
@@ -164,42 +149,52 @@ const VoucherManager: React.FC = () => {
 
     return (
         <div>
-            <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={(value) => searchUser(value)} name="User" />
-            {loading === 'pending' ? (
-                <div className="flex justify-center items-center mt-16">
-                    <LoadingOutlined style={{ fontSize: 24 }} spin />
-                </div>
-            ) : (
-                <Table
-                    style={{ marginTop: '15px' }}
-                    columns={columns}
-                    dataSource={user}
-                    bordered
-                    size="small"
-                    pagination={{ current: currentPage, total: totalDocs, showTotal: (total) => ` ${total} items`, onChange: handlePageChange }}
-                />
-            )}
+            <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchUser} name="User"/>
+            <Table
+                columns={columns}
+                dataSource={user}
+                bordered
+                size="small"
+                pagination={{
+                    current: currentPage,
+                    total: totalDocs,
+                    showTotal: (total) => `${total} items`,
+                    onChange: handlePageChange
+                }}
+            />
 
             <Modal
                 title="Create new voucher"
-                open={isModalOpen}
+                visible={isModalOpen}
                 onOk={() => setIsModalOpen(false)}
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
                 maskClosable={false}
                 destroyOnClose={true}
             >
-                <FormUser mode="create" onSubmit={handleCreateUser} {...defaultValue} />
+                <FormVoucher mode="create" onSubmit={handleCreateUser}/>
             </Modal>
+
+            {/*<Modal*/}
+            {/*    title="Update voucher"*/}
+            {/*    visible={isModalUpdateOpen}*/}
+            {/*    onOk={() => setIsModalUpdateOpen(false)}*/}
+            {/*    onCancel={() => setIsModalUpdateOpen(false)}*/}
+            {/*    destroyOnClose={true}*/}
+            {/*    footer={null}*/}
+            {/*>*/}
+            {/*    <FormVoucher mode="update" onSubmit={handleUpdateUser}/>*/}
+            {/*</Modal>*/}
+
             <Modal
-                title="Update"
-                open={isModalUpdateOpen}
+                title="Update voucher"
+                visible={isModalUpdateOpen}
                 onOk={() => setIsModalUpdateOpen(false)}
                 onCancel={() => setIsModalUpdateOpen(false)}
                 destroyOnClose={true}
                 footer={null}
             >
-                <FormUser mode="update" onSubmit={handleUpdateUser} {...Value} />
+                <FormVoucher mode="update" onSubmit={handleUpdateUser}/>
             </Modal>
         </div>
     );
