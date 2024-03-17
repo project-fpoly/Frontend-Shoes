@@ -6,21 +6,21 @@ import {
   Upload,
   UploadFile,
   UploadProps,
-} from "antd";
-import { IUsers } from "../../../common/users";
-import Input from "antd/es/input/Input";
-import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import { UploadChangeParam } from "antd/es/upload";
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+} from 'antd'
+import { IUsers } from '../../../common/users'
+import Input from 'antd/es/input/Input'
+import { PlusOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+import { UploadChangeParam } from 'antd/es/upload'
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
 const FormUser: React.FC<
   IUsers & { onSubmit: (values: IUsers) => void; mode: string }
 > = ({
@@ -36,59 +36,59 @@ const FormUser: React.FC<
   gender,
   mode,
 }) => {
-  const [form] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [showUploadButton, setShowUploadButton] = useState(mode === "create");
+  const [form] = Form.useForm()
+  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [showUploadButton, setShowUploadButton] = useState(mode === 'create')
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
+      file.preview = await getBase64(file.originFileObj as FileType)
     }
-  };
+  }
 
   const handleChange = (info: UploadChangeParam<UploadFile>) => {
-    setFileList(info.fileList);
-  };
+    setFileList(info.fileList)
+  }
 
   const uploadButton = (
     <div>
       <PlusOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
-  );
+  )
 
   const handleRemoveImage = () => {
-    setFileList([]);
-    setShowUploadButton(true);
-  };
+    setFileList([])
+    setShowUploadButton(true)
+  }
   const handleFormSubmitCreate = (values: IUsers) => {
-    const formData = new FormData();
-    formData.append("userName", values.userName);
-    formData.append("deliveryAddress", values.deliveryAddress);
-    formData.append("gender", values.gender);
-    formData.append("dateOfBirth", values.dateOfBirth);
-    formData.append("phoneNumbers", values.phoneNumbers);
+    const formData = new FormData()
+    formData.append('userName', values.userName)
+    formData.append('deliveryAddress', values.deliveryAddress)
+    formData.append('gender', values.gender)
+    formData.append('dateOfBirth', values.dateOfBirth)
+    formData.append('phoneNumbers', values.phoneNumbers)
     if (values.avt?.file?.originFileObj) {
-      formData.append("avt", values.avt.file.originFileObj);
-    }else{
-      formData.append("avt", avt);
+      formData.append('avt', values.avt.file.originFileObj)
+    } else {
+      formData.append('avt', avt)
     }
 
-    if (mode === "create") {
-      formData.append("email", values.email);
-      formData.append("role", values.role);
-      formData.append("password", values.password || "");
+    if (mode === 'create') {
+      formData.append('email', values.email)
+      formData.append('role', values.role)
+      formData.append('password', values.password || '')
     }
 
     const formDataObject: IUsers = Array.from(formData.entries()).reduce(
       (acc, [key, value]) => {
-        acc[key] = value;
-        return acc;
+        acc[key] = value
+        return acc
       },
       {} as IUsers
-    );
-    onSubmit(formDataObject);
-  };
+    )
+    onSubmit(formDataObject)
+  }
 
   return (
     <Form
@@ -112,64 +112,64 @@ const FormUser: React.FC<
       onFinish={handleFormSubmitCreate}
     >
       <Form.Item
-        label={"userName"}
+        label={'userName'}
         name="userName"
-        rules={[{ required: true, message: "pls input Full Name" }]}
+        rules={[{ required: true, message: 'pls input Full Name' }]}
       >
         <Input defaultValue={userName} />
       </Form.Item>
-      {mode === "create" && (
+      {mode === 'create' && (
         <>
           <Form.Item
-            label={"email"}
+            label={'email'}
             name="email"
-            rules={[{ required: true, message: "pls input Email" }]}
+            rules={[{ required: true, message: 'pls input Email' }]}
           >
             <Input defaultValue={email} />
           </Form.Item>
 
           <Form.Item
-            label={"password"}
+            label={'password'}
             name="password"
-            rules={[{ required: true, message: "pls input password" }]}
+            rules={[{ required: true, message: 'pls input password' }]}
           >
             <Input defaultValue={password} />
           </Form.Item>
 
           <Form.Item
-            label={"role"}
+            label={'role'}
             name="role"
-            rules={[{ required: true, message: "pls input role" }]}
+            rules={[{ required: true, message: 'pls input role' }]}
           >
             <Input defaultValue={role} />
           </Form.Item>
         </>
       )}
       <Form.Item
-        label={"deliveryAddress"}
+        label={'deliveryAddress'}
         name="deliveryAddress"
-        rules={[{ required: true, message: "pls input deliveryAddress" }]}
+        rules={[{ required: true, message: 'pls input deliveryAddress' }]}
       >
         <Input defaultValue={deliveryAddress} />
       </Form.Item>
       <Form.Item
-        label={"gender"}
+        label={'gender'}
         name="gender"
-        rules={[{ required: true, message: "pls input gender" }]}
+        rules={[{ required: true, message: 'pls input gender' }]}
       >
         <Input defaultValue={gender} />
       </Form.Item>
       <Form.Item
-        label={"dateOfBirth"}
+        label={'dateOfBirth'}
         name="dateOfBirth"
-        rules={[{ required: true, message: "pls input dateOfBirth" }]}
+        rules={[{ required: true, message: 'pls input dateOfBirth' }]}
       >
         <Input defaultValue={dateOfBirth} />
       </Form.Item>
       <Form.Item
-        label={"avt"}
+        label={'avt'}
         name="avt"
-        rules={[{ required: true, message: "Vui lòng chọn ảnh đại diện" }]}
+        rules={[{ required: true, message: 'Vui lòng chọn ảnh đại diện' }]}
       >
         {!showUploadButton ? (
           <div>
@@ -194,24 +194,24 @@ const FormUser: React.FC<
       </Form.Item>
 
       <Form.Item
-        label={"phoneNumbers"}
+        label={'phoneNumbers'}
         name="phoneNumbers"
-        rules={[{ required: true, message: "pls input phoneNumbers" }]}
+        rules={[{ required: true, message: 'pls input phoneNumbers' }]}
       >
         <Input defaultValue={phoneNumbers} />
       </Form.Item>
 
       <Form.Item
-        style={{ textAlign: "right" }}
+        style={{ textAlign: 'right' }}
         wrapperCol={{ offset: 8, span: 16 }}
       >
         <Button>cancel</Button>
-        <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
+        <Button style={{ marginLeft: '5px' }} type="primary" htmlType="submit">
           Save
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormUser;
+export default FormUser

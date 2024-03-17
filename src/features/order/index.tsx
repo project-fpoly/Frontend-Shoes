@@ -1,133 +1,133 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { IBill } from "../../common/order";
-import { notification } from "antd";
-import { fetchAllUsers } from "../user";
-import { fetchAllProducts } from "../product";
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios'
+import { IBill } from '../../common/order'
+import { notification } from 'antd'
+import { fetchAllUsers } from '../user'
+import { fetchAllProducts } from '../product'
 
 export const fetchOrders = createAsyncThunk(
-  "order/fetchOrders",
+  'order/fetchOrders',
   async (
     params: {
-      page?: number;
-      limit?: number;
-      start?: string;
-      end?: string;
-      search?: string;
+      page?: number
+      limit?: number
+      start?: string
+      end?: string
+      search?: string
     },
     { dispatch }
   ) => {
     try {
       const response = await axios.get(
-        "http://localhost:9000/api/order/admin/bills",
+        'http://localhost:9000/api/order/admin/bills',
         {
           params,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
           },
         }
-      );
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
+      )
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
 
-      return response.data;
+      return response.data
     } catch (error: any) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
-);
+)
 export const updateOrder = createAsyncThunk(
-  "order/updateOrder",
+  'order/updateOrder',
   async (
     { id, updateOrderData }: { id: string; updateOrderData: any },
     { dispatch }
   ) => {
     try {
-      if (typeof id === "string") {
+      if (typeof id === 'string') {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
           updateOrderData,
           {
             headers: {
-              "Access-Control-Allow-Origin": "*",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              "Content-Type": "application/json; charset=UTF-8",
+              'Access-Control-Allow-Origin': '*',
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              'Content-Type': 'application/json; charset=UTF-8',
             },
           }
-        );
-        await dispatch(fetchOrders({ page: 1, limit: 10 }));
-        notification.success({ message: response.data.message });
+        )
+        await dispatch(fetchOrders({ page: 1, limit: 10 }))
+        notification.success({ message: response.data.message })
 
-        return response.data;
+        return response.data
       } else {
-        throw new Error("Invalid id"); // Xử lý trường hợp id không hợp lệ (undefined)
+        throw new Error('Invalid id') // Xử lý trường hợp id không hợp lệ (undefined)
       }
     } catch (error: any) {
-      notification.error({ message: error.message });
-      throw error.response.data;
+      notification.error({ message: error.message })
+      throw error.response.data
     }
   }
-);
+)
 export const fetchOneOrder = createAsyncThunk(
-  "order/fetchOneOrder",
+  'order/fetchOneOrder',
   async (id: string) => {
     try {
       const response = await axios.get(
         `http://localhost:9000/api/order/admin/bills/${id}`,
         {
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
           },
         }
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error: any) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
-);
+)
 export const deleteOrder = createAsyncThunk(
-  "order/deleteOrder",
+  'order/deleteOrder',
   async (id: string, { dispatch }) => {
     try {
       const response = await axios.delete(
         `http://localhost:9000/api/order/admin/bills/${id}`,
         {
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
           },
         }
-      );
+      )
 
-      await dispatch(fetchOrders({ page: 1, limit: 10 }));
-      notification.success({ message: response.data.message });
-      return response.data;
+      await dispatch(fetchOrders({ page: 1, limit: 10 }))
+      notification.success({ message: response.data.message })
+      return response.data
     } catch (error: any) {
-      notification.error({ message: error.message });
-      throw error.response.data;
+      notification.error({ message: error.message })
+      throw error.response.data
     }
   }
-);
+)
 export const updateManyOrders = createAsyncThunk(
-  "bills/updateMany",
+  'bills/updateMany',
   async (
     {
       ids,
       isPaid,
       isDelivered,
     }: {
-      ids: string[];
-      isPaid: boolean;
-      isDelivered: string;
+      ids: string[]
+      isPaid: boolean
+      isDelivered: string
     },
     { dispatch }
   ) => {
@@ -141,70 +141,70 @@ export const updateManyOrders = createAsyncThunk(
         },
         {
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
           },
         }
-      );
-      console.log(response);
-      await dispatch(fetchOrders({ page: 1, limit: 10 }));
-      notification.success({ message: response.data.message });
-      return response.data;
+      )
+      console.log(response)
+      await dispatch(fetchOrders({ page: 1, limit: 10 }))
+      notification.success({ message: response.data.message })
+      return response.data
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
-);
+)
 export const updateIsDeliveredOrder = createAsyncThunk(
-  "order/updateIsDeliveredOrder",
+  'order/updateIsDeliveredOrder',
   async (
     {
       id,
       isDelivered,
     }: {
-      id: string;
-      isDelivered: string;
+      id: string
+      isDelivered: string
     },
     thunkApi
   ) => {
     try {
-      if (typeof id === "string") {
+      if (typeof id === 'string') {
         const response = await axios.put(
           `http://localhost:9000/api/order/bills/${id}`,
           { isDelivered },
           {
             headers: {
-              "Access-Control-Allow-Origin": "*",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              "Content-Type": "application/json; charset=UTF-8",
+              'Access-Control-Allow-Origin': '*',
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              'Content-Type': 'application/json; charset=UTF-8',
             },
           }
-        );
-        notification.success({ message: "Đã hủy đơn hàng" });
+        )
+        notification.success({ message: 'Đã hủy đơn hàng' })
 
-        thunkApi.dispatch(getOrderByUsers({}));
+        thunkApi.dispatch(getOrderByUsers({}))
 
-        return response.data;
+        return response.data
       } else {
-        throw new Error("Invalid id"); // Xử lý trường hợp id không hợp lệ (undefined)
+        throw new Error('Invalid id') // Xử lý trường hợp id không hợp lệ (undefined)
       }
     } catch (error: any) {
-      notification.error({ message: error.message });
-      throw error.response.data;
+      notification.error({ message: error.message })
+      throw error.response.data
     }
   }
-);
+)
 // get order by user
 export const getOrderByUsers = createAsyncThunk(
-  "order/getOrderByUsers",
+  'order/getOrderByUsers',
   async (
     params: {
-      page?: number;
-      limit?: number;
-      start?: string;
-      end?: string;
-      search?: string;
+      page?: number
+      limit?: number
+      start?: string
+      end?: string
+      search?: string
     },
     { dispatch }
   ) => {
@@ -214,23 +214,23 @@ export const getOrderByUsers = createAsyncThunk(
         {
           params,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json; charset=UTF-8",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
           },
         }
-      );
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
+      )
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
 
-      return response.data;
+      return response.data
     } catch (error: any) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
-);
+)
 const orderSlice = createSlice({
-  name: "order",
+  name: 'order',
   initialState: {
     orders: [],
     pagination: {
@@ -246,122 +246,122 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.orders = action.payload.orders;
-        state.pagination = action.payload.pagination;
+        state.isLoading = false
+        state.orders = action.payload.orders
+        state.pagination = action.payload.pagination
       })
       .addCase(fetchOrders.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder
       .addCase(getOrderByUsers.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(getOrderByUsers.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.orders = action.payload.orders;
-        state.pagination = action.payload.pagination;
+        state.isLoading = false
+        state.orders = action.payload.orders
+        state.pagination = action.payload.pagination
       })
       .addCase(getOrderByUsers.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder.addCase(updateOrder.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
+      state.isLoading = true
+      state.error = null
+    })
     builder
       .addCase(updateOrder.fulfilled, (state: any, action) => {
-        state.isLoading = false;
-        const updatedOrder = action.payload;
+        state.isLoading = false
+        const updatedOrder = action.payload
         const index = state.orders.findIndex(
           (order: IBill) => order._id === updatedOrder._id
-        );
+        )
         if (index !== -1) {
-          state.orders[index] = updatedOrder;
+          state.orders[index] = updatedOrder
         }
       })
       .addCase(updateOrder.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder
       .addCase(fetchOneOrder.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(fetchOneOrder.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.orders = action.payload;
+        state.isLoading = false
+        state.orders = action.payload
       })
       .addCase(fetchOneOrder.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder
       .addCase(deleteOrder.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
-        const orderToDelete = action.payload;
+        const orderToDelete = action.payload
 
-        state.isLoading = false;
+        state.isLoading = false
         state.orders = state.orders.filter(
           (order: IBill) => order._id !== orderToDelete.id
-        );
+        )
       })
       .addCase(deleteOrder.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder
       .addCase(updateManyOrders.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(updateManyOrders.fulfilled, (state: any, action) => {
-        state.isLoading = false;
-        const updateManyOrders = action.payload;
-        const { updates } = updateManyOrders;
+        state.isLoading = false
+        const updateManyOrders = action.payload
+        const { updates } = updateManyOrders
         state.orders = state.orders.map((order: IBill) => {
           if (updates.ids.includes(order._id)) {
-            return { ...order, ...updateManyOrders };
+            return { ...order, ...updateManyOrders }
           }
-          console.log(order);
-          return order;
-        });
+          console.log(order)
+          return order
+        })
       })
       .addCase(updateManyOrders.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
     builder
       .addCase(updateIsDeliveredOrder.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.isLoading = true
+        state.error = null
       })
       .addCase(updateIsDeliveredOrder.fulfilled, (state: any, action) => {
-        state.isLoading = false;
-        const updateIsDeliveredOrder = action.payload;
+        state.isLoading = false
+        const updateIsDeliveredOrder = action.payload
         const index = state.orders.findIndex(
           (order: IBill) => order._id === updateIsDeliveredOrder._id
-        );
+        )
         if (index !== -1) {
-          state.orders[index] = updateIsDeliveredOrder;
+          state.orders[index] = updateIsDeliveredOrder
         }
       })
       .addCase(updateIsDeliveredOrder.rejected, (state: any, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+        state.isLoading = false
+        state.error = action.error.message
+      })
   },
-});
+})
 
-export default orderSlice.reducer;
+export default orderSlice.reducer

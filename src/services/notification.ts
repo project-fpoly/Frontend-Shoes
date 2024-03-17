@@ -1,38 +1,40 @@
-import { AxiosResponse } from "axios";
-import instance from "../core/Api";
+import { AxiosResponse } from 'axios'
+import instance from '../core/Api'
 
 export const getAllNotification = async () => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/role`,{
+      `/api/notification/role`,
+      {
         headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
-            "Content-Type": "application/json; charset=UTF-8"
-        }
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       }
-    );
-    return response.data;
+    )
+    return response.data
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
-export const getOneNotification = async (id:string) => {
+}
+export const getOneNotification = async (id: string) => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/one/${id}`,{
+      `/api/notification/one/${id}`,
+      {
         headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
-            "Content-Type": "application/json; charset=UTF-8"
-        }
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       }
-    );
-    return response.data;
+    )
+    return response.data
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
 // export const createNotification = async (data: INotification) => {
 //   try {
@@ -56,12 +58,12 @@ export const updateNotification = async (id: string) => {
   try {
     const response: AxiosResponse = await instance.put(
       `/api/notification/update/${id}`
-    );
-    return response.data;
+    )
+    return response.data
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
 // export const deleteUsers = async (userIds: string[]) => {
 //   try {

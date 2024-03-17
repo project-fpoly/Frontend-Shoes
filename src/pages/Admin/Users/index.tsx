@@ -4,80 +4,80 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
   UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Modal, Table, Tag, Tooltip, notification } from "antd";
-import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useState } from "react";
-import { IUsers } from "../../../common/users";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
+} from '@ant-design/icons'
+import { Avatar, Button, Modal, Table, Tag, Tooltip, notification } from 'antd'
+import { ColumnsType } from 'antd/es/table'
+import React, { useEffect, useState } from 'react'
+import { IUsers } from '../../../common/users'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../../redux/store'
 import {
   createNewUser,
   deleteeUser,
   fetchAllUsers,
   updateUser,
-} from "../../../features/user";
-import { IStateUser } from "../../../common/redux/type";
-import { format } from "date-fns";
-import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
-import FormUser from "../../../components/Admin/User/FormUser";
+} from '../../../features/user'
+import { IStateUser } from '../../../common/redux/type'
+import { format } from 'date-fns'
+import HeaderTable from '../../../components/Admin/Layout/HeaderTable'
+import FormUser from '../../../components/Admin/User/FormUser'
 const UserManager: React.FC = () => {
-  const dispact = useDispatch<AppDispatch>();
-  const [userss, setUser] = useState<IUsers>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [Search, setSearch] = useState("");
+  const dispact = useDispatch<AppDispatch>()
+  const [userss, setUser] = useState<IUsers>()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [Search, setSearch] = useState('')
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
   const {
     users: user,
     loading,
     totalDocs,
-  } = useSelector((state: IStateUser) => state.user);
+  } = useSelector((state: IStateUser) => state.user)
   useEffect(() => {
-    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }));
-  }, [dispact, currentPage, Search]);
+    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }))
+  }, [dispact, currentPage, Search])
   const handleCreateUser = (newUser: IUsers) => {
-    dispact(createNewUser(newUser));
-    setIsModalOpen(false);
-  };
+    dispact(createNewUser(newUser))
+    setIsModalOpen(false)
+  }
   const handleUpdateUser = (newUser: IUsers) => {
-    dispact(updateUser({ newUser, id: userss?._id as string }));
-    setIsModalUpdateOpen(false);
-  };
+    dispact(updateUser({ newUser, id: userss?._id as string }))
+    setIsModalUpdateOpen(false)
+  }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
   const toggleModal = (user: IUsers) => {
-    setIsModalUpdateOpen(!isModalUpdateOpen);
-    setUser(user);
-    console.log(user);
-  };
+    setIsModalUpdateOpen(!isModalUpdateOpen)
+    setUser(user)
+    console.log(user)
+  }
   const deleteUsesr = (user: IUsers) => {
     Modal.confirm({
-      title: "Confirm Deletion",
+      title: 'Confirm Deletion',
       icon: <ExclamationCircleOutlined />,
-      content: "Are you sure you want to delete this user?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
+      content: 'Are you sure you want to delete this user?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
       onOk() {
-        dispact(deleteeUser([user._id]));
+        dispact(deleteeUser([user._id]))
       },
       onCancel() {},
-    });
-  };
+    })
+  }
   const columns: ColumnsType<IUsers> = [
     {
-      title: "No.",
-      dataIndex: "index",
+      title: 'No.',
+      dataIndex: 'index',
       render: (_, __, index) => index + 1,
-      align: "right",
+      align: 'right',
     },
     {
-      title: "Avatar",
-      dataIndex: "avt",
-      align: "center",
+      title: 'Avatar',
+      dataIndex: 'avt',
+      align: 'center',
       render: (record) =>
         record ? (
           <Avatar src={record.url} />
@@ -86,17 +86,17 @@ const UserManager: React.FC = () => {
         ),
     },
     {
-      title: "userName",
-      dataIndex: "userName",
+      title: 'userName',
+      dataIndex: 'userName',
     },
     {
-      title: "email",
-      dataIndex: "email",
+      title: 'email',
+      dataIndex: 'email',
     },
     {
-      title: "Email Verified",
-      align: "center",
-      dataIndex: "emailVerified",
+      title: 'Email Verified',
+      align: 'center',
+      dataIndex: 'emailVerified',
       render: (emailVerified) =>
         emailVerified ? (
           <Tag color="success">Đã xác thực</Tag>
@@ -105,15 +105,15 @@ const UserManager: React.FC = () => {
         ),
     },
     {
-      title: "Phone Numbers",
-      align: "left",
-      dataIndex: "phoneNumbers",
+      title: 'Phone Numbers',
+      align: 'left',
+      dataIndex: 'phoneNumbers',
       render: (text) =>
         text ? (
           <span>{text}</span>
         ) : (
           <Tag
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: 'flex', justifyContent: 'center' }}
             color="warning"
           >
             Chưa cập nhật
@@ -121,12 +121,12 @@ const UserManager: React.FC = () => {
         ),
     },
     {
-      title: "role",
-      dataIndex: "role",
+      title: 'role',
+      dataIndex: 'role',
     },
     {
-      title: "isActive",
-      dataIndex: "isActive",
+      title: 'isActive',
+      dataIndex: 'isActive',
       render: (isActive) => (
         <span style={{ color: isActive ? 'green' : 'red' }}>
           {isActive ? 'On' : 'Off'}
@@ -134,26 +134,26 @@ const UserManager: React.FC = () => {
       ),
     },
     {
-      title: "lastActivity",
-      dataIndex: "lastActivity",
+      title: 'lastActivity',
+      dataIndex: 'lastActivity',
       render: (lastActivity: string | null | undefined) =>
         lastActivity
-          ? format(new Date(lastActivity), " HH:mm:ss dd-MM-yyyy")
-          : "Chưa hoạt động",
+          ? format(new Date(lastActivity), ' HH:mm:ss dd-MM-yyyy')
+          : 'Chưa hoạt động',
     },
     {
-      title: "action",
-      key: "action",
-      align: "center",
+      title: 'action',
+      key: 'action',
+      align: 'center',
       render: (_, record) => (
-        <div style={{ textAlign: "center" }}>
-          <Tooltip title={"edit"}>
+        <div style={{ textAlign: 'center' }}>
+          <Tooltip title={'edit'}>
             <Button type="link" onClick={() => toggleModal(record)}>
               <EditOutlined />
             </Button>
           </Tooltip>
-          {record.role !== "admin" && (
-            <Tooltip title={"delete"}>
+          {record.role !== 'admin' && (
+            <Tooltip title={'delete'}>
               <Button type="link" onClick={() => deleteUsesr(record)}>
                 <DeleteOutlined />
               </Button>
@@ -162,39 +162,39 @@ const UserManager: React.FC = () => {
         </div>
       ),
     },
-  ];
+  ]
   const defaultValue = {
-    _id: "",
-    userName: "hahhaaa",
-    password: "123123",
-    deliveryAddress: "gia lai",
-    email: "la@gmail.com",
-    role: "member",
-    phoneNumbers: "0000000000",
-    avt: "hihia",
-    dateOfBirth: "2003",
-    gender: "male",
-  };
+    _id: '',
+    userName: 'hahhaaa',
+    password: '123123',
+    deliveryAddress: 'gia lai',
+    email: 'la@gmail.com',
+    role: 'member',
+    phoneNumbers: '0000000000',
+    avt: 'hihia',
+    dateOfBirth: '2003',
+    gender: 'male',
+  }
   const Value = {
-    _id: userss?._id || "",
-    userName: userss?.userName || "hahhaaa",
-    deliveryAddress: userss?.deliveryAddress || "gia lai",
-    email: userss?.email || "la@gmail.com",
-    role: userss?.role || "member",
-    phoneNumbers: userss?.phoneNumbers || "0000000000",
-    avt: userss?.avt || "hihia",
-    dateOfBirth: userss?.dateOfBirth || "2003",
-    gender: userss?.gender || "male",
-  };
+    _id: userss?._id || '',
+    userName: userss?.userName || 'hahhaaa',
+    deliveryAddress: userss?.deliveryAddress || 'gia lai',
+    email: userss?.email || 'la@gmail.com',
+    role: userss?.role || 'member',
+    phoneNumbers: userss?.phoneNumbers || '0000000000',
+    avt: userss?.avt || 'hihia',
+    dateOfBirth: userss?.dateOfBirth || '2003',
+    gender: userss?.gender || 'male',
+  }
   const searchUser = (value: string) => {
-    setSearch(value);
-  };
+    setSearch(value)
+  }
   return (
     <div>
       <HeaderTable
         showModal={() => setIsModalOpen(true)}
         onSubmitt={(value) => searchUser(value)}
-        name={"User"}
+        name={'User'}
       />
       {/* {loading === "pending" ? (
         <>
@@ -203,25 +203,25 @@ const UserManager: React.FC = () => {
           </div>
         </>
       ) : ( */}
-        <Table
-          style={{
-            marginTop: "15px",
-          }}
-          columns={columns}
-          dataSource={user}
-          bordered
-          size="small"
-          pagination={{
-            current: currentPage,
-            total: totalDocs,
-            showTotal: (total) => ` ${total} items`,
-            onChange: handlePageChange,
-          }}
-        />
+      <Table
+        style={{
+          marginTop: '15px',
+        }}
+        columns={columns}
+        dataSource={user}
+        bordered
+        size="small"
+        pagination={{
+          current: currentPage,
+          total: totalDocs,
+          showTotal: (total) => ` ${total} items`,
+          onChange: handlePageChange,
+        }}
+      />
       {/* )} */}
 
       <Modal
-        title={"Create new user"}
+        title={'Create new user'}
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
@@ -230,22 +230,22 @@ const UserManager: React.FC = () => {
         destroyOnClose={true}
       >
         <FormUser
-          mode={"create"}
+          mode={'create'}
           onSubmit={handleCreateUser}
           {...defaultValue}
         />
       </Modal>
       <Modal
-        title={"Update"}
+        title={'Update'}
         open={isModalUpdateOpen}
         onOk={() => setIsModalUpdateOpen(false)}
         onCancel={() => setIsModalUpdateOpen(false)}
         destroyOnClose={true}
         footer={null}
       >
-        <FormUser mode={"update"} onSubmit={handleUpdateUser} {...Value} />
+        <FormUser mode={'update'} onSubmit={handleUpdateUser} {...Value} />
       </Modal>
     </div>
-  );
-};
-export default UserManager;
+  )
+}
+export default UserManager

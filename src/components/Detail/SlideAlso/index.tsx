@@ -1,13 +1,13 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/pagination";
-import { FreeMode, Pagination } from "swiper/modules";
-import { IProduct } from "../../../common/products";
-import { Link } from "react-router-dom";
-import style from "./index.module.scss";
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/free-mode'
+import 'swiper/css/pagination'
+import { FreeMode, Pagination } from 'swiper/modules'
+import { IProduct } from '../../../common/products'
+import { Link } from 'react-router-dom'
+import style from './index.module.scss'
 interface Props {
-  shoes: IProduct[];
+  shoes: IProduct[]
 }
 const SlideAlso = ({ shoes }: Props) => {
   return (
@@ -28,17 +28,17 @@ const SlideAlso = ({ shoes }: Props) => {
                   className="rounded-lg"
                   width={459}
                   height={400}
-                  src={"/src/assets/air-jordan-1-low-se-shoes-ZbxSRp.jpg"}
+                  src={'/src/assets/air-jordan-1-low-se-shoes-ZbxSRp.jpg'}
                   alt="BigCo Inc. logo"
                 />
                 <h2 className="font-bold">{shoe.name}</h2>
                 <p>{shoe.price}</p>
               </Link>
             </SwiperSlide>
-          );
+          )
         })}
       </Swiper>
     </>
-  );
-};
-export default SlideAlso;
+  )
+}
+export default SlideAlso

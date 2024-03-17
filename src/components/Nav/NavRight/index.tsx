@@ -1,21 +1,21 @@
-import { CiHeart } from "react-icons/ci";
-import { IoBagOutline } from "react-icons/io5";
-import { CiSearch } from "react-icons/ci";
-import { useState } from "react";
-import ModalCustom from "../../Modal";
-import Search from "./Search";
-import { Link } from "react-router-dom";
+import { CiHeart } from 'react-icons/ci'
+import { IoBagOutline } from 'react-icons/io5'
+import { CiSearch } from 'react-icons/ci'
+import { useState } from 'react'
+import ModalCustom from '../../Modal'
+import Search from './Search'
+import { Link } from 'react-router-dom'
 const NavRight = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [valueInput, setValueInput] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [valueInput, setValueInput] = useState('')
   const handleChange = (e: any) => {
-    setValueInput(e.target.value);
-    if (valueInput && valueInput != "") {
-      setIsModalOpen(true);
+    setValueInput(e.target.value)
+    if (valueInput && valueInput != '') {
+      setIsModalOpen(true)
     } else {
-      setIsModalOpen(false);
+      setIsModalOpen(false)
     }
-  };
+  }
 
   return (
     <div className="mt-2 flex gap-3 ">
@@ -29,7 +29,7 @@ const NavRight = () => {
         className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"
         size={43}
       />
-      <Link to="./cart">
+      <Link to="cart">
         <IoBagOutline
           className="mt-1 cursor-pointer hover:bg-[#e5e5e5] rounded-full p-2 "
           size={43}
@@ -39,7 +39,7 @@ const NavRight = () => {
         <Search setIsModalOpen={setIsModalOpen}></Search>
       </ModalCustom>
     </div>
-  );
-};
+  )
+}
 
-export default NavRight;
+export default NavRight

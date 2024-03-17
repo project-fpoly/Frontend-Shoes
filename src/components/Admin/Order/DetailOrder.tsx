@@ -1,63 +1,63 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Image, Descriptions, Row, Col, Table } from "antd";
-import { CartItem, IBill } from "../../../common/order";
-import moment from "moment";
-import {} from "../../../common/redux/type";
-import { IUsers } from "../../../common/users";
-import { ColumnsType } from "antd/es/table";
+import { Card, Image, Descriptions, Row, Col, Table } from 'antd'
+import { CartItem, IBill } from '../../../common/order'
+import moment from 'moment'
+import {} from '../../../common/redux/type'
+import { IUsers } from '../../../common/users'
+import { ColumnsType } from 'antd/es/table'
 
 const DetailOrder = (order: IBill, products: any, users: IUsers) => {
   // const { users } = useSelector((state: IUsers) => state.user);
   const getProductName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
 
   const getUserName = (userId: string) => {
-    const user = users.find((user: IUsers) => user._id === userId);
-    return user ? user.userName : "Khách";
-  };
+    const user = users.find((user: IUsers) => user._id === userId)
+    return user ? user.userName : 'Khách'
+  }
 
-  const { cartItems } = order;
-  console.log(cartItems);
-  const quantity = order.cartItems.map((item) => item.quantity);
-  const { fullname, address, email, phone } = order.shippingAddress;
+  const { cartItems } = order
+  console.log(cartItems)
+  const quantity = order.cartItems.map((item) => item.quantity)
+  const { fullname, address, email, phone } = order.shippingAddress
   const columns: ColumnsType<CartItem> = [
     {
-      title: "Product Name",
-      dataIndex: "product",
+      title: 'Product Name',
+      dataIndex: 'product',
       render: (product: string) => getProductName(product),
     },
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      align: "center",
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      align: 'center',
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      align: "center",
+      title: 'Price',
+      dataIndex: 'price',
+      align: 'center',
     },
     {
-      title: "Size",
-      dataIndex: "size",
-      align: "center",
+      title: 'Size',
+      dataIndex: 'size',
+      align: 'center',
     },
     {
-      title: "Image",
-      dataIndex: "images",
+      title: 'Image',
+      dataIndex: 'images',
       render: (images) => {
         return images.map((image: string) => (
           <img className="w-28 h-28 " src={image} />
-        ));
+        ))
       },
-      className: "flex items-center gap-x-2  justify-center",
-      align: "center",
+      className: 'flex items-center gap-x-2  justify-center',
+      align: 'center',
     },
-  ];
+  ]
   return (
     <>
-      <Card title="Order Details" style={{ width: "100%" }}>
+      <Card title="Order Details" style={{ width: '100%' }}>
         <Table
           dataSource={cartItems}
           columns={columns}
@@ -71,7 +71,7 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
           </Descriptions.Item>
 
           <Descriptions.Item label="User Name">
-            {order.user ? getUserName(order.user) : "Khách"}
+            {order.user ? getUserName(order.user) : 'Khách'}
           </Descriptions.Item>
           <Descriptions.Item label="Shipping Address">
             <Row gutter={16}>
@@ -85,18 +85,18 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
             {order.totalPrice}
           </Descriptions.Item>
           <Descriptions.Item label="Paid">
-            {!order.isPaid ? "Chưa thanh toán" : "Đã thanh toán"}
+            {!order.isPaid ? 'Chưa thanh toán' : 'Đã thanh toán'}
           </Descriptions.Item>
           <Descriptions.Item label="Delivered">
             {order.isDelivered}
           </Descriptions.Item>
           <Descriptions.Item label="Order Creation Time">
-            {moment(order.createdAt).format("DD/MM/YYYY")}
+            {moment(order.createdAt).format('DD/MM/YYYY')}
           </Descriptions.Item>
         </Descriptions>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default DetailOrder;
+export default DetailOrder

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useDispatch } from "react-redux";
-import { Button, Form, Input, Select, Tag } from "antd";
-import { updateManyOrders } from "../../../features/order";
-import React from "react";
-import { AppDispatch } from "../../../redux/store";
+import { useDispatch } from 'react-redux'
+import { Button, Form, Input, Select, Tag } from 'antd'
+import { updateManyOrders } from '../../../features/order'
+import React from 'react'
+import { AppDispatch } from '../../../redux/store'
 import {
   CarOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   SyncOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons'
 
 const FormUpdateMany = ({
   selectedRowKeys,
@@ -17,37 +17,37 @@ const FormUpdateMany = ({
   onSelectChange,
   orders,
 }: {
-  selectedRowKeys: any;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onSelectChange: (newSelectedRowKeys: React.Key[]) => React.Key[];
-  onSubmit: () => void;
-  orders: any;
+  selectedRowKeys: any
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onSelectChange: (newSelectedRowKeys: React.Key[]) => React.Key[]
+  onSubmit: () => void
+  orders: any
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>()
+  const [form] = Form.useForm()
   const getIsDelivered = (orderId: string) => {
-    const order = orders.find((order: any) => order._id === orderId);
+    const order = orders.find((order: any) => order._id === orderId)
     return order
       ? order.isDelivered
-      : "Chờ xác nhận" && "Chờ lấy hàng" && "Đang giao hàng" && "Đã hủy";
-  };
+      : 'Chờ xác nhận' && 'Chờ lấy hàng' && 'Đang giao hàng' && 'Đã hủy'
+  }
   const handleFormSubmit = (formValues: any) => {
-    console.log(formValues);
-    dispatch(updateManyOrders(formValues));
-    onSelectChange([]);
-    setIsModalOpen(false);
-  };
-  const isPaid = false;
-  const isDelivered = getIsDelivered(selectedRowKeys[0]);
-  const ids = selectedRowKeys;
+    console.log(formValues)
+    dispatch(updateManyOrders(formValues))
+    onSelectChange([])
+    setIsModalOpen(false)
+  }
+  const isPaid = false
+  const isDelivered = getIsDelivered(selectedRowKeys[0])
+  const ids = selectedRowKeys
 
   React.useEffect(() => {
     form.setFieldsValue({
       ids,
       isPaid,
       isDelivered,
-    });
-  }, [form, ids, isPaid, isDelivered]);
+    })
+  }, [form, ids, isPaid, isDelivered])
 
   return (
     <Form
@@ -63,7 +63,7 @@ const FormUpdateMany = ({
         label="Ids"
         name="ids"
         rules={[
-          { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
+          { required: true, message: 'Vui lòng nhập trạng thái thanh toán' },
         ]}
         className="hidden"
       >
@@ -73,7 +73,7 @@ const FormUpdateMany = ({
         label="Is Paid"
         name="isPaid"
         rules={[
-          { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
+          { required: true, message: 'Vui lòng nhập trạng thái thanh toán' },
         ]}
       >
         <Select placeholder="is Paid">
@@ -85,11 +85,11 @@ const FormUpdateMany = ({
         label="Is Delivered"
         name="isDelivered"
         rules={[
-          { required: true, message: "Vui lòng nhập trạng thái thanh toán" },
+          { required: true, message: 'Vui lòng nhập trạng thái thanh toán' },
         ]}
       >
         <Select placeholder="is Delevered">
-          {isDelivered === "Chờ xác nhận" && (
+          {isDelivered === 'Chờ xác nhận' && (
             <>
               <Select.Option value="Chờ lấy hàng">
                 <Tag icon={<SyncOutlined spin />} color="purple">
@@ -103,7 +103,7 @@ const FormUpdateMany = ({
               </Select.Option>
             </>
           )}
-          {isDelivered === "Chờ lấy hàng" && (
+          {isDelivered === 'Chờ lấy hàng' && (
             <>
               <Select.Option value="Đang giao hàng">
                 <Tag icon={<CarOutlined />} color="processing">
@@ -111,17 +111,17 @@ const FormUpdateMany = ({
                 </Tag>
               </Select.Option>
               <Select.Option value="Đã huỷ">
-                {" "}
+                {' '}
                 <Tag icon={<CloseCircleOutlined />} color="error">
                   Đã hủy
                 </Tag>
               </Select.Option>
             </>
           )}
-          {isDelivered === "Đang giao hàng" && (
+          {isDelivered === 'Đang giao hàng' && (
             <>
               <Select.Option value="Đã giao hàng">
-                {" "}
+                {' '}
                 <Tag icon={<CheckCircleOutlined />} color="success">
                   Đã giao hàng
                 </Tag>
@@ -129,7 +129,7 @@ const FormUpdateMany = ({
               <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
             </>
           )}
-          {isDelivered === "Đã giao hàng" && (
+          {isDelivered === 'Đã giao hàng' && (
             <>
               <Select.Option value="Đã giao hàng">
                 <Tag icon={<CheckCircleOutlined />} color="success">
@@ -138,10 +138,10 @@ const FormUpdateMany = ({
               </Select.Option>
             </>
           )}
-          {isDelivered === "Đã huỷ" && (
+          {isDelivered === 'Đã huỷ' && (
             <>
               <Select.Option value="Đã huỷ">
-                {" "}
+                {' '}
                 <Tag icon={<CloseCircleOutlined />} color="error">
                   Đã hủy
                 </Tag>
@@ -153,7 +153,7 @@ const FormUpdateMany = ({
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button className="hover:bg-red-600 hover:!text-white">Cancel</Button>
         <Button
-          style={{ marginLeft: "5px" }}
+          style={{ marginLeft: '5px' }}
           type="default"
           className="hover:bg-blue-600 hover:!text-white"
           htmlType="submit"
@@ -162,7 +162,7 @@ const FormUpdateMany = ({
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormUpdateMany;
+export default FormUpdateMany

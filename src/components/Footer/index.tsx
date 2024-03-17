@@ -3,21 +3,21 @@ import {
   FacebookOutlined,
   YoutubeOutlined,
   InstagramOutlined,
-} from "@ant-design/icons";
-import { IoLocationOutline } from "react-icons/io5";
-import { Avatar } from "antd";
-import clsx from "clsx";
-import style from "./index.module.scss";
+} from '@ant-design/icons'
+import { IoLocationOutline } from 'react-icons/io5'
+import { Avatar } from 'antd'
+import clsx from 'clsx'
+import style from './index.module.scss'
 const Footer = () => {
   return (
     <div className="bg-black ">
       <div
         className={clsx(
-          "py-16 flex justify-around cursor-pointer",
+          'py-16 flex justify-around cursor-pointer',
           style.footer
         )}
       >
-        <div className={clsx("flex gap-32 flex-row", style.infoFooter)}>
+        <div className={clsx('flex gap-32 flex-row', style.infoFooter)}>
           <div className="text-base flex flex-col gap-3 text-white">
             <p>FIND A STORE</p>
             <p>BECOME A MEMBER</p>
@@ -45,19 +45,19 @@ const Footer = () => {
             icon={
               <TwitterOutlined className="text-black hover:text-gray-400 cursor-pointer" />
             }
-          />{" "}
+          />{' '}
           <Avatar
             className="bg-gray-400 hover:bg-white"
             icon={
               <FacebookOutlined className="text-black hover:text-gray-400 cursor-pointer" />
             }
-          />{" "}
+          />{' '}
           <Avatar
             className="bg-gray-400 hover:bg-white"
             icon={
               <YoutubeOutlined className="text-black hover:text-gray-400 cursor-pointer" />
             }
-          />{" "}
+          />{' '}
           <Avatar
             className="bg-gray-400 hover:bg-white"
             icon={
@@ -67,7 +67,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className={clsx("flex justify-around py-6", style.detailFooter)}>
+      <div className={clsx('flex justify-around py-6', style.detailFooter)}>
         <span className="text-sm">
           <span className=" flex gap-3 ">
             <p className="mt-1 text-white">
@@ -81,7 +81,7 @@ const Footer = () => {
         </span>
         <span
           className={clsx(
-            "text-sm text-gray-400 flex gap-6",
+            'text-sm text-gray-400 flex gap-6',
             style.aboutDtFooter
           )}
         >
@@ -92,7 +92,7 @@ const Footer = () => {
         </span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

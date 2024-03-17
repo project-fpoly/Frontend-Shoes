@@ -1,66 +1,80 @@
-import { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
-import { SiNike } from 'react-icons/si';
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useState } from 'react'
+import { Form, Input, Button, message } from 'antd'
+import { SiNike } from 'react-icons/si'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const SignupPage = () => {
-  const [passwordHelp, setPasswordHelp] = useState<string | undefined>(undefined);
-  const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<string | undefined>(undefined);
-  const navigate = useNavigate();
+  const [passwordHelp, setPasswordHelp] = useState<string | undefined>(
+    undefined
+  )
+  const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<
+    string | undefined
+  >(undefined)
+  const navigate = useNavigate()
 
   const onFinish = async (values: any) => {
-      try {
-          const data = {...values};
-          const response = await axios.post('http://localhost:9000/api/auth/signup', data);
-          if (response && response.status === 200) {
-              message.success('Signup successfully');
-              localStorage.setItem('accessToken', response.data.accessToken);
+    try {
+      const data = { ...values }
+      const response = await axios.post(
+        'http://localhost:9000/api/auth/signup',
+        data
+      )
+      if (response && response.status === 200) {
+        message.success('Signup successfully')
+        localStorage.setItem('accessToken', response.data.accessToken)
 
-
-              //redirect to signup page
-              navigate(`/verify-email?email=${values?.email}`);
-          }
-      } catch (e: any) {
-          e.response.data.message && alert(e.response.data.message);
-          console.log(e);
+        //redirect to signup page
+        navigate(`/verify-email?email=${values?.email}`)
       }
-    console.log('Received values:', values);
-  };
+    } catch (e: any) {
+      e.response.data.message && alert(e.response.data.message)
+      console.log(e)
+    }
+    console.log('Received values:', values)
+  }
 
   const validatePassword = (_: any, value: string) => {
     if (value.length < 8) {
-      setPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
-      return Promise.reject('');
+      setPasswordHelp(
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+      )
+      return Promise.reject('')
     }
 
     if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
-      return Promise.reject('');
+      setPasswordHelp(
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+      )
+      return Promise.reject('')
     }
 
-    setPasswordHelp(undefined);
-    return Promise.resolve();
-  };
+    setPasswordHelp(undefined)
+    return Promise.resolve()
+  }
   const validateConfirmPassword = (_: any, value: string) => {
     if (value.length < 8) {
-      setConfirmPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
-      return Promise.reject('');
+      setConfirmPasswordHelp(
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+      )
+      return Promise.reject('')
     }
 
     if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-        setConfirmPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
-      return Promise.reject('');
+      setConfirmPasswordHelp(
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+      )
+      return Promise.reject('')
     }
 
     if (value.trim() !== document.getElementById('password')?.value?.trim()) {
-        setConfirmPasswordHelp('Confirm password does not match password.');
-      return Promise.reject('');
+      setConfirmPasswordHelp('Confirm password does not match password.')
+      return Promise.reject('')
     }
 
-      setConfirmPasswordHelp(undefined);
-    return Promise.resolve();
-  };
+    setConfirmPasswordHelp(undefined)
+    return Promise.resolve()
+  }
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 flex items-center justify-center flex-col">
@@ -73,9 +87,10 @@ const SignupPage = () => {
           onFinish={onFinish}
           autoComplete="off"
           style={{ margin: '32px 0' }} // Thêm khoảng cách trên và dưới cho toàn bộ form
-
         >
-          <h1 className="text-2xl font-normal sm:text-3xl">Let's make you a Nike member.</h1>
+          <h1 className="text-2xl font-normal sm:text-3xl">
+            Let's make you a Nike member.
+          </h1>
 
           <Form.Item
             name="userName"
@@ -86,37 +101,65 @@ const SignupPage = () => {
               },
             ]}
           >
-            <Input className="border border-black" size="large" placeholder="User name" />
+            <Input
+              className="border border-black"
+              size="large"
+              placeholder="User name"
+            />
           </Form.Item>
 
           <Form.Item
             name="email"
             rules={[{ required: true, message: 'Please input your email!' }]}
           >
-            <Input className="border border-black" size="large" placeholder="Email" />
+            <Input
+              className="border border-black"
+              size="large"
+              placeholder="Email"
+            />
           </Form.Item>
 
-            <Form.Item
-                name="password"
-                rules={[
-                    { required: true, message: 'Please input your password!' },
-                    { validator: validatePassword },
-                ]}
-                extra={passwordHelp && <div style={{ color: 'blue' }}>{passwordHelp}</div>}
-            >
-                <Input.Password id="password" className="border border-black" size="large" placeholder="Password" />
-            </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              { required: true, message: 'Please input your password!' },
+              { validator: validatePassword },
+            ]}
+            extra={
+              passwordHelp && (
+                <div style={{ color: 'blue' }}>{passwordHelp}</div>
+              )
+            }
+          >
+            <Input.Password
+              id="password"
+              className="border border-black"
+              size="large"
+              placeholder="Password"
+            />
+          </Form.Item>
 
-            <Form.Item
-                name="confirmPassword"
-                rules={[
-                    { required: true, message: 'Please input your confirm password!' },
-                    { validator: validateConfirmPassword },
-                ]}
-                extra={confirmPasswordHelp && <div style={{ color: 'blue' }}>{confirmPasswordHelp}</div>}
-            >
-                <Input.Password className="border border-black" size="large" placeholder="Confirm password" />
-            </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your confirm password!',
+              },
+              { validator: validateConfirmPassword },
+            ]}
+            extra={
+              confirmPasswordHelp && (
+                <div style={{ color: 'blue' }}>{confirmPasswordHelp}</div>
+              )
+            }
+          >
+            <Input.Password
+              className="border border-black"
+              size="large"
+              placeholder="Confirm password"
+            />
+          </Form.Item>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
@@ -139,8 +182,8 @@ const SignupPage = () => {
           </div>
         </Form>
       </section>
-    </div >
-  );
-};
+    </div>
+  )
+}
 
-export default SignupPage;
+export default SignupPage

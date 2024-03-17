@@ -1,11 +1,11 @@
-import { Modal } from "antd";
-import React, { ReactNode } from "react";
+import { Modal } from 'antd'
+import React, { ReactNode } from 'react'
 
-import "./index.scss";
+import './index.scss'
 interface Props {
-  isModalOpen: boolean;
-  setIsModalOpen: any;
-  children: ReactNode;
+  isModalOpen: boolean
+  setIsModalOpen: any
+  children: ReactNode
 }
 const ModalCustom: React.FC<Props> = ({
   isModalOpen,
@@ -13,15 +13,15 @@ const ModalCustom: React.FC<Props> = ({
   children,
 }) => {
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
   return (
     <>
       <Modal className="h-[700px]" open={isModalOpen} onCancel={handleCancel}>
         {children}
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default ModalCustom;
+export default ModalCustom

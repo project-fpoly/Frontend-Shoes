@@ -1,32 +1,31 @@
-import { useState } from "react";
-import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { SiNike } from "react-icons/si";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../../features/auth";
-
+import { useState } from 'react'
+import { Button, Form, Input } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
+import { SiNike } from 'react-icons/si'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../../../features/auth'
 
 const SigninPage = () => {
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState<boolean>(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
+    setIsHovered(true)
+  }
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+    setIsHovered(false)
+  }
 
   const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const onFinish = async (values: { email: string }) => {
-    dispatch(setUser({email: values.email}));
-    navigate(`/password?email=${values.email}`);
+    dispatch(setUser({ email: values.email }))
+    navigate(`/password?email=${values.email}`)
     // try {
     //   if (!isValidEmail(values.email)) {
     //     message.error("Invalid email format. Please enter a valid email address.", 5);
@@ -68,7 +67,7 @@ const SigninPage = () => {
     //     }
     //   }
     // }
-  };
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -84,31 +83,31 @@ const SigninPage = () => {
             onFinish={onFinish}
             autoComplete="off"
           >
-            <h1 className="text-2xl font-normal sm:text-4xl">Enter your email address to join or log in.</h1>
+            <h1 className="text-2xl font-normal sm:text-4xl">
+              Enter your email address to join or log in.
+            </h1>
 
             <p className="text-sm mt-4 font-medium leading-none text-gray-500">
-              Don't have account?{" "}
+              Don't have account?{' '}
               <span
                 tabIndex={0}
                 role="link"
                 aria-label="Sign up here"
                 className="text-sm font-medium leading-none underline text-gray-800 cursor-pointer"
               >
-                {" "}
+                {' '}
                 <Link to="/signup">Sign up here</Link>
               </span>
             </p>
-
-
 
             <Form.Item
               className="text-black font-bold"
               name="email"
               rules={[
                 {
-                  message: "Mandatory!",
+                  message: 'Mandatory!',
                   required: true,
-                  type: "email",
+                  type: 'email',
                 },
               ]}
             >
@@ -119,11 +118,15 @@ const SigninPage = () => {
               />
             </Form.Item>
             <h1 className="text-sm sm:text-xl mt-4 font-inherit leading-none text-gray-500">
-              By continuing, I agree to Nike's <a href="" className="underline" target="_blank">Privacy Policy</a> and <a href="" className="underline" target="_blank">Terms of Use.</a>
+              By continuing, I agree to Nike's{' '}
+              <a href="" className="underline" target="_blank">
+                Privacy Policy
+              </a>{' '}
+              and{' '}
+              <a href="" className="underline" target="_blank">
+                Terms of Use.
+              </a>
             </h1>
-
-
-
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
@@ -139,7 +142,6 @@ const SigninPage = () => {
                   alignItems: 'center',
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
-
                 }}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -152,12 +154,9 @@ const SigninPage = () => {
             </div> */}
           </Form>
         </section>
-
-
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SigninPage;
-
+export default SigninPage

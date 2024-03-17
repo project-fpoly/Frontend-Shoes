@@ -1,25 +1,25 @@
-import { Col, Row, Space, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Col, Row, Space, Typography } from 'antd'
+import { Link } from 'react-router-dom'
 
 const Featured = () => {
   return (
-    <Space direction="vertical" style={{ width: "100%" }}>
+    <Space direction="vertical" style={{ width: '100%' }}>
       <Typography className="home_title">Featured</Typography>
       <Row gutter={24}>
         <Col span={12}>
-          <div style={{ position: "relative" }}>
+          <div style={{ position: 'relative' }}>
             <img
               src="../../../public/nam.jpg"
-              style={{ height: "650px", width: "100%" }}
+              style={{ height: '650px', width: '100%' }}
             />
             <Typography
               className="text-3xl font-bold"
               style={{
-                position: "absolute",
+                position: 'absolute',
                 bottom: 100,
                 left: 30,
-                padding: "10px",
-                color: "white",
+                padding: '10px',
+                color: 'white',
               }}
             >
               Men's Shoes <br />
@@ -27,7 +27,7 @@ const Featured = () => {
             </Typography>
             <Link
               to={'/men'}
-              style={{ position: "absolute", bottom: 50, left: 40 }}
+              style={{ position: 'absolute', bottom: 50, left: 40 }}
               className="bg-white font-medium text-lg px-5 py-3 leading-4 rounded-full"
             >
               Go
@@ -35,19 +35,19 @@ const Featured = () => {
           </div>
         </Col>
         <Col span={12}>
-          <div style={{ position: "relative" }}>
+          <div style={{ position: 'relative' }}>
             <img
               src="../../../public/women.jpg"
-              style={{ height: "650px", width: "100%" }}
+              style={{ height: '650px', width: '100%' }}
             />
             <Typography
               className="text-3xl font-bold"
               style={{
-                position: "absolute",
+                position: 'absolute',
                 bottom: 100,
                 left: 30,
-                padding: "10px",
-                color: "white",
+                padding: '10px',
+                color: 'white',
               }}
             >
               Women's <br />
@@ -55,7 +55,7 @@ const Featured = () => {
             </Typography>
             <Link
               to={'/women'}
-              style={{ position: "absolute", bottom: 50, left: 40 }}
+              style={{ position: 'absolute', bottom: 50, left: 40 }}
               className="bg-white font-medium text-lg px-5 py-3 leading-4 rounded-full"
             >
               Go
@@ -64,7 +64,7 @@ const Featured = () => {
         </Col>
       </Row>
     </Space>
-  );
-};
+  )
+}
 
-export default Featured;
+export default Featured
