@@ -1,34 +1,45 @@
-import { AlertOutlined, AppstoreOutlined, ContainerOutlined, OrderedListOutlined, ShoppingOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
-import { Badge, List } from "antd";
-import { differenceInMilliseconds, format, formatDistanceToNow } from "date-fns";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
-import { IStateNotification } from "../../../common/redux/type";
-import { useEffect } from "react";
-import { fetchAllNotification, updateNotificationById } from "../../../features/notification";
-import styles from "../../../App.module.scss";
-import { useNavigate } from "react-router-dom";
-import { INotification } from "../../../common/notification";
-const AllNotification=()=>{
-  const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
-    const { notifications: notification } = useSelector(
-      (state: IStateNotification) => state.notification
-    );
-    useEffect(() => {
-      dispatch(fetchAllNotification());
-    }, [dispatch]);
-    const currentDateTime: Date = new Date();
-    const handleItemClick = async  (item:INotification) => {
-      if(!item.isRead){
-        await  dispatch(updateNotificationById(item._id));
-        dispatch(fetchAllNotification());
-      }
-        navigate(`/admin/notification/${item._id}`);
-      };
-    return(
-        <>
-        <div style={{ maxHeight: "75vh", overflowY: "auto" }}>
+import {
+  AlertOutlined,
+  AppstoreOutlined,
+  ContainerOutlined,
+  OrderedListOutlined,
+  ShoppingOutlined,
+  SolutionOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
+import { Badge, List } from 'antd'
+import { differenceInMilliseconds, format, formatDistanceToNow } from 'date-fns'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../../redux/store'
+import { IStateNotification } from '../../../common/redux/type'
+import { useEffect } from 'react'
+import {
+  fetchAllNotification,
+  updateNotificationById,
+} from '../../../features/notification'
+import styles from '../../../App.module.scss'
+import { useNavigate } from 'react-router-dom'
+import { INotification } from '../../../common/notification'
+const AllNotification = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const { notifications: notification } = useSelector(
+    (state: IStateNotification) => state.notification
+  )
+  useEffect(() => {
+    dispatch(fetchAllNotification())
+  }, [dispatch])
+  const currentDateTime: Date = new Date()
+  const handleItemClick = async (item: INotification) => {
+    if (!item.isRead) {
+      await dispatch(updateNotificationById(item._id))
+      dispatch(fetchAllNotification())
+    }
+    navigate(`/admin/notification/${item._id}`)
+  }
+  return (
+    <>
+      <div style={{ maxHeight: '75vh', overflowY: 'auto' }}>
         <List
           itemLayout="vertical"
           dataSource={notification}
@@ -36,11 +47,11 @@ const AllNotification=()=>{
             const timeDifference = differenceInMilliseconds(
               currentDateTime,
               new Date(item.createdAt)
-            );
+            )
             const timeAgo = formatDistanceToNow(
               Number(currentDateTime.getTime()) - timeDifference,
               { addSuffix: true }
-            );
+            )
 
             const iconMap: Record<string, JSX.Element> = {
               user: <UserOutlined />,
@@ -50,7 +61,7 @@ const AllNotification=()=>{
               promotion: <AppstoreOutlined />,
               product: <ShoppingOutlined />,
               category: <SolutionOutlined />,
-            };
+            }
 
             return (
               <List.Item
@@ -59,23 +70,23 @@ const AllNotification=()=>{
                 }`}
                 onClick={() => handleItemClick(item)}
               >
-                <div style={{ marginBottom: "16px",padding:5 }}>
+                <div style={{ marginBottom: '16px', padding: 5 }}>
                   <h3>{iconMap[item.type]}</h3>
                   <p>{item.message}</p>
                 </div>
                 <div>
-                  <Badge status={item.isRead ? "success" : "error"} />
-                  {timeAgo}{" "}
-                  <i style={{ fontSize: "13px" }}>
-                    {format(new Date(item.createdAt), " HH:mm:ss dd-MM-yyyy")}
+                  <Badge status={item.isRead ? 'success' : 'error'} />
+                  {timeAgo}{' '}
+                  <i style={{ fontSize: '13px' }}>
+                    {format(new Date(item.createdAt), ' HH:mm:ss dd-MM-yyyy')}
                   </i>
                 </div>
               </List.Item>
-            );
+            )
           }}
         />
       </div>
-        </>
-    )
+    </>
+  )
 }
 export default AllNotification

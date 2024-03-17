@@ -1,125 +1,156 @@
-import { Button, Modal, notification } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { GrFavorite } from "react-icons/gr";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
-import { Link } from "react-router-dom";
-import Slider from "react-slick";
+import { Button, Modal, notification } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+import { GrFavorite } from 'react-icons/gr'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { SlArrowLeft, SlArrowRight } from 'react-icons/sl'
+import { Link, useNavigate } from 'react-router-dom'
+import Slider from 'react-slick'
 
-import { FaQuestionCircle } from "react-icons/fa";
-import "./style.css";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { FaQuestionCircle } from 'react-icons/fa'
+import './style.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../redux/store'
 import {
   getCartItems,
   removeFromCart,
+  synchronizeCart,
   updateProductCart,
-} from "../../features/cart";
-import { CartItem } from "../../common/order";
-import { IStateProduct } from "../../common/redux/type";
-import { fetchAllProducts } from "../../features/product";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { toInteger } from "lodash";
+} from '../../features/cart'
+import { CartItem } from '../../common/order'
+import { IStateProduct } from '../../common/redux/type'
+import { fetchAllProducts } from '../../features/product'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { toInteger } from 'lodash'
+import { IProduct } from '../../common/products'
+import usesessionStorage from '../../hooks'
 
 const Cart = () => {
-  const ref = useRef<any>({});
-  const dispatch = useDispatch<AppDispatch>();
-  const { cart } = useSelector((state: any) => state.cart.cartItems);
-  const cartSession = JSON.parse(sessionStorage.getItem("cart"));
-  const [forceRender, setForceRender] = useState(0);
-  let totalPrice = 0;
+  const ref = useRef<any>({})
+  const dispatch = useDispatch<AppDispatch>()
+  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const cartSession = JSON.parse(sessionStorage.getItem('cart'))
+  const [forceRender, setForceRender] = useState(0)
+  const [merge, setMerge] = usesessionStorage<{ cartItems: any }>('cart', {
+    cartItems: [],
+  })
+  const navigate = useNavigate()
 
+  const accessToken = localStorage.getItem('accessToken')
+  let totalPrice = 0
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity;
-  });
+    totalPrice += item.price * item.quantity
+  })
 
-  const { products } = useSelector((state: any) => state.product);
+  const { products } = useSelector((state: any) => state.product)
   const getProductName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
+  const getProductSize = (shoeId: string) => {
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product?.sizes : 'N/A'
+  }
+
   const getCateName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.categoryId.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.categoryId.name : 'N/A'
+  }
   useEffect(() => {
-    dispatch(getCartItems());
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-  }, [dispatch]);
+    dispatch(getCartItems())
+    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+  }, [dispatch])
   const next = () => {
-    ref.current.slickNext();
-  };
+    ref.current.slickNext()
+  }
 
   const previous = () => {
-    ref.current.slickPrev();
-  };
+    ref.current.slickPrev()
+  }
   const removeItemFromCart = (productId: string) => {
-    dispatch(removeFromCart(productId));
-    setForceRender(forceRender + 1); // Gọi setState để force render lại component
-  };
+    dispatch(removeFromCart(productId))
+    if (cart) {
+      sessionStorage.removeItem('cart')
+    }
+  }
   const removeItemFromCartSession = (productId: string, size: string) => {
-    const { cartItems } = cartSession;
+    const { cartItems } = cartSession
     if (cartItems) {
-      const CartItems = cartItems;
+      const CartItems = cartItems
       const updatedCartItems = CartItems.filter(
         (item: CartItem) =>
           item.product.toString() !== productId || item.size !== size
-      );
+      )
       const updatedCartData = {
         cartItems: updatedCartItems,
-      };
-      sessionStorage.setItem("cart", JSON.stringify(updatedCartData));
-      notification.success({ message: "Sản phẩm đã được xóa khỏi giỏ hàng" });
-      setForceRender(forceRender + 1); // Gọi setState để force render lại component
+      }
+
+      sessionStorage.setItem('cart', JSON.stringify(updatedCartData))
+
+      notification.success({ message: 'Sản phẩm đã được xóa khỏi giỏ hàng' })
     }
-  };
+    setForceRender(forceRender + 1) // Gọi setState để force render lại component
+  }
+
   const handleSizeChange = (
+    index: number,
     productId: string,
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const size = event.target.value;
+    const size = event.target.value
 
     dispatch(
       updateProductCart({
+        index,
         productId,
         size,
-        quantity: cart.cartItems.find((item: any) => item.product === productId)
-          .quantity,
       })
-    );
-    setForceRender(forceRender + 1); // Gọi setState để force render lại component
-  };
+    )
+    setForceRender(forceRender + 1) // Gọi setState để force render lại component
+  }
   const handleQuantityChange = (
+    index: number,
     productId: string,
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const quantity = toInteger(event.target.value);
-
+    const quantity = Number(event.target.value)
     dispatch(
       updateProductCart({
+        index,
         productId,
         quantity,
-        size: cart.cartItems.find((item: any) => item.product === productId)
-          .size,
+        size: cart.cartItems[index].size,
       })
-    );
-    setForceRender(forceRender + 1); // Gọi setState để force render lại component
-  };
+    )
+    setForceRender(forceRender + 1) // Gọi setState để force render lại component
+  }
   const updateCartItem = (
     index: number,
-    field: any,
-    value: React.ChangeEvent<HTMLSelectElement>
+    field: string,
+    value: React.ChangeEvent<HTMLSelectElement> | number
   ) => {
-    const updatedCart = { ...cartSession }; // Sao chép đối tượng cartSession
-    console.log(updatedCart);
-    // Cập nhật giá trị của trường field trong mục thứ index
-    updatedCart.cartItems[index][field] = value;
-    // Lưu cartSession đã cập nhật vào session storage
-    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    const updatedCart = { ...cartSession }
+    const updatedCartItem = { ...updatedCart.cartItems[index] }
 
-    // Force render lại component (nếu cần)
-    setForceRender(forceRender + 1); // Gọi setState để force render lại component
-  };
+    updatedCartItem[field] = field === 'size' ? value : +value
+
+    updatedCart.cartItems[index] = updatedCartItem
+
+    const mergedCartItems = { cartItems: [] as any }
+
+    for (const shoes of updatedCart.cartItems) {
+      const existingIndex = mergedCartItems.cartItems.findIndex(
+        (item: any) =>
+          item.product === shoes.product && item.size === shoes.size
+      )
+      if (existingIndex !== -1) {
+        mergedCartItems.cartItems[existingIndex].quantity += shoes.quantity
+      } else {
+        mergedCartItems.cartItems.push(shoes)
+      }
+    }
+    setMerge(mergedCartItems)
+  }
+
   const settings = {
     dots: true,
     infinite: true,
@@ -151,7 +182,7 @@ const Cart = () => {
         },
       },
     ],
-  };
+  }
 
   return (
     <>
@@ -166,7 +197,7 @@ const Cart = () => {
                 <span className="text-[#6b7280] pr-2 mr-2 border-r-2">
                   {cart
                     ? cart?.cartItems.length
-                    : cartSession?.cartItems.length}{" "}
+                    : cartSession?.cartItems.length}{' '}
                   items
                 </span>
                 {cart ? cart?.totalPrice : totalPrice}
@@ -174,189 +205,234 @@ const Cart = () => {
               </p>
             </div>
             {cart
-              ? cart?.cartItems.map((cartItem: any, index: number) => (
-                  <div key={index} className="cart-item flex mb-8">
-                    <figure className="w-[220px]">
-                      <Link to={"/"}>
-                        <img src={cartItem.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                    <div className="cart-item-content flex w-full ml-4">
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div className="">
-                          <div className="flex justify-between">
-                            <h2 className="font-semibold text-xl">
-                              {getProductName(cartItem.product)}
-                            </h2>
-                            <p className="text-xl font-semibold">
-                              {cartItem.price * cartItem.quantity}
-                              <span className="font-light">VND</span>
+              ? cart?.cartItems?.map((cartItem: any, index: number) => {
+                  const sizes = getProductSize(cartItem.product)
+                  console.log(sizes)
+                  return (
+                    <div
+                      key={`${cartItem.product}-${cartItem.size}`}
+                      className="cart-item flex mb-8"
+                    >
+                      <figure className="w-[220px]">
+                        <Link to={'/'}>
+                          <img src={cartItem.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                      <div className="cart-item-content flex w-full ml-4">
+                        <div className="flex flex-1 flex-col justify-between">
+                          <div className="">
+                            <div className="flex justify-between">
+                              <h2 className="font-semibold text-xl">
+                                {getProductName(cartItem.product)}
+                              </h2>
+                              <p className="text-xl font-semibold">
+                                {cartItem.price * cartItem.quantity}
+                                <span className="font-light">VND</span>
+                              </p>
+                            </div>
+                            <p className="text-lg text-[#565656]">
+                              {getCateName(cartItem.product)}
                             </p>
-                          </div>
-                          <p className="text-lg text-[#565656]">
-                            {getCateName(cartItem.product)}
-                          </p>
 
-                          <div className="flex text-lg text-[#6b7280]">
-                            <div>
-                              <label htmlFor="">Size</label>
-                              <select
-                                defaultValue={cartItem.size}
-                                name="size"
-                                id=""
-                                className="px-2 ml-1"
-                                onChange={(
-                                  event: React.ChangeEvent<HTMLSelectElement>
-                                ) => handleSizeChange(cartItem.product, event)}
-                              >
-                                <option value="38">38</option>
-                                <option value="39">39</option>
-                                <option value="40">40</option>
-                                <option value="41">41</option>
-                              </select>
-                            </div>
-                            <div className="ml-2">
-                              <label htmlFor="">Quanlity</label>
-                              <select
-                                defaultValue={cartItem.quantity}
-                                name="quanlity"
-                                id=""
-                                className="px-2 ml-1"
-                                onChange={(
-                                  event: React.ChangeEvent<HTMLSelectElement>
-                                ) =>
-                                  handleQuantityChange(cartItem.product, event)
-                                }
-                              >
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                              </select>
+                            <div className="flex text-lg text-[#6b7280]">
+                              <div>
+                                <label htmlFor="">Size</label>
+                                <select
+                                  value={cartItem.size}
+                                  name="size"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLSelectElement>
+                                  ) =>
+                                    handleSizeChange(
+                                      index,
+                                      cartItem.product,
+                                      event
+                                    )
+                                  }
+                                >
+                                  {sizes && Array.isArray(sizes) ? (
+                                    sizes.map((size: any, index: number) => (
+                                      <option key={index} value={size.name}>
+                                        {size.name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="">No sizes available</option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="ml-2">
+                                <label htmlFor="">Quanlity</label>
+                                <select
+                                  value={cartItem.quantity}
+                                  name="quanlity"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLSelectElement>
+                                  ) =>
+                                    handleQuantityChange(
+                                      index,
+                                      cartItem.product,
+                                      event
+                                    )
+                                  }
+                                >
+                                  <option value={1}>1</option>
+                                  <option value={2}>2</option>
+                                  <option value={3}>3</option>
+                                  <option value={4}>4</option>
+                                  <option value={5}>5</option>
+                                  <option value={6}>6</option>
+                                  <option value={7}>7</option>
+                                  <option value={8}>8</option>
+                                  <option value={9}>9</option>
+                                  <option value={10}>10</option>
+                                </select>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="cart-item-content-action">
-                          <ul className="flex">
-                            <li>
-                              <GrFavorite
-                                style={{
-                                  fontSize: "24px",
-                                  marginRight: "12px",
-                                }}
-                              />
-                            </li>
-                            <li>
-                              <RiDeleteBin6Line
-                                className="hover:cursor-pointer"
-                                onClick={() =>
-                                  removeItemFromCart(cartItem.product)
-                                }
-                                style={{ fontSize: "24px" }}
-                              />
-                            </li>
-                          </ul>
+                          <div className="cart-item-content-action">
+                            <ul className="flex">
+                              <li>
+                                <GrFavorite
+                                  style={{
+                                    fontSize: '24px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                              </li>
+                              <li>
+                                <RiDeleteBin6Line
+                                  className="hover:cursor-pointer"
+                                  onClick={() =>
+                                    removeItemFromCart(cartItem.product)
+                                  }
+                                  style={{ fontSize: '24px' }}
+                                />
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              : cartSession?.cartItems.map((item: any, index: number) => (
-                  <div key={index} className="cart-item flex mb-8">
-                    <figure className="w-[220px]">
-                      <Link to={"/"}>
-                        <img src={item.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                    <div className="cart-item-content flex w-full ml-4">
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div className="">
-                          <div className="flex justify-between">
-                            <h2 className="font-semibold text-xl">
-                              {getProductName(item.product)}
-                            </h2>
-                            <p className="text-xl font-semibold">
-                              {item.price * item.quantity}
-                              <span className="font-light">VND</span>
+                  )
+                })
+              : cartSession?.cartItems.map((item: any, index: any) => {
+                  const sizes = getProductSize(item.product)
+                  return (
+                    <div
+                      key={`${item.product}-${item.size}`}
+                      className="cart-item flex mb-8"
+                    >
+                      <figure className="w-[220px]">
+                        <Link to={'/'}>
+                          <img src={item.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                      <div className="cart-item-content flex w-full ml-4">
+                        <div className="flex flex-1 flex-col justify-between">
+                          <div className="">
+                            <div className="flex justify-between">
+                              <h2 className="font-semibold text-xl">
+                                {getProductName(item.product)}
+                              </h2>
+                              <p className="text-xl font-semibold">
+                                {item.price * item.quantity}
+                                <span className="font-light">VND</span>
+                              </p>
+                            </div>
+                            <p className="text-lg text-[#565656]">
+                              {getCateName(item.product)}
                             </p>
-                          </div>
-                          <p className="text-lg text-[#565656]">
-                            {getCateName(item.product)}
-                          </p>
 
-                          <div className="flex text-lg text-[#6b7280]">
-                            <div>
-                              <label htmlFor="">Size</label>
-                              <select
-                                defaultValue={item.size}
-                                name="size"
-                                id=""
-                                className="px-2 ml-1"
-                                onChange={(e) =>
-                                  updateCartItem(
-                                    index,
-                                    "size",
-                                    e.target.value as any
-                                  )
-                                }
-                              >
-                                <option value="38">38</option>
-                                <option value="39">39</option>
-                                <option value="40">40</option>
-                                <option value="41">41</option>
-                              </select>
-                            </div>
-                            <div className="ml-2">
-                              <label htmlFor="">Quanlity</label>
-                              <select
-                                defaultValue={item.quantity}
-                                name="quanlity"
-                                id=""
-                                className="px-2 ml-1"
-                                onChange={(e) =>
-                                  updateCartItem(
-                                    index,
-                                    "quantity",
-                                    e.target.value as any
-                                  )
-                                }
-                              >
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                              </select>
+                            <div className="flex text-lg text-[#6b7280]">
+                              <div>
+                                <label htmlFor="">Size</label>
+                                <select
+                                  value={item.size}
+                                  name="size"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(e) =>
+                                    updateCartItem(
+                                      index,
+                                      'size',
+                                      e.target.value as any
+                                    )
+                                  }
+                                >
+                                  {sizes && Array.isArray(sizes) ? (
+                                    sizes.map((size: any, index: number) => (
+                                      <option key={index} value={size.name}>
+                                        {size.name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="">No sizes available</option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="ml-2">
+                                <label htmlFor="">Quanlity</label>
+                                <select
+                                  value={item.quantity}
+                                  name="quantity"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(e) =>
+                                    updateCartItem(
+                                      index,
+                                      'quantity',
+                                      e.target.value as any
+                                    )
+                                  }
+                                >
+                                  <option value={1}>1</option>
+                                  <option value={2}>2</option>
+                                  <option value={3}>3</option>
+                                  <option value={4}>4</option>
+                                  <option value={5}>5</option>
+                                  <option value={6}>6</option>
+                                  <option value={7}>7</option>
+                                  <option value={8}>8</option>
+                                  <option value={9}>9</option>
+                                  <option value={10}>10</option>
+                                </select>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="cart-item-content-action">
-                          <ul className="flex">
-                            <li>
-                              <GrFavorite
-                                style={{
-                                  fontSize: "24px",
-                                  marginRight: "12px",
-                                }}
-                              />
-                            </li>
-                            <li>
-                              <RiDeleteBin6Line
-                                className="hover:cursor-pointer"
-                                onClick={() =>
-                                  removeItemFromCartSession(
-                                    item.product,
-                                    item.size
-                                  )
-                                }
-                                style={{ fontSize: "24px" }}
-                              />
-                            </li>
-                          </ul>
+                          <div className="cart-item-content-action">
+                            <ul className="flex">
+                              <li>
+                                <GrFavorite
+                                  style={{
+                                    fontSize: '24px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                              </li>
+                              <li>
+                                <RiDeleteBin6Line
+                                  className="hover:cursor-pointer"
+                                  onClick={() =>
+                                    removeItemFromCartSession(
+                                      item.product,
+                                      item.size
+                                    )
+                                  }
+                                  style={{ fontSize: '24px' }}
+                                />
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
             <hr />
           </div>
           <div className="shopping-cart-summary lg:w-[35%]">
@@ -393,24 +469,37 @@ const Cart = () => {
                 </div>
               </div>
               <div className="mt-5 hidden lg:block">
-                {cart || cartSession ? (
+                {cart || cartSession?.cartItems.length ? (
                   <>
-                    <Button
-                      style={{ background: "rgb(17, 17, 17)" }}
-                      block
-                      className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
-                    >
-                      <Link to={"./guest_checkout"}>
-                        <p>Guest Checkout</p>
-                      </Link>
-                    </Button>
-                    <Button
-                      style={{ background: "rgb(17, 17, 17)" }}
-                      block
-                      className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700"
-                    >
-                      Member Checkout
-                    </Button>
+                    {accessToken ? (
+                      <Button
+                        onClick={() => navigate('./checkout')}
+                        style={{ background: 'rgb(17, 17, 17)' }}
+                        block
+                        className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
+                      >
+                        <p> Checkout</p>
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={() => navigate('./guest_checkout')}
+                          style={{ background: 'rgb(17, 17, 17)' }}
+                          block
+                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
+                        >
+                          <p>Guest Checkout</p>
+                        </Button>
+                        <Button
+                          onClick={() => navigate('../signin')}
+                          style={{ background: 'rgb(17, 17, 17)' }}
+                          block
+                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700"
+                        >
+                          <p>Member Checkout</p>
+                        </Button>
+                      </>
+                    )}
                   </>
                 ) : null}
               </div>
@@ -418,27 +507,35 @@ const Cart = () => {
           </div>
         </div>
 
-        <div className="favourites my-12">
+        <div className="favourites my-12 gay-4">
           <h2 className="text-3xl font-semibold">Favourites</h2>
           <div className="flex items-center lg:block">
             <p className="text-lg">Want to view your favourites?</p>
-            <Link to={"/"} className="underline text-lg text-gray-500 mx-1">
-              Join us
-            </Link>{" "}
-            or{" "}
-            <Link to={"/"} className="underline text-lg text-gray-500 mx-1">
-              Sign in
-            </Link>
+            {accessToken ? (
+              <Link to={'/'} className="underline text-lg text-gray-500 mx-1">
+                View favourites
+              </Link>
+            ) : (
+              <>
+                <Link to={'/'} className="underline text-lg text-gray-500 mx-1">
+                  Join us
+                </Link>{' '}
+                or{' '}
+                <Link to={'/'} className="underline text-lg text-gray-500 mx-1">
+                  Sign in
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
       <div className="fixed z-10 bottom-0 h-[120px] w-full bg-white px-4 leading-[120px] lg:hidden">
         <Button
-          style={{ background: "rgb(17, 17, 17)" }}
+          style={{ background: 'rgb(17, 17, 17)' }}
           block
           className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 my-auto"
         >
-          <Link to={"./guest_checkout"}>
+          <Link to={'./guest_checkout'}>
             <p>Guest Checkout</p>
           </Link>
         </Button>
@@ -467,7 +564,7 @@ const Cart = () => {
         <div className="">
           <Slider ref={ref} {...settings}>
             <div>
-              <Link to={"1"}>
+              <Link to={'1'}>
                 <div>
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -482,7 +579,7 @@ const Cart = () => {
               </Link>
             </div>
             <div>
-              <Link to={"2"}>
+              <Link to={'2'}>
                 <div className="overflow-hidden w-full">
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -496,7 +593,7 @@ const Cart = () => {
               </Link>
             </div>
             <div>
-              <Link to={"3"}>
+              <Link to={'3'}>
                 <div className="overflow-hidden w-full">
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -510,7 +607,7 @@ const Cart = () => {
               </Link>
             </div>
             <div>
-              <Link to={"4"}>
+              <Link to={'4'}>
                 <div>
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -525,7 +622,7 @@ const Cart = () => {
               </Link>
             </div>
             <div>
-              <Link to={"5"}>
+              <Link to={'5'}>
                 <div className="overflow-hidden w-full">
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -539,7 +636,7 @@ const Cart = () => {
               </Link>
             </div>
             <div>
-              <Link to={"6"}>
+              <Link to={'6'}>
                 <div className="overflow-hidden w-full">
                   <img src="https://picsum.photos/200" alt="" width="100%" />
                 </div>
@@ -556,7 +653,7 @@ const Cart = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

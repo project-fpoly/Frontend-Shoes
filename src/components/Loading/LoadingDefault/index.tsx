@@ -1,6 +1,8 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons'
+import { Spin } from 'antd'
 
-const LoadingDefault: React.FC = () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+const LoadingDefault: React.FC = () => (
+  <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+)
 
-export default LoadingDefault;
+export default LoadingDefault

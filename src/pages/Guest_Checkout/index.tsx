@@ -1,59 +1,79 @@
-import React, { useEffect } from "react";
-import { Button, Checkbox, Form, Input, Radio } from "antd";
-import { Link } from "react-router-dom";
-import "./style.css";
-import { TbTruckDelivery } from "react-icons/tb";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { IStateProduct } from "../../common/redux/type";
-import { createOrder, getCartItems } from "../../features/cart";
-import { fetchAllProducts } from "../../features/product";
+import React, { useEffect } from 'react'
+import { Button, Checkbox, Form, Input, Radio } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
+import './style.css'
+import { TbTruckDelivery } from 'react-icons/tb'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../redux/store'
+import { IStateProduct } from '../../common/redux/type'
+import { createOrder, getCartItems } from '../../features/cart'
+import { fetchAllProducts } from '../../features/product'
 
 const Guest_Checkout = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { cart } = useSelector((state: any) => state.cart.cartItems);
-  const cartSession = JSON.parse(sessionStorage.getItem("cart"));
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
 
-  const accessToken = localStorage.getItem("accessToken");
+  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const cartSession = JSON.parse(sessionStorage.getItem('cart'))
 
-  let totalPrice = 0;
+  const accessToken = localStorage.getItem('accessToken')
+
+  let totalPrice = 0
 
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity;
-  });
+    totalPrice += item.price * item.quantity
+  })
 
-  const { products } = useSelector((state: IStateProduct) => state.product);
+  const { products } = useSelector((state: IStateProduct) => state.product)
   const getProductName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
   const getCateName = (shoeId: string) => {
-    const product = products.find((product: any) => product._id === shoeId);
-    return product ? product.categoryId.name : "N/A";
-  };
+    const product = products.find((product: any) => product._id === shoeId)
+    return product ? product.categoryId.name : 'N/A'
+  }
   useEffect(() => {
-    dispatch(getCartItems());
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-  }, []);
-  const [form] = Form.useForm();
+    dispatch(getCartItems())
+    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+  }, [])
+  const [form] = Form.useForm()
   const handleFormSubmit = (formValues: {
-    fullname: string;
-    email: string;
-    phone: string;
-    address: string;
+    fullname: string
+    email: string
+    phone: string
+    address: string
   }) => {
-    const address = { shippingAddress: formValues };
-    const { shippingAddress } = address;
-    if (accessToken) {
-      const { cartItems } = cart;
-      dispatch(createOrder({ cartItems, shippingAddress }));
-    } else {
-      const { cartItems } = cartSession;
-
-      dispatch(createOrder({ cartItems, shippingAddress, totalPrice }));
-      sessionStorage.removeItem("cart");
+    const request = {
+      shippingAddress: {
+        fullname: formValues.fullname,
+        address: formValues.address,
+        email: formValues.email,
+        phone: formValues.phone,
+      },
+      payment_method: formValues.payment_method,
     }
-  };
+
+    if (accessToken) {
+      if (cart) {
+        const { cartItems } = cart
+        dispatch(createOrder({ cartItems, request }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
+      } else {
+        const { cartItems } = cartSession
+        dispatch(createOrder({ cartItems, request }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
+      }
+    } else {
+      const { cartItems } = cartSession
+
+      dispatch(createOrder({ cartItems, request, totalPrice }))
+      sessionStorage.removeItem('cart')
+      navigate('../../order')
+    }
+  }
   // React.useEffect(() => {
   //   form.setFieldsValue({
   //     name,
@@ -75,7 +95,7 @@ const Guest_Checkout = () => {
             >
               <p className="flex items-center text-left text-xl px-3">
                 <TbTruckDelivery
-                  style={{ fontSize: "32px", marginRight: "12px" }}
+                  style={{ fontSize: '32px', marginRight: '12px' }}
                 />
                 Deliver It
               </p>
@@ -97,7 +117,7 @@ const Guest_Checkout = () => {
                 <Form.Item
                   name="fullname"
                   rules={[
-                    { required: true, message: "Please enter your last name!" },
+                    { required: true, message: 'Please enter your last name!' },
                   ]}
                 >
                   <Input
@@ -113,7 +133,7 @@ const Guest_Checkout = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please enter your address details!",
+                      message: 'Please enter your address details!',
                     },
                   ]}
                 >
@@ -127,7 +147,7 @@ const Guest_Checkout = () => {
                 <Form.Item
                   name="email"
                   rules={[
-                    { required: true, message: "Please enter your Email!" },
+                    { required: true, message: 'Please enter your Email!' },
                   ]}
                 >
                   <Input
@@ -143,7 +163,7 @@ const Guest_Checkout = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please enter your phone number!",
+                      message: 'Please enter your phone number!',
                     },
                   ]}
                 >
@@ -178,14 +198,25 @@ const Guest_Checkout = () => {
               {/* <Form.Item name="fieldA" valuePropName="checked">
                                 <Checkbox />
                             </Form.Item> */}
-
+              <Form.Item
+                name="payment_method"
+                rules={[
+                  { required: true, message: 'Please select payment method!' },
+                ]}
+                initialValue="Thanh toán tiền mặt"
+              >
+                <Radio.Group defaultValue="Thanh toán tiền mặt">
+                  <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
+                  <Radio value="vnpay">VNPAY</Radio>
+                </Radio.Group>
+              </Form.Item>
               <Button
                 type="default"
                 htmlType="submit"
                 block
-                className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:text-white"
+                className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
               >
-                <p className="text-lg">Continue</p>
+                <p className="text-lg ">Check out</p>
               </Button>
             </Form>
           </div>
@@ -207,7 +238,7 @@ const Guest_Checkout = () => {
             <div className="flex justify-between items-center my-5">
               <div>Total</div>
               <div>
-                {cart ? cart?.totalPrice : totalPrice}{" "}
+                {cart ? cart?.totalPrice : totalPrice}{' '}
                 <span className="font-light">VND</span>
               </div>
             </div>
@@ -219,8 +250,12 @@ const Guest_Checkout = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={"/"}>
-                          <img src={cartItem.images[0]} alt="" />
+                        <Link to={'/'}>
+                          <img
+                            className="h-full w-full object-cover object-center"
+                            src={cartItem.images[0]}
+                            alt=""
+                          />
                         </Link>
                       </figure>
                     </div>
@@ -241,8 +276,12 @@ const Guest_Checkout = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={"/"}>
-                          <img src={item.images[0]} alt="" />
+                        <Link to={'/'}>
+                          <img
+                            className="h-full w-full object-cover object-center"
+                            src={item.images[0]}
+                            alt=""
+                          />
                         </Link>
                       </figure>
                     </div>
@@ -265,7 +304,7 @@ const Guest_Checkout = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Guest_Checkout;
+export default Guest_Checkout

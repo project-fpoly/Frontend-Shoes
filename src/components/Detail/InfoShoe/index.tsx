@@ -1,70 +1,70 @@
-import { ICategory } from "../../../common/category";
-import { IProduct } from "../../../common/products";
-import style from "./index.module.scss";
-import clsx from "clsx";
-import ModalCustom from "../../Modal";
-import { useState } from "react";
-import { Image, notification, Button, ConfigProvider } from "antd";
-import Colspace from "./Colspace";
-import { Link } from "react-router-dom";
-import { CiHeart } from "react-icons/ci";
-import usesessionStorage from "../../../hooks";
-import { addToCart } from "../../../features/cart";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
-type NotificationType = "success" | "info" | "warning" | "error";
+import { ICategory } from '../../../common/category'
+import { IProduct } from '../../../common/products'
+import style from './index.module.scss'
+import clsx from 'clsx'
+import ModalCustom from '../../Modal'
+import { useState } from 'react'
+import { Image, notification, Button, ConfigProvider } from 'antd'
+import Colspace from './Colspace'
+import { Link } from 'react-router-dom'
+import { CiHeart } from 'react-icons/ci'
+import usesessionStorage from '../../../hooks'
+import { addToCart } from '../../../features/cart'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../../redux/store'
+type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
-  shoe: any;
-  category: ICategory;
+  shoe: any
+  category: ICategory
 }
 const InfoShoe = (props: Props) => {
-  const { shoe, category } = props;
-  const [size, setSize] = useState("");
-  const [activeButton, setActiveButton] = useState(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const { shoe, category } = props
+  const [size, setSize] = useState('')
+  const [activeButton, setActiveButton] = useState(null)
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleClick = (index: any) => {
-    setActiveButton(index === activeButton ? null : index);
-  };
+    setActiveButton(index === activeButton ? null : index)
+  }
   const openNotification = (type: NotificationType) => {
     switch (type) {
-      case "error":
+      case 'error':
         notification[type]({
-          message: "Không thêm được sản phẩm",
-          description: "Bạn cần phải chọn size",
-        });
-        break;
+          message: 'Không thêm được sản phẩm',
+          description: 'Bạn cần phải chọn size',
+        })
+        break
       default:
-        "success";
+        'success'
         notification[type]({
-          message: "Thêm sản phẩm thành công",
-          description: "Sản phẩm đã được thêm vào giỏ hàng",
-        });
-        break;
+          message: 'Thêm sản phẩm thành công',
+          description: 'Sản phẩm đã được thêm vào giỏ hàng',
+        })
+        break
     }
-  };
-  const [cart, setCart] = usesessionStorage<{ cartItems: IProduct[] }>("cart", {
+  }
+  const [cart, setCart] = usesessionStorage<{ cartItems: IProduct[] }>('cart', {
     cartItems: [],
-  });
+  })
 
-  const { _id: product, sizes, color, images, price, ...shoeCart } = shoe;
+  const { _id: product, sizes, color, images, price, ...shoeCart } = shoe
 
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem('accessToken')
 
   const addToCartt = () => {
-    if (!size) return openNotification("error");
-    const cartItem = { product, size: size };
+    if (!size) return openNotification('error')
+    const cartItem = { product, size: size }
     if (accessToken) {
-      dispatch(addToCart(cartItem as any));
+      dispatch(addToCart(cartItem as any))
     } else {
       const updatedCart = cart?.cartItems.map((item: any) => {
         if (item.product === shoe._id && item.size === size) {
           // If product with the same ID already exists, increase its quantity
-          return { ...item, quantity: item.quantity + 1 };
+          return { ...item, quantity: item.quantity + 1 }
         }
-        return item;
-      });
+        return item
+      })
 
       // If the product was not found in the cart, add it with quantity 1
       if (
@@ -79,19 +79,19 @@ const InfoShoe = (props: Props) => {
           images,
           price,
           quantity: 1,
-        });
+        })
       }
 
-      openNotification("success");
-      setCart({ cartItems: updatedCart });
+      openNotification('success')
+      setCart({ cartItems: updatedCart })
     }
-  };
-  const storedData = localStorage.getItem("cart");
+  }
+  const storedData = localStorage.getItem('cart')
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
   return (
     <>
       <ConfigProvider
@@ -99,14 +99,14 @@ const InfoShoe = (props: Props) => {
           components: {
             Button: {
               contentFontSize: 18,
-              defaultHoverBorderColor: "black",
-              defaultHoverColor: "black",
+              defaultHoverBorderColor: 'black',
+              defaultHoverColor: 'black',
             },
           },
         }}
       >
         <div
-          className={clsx("flex flex-col gap-6 w-[500px]", style.containerInfo)}
+          className={clsx('flex flex-col gap-6 w-[500px]', style.containerInfo)}
         >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
@@ -115,27 +115,27 @@ const InfoShoe = (props: Props) => {
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
             <p>Select size</p>
-            <Link to={"/sizeguide"}>
+            <Link to={'/sizeguide'}>
               <p>Size guide</p>
             </Link>
           </span>
           <div className={style.sizes}>
-            {shoe?.sizes?.map((item:any, index:number) => {
+            {shoe?.sizes?.map((item: any, index: number) => {
               return (
                 <Button
                   onClick={() => {
-                    handleClick(index);
-                    setSize(item.name);
+                    handleClick(index)
+                    setSize(item.name)
                   }}
                   key={item.name}
                   className={clsx(
                     style.button,
-                    index === activeButton ? "border-black" : ""
+                    index === activeButton ? 'border-black' : ''
                   )}
                 >
                   {item.name}
                 </Button>
-              );
+              )
             })}
           </div>
           <div className="flex flex-col gap-5 justify-center items-center">
@@ -184,7 +184,7 @@ const InfoShoe = (props: Props) => {
         </div>
       </ConfigProvider>
     </>
-  );
-};
+  )
+}
 
-export default InfoShoe;
+export default InfoShoe

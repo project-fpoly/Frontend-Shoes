@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, DatePicker, Modal, Select, Table, Tag, Tooltip } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, DatePicker, Modal, Select, Table, Tag, Tooltip } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import {
   CarOutlined,
   CheckCircleOutlined,
@@ -16,41 +16,43 @@ import {
   LoadingOutlined,
   RocketOutlined,
   SyncOutlined,
-} from "@ant-design/icons";
-import { CartItem, IBill } from "../../../common/order";
-import { AppDispatch, RootState } from "../../../redux/store";
-import { ColumnsType } from "antd/es/table";
-import { deleteOrder, fetchOrders, updateOrder } from "../../../features/order";
-import FormOrder from "../../../components/Admin/Order/FormOrder";
-import moment from "moment";
-import { IStateProduct } from "../../../common/redux/type";
-import { IUsers } from "../../../common/users";
-import DetailOrder from "../../../components/Admin/Order/DetailOrder";
-import FormUpdateMany from "../../../components/Admin/Order/FormUpdateMany";
-import HeaderTableAdminOrder from "../../../components/Admin/Layout/HeaderTableAdminOrder";
-
-const OrderManager: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [order, setOrder] = useState<IBill>();
-  const [dayStart, setDayStart] = useState("");
-  const [dayEnd, setDayEnd] = useState("");
-  const [Search, setSearch] = useState("");
-  const [_, setSelectedValue] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const orders = useSelector((state: RootState) => state.order.orders);
-  const isLoading = useSelector((state: RootState) => state.order.isLoading);
-  const pagination = useSelector((state: RootState) => state.order.pagination);
-  const { products } = useSelector((state: IStateProduct) => state.product);
-  const { users } = useSelector((state: IUsers) => state.user);
+} from '@ant-design/icons'
+import { CartItem, IBill } from '../../../common/order'
+import { AppDispatch, RootState } from '../../../redux/store'
+import { ColumnsType } from 'antd/es/table'
+import { deleteOrder, fetchOrders, updateOrder } from '../../../features/order'
+import FormOrder from '../../../components/Admin/Order/FormOrder'
+import moment from 'moment'
+import { IStateProduct } from '../../../common/redux/type'
+import { IUsers } from '../../../common/users'
+import DetailOrder from '../../../components/Admin/Order/DetailOrder'
+import FormUpdateMany from '../../../components/Admin/Order/FormUpdateMany'
+import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableAdminOrder'
+interface Props {
+  data: any
+}
+const OrderManager = ({ data }: Props) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [order, setOrder] = useState<IBill>()
+  const [dayStart, setDayStart] = useState('')
+  const [dayEnd, setDayEnd] = useState('')
+  const [Search, setSearch] = useState('')
+  const [_, setSelectedValue] = useState('')
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [isSelect, SetIsSelect] = useState(false)
+  const orders = useSelector((state: RootState) => state.order.orders)
+  const isLoading = useSelector((state: RootState) => state.order.isLoading)
+  const pagination = useSelector((state: RootState) => state.order.pagination)
+  const { products } = useSelector((state: IStateProduct) => state.product)
+  const { users } = useSelector((state: IUsers) => state.user)
   useEffect(() => {
     dispatch(
       fetchOrders({
@@ -60,18 +62,18 @@ const OrderManager: React.FC = () => {
         start: dayStart,
         end: dayEnd,
       })
-    );
-  }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd]);
+    )
+  }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
   const toggleModal = (orders: IBill) => {
-    setIsModalUpdateOpen(!isModalUpdateOpen);
-    setOrder(orders);
-  };
+    setIsModalUpdateOpen(!isModalUpdateOpen)
+    setOrder(orders)
+  }
   const handlePageChange = (page: number, pageSize: number) => {
-    setCurrentPage(page);
-    setPageSize(pageSize);
-    const url = `?page=${page}`;
-    navigate(url);
+    setCurrentPage(page)
+    setPageSize(pageSize)
+    const url = `?page=${page}`
+    navigate(url)
 
     dispatch(
       fetchOrders({
@@ -81,69 +83,73 @@ const OrderManager: React.FC = () => {
         start: dayStart,
         end: dayEnd,
       })
-    );
-  };
+    )
+  }
   const handleUpdateOrder = async (updateOrderData: any) => {
-    await dispatch(updateOrder({ id: order?._id as string, updateOrderData }));
+    await dispatch(updateOrder({ id: order?._id as string, updateOrderData }))
 
-    setIsModalUpdateOpen(false);
-  };
+    setIsModalUpdateOpen(false)
+  }
   const deleteOneOrder = async (order: IBill) => {
     Modal.confirm({
-      title: "Confirm Deletion",
+      title: 'Confirm Deletion',
       icon: <ExclamationCircleOutlined />,
-      content: "Are you sure you want to delete this order?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
+      content: 'Are you sure you want to delete this order?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
 
       async onOk() {
-        await dispatch(deleteOrder(order._id as string));
+        await dispatch(deleteOrder(order._id as string))
       },
       onCancel() {},
-    });
-  };
+    })
+  }
   const getProductName = (shoeId: string) => {
-    const product = products.find((product) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
   const getUserName = (userId: string) => {
-    const user = users.find((user: IUsers) => user._id === userId);
-    return user ? user.userName : "Khách";
-  };
+    const user = users.find((user: IUsers) => user._id === userId)
+    return user ? user.userName : 'Khách'
+  }
   const handleRowClick = (order: IBill) => {
-    setSelectedOrder(order);
-    setModalVisible(true);
-  };
+    setSelectedOrder(order)
+    setModalVisible(true)
+  }
   const closeModal = () => {
-    setSelectedOrder(null);
-    setModalVisible(false);
-  };
+    setSelectedOrder(null)
+    setModalVisible(false)
+  }
   const handleUpdateManyOrder: () => void = () => {
-    setLoading(true);
+    setLoading(true)
     setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
+      setLoading(false)
+    }, 1000)
+  }
+  const getIsDelivered = (orderId: string) => {
+    const order = orders.find((order: IBill) => order._id === orderId)
+    return order ? order.isDelivered : ''
+  }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    return newSelectedRowKeys;
-  };
+    setSelectedRowKeys(newSelectedRowKeys)
+    return newSelectedRowKeys
+  }
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
+  }
+  const hasSelected = selectedRowKeys.length > 0
   const columns: ColumnsType<IBill> = [
     {
-      title: "No.",
-      dataIndex: "index",
+      title: 'No.',
+      dataIndex: 'index',
       render: (_, __, index) => index + 1,
-      align: "center",
+      align: 'center',
     },
     {
-      title: "Items",
-      dataIndex: "cartItems",
+      title: 'Items',
+      dataIndex: 'cartItems',
       render: (cartItems) => (
         <span key={cartItems._id}>
           {cartItems.map((cartItem: CartItem, index: number) => (
@@ -153,17 +159,17 @@ const OrderManager: React.FC = () => {
           ))}
         </span>
       ),
-      align: "center",
+      align: 'center',
     },
     {
-      title: "User",
-      dataIndex: "user",
+      title: 'User',
+      dataIndex: 'user',
       render: (user) => <span>{getUserName(user)}</span>,
-      align: "center",
+      align: 'center',
     },
     {
-      title: "Shipping address",
-      dataIndex: "shippingAddress",
+      title: 'Shipping address',
+      dataIndex: 'shippingAddress',
       render: (shippingAddress) => (
         <span>
           <>
@@ -185,29 +191,29 @@ const OrderManager: React.FC = () => {
       ),
     },
     {
-      title: "Payment meothod",
-      dataIndex: "payment_method",
-      align: "center",
+      title: 'Payment meothod',
+      dataIndex: 'payment_method',
+      align: 'center',
     },
     {
-      title: "Total",
-      dataIndex: "totalPrice",
-      align: "center",
+      title: 'Total',
+      dataIndex: 'totalPrice',
+      align: 'center',
     },
     {
-      title: "Is paid",
-      dataIndex: "isPaid",
-      align: "center",
+      title: 'Is paid',
+      dataIndex: 'isPaid',
+      align: 'center',
       render: (isPaid) => (
-        <span>{isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</span>
+        <span>{isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>
       ),
     },
     {
-      title: "Create at",
-      dataIndex: "createdAt",
-      align: "center",
+      title: 'Create at',
+      dataIndex: 'createdAt',
+      align: 'center',
       render: (createdAt) => (
-        <span>{moment(createdAt).format("DD/MM/YYYY")}</span>
+        <span>{moment(createdAt).format('DD/MM/YYYY')}</span>
       ),
     },
     {
@@ -222,44 +228,44 @@ const OrderManager: React.FC = () => {
             <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
             <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
             <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-            <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+            <Select.Option value="Đã hủy">Đã hủy</Select.Option>
           </Select>
         </span>
       ),
-      dataIndex: "isDelivered",
-      align: "center",
+      dataIndex: 'isDelivered',
+      align: 'center',
       render: (isDelivered: string) => {
-        let tagColor = "";
-        let tagContent = "";
-        let tagIcon = null;
+        let tagColor = ''
+        let tagContent = ''
+        let tagIcon = null
         switch (isDelivered) {
-          case "Chờ xác nhận":
-            tagColor = "default";
-            tagContent = "Chờ xác nhận";
-            tagIcon = <ClockCircleOutlined />;
-            break;
-          case "Chờ lấy hàng":
+          case 'Chờ xác nhận':
+            tagColor = 'default'
+            tagContent = 'Chờ xác nhận'
+            tagIcon = <ClockCircleOutlined />
+            break
+          case 'Chờ lấy hàng':
             // Xử lý khi isDelivered là "Đã hủy"
-            tagColor = "purple";
-            tagContent = "Chờ lấy hàng";
-            tagIcon = <SyncOutlined spin />;
-            break;
-          case "Đang giao hàng":
-            tagColor = "processing";
-            tagContent = "Đang giao hàng";
-            tagIcon = <CarOutlined />;
-            break;
-          case "Đã giao hàng":
-            tagColor = "success";
-            tagContent = "Đã giao hàng";
-            tagIcon = <CheckCircleOutlined />;
-            break;
+            tagColor = 'purple'
+            tagContent = 'Chờ lấy hàng'
+            tagIcon = <SyncOutlined spin />
+            break
+          case 'Đang giao hàng':
+            tagColor = 'processing'
+            tagContent = 'Đang giao hàng'
+            tagIcon = <CarOutlined />
+            break
+          case 'Đã giao hàng':
+            tagColor = 'success'
+            tagContent = 'Đã giao hàng'
+            tagIcon = <CheckCircleOutlined />
+            break
 
           default:
-            tagColor = "error";
-            tagContent = "Đã hủy";
-            tagIcon = <CloseCircleOutlined />;
-            break;
+            tagColor = 'error'
+            tagContent = 'Đã hủy'
+            tagIcon = <CloseCircleOutlined />
+            break
         }
 
         return (
@@ -270,51 +276,57 @@ const OrderManager: React.FC = () => {
               </Tag>
             }
           </span>
-        );
+        )
       },
     },
     {
-      title: "Action",
-      key: "action",
-      align: "center",
-      className: "action-cell",
-      render: (_, record) => (
-        <div style={{ textAlign: "center" }}>
-          <Tooltip title={"edit"}>
-            <Button type="link" onClick={() => toggleModal(record)}>
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-          <Tooltip title={"delete"}>
-            <Button type="link" onClick={() => deleteOneOrder(record)}>
-              <DeleteOutlined className="text-red-600" />
-            </Button>
-          </Tooltip>
-        </div>
-      ),
+      title: 'Action',
+      key: 'action',
+      align: 'center',
+      className: 'action-cell',
+      render: (_, record) => {
+        if (record.isDelivered === 'Đã giao hàng') {
+          return null
+        } else {
+          return (
+            <div style={{ textAlign: 'center' }}>
+              <Tooltip title={'edit'}>
+                <Button type="link" onClick={() => toggleModal(record)}>
+                  <EditOutlined />
+                </Button>
+              </Tooltip>
+              <Tooltip title={'delete'}>
+                <Button type="link" onClick={() => deleteOneOrder(record)}>
+                  <DeleteOutlined className="text-red-600" />
+                </Button>
+              </Tooltip>
+            </div>
+          )
+        }
+      },
     },
-  ];
+  ]
   const Value = {
-    _id: order?._id || "",
+    _id: order?._id || '',
     cartItems: order?.cartItems || [],
     shippingAddress: order?.shippingAddress || {
-      email: "la@gmail.com",
-      fullname: "Unknown",
-      address: "gia lai",
-      phone: "0",
+      email: 'la@gmail.com',
+      fullname: 'Unknown',
+      address: 'gia lai',
+      phone: '0',
     },
-    user: order?.user || "la@gmail.com",
+    user: order?.user || 'la@gmail.com',
     totalPrice: order?.totalPrice || 0,
     isPaid: order?.isPaid || false,
-    isDelivered: order?.isDelivered || "0000000000",
-    trackingNumber: order?.trackingNumber || "Abcxyz",
-    createdAt: order?.createdAt || "2003",
-    updatedAt: order?.updatedAt || "male",
-  };
+    isDelivered: order?.isDelivered || '0000000000',
+    trackingNumber: order?.trackingNumber || 'Abcxyz',
+    createdAt: order?.createdAt || '2003',
+    updatedAt: order?.updatedAt || 'male',
+  }
   const searchOrder = (value: string) => {
-    setSearch(value);
-    setSelectedValue(value);
-  };
+    setSearch(value)
+    setSelectedValue(value)
+  }
 
   return (
     <>
@@ -323,13 +335,13 @@ const OrderManager: React.FC = () => {
           <HeaderTableAdminOrder
             showModal={() => {}}
             onSubmitt={(value) => searchOrder(value)}
-            name={"Orders "}
+            name={'Orders '}
           />
           <DatePicker
             className="mx-2"
             onChange={(_, dateString) =>
               setDayStart(
-                Array.isArray(dateString) ? dateString.join(",") : dateString
+                Array.isArray(dateString) ? dateString.join(',') : dateString
               )
             }
             placeholder="Start Date"
@@ -337,7 +349,7 @@ const OrderManager: React.FC = () => {
           <DatePicker
             onChange={(_, dateString) =>
               setDayEnd(
-                Array.isArray(dateString) ? dateString.join(",") : dateString
+                Array.isArray(dateString) ? dateString.join(',') : dateString
               )
             }
             placeholder="End Date"
@@ -353,7 +365,7 @@ const OrderManager: React.FC = () => {
               <RocketOutlined /> Update
             </Button>
             <span style={{ marginLeft: 8 }} className="flex items-center">
-              {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+              {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
             </span>
           </div>
         </div>
@@ -367,15 +379,28 @@ const OrderManager: React.FC = () => {
           <>
             <Table
               style={{
-                marginTop: "15px",
+                marginTop: '15px',
               }}
               rowSelection={{
                 ...rowSelection,
                 getCheckboxProps: (record) => {
-                  console.log("Checkbox props:", record.isDelivered);
-                  return {
-                    disabled: record.isDelivered === "Đã giao hàng",
-                  };
+                  const selectedOrderId = rowSelection
+                    .selectedRowKeys[0] as string
+                  const selectOrder = getIsDelivered(selectedOrderId)
+                  if (rowSelection.selectedRowKeys.length !== 0) {
+                    return {
+                      disabled:
+                        record.isDelivered === 'Đã giao hàng' ||
+                        record.isDelivered !== selectOrder ||
+                        record.isDelivered === 'Đã hủy',
+                    }
+                  } else {
+                    return {
+                      disabled:
+                        record.isDelivered === 'Đã giao hàng' ||
+                        record.isDelivered === 'Đã hủy',
+                    }
+                  }
                 },
               }}
               columns={columns}
@@ -391,12 +416,12 @@ const OrderManager: React.FC = () => {
               }}
               onRow={(record) => ({
                 onClick: (event) => {
-                  const target = event.target as Element;
+                  const target = event.target as Element
                   const isAction =
-                    target.classList.contains("action-cell") ||
-                    target.closest(".action-cell");
+                    target.classList.contains('action-cell') ||
+                    target.closest('.action-cell')
                   if (!isAction) {
-                    handleRowClick(record);
+                    handleRowClick(record)
                   }
                 },
               })}
@@ -414,7 +439,7 @@ const OrderManager: React.FC = () => {
             DetailOrder(selectedOrder, products, users)}
         </Modal>
         <Modal
-          title={"updateMany"}
+          title={'Update many'}
           open={isModalOpen}
           onOk={() => setIsModalOpen(false)}
           onCancel={() => setIsModalOpen(false)}
@@ -428,10 +453,11 @@ const OrderManager: React.FC = () => {
             selectedRowKeys={selectedRowKeys}
             setIsModalOpen={setIsModalOpen}
             onSelectChange={onSelectChange}
+            orders={orders}
           />
         </Modal>
         <Modal
-          title={"Update"}
+          title={'Update'}
           open={isModalUpdateOpen}
           onOk={() => setIsModalUpdateOpen(false)}
           onCancel={() => setIsModalUpdateOpen(false)}
@@ -439,7 +465,7 @@ const OrderManager: React.FC = () => {
           footer={null}
         >
           <FormOrder
-            mode={"update"}
+            mode={'update'}
             onSubmit={handleUpdateOrder}
             {...Value}
             {...products}
@@ -447,6 +473,6 @@ const OrderManager: React.FC = () => {
         </Modal>
       </div>
     </>
-  );
-};
-export default OrderManager;
+  )
+}
+export default OrderManager
