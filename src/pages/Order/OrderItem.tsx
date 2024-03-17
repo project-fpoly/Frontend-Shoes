@@ -1,131 +1,152 @@
-import { Button, DatePicker, Modal, Table } from "antd";
-import { ColumnsType } from "antd/es/table";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { CartItem, IBill } from "../../common/order";
+import { Button, DatePicker, Modal, Table } from 'antd'
+import { ColumnsType } from 'antd/es/table'
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
+import { CartItem, IBill } from '../../common/order'
 
-import { useDispatch, useSelector } from "react-redux";
-import { IStateProduct } from "../../common/redux/type";
-import HeaderTableAdminOrder from "../../components/Admin/Layout/HeaderTableAdminOrder";
-import { fetchOrders } from "../../features/order";
-import { AppDispatch } from "../../redux/store";
-import DetailOrder from "../../components/Admin/Order/DetailOrder";
-import { IUsers } from "../../common/users";
-import { fetchAllUsers } from "../../features/user";
-import { fetchAllProducts } from "../../features/product";
+import { useDispatch, useSelector } from 'react-redux'
+import { IStateProduct } from '../../common/redux/type'
+import HeaderTableAdminOrder from '../../components/Admin/Layout/HeaderTableAdminOrder'
+import {
+  fetchOrders,
+  getOrderByUsers,
+  updateIsDeliveredOrder,
+} from '../../features/order'
+import { AppDispatch } from '../../redux/store'
+import DetailOrder from '../../components/Admin/Order/DetailOrder'
+import { IUsers } from '../../common/users'
+import { fetchAllUsers } from '../../features/user'
+import { fetchAllProducts } from '../../features/product'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface Props {
-  data: any;
+  data: any
 }
 
 export default function OrderItem({ data }: Props) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const dispatch = useDispatch<AppDispatch>();
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const dispatch = useDispatch<AppDispatch>()
 
-  const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [dayStart, setDayStart] = useState("");
-  const [dayEnd, setDayEnd] = useState("");
-  const [Search, setSearch] = useState("");
-  const [_, setSelectedValue] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { users } = useSelector((state: IUsers) => state.user);
-  const { products } = useSelector((state: IStateProduct) => state.product);
-  const [item, setItem] = useState([]);
-  const accessToken = localStorage.getItem("accessToken");
+  const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [dayStart, setDayStart] = useState('')
+  const [dayEnd, setDayEnd] = useState('')
+  const [Search, setSearch] = useState('')
+  const [_, setSelectedValue] = useState('')
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const { users } = useSelector((state: IUsers) => state.user)
+  const { products } = useSelector((state: IStateProduct) => state.product)
+  const [item, setItem] = useState([])
+  const accessToken = localStorage.getItem('accessToken')
   useEffect(() => {
     // Mở hoặc tạo cơ sở dữ liệu IndexedDB
-    const request = indexedDB.open("my_database", 1);
+    const request = indexedDB.open('my_database', 1)
 
     // Xử lý sự kiện khi cơ sở dữ liệu được mở hoặc tạo mới thành công
     request.onsuccess = function (event: any) {
-      const db = event.target.result;
+      const db = event.target.result
 
       // Tạo một giao dịch chỉ để đọc
-      const transaction = db.transaction(["my_object_store"], "readonly");
-      const objectStore = transaction.objectStore("my_object_store");
+      const transaction = db.transaction(['my_object_store'], 'readonly')
+      const objectStore = transaction.objectStore('my_object_store')
 
       // Sử dụng phương thức getAll() để truy vấn tất cả dữ liệu
-      const getAllRequest = objectStore.getAll();
+      const getAllRequest = objectStore.getAll()
 
       // Xử lý kết quả trả về
       getAllRequest.onsuccess = function (event: any) {
-        const data = event.target.result;
-        setItem(data);
-      };
+        const data = event.target.result
+        setItem(data)
+      }
 
       // Xử lý lỗi trong quá trình truy vấn
       getAllRequest.onerror = function (event: any) {
         console.error(
-          "Lỗi khi truy vấn dữ liệu từ IndexedDB:",
+          'Lỗi khi truy vấn dữ liệu từ IndexedDB:',
           event.target.errorCode
-        );
-      };
-    };
+        )
+      }
+    }
 
     // Xử lý sự kiện khi có lỗi mở hoặc tạo cơ sở dữ liệu
     request.onerror = function (event: any) {
       console.error(
-        "Lỗi khi mở hoặc tạo cơ sở dữ liệu: ",
+        'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ',
         event.target.errorCode
-      );
-    };
-  }, []);
-  console.log();
+      )
+    }
+  }, [])
+  console.log(data)
   useEffect(() => {
     dispatch(
-      fetchOrders({
+      getOrderByUsers({
         page: currentPage,
         limit: pageSize,
         search: Search,
         start: dayStart,
         end: dayEnd,
       })
-    );
-    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: "" }));
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" }));
-  }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd]);
+    )
+    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+  }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
   const handleRowClick = (order: IBill) => {
-    setSelectedOrder(order);
-    setModalVisible(true);
-  };
+    setSelectedOrder(order)
+    console.log(order)
+    setModalVisible(true)
+  }
 
   const closeModal = () => {
-    setSelectedOrder(null);
-    setModalVisible(false);
-  };
+    setSelectedOrder(null)
+    setModalVisible(false)
+  }
 
   const getProductName = (shoeId: string) => {
-    const product = products.find((product) => product._id === shoeId);
-    return product ? product.name : "N/A";
-  };
+    const product = products.find((product) => product._id === shoeId)
+    return product ? product.name : 'N/A'
+  }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    return newSelectedRowKeys;
-  };
+    setSelectedRowKeys(newSelectedRowKeys)
+    return newSelectedRowKeys
+  }
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-  };
+  }
 
   const searchOrder = (value: string) => {
-    setSearch(value);
-    setSelectedValue(value);
-  };
+    setSearch(value)
+    setSelectedValue(value)
+  }
+  const handleCancelOrder = (order: IBill) => {
+    Modal.confirm({
+      title: 'Confirm Deletion',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to delete this order?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
 
+      async onOk() {
+        const isDelivered = 'Đã hủy'
+        await dispatch(updateIsDeliveredOrder({ id: order?._id, isDelivered }))
+      },
+      onCancel() {},
+    })
+  }
   const columns: ColumnsType<IBill> = [
     {
-      title: "No.",
-      dataIndex: "index",
+      title: 'No.',
+      dataIndex: 'index',
       render: (_, __, index) => index + 1,
-      align: "center",
+      align: 'center',
     },
     {
-      title: "Items",
-      dataIndex: "cartItems",
+      title: 'Items',
+      dataIndex: 'cartItems',
       render: (cartItems) => (
         <span key={cartItems._id}>
           {cartItems.map((cartItem: CartItem, index: number) => (
@@ -135,12 +156,12 @@ export default function OrderItem({ data }: Props) {
           ))}
         </span>
       ),
-      align: "center",
+      align: 'center',
     },
 
     {
-      title: "Shipping address",
-      dataIndex: "shippingAddress",
+      title: 'Shipping address',
+      dataIndex: 'shippingAddress',
       render: (shippingAddress) => (
         <span>
           <>
@@ -162,62 +183,71 @@ export default function OrderItem({ data }: Props) {
       ),
     },
     {
-      title: "Payment meothod",
-      dataIndex: "payment_method",
-      align: "center",
+      title: 'Payment meothod',
+      dataIndex: 'payment_method',
+      align: 'center',
     },
     {
-      title: "Total",
-      dataIndex: "totalPrice",
-      align: "center",
+      title: 'Total',
+      dataIndex: 'totalPrice',
+      align: 'center',
     },
     {
-      title: "Is paid",
-      dataIndex: "isPaid",
-      align: "center",
+      title: 'Is paid',
+      dataIndex: 'isPaid',
+      align: 'center',
       render: (isPaid) => (
-        <span>{isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</span>
+        <span>{isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>
       ),
     },
     {
-      title: "Create at",
-      dataIndex: "createdAt",
-      align: "center",
+      title: 'Create at',
+      dataIndex: 'createdAt',
+      align: 'center',
       render: (createdAt) => (
-        <span>{moment(createdAt).format("DD/MM/YYYY")}</span>
+        <span>{moment(createdAt).format('DD/MM/YYYY')}</span>
       ),
     },
 
     {
-      title: "Action",
-      key: "action",
-      align: "center",
-      className: "action-cell",
+      title: 'Action',
+      key: 'action',
+      align: 'center',
+      className: 'action-cell',
       render: (_, record) => {
-        const isCancel = record.isDelivered === "Chờ xác nhận";
+        const isCancel = record.isDelivered === 'Chờ xác nhận'
         return (
-          <div style={{ textAlign: "center" }}>
-            <Button type="link" disabled={!isCancel}>
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              onClick={() => handleCancelOrder(record)}
+              type="link"
+              disabled={!isCancel}
+              className={
+                record.isDelivered === 'Đã hủy'
+                  ? 'hidden'
+                  : 'block w-full mx-auto'
+              }
+            >
               Hủy dơn
             </Button>
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
   return (
     <>
       <div className="flex items-end">
         <HeaderTableAdminOrder
           showModal={() => {}}
           onSubmitt={(value) => searchOrder(value)}
-          name={"Orders "}
+          name={'Orders '}
         />
         <DatePicker
           className="mx-2"
           onChange={(_, dateString) =>
             setDayStart(
-              Array.isArray(dateString) ? dateString.join(",") : dateString
+              Array.isArray(dateString) ? dateString.join(',') : dateString
             )
           }
           placeholder="Start Date"
@@ -225,7 +255,7 @@ export default function OrderItem({ data }: Props) {
         <DatePicker
           onChange={(_, dateString) =>
             setDayEnd(
-              Array.isArray(dateString) ? dateString.join(",") : dateString
+              Array.isArray(dateString) ? dateString.join(',') : dateString
             )
           }
           placeholder="End Date"
@@ -233,14 +263,14 @@ export default function OrderItem({ data }: Props) {
       </div>
       <Table
         style={{
-          marginTop: "15px",
+          marginTop: '15px',
         }}
         rowSelection={{
           ...rowSelection,
           getCheckboxProps: (record) => {
             return {
-              disabled: record.isDelivered === "Đã giao hàng",
-            };
+              disabled: record.isDelivered === 'Đã giao hàng',
+            }
           },
         }}
         columns={columns}
@@ -249,12 +279,12 @@ export default function OrderItem({ data }: Props) {
         size="small"
         onRow={(record) => ({
           onClick: (event) => {
-            const target = event.target as Element;
+            const target = event.target as Element
             const isAction =
-              target.classList.contains("action-cell") ||
-              target.closest(".action-cell");
+              target.classList.contains('action-cell') ||
+              target.closest('.action-cell')
             if (!isAction) {
-              handleRowClick(record);
+              handleRowClick(record)
             }
           },
         })}
@@ -268,5 +298,5 @@ export default function OrderItem({ data }: Props) {
         {selectedOrder && DetailOrder(selectedOrder, products, users)}
       </Modal>
     </>
-  );
+  )
 }

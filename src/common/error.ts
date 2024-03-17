@@ -1,7 +1,7 @@
 export interface CustomError {
-    response?: {
-      data?: {
-        message?: string;
-      };
-    };
+  response?: {
+    data?: {
+      message?: string
+    }
   }
+}
