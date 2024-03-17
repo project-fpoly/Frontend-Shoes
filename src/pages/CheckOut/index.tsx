@@ -46,23 +46,23 @@ const CheckOut = () => {
     address: string;
   }) => {
     const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method };
-
+    const{shippingAddress,payment_method} = request
     if (accessToken) {
       if (cart) {
         const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, request }));
+        dispatch(createOrder({ cartItems, shippingAddress,payment_method }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       } else {
         const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, request }));
+        dispatch(createOrder({ cartItems, shippingAddress,payment_method }));
         sessionStorage.removeItem("cart");
         navigate("../../order");
       }
     } else {
       const { cartItems } = cartSession;
 
-      dispatch(createOrder({ cartItems, request, totalPrice }));
+      dispatch(createOrder({ cartItems, shippingAddress,payment_method, totalPrice }));
       sessionStorage.removeItem("cart");
       navigate("../../order");
     }
