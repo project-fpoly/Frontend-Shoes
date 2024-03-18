@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { IStateCategory } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, StarFilled } from "@ant-design/icons";
-import ParentComponent from '../test';
+
 
 const { Option } = Select;
 
@@ -18,7 +18,6 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
     const [form] = Form.useForm();
     const handleFormSubmitCreate = (values: IProduct) => {
         onSubmit(values);
-        console.log(values);
     };
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
@@ -128,7 +127,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         name="material"
                         rules={[{ required: true, message: "Please select a material" }]}
                     >
-                        <Select placeholder="Select a material" defaultValue="leather">
+                        <Select placeholder="Select a material" defaultValue="material">
                             <Option value="leather">Leather</Option>
                             <Option value="fabric">Fabric</Option>
                             <Option value="rubber">Rubber</Option>
@@ -253,11 +252,17 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     )}
 
                     <Form.Item
-                        label="Stock status"
+                        label="Stock Status"
                         name="stock_status"
-                        rules={[{ required: true, message: "Please enter the product stock_status" }]}
+                        rules={[{ required: true, message: "Please select a stock status" }]}
                     >
-                        <Input placeholder="Enter product stock_status" />
+                        <Select placeholder="Select a Stock Status" defaultValue="stock_status">
+                            <Option value="In stock">Có sẵn</Option>
+                            <Option value="Out of stock ">Có sẵn</Option>
+                            <Option value="Pre-order">Đặt trước</Option>
+                            <Option value="Backorder">Đặt hàng sau</Option>
+                            <Option value="Discontinued">Ngừng sản xuất</Option>
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
@@ -274,7 +279,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     <Form.Item
                         label="gender"
                         name="gender"
-                        rules={[{ required: true, message: "Please enter the product gender" }]}
+                        rules={[{ message: "Please enter the product gender" }]}
                     >
                         <Radio.Group defaultValue={gender}>
                             <Radio value={'nam'}>Nam</Radio>
@@ -295,7 +300,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                 <Input.TextArea placeholder="Enter product description" />
             </Form.Item>
 
-            {/* <Form.List name="images" >
+            <Form.List name="images" >
                 {(fields, { add, remove }) => (
                     <div style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px', marginTop: '20px' }}>
                         {fields.map((field, index) => (
@@ -303,14 +308,14 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                 key={field.key}
                                 label={`Image ${index + 1}`}
                                 required={false}
-                                style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px' }}
+                                style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '20px', marginBlockEnd: '20px' }}
                             >
                                 <Form.Item
                                     {...field}
                                     validateTrigger={['onChange', 'onBlur']}
                                     noStyle
                                 >
-                                    <Input placeholder="Enter image URL" defaultValue={images} />
+                                    <Input.TextArea placeholder="Enter image URL" defaultValue={images} />
                                 </Form.Item>
                                 {fields.length > 1 && (
                                     <Button
@@ -334,8 +339,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         </Form.Item>
                     </div>
                 )}
-            </Form.List> */}
-            <ParentComponent name="images" />
+            </Form.List>
+
             <Form.List name="sizes">
                 {(fields, { add, remove }) => (
                     <div style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px', marginTop: '20px' }}>

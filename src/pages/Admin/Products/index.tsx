@@ -5,6 +5,7 @@ import {
     LoadingOutlined,
     ExclamationCircleOutlined,
     EyeOutlined,
+    WarningFilled,
 
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +14,7 @@ import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
 import { Button, Table, Tooltip, Image, Modal, Row, Col } from "antd";
-import { removeProduct, createProduct, update, tryDelete } from "../../../features/product";
+import { removeProduct, createProduct, update, tryDelete,tryRestore } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
@@ -80,7 +81,7 @@ const ProductsManager: React.FC = () => {
         });
     };
     const isRowDisabled = (record: IProduct) => {
-        return record.delete === true;
+        return record.isDeleted === true;
     };
     const rowClassName = (record: IProduct) => {
         return isRowDisabled(record) ? 'table-row-disabled' : '';
@@ -132,6 +133,16 @@ const ProductsManager: React.FC = () => {
             dataIndex: "sale",
         },
         {
+            title: "Is Deleted",
+            key: "isDeleted",
+            align: "center",
+            render: (_, record) => (
+                <div style={{ textAlign: "center" }}>
+                    {record.isDeleted ? <WarningFilled /> : "" }
+                </div>
+            ),
+        },
+        {
             title: "Action",
             key: "action",
             align: "center",
@@ -175,58 +186,56 @@ const ProductsManager: React.FC = () => {
 
         ],
         color: "red" || "green" || "blue" || "yellow" || "black" || "white",
-        material: "Cao Cấp",
+        material: "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
         release_date: "",
         images: [
         ],
         video: "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
         blog: "61f2a4c8e9a82f001f9e4a1c",
-        warranty: "Bảo hành của sản phẩm",
+        warranty: "1 year",
         tech_specs: "Đặc tả kỹ thuật của sản phẩm",
-        stock_status: "Tình trạng hàng tồn kho của sản phẩm",
-        gender: "Nam",
+        stock_status: "In stock" || "Out of stock" || "Pre-order" || "Backorder" || "Discontinued",
+        gender: "nam" || "nữ",
         isPublished: true,
         publishedDate: "",
         hits: 112,
-        delete: false
+        isDeleted: false
     };
     const Value = {
-
-        product_id: productsState?.product_id || "Mã số sản phẩm",
-        SKU: productsState?.SKU || "Mã tồn kho của sản phẩm",
-        name: productsState?.name || "Tên của sản phẩm",
-        description: productsState?.description || "Mô tả của sản phẩm",
-        categoryId: productsState?.categoryId || "ID danh mục của sản phẩm",
-        price: productsState?.price || 0,
-        sale: productsState?.sale || 0,
-        discount: productsState?.discount || 0,
-        quantity: productsState?.quantity || 0,
-        sold_count: productsState?.sold_count || 0,
-        rating: productsState?.rating || 0,
-        sizes: productsState?.sizes || [
+        product_id: productsState?.product_id ? productsState?.product_id : "Mã số sản phẩm",
+        SKU: productsState?.SKU ? productsState?.SKU : "Mã tồn kho của sản phẩm",
+        name: productsState?.name ? productsState?.name : "Tên của sản phẩm",
+        description: productsState?.description ? productsState?.description : "Mô tả của sản phẩm",
+        categoryId: productsState?.categoryId ? productsState?.categoryId : "ID danh mục của sản phẩm",
+        price: productsState?.price ? productsState?.price : 0,
+        sale: productsState?.sale ? productsState?.sale : 0,
+        discount: productsState?.discount ? productsState?.discount : 0,
+        quantity: productsState?.quantity ? productsState?.quantity : 0,
+        sold_count: productsState?.sold_count ? productsState?.sold_count : 0,
+        rating: productsState?.rating ? productsState?.rating : 0,
+        sizes: productsState?.sizes ? productsState?.sizes : [
             {
-                name: "Nhập size",
+                name: "39",
                 quantity: 10
             }
         ],
-        color: productsState?.color || "red" || "green" || "blue" || "yellow" || "black" || "white",
-        material: productsState?.material || "da",
-        release_date: productsState?.release_date || "",
-        images: productsState?.images || [
+        color: productsState?.color ? productsState?.color : "red" || "green" || "blue" || "yellow" || "black" || "white",
+        material: productsState?.material ? productsState?.material : "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
+        release_date: productsState?.release_date ? productsState?.release_date : "2021-02-28",
+        images: productsState?.images ? productsState?.images : [
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg"
         ],
-        video: productsState?.video || "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
-        blog: productsState?.blog || "61f2a4c8e9a82f001f9e4a1c",
-        warranty: productsState?.warranty || "",
-        tech_specs: productsState?.tech_specs || "",
-        stock_status: productsState?.stock_status || "",
-        gender: productsState?.gender || "",
-        isPublished: productsState?.isPublished || true,
-        publishedDate: productsState?.publishedDate || "",
-        hits: productsState?.hits || 123,
-        delete: productsState?.delete || false
-
+        video: productsState?.video ? productsState?.video : "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
+        blog: productsState?.blog ? productsState?.blog : "61f2a4c8e9a82f001f9e4a1c",
+        warranty: productsState?.warranty ? productsState?.warranty : "1 year",
+        tech_specs: productsState?.tech_specs ? productsState?.tech_specs : "",
+        stock_status: productsState?.stock_status ? productsState?.stock_status : "In stock" || "Out of stock" || "Pre-order" || "Backorder" || "Discontinued",
+        gender: productsState?.gender ? productsState?.gender : "nam" || "nữ",
+        isPublished: productsState?.isPublished ? productsState?.isPublished : true,
+        publishedDate: productsState?.publishedDate ? productsState?.publishedDate : "2021-02-28",
+        hits: productsState?.hits ? productsState?.hits : 0,
+        isDeleted: productsState?.isDeleted ? productsState?.isDeleted : false
     };
     const searchProduct = (value: string) => {
         setSearch(value);
@@ -296,7 +305,7 @@ const ProductsManager: React.FC = () => {
 
                     <Modal
                         title={selectedProduct?.name}
-                        visible={modalVisible}
+                        open={modalVisible}
                         onCancel={closeModal}
                         footer={null}
                     >

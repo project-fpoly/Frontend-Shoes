@@ -36,7 +36,7 @@ export interface IProduct {
   isPublished?: boolean;
   publishedDate?: string;
   hits?: number;
-  delete: boolean;
+  isDeleted: boolean;
   updatedAt?: Date;
   createdAt?: Date;
   quantityCart?: number;

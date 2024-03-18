@@ -14,7 +14,8 @@ import {
   deleteProduct,
   addProduct,
   updatePrroduct,
-  tryDeleteProduct
+  tryDeleteProduct,
+  tryRestoreProduct
 } from "../../services/products";
 import { getProductsWithFilter } from "../../services/productsQuery";
 import { isRejected } from "@reduxjs/toolkit/react";
@@ -45,21 +46,22 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate,
     color,
     gender,
+    isDeleted
   }: {
     page: number
     pageSize: number
     searchKeyword: string
     sort?:
-      | 'asc'
-      | 'desc'
-      | 'asc_views'
-      | 'desc_views'
-      | 'asc_sold'
-      | 'desc_sold'
-      | 'asc_sale'
-      | 'desc_sale'
-      | 'asc_rate'
-      | 'desc_rate'
+    | 'asc'
+    | 'desc'
+    | 'asc_views'
+    | 'desc_views'
+    | 'asc_sold'
+    | 'desc_sold'
+    | 'asc_sale'
+    | 'desc_sale'
+    | 'asc_rate'
+    | 'desc_rate'
     categoryId?: string
     size?: string
     minPrice?: number
@@ -69,6 +71,7 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate?: Date
     color?: string
     gender?: string
+    isDeleted?: boolean
   }) => {
     try {
       const response = await getProductsWithFilter(
@@ -84,7 +87,8 @@ export const getProductsWithFilters = createAsyncThunk(
         startDate,
         endDate,
         color,
-        gender
+        gender,
+        isDeleted
       )
       console.log('hi', response)
       return response
@@ -92,7 +96,9 @@ export const getProductsWithFilters = createAsyncThunk(
       throw new Error('Lỗi khi lấy dữ liệu')
     }
   }
-)
+);
+
+
 
 export const fetchAllProducts = createAsyncThunk(
   'product/fetchAllProducts',
@@ -113,6 +119,7 @@ export const fetchAllProducts = createAsyncThunk(
     }
   }
 )
+
 export const fetchProductById = createAsyncThunk(
   'product/fetchProductById',
   async (id: string, thunkApi) => {
@@ -127,17 +134,7 @@ export const fetchProductById = createAsyncThunk(
     }
   }
 )
-export const fetchProductsByPriceLowOrHight = createAsyncThunk(
-  'product/fetchProductsByPriceLowOrHight',
-  async (sort: string) => {
-    try {
-      const respone = await sortOrderProducts(sort)
-      return respone.data
-    } catch (error) {
-      throw new Error('Lỗi khi lấy dữ liệu')
-    }
-  }
-)
+
 export const removeProduct = createAsyncThunk(
   'product/deleteProduct',
   async (id: string, thunkApi) => {
@@ -158,7 +155,7 @@ export const createProduct = createAsyncThunk(
     try {
       const response = await addProduct(newProduct)
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
       )
       return response
     } catch (error) {
@@ -175,7 +172,7 @@ export const update = createAsyncThunk(
     try {
       const response = await updatePrroduct(id, newProduct)
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
       )
       return response
     } catch (error) {
@@ -199,6 +196,33 @@ export const tryDelete = createAsyncThunk(
     }
   }
 );
+
+export const tryRestore = createAsyncThunk(
+  "product/tryRestoreProduct",
+  async (id: string, thunkApi) => {
+    try {
+      const response = await tryRestoreProduct(id);
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
+      return response;
+    } catch (error) {
+      throw new Error("Error updating Product");
+    }
+  }
+);
+
+export const fetchProductsByPriceLowOrHight = createAsyncThunk(
+  'product/fetchProductsByPriceLowOrHight',
+  async (sort: string) => {
+    try {
+      const respone = await sortOrderProducts(sort)
+      return respone.data
+    } catch (error) {
+      throw new Error('Lỗi khi lấy dữ liệu')
+    }
+  }
+)
 
 
 export const fetchCategoryById = createAsyncThunk(

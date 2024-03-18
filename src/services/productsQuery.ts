@@ -28,7 +28,7 @@ export const getProductsWithFilter = async (
   endDate?: Date,
   color?: string,
   gender?: string,
-  deleteFilter?: false
+  isDeleted?: boolean
 ) => {
   try {
     let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
@@ -67,8 +67,8 @@ export const getProductsWithFilter = async (
     if (gender) {
       url += `&genderFilter=${gender}`;
     }
-    if (deleteFilter) {
-      url += `&deleteFilter=${deleteFilter}`;
+    if (isDeleted) {
+      url += `&deleteFilter=${isDeleted}`;
     }
 
     const response: AxiosResponse = await instance.get(url);
@@ -125,7 +125,8 @@ export const filterProducts = async (
   material?: string,
   startDate?: Date,
   endDate?: Date,
-  color?: string
+  color?: string,
+  deleteProduct?: boolean
 ) => {
   try {
     let url = `api/product?pageSize=${pageSize}`;
@@ -159,6 +160,9 @@ export const filterProducts = async (
     }
     if (color) {
       url += `&colorFilter=${color}`;
+    }
+    if (deleteProduct) {
+      url += `&deleteFilter=${deleteProduct}`;
     }
 
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(

@@ -104,6 +104,33 @@ export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => 
   }
 };
 
+export const tryRestoreProduct = async (id: string): Promise<IProduct | null> => {
+  try {
+    const product: Partial<IProduct> = {
+      delete: false
+    };
+
+    const response: AxiosResponse<IProduct> = await instance.patch(
+      `/api/product/${id}`,
+      product
+    );
+
+    notification.success({ message: "Product restored successfully" });
+
+    return response.data || response;
+  } catch (error) {
+    console.log(error);
+
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message || "Error while restoring product.";
+
+    notification.error({ message: errorMessage });
+
+    throw new Error("Error while restoring product.");
+  }
+};
+
 export const deleteProduct = async (id: string): Promise<IProduct | null> => {
   try {
     const response: AxiosResponse<IProduct> = await instance.delete(
