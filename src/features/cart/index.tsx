@@ -95,7 +95,7 @@ export const createOrder = createAsyncThunk(
   async ({
     cartItems,
     shippingAddress,
-    totalPrice,
+    totalPrice,payment_method
   }: {
     cartItems: Array<{
       product: string
@@ -105,19 +105,20 @@ export const createOrder = createAsyncThunk(
       size: string
     }>
     shippingAddress: {
-      fullname: string
-      phone: string
-      address: string
-      email: string
-    }
-    totalPrice: number
+      fullname: string;
+      phone: string;
+      address: string;
+      email: string;
+    };
+    totalPrice: number;
+    payment_method:string;
   }) => {
     try {
       const accessToken = localStorage.getItem('accessToken')
       if (accessToken) {
         const response = await axios.post(
-          'http://localhost:9000/api/order/bills/',
-          { shippingAddress, cartItems },
+          "http://localhost:9000/api/order/bills/",
+          { shippingAddress, cartItems ,payment_method},
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -130,8 +131,8 @@ export const createOrder = createAsyncThunk(
         return response.data.cart
       } else {
         const response = await axios.post(
-          'http://localhost:9000/api/order/bills/',
-          { cartItems, shippingAddress, totalPrice },
+          "http://localhost:9000/api/order/bills/",
+          { cartItems, shippingAddress,payment_method, totalPrice },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
