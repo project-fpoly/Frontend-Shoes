@@ -27,7 +27,7 @@ const CommentManager = () => {
   const { products } = useSelector((state: IStateProduct) => state.product)
   useEffect(() => {
     dispatch(
-      fetchAllComment({ page: currentPage, pageSize: 10, search: Search })
+      fetchAllComment({ page: currentPage, pageSize: 10, search: Search }),
     )
     dispatch(fetchAllProducts({ page: 0, pageSize: 0, searchKeyword: '' }))
   }, [dispatch, currentPage, Search])
@@ -82,7 +82,7 @@ const CommentManager = () => {
       dataIndex: 'parentId',
       render: (parentId) => {
         const correspondingComment = comment.find(
-          (cmt) => cmt._id === parentId?._id
+          (cmt) => cmt._id === parentId?._id,
         )
 
         return (

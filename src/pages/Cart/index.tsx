@@ -78,7 +78,7 @@ const Cart = () => {
       const CartItems = cartItems
       const updatedCartItems = CartItems.filter(
         (item: CartItem) =>
-          item.product.toString() !== productId || item.size !== size
+          item.product.toString() !== productId || item.size !== size,
       )
       const updatedCartData = {
         cartItems: updatedCartItems,
@@ -94,7 +94,7 @@ const Cart = () => {
   const handleSizeChange = (
     index: number,
     productId: string,
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const size = event.target.value
 
@@ -103,14 +103,14 @@ const Cart = () => {
         index,
         productId,
         size,
-      })
+      }),
     )
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
   }
   const handleQuantityChange = (
     index: number,
     productId: string,
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const quantity = Number(event.target.value)
     dispatch(
@@ -119,14 +119,14 @@ const Cart = () => {
         productId,
         quantity,
         size: cart.cartItems[index].size,
-      })
+      }),
     )
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
   }
   const updateCartItem = (
     index: number,
     field: string,
-    value: React.ChangeEvent<HTMLSelectElement> | number
+    value: React.ChangeEvent<HTMLSelectElement> | number,
   ) => {
     const updatedCart = { ...cartSession }
     const updatedCartItem = { ...updatedCart.cartItems[index] }
@@ -140,7 +140,7 @@ const Cart = () => {
     for (const shoes of updatedCart.cartItems) {
       const existingIndex = mergedCartItems.cartItems.findIndex(
         (item: any) =>
-          item.product === shoes.product && item.size === shoes.size
+          item.product === shoes.product && item.size === shoes.size,
       )
       if (existingIndex !== -1) {
         mergedCartItems.cartItems[existingIndex].quantity += shoes.quantity
@@ -243,12 +243,12 @@ const Cart = () => {
                                   id=""
                                   className="px-2 ml-1"
                                   onChange={(
-                                    event: React.ChangeEvent<HTMLSelectElement>
+                                    event: React.ChangeEvent<HTMLSelectElement>,
                                   ) =>
                                     handleSizeChange(
                                       index,
                                       cartItem.product,
-                                      event
+                                      event,
                                     )
                                   }
                                 >
@@ -271,12 +271,12 @@ const Cart = () => {
                                   id=""
                                   className="px-2 ml-1"
                                   onChange={(
-                                    event: React.ChangeEvent<HTMLSelectElement>
+                                    event: React.ChangeEvent<HTMLSelectElement>,
                                   ) =>
                                     handleQuantityChange(
                                       index,
                                       cartItem.product,
-                                      event
+                                      event,
                                     )
                                   }
                                 >
@@ -360,7 +360,7 @@ const Cart = () => {
                                     updateCartItem(
                                       index,
                                       'size',
-                                      e.target.value as any
+                                      e.target.value as any,
                                     )
                                   }
                                 >
@@ -386,7 +386,7 @@ const Cart = () => {
                                     updateCartItem(
                                       index,
                                       'quantity',
-                                      e.target.value as any
+                                      e.target.value as any,
                                     )
                                   }
                                 >
@@ -420,7 +420,7 @@ const Cart = () => {
                                   onClick={() =>
                                     removeItemFromCartSession(
                                       item.product,
-                                      item.size
+                                      item.size,
                                     )
                                   }
                                   style={{ fontSize: '24px' }}

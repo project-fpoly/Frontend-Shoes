@@ -23,13 +23,10 @@ import Filter from './ProductFilter';
 const ProductsManager: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [Search, setSearch] = useState("");
-
     const dispatch = useDispatch<AppDispatch>();
     const { products, loading, totalProducts } = useSelector(
         (state: IStateProduct) => state.product
     );
-
-
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 

@@ -24,7 +24,7 @@ const AllNotification = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const { notifications: notification } = useSelector(
-    (state: IStateNotification) => state.notification
+    (state: IStateNotification) => state.notification,
   )
   useEffect(() => {
     dispatch(fetchAllNotification())
@@ -46,11 +46,11 @@ const AllNotification = () => {
           renderItem={(item) => {
             const timeDifference = differenceInMilliseconds(
               currentDateTime,
-              new Date(item.createdAt)
+              new Date(item.createdAt),
             )
             const timeAgo = formatDistanceToNow(
               Number(currentDateTime.getTime()) - timeDifference,
-              { addSuffix: true }
+              { addSuffix: true },
             )
 
             const iconMap: Record<string, JSX.Element> = {

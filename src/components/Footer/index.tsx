@@ -14,7 +14,7 @@ const Footer = () => {
       <div
         className={clsx(
           'py-16 flex justify-around cursor-pointer',
-          style.footer
+          style.footer,
         )}
       >
         <div className={clsx('flex gap-32 flex-row', style.infoFooter)}>
@@ -82,7 +82,7 @@ const Footer = () => {
         <span
           className={clsx(
             'text-sm text-gray-400 flex gap-6',
-            style.aboutDtFooter
+            style.aboutDtFooter,
           )}
         >
           <p>Guides</p>

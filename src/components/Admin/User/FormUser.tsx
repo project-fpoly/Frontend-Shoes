@@ -85,7 +85,7 @@ const FormUser: React.FC<
         acc[key] = value
         return acc
       },
-      {} as IUsers
+      {} as IUsers,
     )
     onSubmit(formDataObject)
   }

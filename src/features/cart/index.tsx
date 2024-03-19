@@ -24,7 +24,7 @@ export const fetchProducts = createAsyncThunk(
     }
     const data = await response.json()
     return data.products
-  }
+  },
 )
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
@@ -47,9 +47,8 @@ export const addToCart = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
-        notification.success({ message: response.data.message })
         return response.data.cart
       } else {
         response = await axios.post(
@@ -63,17 +62,17 @@ export const addToCart = createAsyncThunk(
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         return sessionStorage.setItem(
           'cart',
-          JSON.stringify(response.data.cart)
+          JSON.stringify(response.data.cart),
         )
       }
     } catch (error: any) {
       throw new Error(error.message)
     }
-  }
+  },
 )
 export const getCartItems = createAsyncThunk('cart/getCartItems', async () => {
   try {
@@ -95,7 +94,8 @@ export const createOrder = createAsyncThunk(
   async ({
     cartItems,
     shippingAddress,
-    totalPrice,payment_method
+    totalPrice,
+    payment_method,
   }: {
     cartItems: Array<{
       product: string
@@ -105,40 +105,40 @@ export const createOrder = createAsyncThunk(
       size: string
     }>
     shippingAddress: {
-      fullname: string;
-      phone: string;
-      address: string;
-      email: string;
-    };
-    totalPrice: number;
-    payment_method:string;
+      fullname: string
+      phone: string
+      address: string
+      email: string
+    }
+    totalPrice: number
+    payment_method: string
   }) => {
     try {
       const accessToken = localStorage.getItem('accessToken')
       if (accessToken) {
         const response = await axios.post(
-          "http://localhost:9000/api/order/bills/",
-          { shippingAddress, cartItems ,payment_method},
+          'http://localhost:9000/api/order/bills/',
+          { shippingAddress, cartItems, payment_method },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         notification.success({ message: response.data.message })
         return response.data.cart
       } else {
         const response = await axios.post(
-          "http://localhost:9000/api/order/bills/",
-          { cartItems, shippingAddress,payment_method, totalPrice },
+          'http://localhost:9000/api/order/bills/',
+          { cartItems, shippingAddress, payment_method, totalPrice },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         notification.success({ message: response.data.message })
         var request = indexedDB.open('my_database', 1)
@@ -165,7 +165,7 @@ export const createOrder = createAsyncThunk(
           // Xử lý lỗi giao dịch
           transaction.onerror = function (event: any) {
             console.error(
-              'Lỗi khi lưu dữ liệu vào IndexedDB: ' + event.target.errorCode
+              'Lỗi khi lưu dữ liệu vào IndexedDB: ' + event.target.errorCode,
             )
           }
         }
@@ -173,7 +173,7 @@ export const createOrder = createAsyncThunk(
         // Xử lý sự kiện khi có lỗi mở hoặc tạo cơ sở dữ liệu
         request.onerror = function (event: any) {
           console.error(
-            'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ' + event.target.errorCode
+            'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ' + event.target.errorCode,
           )
         }
 
@@ -195,7 +195,7 @@ export const createOrder = createAsyncThunk(
 
       throw new Error(error.response.data.message)
     }
-  }
+  },
 )
 export const removeFromCart = createAsyncThunk(
   'cart/removeFromCart',
@@ -211,7 +211,7 @@ export const removeFromCart = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         notification.success({ message: response.data.message })
         thunkApi.dispatch(getCartItems())
@@ -225,7 +225,7 @@ export const removeFromCart = createAsyncThunk(
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         notification.success({ message: response.data.message })
         return response.data
@@ -235,7 +235,7 @@ export const removeFromCart = createAsyncThunk(
 
       throw new Error(error.response.data.message)
     }
-  }
+  },
 )
 export const updateProductCart = createAsyncThunk(
   'cart/updateProductCart',
@@ -251,7 +251,7 @@ export const updateProductCart = createAsyncThunk(
       size?: string
       quantity?: number
     },
-    thunkApi
+    thunkApi,
   ) => {
     try {
       const response = await axios.put(
@@ -263,7 +263,7 @@ export const updateProductCart = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
       thunkApi.dispatch(getCartItems())
 
@@ -273,7 +273,7 @@ export const updateProductCart = createAsyncThunk(
 
       throw new Error(error.response.data.message)
     }
-  }
+  },
 )
 
 const cartSlice = createSlice({

@@ -63,7 +63,7 @@ const Filter = (props: FilterProps) => {
         | 'asc_sale'
         | 'desc_sale'
         | 'asc_rate'
-        | 'desc_rate'
+        | 'desc_rate',
     )
   }
 
