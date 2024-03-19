@@ -33,7 +33,7 @@ export const getUserByID = () => async (dispatch: AppDispatch) => {
     }
     const response = await axios.get(
       `http://localhost:9000/api/auth/user`,
-      config
+      config,
     )
     dispatch(setUser(response.data.user))
   } catch (err: any) {

@@ -46,7 +46,7 @@ const AdminHeader: React.FC = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const { notifications: notification } = useSelector(
-    (state: IStateNotification) => state.notification
+    (state: IStateNotification) => state.notification,
   )
   useEffect(() => {
     dispatch(fetchAllNotification())
@@ -80,7 +80,7 @@ const AdminHeader: React.FC = () => {
 
   const currentDateTime: Date = new Date()
   const unreadNotificationsCount = notification.filter(
-    (item) => !item.isRead
+    (item) => !item.isRead,
   ).length
   const notificationContent = (
     <>
@@ -91,11 +91,11 @@ const AdminHeader: React.FC = () => {
           renderItem={(item) => {
             const timeDifference = differenceInMilliseconds(
               currentDateTime,
-              new Date(item.createdAt)
+              new Date(item.createdAt),
             )
             const timeAgo = formatDistanceToNow(
               Number(currentDateTime.getTime()) - timeDifference,
-              { addSuffix: true }
+              { addSuffix: true },
             )
 
             const iconMap: Record<string, JSX.Element> = {

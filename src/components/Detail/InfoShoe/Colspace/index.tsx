@@ -1,31 +1,105 @@
 import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import type { CollapseProps } from 'antd'
-import { Collapse } from 'antd'
+import {
+  Collapse,
+  Rate,
+  Button,
+  Image,
+  Input,
+  Avatar,
+  Popover,
+  Popconfirm,
+  message,
+} from 'antd'
 import './index.scss'
-import { Rate } from 'antd'
-import { Button } from 'antd'
 import ModalCustom from '../../../Modal'
-import { IProduct } from '../../../../common/products'
-import { Image } from 'antd'
-import { Input } from 'antd'
+import { ICmt, IProduct } from '../../../../common/products'
 import { useDispatch, useSelector } from 'react-redux'
 import { IStateCmt, IStateProduct } from '../../../../common/redux/type'
-import { Avatar, Popover } from 'antd'
 import { Link } from 'react-router-dom'
 import user from '../../../../features/user'
 import moment from 'moment'
-
 import { AppDispatch } from '../../../../redux/store'
-import { createCommnets } from '../../../../features/comment'
+import { createCommnets, deleteCommentById } from '../../../../features/comment'
 const Colspace = ({ shoe }: { shoe: IProduct }) => {
+  const [inputUpdate, setInputUpdate] = useState<boolean>(false)
   const userIdStorage = localStorage.getItem('userID')
   const commnets = useSelector((state: IStateCmt) => state.comment.comments)
   const dispatch = useDispatch<AppDispatch>()
   const Loading = useSelector((state: IStateCmt) => state.comment.loading)
-  const { TextArea } = Input
   const accessToken = localStorage.getItem('accessToken')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [idCmt, setIdCmt] = useState<ICmt>()
+  const filteredReviews = commnets.filter(
+    (review) => typeof review.rating === 'number',
+  )
+  const totalStars = filteredReviews.reduce(
+    (acc, review) => acc + +review?.rating!,
+    0,
+  )
+  const averageRating = totalStars / commnets.length
+  const onChange = (key: string | string[]) => {
+    console.log(key)
+  }
+  const handleShowModal = () => {
+    setIsModalOpen(true)
+  }
+  type FormValues = {
+    content: string
+  }
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>()
+
+  const { _id: shoeId } = shoe
+  const [rating, setRating] = useState<any>(0)
+  const handleRateChange = (value: number) => {
+    setRating(value)
+  }
+  const confirm = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch(deleteCommentById(idCmt as ICmt))
+    success()
+  }
+  const [messageApi, contextHolder] = message.useMessage()
+
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Delete successfully',
+      duration: 3000,
+    })
+  }
+
+  const contentCommnet = () => {
+    return (
+      <>
+        {contextHolder}
+        <div className="flex flex-col w-32">
+          <button
+            onClick={() => setInputUpdate(true)}
+            className="flex flex-start py-2 hover:bg-gray-100 rounded-sm"
+          >
+            Update
+          </button>
+          <Popconfirm
+            title="Delete "
+            description="Are you sure to delete this commnet?"
+            onConfirm={confirm}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button className="flex flex-start py-2 hover:bg-gray-100 rounded-sm">
+              Delete
+            </button>
+          </Popconfirm>
+        </div>
+      </>
+    )
+  }
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -54,12 +128,13 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
       children: (
         <div className="flex flex-col gap-5">
           <p className="flex gap-5">
+            <p className="text-[17px]">{`Review(${commnets.length})`}</p>
             <Rate
               disabled
-              className="text-black text-[15px] mt-1 "
-              defaultValue={1.5}
-            />
-            <p className="text-[17px]">{`${commnets.length} Starts`}</p>
+              className="text-black"
+              defaultValue={averageRating}
+              allowHalf
+            ></Rate>
           </p>
           <p
             onClick={() => handleShowModal()}
@@ -70,20 +145,62 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           <div className="flex flex-col gap-8  ">
             {commnets.map((comment, index) => {
               const { content, userId } = comment
-
               return (
                 <div
                   key={index + 1}
                   className="flex flex-col gap-5 cursor-pointer"
                 >
                   <div className="flex gap-5">
-                    <Popover content={content}></Popover>
-                    <p className="text-xl"> {comment?.userId['userName']}</p>
-                    {userId._id === userIdStorage && (
+                    {userId?.avt['url'] ? (
                       <>
-                        <h1>hehe</h1>
+                        <Avatar src={userId?.avt['url']} />
+                      </>
+                    ) : (
+                      <>
+                        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
                       </>
                     )}
+
+                    <div className="flex  gap-5">
+                      {inputUpdate && comment._id === idCmt?._id ? (
+                        <>
+                          {' '}
+                          <form className="flex gap-5" action="">
+                            <input
+                              className="border outline-none p-1 rounded-md"
+                              type="text"
+                            />{' '}
+                            <button
+                              children
+                              onClick={() => setInputUpdate(!inputUpdate)}
+                            >
+                              Update
+                            </button>
+                          </form>{' '}
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xl">
+                            {' '}
+                            {comment?.userId['userName']}
+                          </p>
+                          {userId?._id! === userIdStorage && (
+                            <>
+                              <Popover
+                                className="mt-1"
+                                placement="bottomLeft"
+                                content={contentCommnet}
+                                trigger="click"
+                              >
+                                <button onClick={() => setIdCmt(comment)}>
+                                  ...
+                                </button>
+                              </Popover>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
 
                   <span className="flex flex-col gap-3">
@@ -92,9 +209,11 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                       className="text-black"
                       defaultValue={comment.rating}
                     />
-                    <span className=" flex gap-5 text-gray-500 ">
-                      <p className="">{comment.content}</p>
-                      <p>{comment.createdAt}</p>
+                    <span className=" flex flex-col gap-2  ">
+                      <p className="text-3xl">{comment.content}</p>
+                      <p className="text-gray-500">
+                        {moment(comment.createdAt).calendar()}
+                      </p>
                     </span>
                   </span>
                 </div>
@@ -105,26 +224,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
       ),
     },
   ]
-  const onChange = (key: string | string[]) => {
-    console.log(key)
-  }
-  const handleShowModal = () => {
-    setIsModalOpen(true)
-  }
-  type FormValues = {
-    content: string
-  }
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
-
-  const { _id: shoeId } = shoe
-  const [rating, setRating] = useState(0)
-  const handleRateChange = (value: number) => {
-    setRating(value)
-  }
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
@@ -132,6 +231,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     dispatch(createCommnets(commnet as any))
     if (Loading === 'fulfilled') {
       setIsModalOpen(false)
+      reset()
+      setRating(null)
     }
   }
 
@@ -165,6 +266,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 <span>
                   <h2 className="mb-3">Overall rating *</h2>
                   <Rate
+                    value={rating}
+                    allowClear
                     onChange={handleRateChange}
                     className="text-black text-3xl"
                   />

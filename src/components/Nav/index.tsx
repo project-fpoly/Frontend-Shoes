@@ -252,7 +252,7 @@ const NavBar = () => {
           className={clsx(
             'flex fixed bg-white w-full justify-evenly z-50',
             showNav ? 'hidden' : '',
-            position ? 'top-0' : ''
+            position ? 'top-0' : '',
           )}
         >
           <div className="flex justify-evenly py-2 mx-24 gap-[200px]">

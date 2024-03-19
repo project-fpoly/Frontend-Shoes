@@ -40,6 +40,23 @@ export const createComment = async (commnets: ICmt) => {
     console.error(error)
   }
 }
+export const deleteComment = async (id:string) => {
+  try {
+    const response: AxiosResponse = await instance.delete(
+      `/api/comments/delete/${id}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // export const createUsers = async (newUser:IUsers) => {
 //   try {

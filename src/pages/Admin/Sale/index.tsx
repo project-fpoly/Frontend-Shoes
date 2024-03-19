@@ -25,7 +25,7 @@ const SaleManager: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const { products, loading, totalProducts } = useSelector(
-    (state: IStateProduct) => state.product
+    (state: IStateProduct) => state.product,
   )
 
   const [selectedProduct, setSelectedProduct] = useState<ISale | null>(null)

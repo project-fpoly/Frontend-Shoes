@@ -32,7 +32,7 @@ export const fetchAllCategories = createAsyncThunk(
     } catch (error) {
       throw new Error('Lỗi khi lấy dữ liệu')
     }
-  }
+  },
 )
 export const deleteCategory = createAsyncThunk(
   'category/deleteCategory',
@@ -44,7 +44,7 @@ export const deleteCategory = createAsyncThunk(
     } catch (error) {
       throw new Error('Lỗi khi xóa danh mục')
     }
-  }
+  },
 )
 export const createCategory = createAsyncThunk(
   'category/createCategory',
@@ -56,14 +56,14 @@ export const createCategory = createAsyncThunk(
     } catch (error) {
       throw new Error('Error create category')
     }
-  }
+  },
 )
 
 export const updateCategory = createAsyncThunk(
   'category/updateCategory',
   async (
     { id, newCategory }: { id: string; newCategory: ICategory },
-    thunkApi
+    thunkApi,
   ) => {
     try {
       const response = await updateCate(id, newCategory)
@@ -72,7 +72,7 @@ export const updateCategory = createAsyncThunk(
     } catch (error) {
       throw new Error('Error updating category')
     }
-  }
+  },
 )
 
 export const categorySlice = createSlice({

@@ -22,7 +22,7 @@ function getItem(
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group'
+  type?: 'group',
 ): MenuItem {
   return {
     key,
@@ -42,7 +42,7 @@ const items: MenuItem[] = [
   getItem(
     <Link to="categories">Categories</Link>,
     'sub5',
-    <DotChartOutlined />
+    <DotChartOutlined />,
   ),
   getItem(<Link to="sale">Sale</Link>, 'sub6', <ShoppingCartOutlined />),
   getItem(<Link to="comment">Comments</Link>, 'sub7', <WechatOutlined />),

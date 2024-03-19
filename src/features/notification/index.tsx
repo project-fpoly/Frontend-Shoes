@@ -24,7 +24,7 @@ export const fetchAllNotification = createAsyncThunk(
       console.log('hi')
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const fetchNotificationById = createAsyncThunk(
   'notification/fetchNotificationById',
@@ -36,7 +36,7 @@ export const fetchNotificationById = createAsyncThunk(
     } catch (error) {
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const updateNotificationById = createAsyncThunk(
   'notification/updateNotificationById',
@@ -48,7 +48,7 @@ export const updateNotificationById = createAsyncThunk(
     } catch (error) {
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 /// đây là chỗ chọc vào kho để lấy db
 export const notificationSlice = createSlice({

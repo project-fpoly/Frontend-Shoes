@@ -18,7 +18,7 @@ export const fetchOrders = createAsyncThunk(
       end?: string
       search?: string
     },
-    { dispatch }
+    { dispatch },
   ) => {
     try {
       const response = await axios.get(
@@ -30,7 +30,7 @@ export const fetchOrders = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
       dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -39,13 +39,13 @@ export const fetchOrders = createAsyncThunk(
     } catch (error: any) {
       throw error.response.data
     }
-  }
+  },
 )
 export const updateOrder = createAsyncThunk(
   'order/updateOrder',
   async (
     { id, updateOrderData }: { id: string; updateOrderData: any },
-    { dispatch }
+    { dispatch },
   ) => {
     try {
       if (typeof id === 'string') {
@@ -58,7 +58,7 @@ export const updateOrder = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         await dispatch(fetchOrders({ page: 1, limit: 10 }))
         notification.success({ message: response.data.message })
@@ -71,7 +71,7 @@ export const updateOrder = createAsyncThunk(
       notification.error({ message: error.message })
       throw error.response.data
     }
-  }
+  },
 )
 export const fetchOneOrder = createAsyncThunk(
   'order/fetchOneOrder',
@@ -85,13 +85,13 @@ export const fetchOneOrder = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
       return response.data
     } catch (error: any) {
       throw error.response.data
     }
-  }
+  },
 )
 export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
@@ -105,7 +105,7 @@ export const deleteOrder = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
 
       await dispatch(fetchOrders({ page: 1, limit: 10 }))
@@ -115,7 +115,7 @@ export const deleteOrder = createAsyncThunk(
       notification.error({ message: error.message })
       throw error.response.data
     }
-  }
+  },
 )
 export const updateManyOrders = createAsyncThunk(
   'bills/updateMany',
@@ -129,7 +129,7 @@ export const updateManyOrders = createAsyncThunk(
       isPaid: boolean
       isDelivered: string
     },
-    { dispatch }
+    { dispatch },
   ) => {
     try {
       const response = await axios.put(
@@ -145,7 +145,7 @@ export const updateManyOrders = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
       console.log(response)
       await dispatch(fetchOrders({ page: 1, limit: 10 }))
@@ -154,7 +154,7 @@ export const updateManyOrders = createAsyncThunk(
     } catch (error: any) {
       throw new Error(error.message)
     }
-  }
+  },
 )
 export const updateIsDeliveredOrder = createAsyncThunk(
   'order/updateIsDeliveredOrder',
@@ -166,7 +166,7 @@ export const updateIsDeliveredOrder = createAsyncThunk(
       id: string
       isDelivered: string
     },
-    thunkApi
+    thunkApi,
   ) => {
     try {
       if (typeof id === 'string') {
@@ -179,7 +179,7 @@ export const updateIsDeliveredOrder = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               'Content-Type': 'application/json; charset=UTF-8',
             },
-          }
+          },
         )
         notification.success({ message: 'Đã hủy đơn hàng' })
 
@@ -193,7 +193,7 @@ export const updateIsDeliveredOrder = createAsyncThunk(
       notification.error({ message: error.message })
       throw error.response.data
     }
-  }
+  },
 )
 // get order by user
 export const getOrderByUsers = createAsyncThunk(
@@ -206,7 +206,7 @@ export const getOrderByUsers = createAsyncThunk(
       end?: string
       search?: string
     },
-    { dispatch }
+    { dispatch },
   ) => {
     try {
       const response = await axios.get(
@@ -218,7 +218,7 @@ export const getOrderByUsers = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        }
+        },
       )
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
       dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -227,7 +227,7 @@ export const getOrderByUsers = createAsyncThunk(
     } catch (error: any) {
       throw error.response.data
     }
-  }
+  },
 )
 const orderSlice = createSlice({
   name: 'order',
@@ -281,7 +281,7 @@ const orderSlice = createSlice({
         state.isLoading = false
         const updatedOrder = action.payload
         const index = state.orders.findIndex(
-          (order: IBill) => order._id === updatedOrder._id
+          (order: IBill) => order._id === updatedOrder._id,
         )
         if (index !== -1) {
           state.orders[index] = updatedOrder
@@ -314,7 +314,7 @@ const orderSlice = createSlice({
 
         state.isLoading = false
         state.orders = state.orders.filter(
-          (order: IBill) => order._id !== orderToDelete.id
+          (order: IBill) => order._id !== orderToDelete.id,
         )
       })
       .addCase(deleteOrder.rejected, (state: any, action) => {
@@ -351,7 +351,7 @@ const orderSlice = createSlice({
         state.isLoading = false
         const updateIsDeliveredOrder = action.payload
         const index = state.orders.findIndex(
-          (order: IBill) => order._id === updateIsDeliveredOrder._id
+          (order: IBill) => order._id === updateIsDeliveredOrder._id,
         )
         if (index !== -1) {
           state.orders[index] = updateIsDeliveredOrder
