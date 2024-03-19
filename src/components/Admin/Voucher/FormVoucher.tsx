@@ -116,9 +116,8 @@
 // export default FormVoucher;
 
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Form, Input, InputNumber } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import { IVoucher } from '../../../common/voucher';
 
 const FormVoucher: React.FC<{ onSubmit: (values: IVoucher) => void; mode: 'create' | 'update' }> = ({ onSubmit, mode }) => {
@@ -166,13 +165,11 @@ const FormVoucher: React.FC<{ onSubmit: (values: IVoucher) => void; mode: 'creat
 
             <Form.Item
                 label="Price order"
-                name="codeName"
-                rules={[{ required: true, message: 'Please input Code Name' }]}
+                name="priceOrder" // Change name to a unique identifier
+                rules={[{ required: true, message: 'Please input Price Order' }]}
             >
                 <Input />
             </Form.Item>
-
-
 
             <Form.Item
                 label="Quantity"
@@ -192,21 +189,11 @@ const FormVoucher: React.FC<{ onSubmit: (values: IVoucher) => void; mode: 'creat
 
             <Form.Item
                 label="Expiration date"
-                name="codeName"
-                rules={[{ required: true, message: 'Please input Code Name' }]}
-            >
-                <Input />
-            </Form.Item>
-
-            {/* Add other form items based on your requirements */}
-            {/* For example: */}
-            {/* <Form.Item
-                label="Expiration Date"
                 name="expiration_date"
                 rules={[{ required: true, message: 'Please input Expiration Date' }]}
             >
-                <DatePicker />
-            </Form.Item> */}
+                <Input />
+            </Form.Item>
 
             <Form.Item
                 style={{ textAlign: 'right' }}
@@ -222,4 +209,3 @@ const FormVoucher: React.FC<{ onSubmit: (values: IVoucher) => void; mode: 'creat
 };
 
 export default FormVoucher;
-

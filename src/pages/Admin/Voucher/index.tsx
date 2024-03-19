@@ -133,9 +133,9 @@ const VoucherManager: React.FC = () => {
 
                         </Button>
                     </Tooltip>
-                    {/*{record.role !== 'admin' && (*/}
+                            {/*{record.role !== 'admin' && (*/}
 
-                    {/*)}*/}
+                            {/*)}*/}
                 </div>
             ),
         },
