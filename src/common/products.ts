@@ -10,34 +10,37 @@ export interface IProduct {
   name?: string
   description: string
   categoryId:
-    | string
-    | {
-        _id: string
-        name?: string
-      }
-  price: number
-  sale: number
-  discount?: number
-  quantity: number
-  sold_count?: number
-  rating?: number
-  sizes?: ISize[]
-  color?: string
-  material?: string
-  release_date?: string
-  images?: string[]
-  video?: string
-  blog?: string
-  warranty?: string
-  tech_specs?: string
-  stock_status?: string
-  gender?: string
-  isPublished?: boolean
-  publishedDate?: string
-  hits?: number
-  updatedAt?: Date
-  createdAt?: Date
-  quantityCart?: number
+
+  | string
+  | {
+    _id: string;
+    name?: string;
+  };
+  price: number;
+  sale: number;
+  discount?: number;
+  quantity: number;
+  sold_count?: number;
+  rating?: number;
+  sizes?: ISize[];
+  color?: string;
+  material?: string;
+  release_date?: string;
+  images?: string[];
+  video?: string;
+  blog?: string;
+  warranty?: string;
+  tech_specs?: string;
+  stock_status?: string;
+  gender?: string;
+  isPublished?: boolean;
+  publishedDate?: string;
+  hits?: number;
+  isDeleted: boolean;
+  updatedAt?: Date;
+  createdAt?: Date;
+  quantityCart?: number;
+
 }
 export interface ICmt {
   _id: string

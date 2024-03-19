@@ -14,10 +14,13 @@ import {
   deleteProduct,
   addProduct,
   updatePrroduct,
-} from '../../services/products'
-import { getProductsWithFilter } from '../../services/productsQuery'
-import { isRejected } from '@reduxjs/toolkit/react'
-import { categoryFilterProducts } from '../../services/productsQuery'
+  tryDeleteProduct,
+  tryRestoreProduct
+} from "../../services/products";
+import { getProductsWithFilter } from "../../services/productsQuery";
+import { isRejected } from "@reduxjs/toolkit/react";
+import { categoryFilterProducts } from "../../services/productsQuery";
+
 
 const initialState: initialProduct = {
   loading: 'idle',
@@ -43,21 +46,22 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate,
     color,
     gender,
+    isDeleted
   }: {
     page: number
     pageSize: number
     searchKeyword: string
     sort?:
-      | 'asc'
-      | 'desc'
-      | 'asc_views'
-      | 'desc_views'
-      | 'asc_sold'
-      | 'desc_sold'
-      | 'asc_sale'
-      | 'desc_sale'
-      | 'asc_rate'
-      | 'desc_rate'
+    | 'asc'
+    | 'desc'
+    | 'asc_views'
+    | 'desc_views'
+    | 'asc_sold'
+    | 'desc_sold'
+    | 'asc_sale'
+    | 'desc_sale'
+    | 'asc_rate'
+    | 'desc_rate'
     categoryId?: string
     size?: string
     minPrice?: number
@@ -67,6 +71,7 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate?: Date
     color?: string
     gender?: string
+    isDeleted?: boolean
   }) => {
     try {
       const response = await getProductsWithFilter(
@@ -82,7 +87,8 @@ export const getProductsWithFilters = createAsyncThunk(
         startDate,
         endDate,
         color,
-        gender
+        gender,
+        isDeleted
       )
       console.log('hi', response)
       return response
@@ -90,7 +96,9 @@ export const getProductsWithFilters = createAsyncThunk(
       throw new Error('Lỗi khi lấy dữ liệu')
     }
   }
-)
+);
+
+
 
 export const fetchAllProducts = createAsyncThunk(
   'product/fetchAllProducts',
@@ -111,6 +119,7 @@ export const fetchAllProducts = createAsyncThunk(
     }
   }
 )
+
 export const fetchProductById = createAsyncThunk(
   'product/fetchProductById',
   async (id: string, thunkApi) => {
@@ -125,17 +134,7 @@ export const fetchProductById = createAsyncThunk(
     }
   }
 )
-export const fetchProductsByPriceLowOrHight = createAsyncThunk(
-  'product/fetchProductsByPriceLowOrHight',
-  async (sort: string) => {
-    try {
-      const respone = await sortOrderProducts(sort)
-      return respone.data
-    } catch (error) {
-      throw new Error('Lỗi khi lấy dữ liệu')
-    }
-  }
-)
+
 export const removeProduct = createAsyncThunk(
   'product/deleteProduct',
   async (id: string, thunkApi) => {
@@ -156,7 +155,7 @@ export const createProduct = createAsyncThunk(
     try {
       const response = await addProduct(newProduct)
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
       )
       return response
     } catch (error) {
@@ -173,14 +172,59 @@ export const update = createAsyncThunk(
     try {
       const response = await updatePrroduct(id, newProduct)
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
       )
       return response
     } catch (error) {
       throw new Error('Error updating Product')
     }
   }
+
+);
+
+export const tryDelete = createAsyncThunk(
+  "product/tryDeleteProduct",
+  async (id: string, thunkApi) => {
+    try {
+      const response = await tryDeleteProduct(id);
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
+      return response;
+    } catch (error) {
+      throw new Error("Error updating Product");
+    }
+  }
+);
+
+export const tryRestore = createAsyncThunk(
+  "product/tryRestoreProduct",
+  async (id: string, thunkApi) => {
+    try {
+      const response = await tryRestoreProduct(id);
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
+      return response;
+    } catch (error) {
+      throw new Error("Error updating Product");
+    }
+  }
+);
+
+export const fetchProductsByPriceLowOrHight = createAsyncThunk(
+  'product/fetchProductsByPriceLowOrHight',
+  async (sort: string) => {
+    try {
+      const respone = await sortOrderProducts(sort)
+      return respone.data
+    } catch (error) {
+      throw new Error('Lỗi khi lấy dữ liệu')
+    }
+  }
 )
+
+
 export const fetchCategoryById = createAsyncThunk(
   'product/fetchCategoryById',
   async (id: string) => {
@@ -227,11 +271,13 @@ export const featchProductByPrice = createAsyncThunk(
 )
 ///////
 export const featchProductByGender = createAsyncThunk(
-  'product/featchProductByGender',
+
+  "product/featchProductByGender",
   async (gender: string) => {
     try {
-      const respone = await genderFilterProducts(gender)
-      return respone.data || []
+      const respone = await genderFilterProducts(gender);
+      return respone.data || [];
+
     } catch (error) {
       return isRejected('Error fetching data')
     }
@@ -304,10 +350,24 @@ export const productSlice = createSlice({
       state.loading = 'failed'
     })
     builder.addCase(update.fulfilled, (state, action) => {
-      state.loading = 'fulfilled'
-      state.products = Array.isArray(action.payload) ? action.payload : []
-      state.totalProducts = state.products.length
-    })
+
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
+    });
+    // try delete product
+    builder.addCase(tryDelete.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(tryDelete.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(tryDelete.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload : [];
+      state.totalProducts = state.products.length;
+    });
+
     // remove product
     builder.addCase(removeProduct.pending, (state) => {
       state.loading = 'pending'
@@ -383,12 +443,16 @@ export const productSlice = createSlice({
       state.loading = 'pending'
     })
     builder.addCase(featchProductByGender.rejected, (state) => {
-      state.loading = 'failed'
-    })
-    builder.addCase(featchProductByGender.fulfilled, (state, action) => {
-      state.loading = 'fulfilled'
-      state.products = action.payload
-    })
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByGender.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload;
+      }
+    );
+
   },
 })
 

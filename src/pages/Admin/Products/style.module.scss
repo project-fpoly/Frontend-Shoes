@@ -1,10 +1,18 @@
 label {
-  font-weight: bold;
-  color: red;
+    font-weight: bold;
+    color: red;
 }
 
 .grid-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Chia hàng thành 2 cột có chiều rộng bằng nhau */
-  gap: 16px; /* Khoảng cách giữa các phần tử trong hàng */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Chia hàng thành 2 cột có chiều rộng bằng nhau */
+    gap: 16px;
+    /* Khoảng cách giữa các phần tử trong hàng */
 }
+
+.table-row-disabled {
+    opacity: 0.5 !important; // Điều chỉnh độ mờ tùy ý, sử dụng !important để ghi đè các quy tắc CSS của antd
+    pointer-events: none !important; // Ngăn người dùng tương tác với hàng bị mờ
+    background-color: gray !important; // Màu nền của hàng bị mờ
+  }
