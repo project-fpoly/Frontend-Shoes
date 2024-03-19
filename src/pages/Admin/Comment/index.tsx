@@ -67,7 +67,7 @@ const CommentManager = () => {
       title: 'likes',
       dataIndex: 'likes',
       render: (likes) => likes.length,
-      sorter: (a, b) => a.likes.length - b.likes.length,
+      sorter: (a, b) => a.likes!.length - b.likes!.length,
     },
     {
       title: 'rating',

@@ -1,32 +1,26 @@
-import React, { useState } from 'react'
-import { Form, Input, Button, Upload, Image } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-// import { IUsers } from "../../../common/users";
+import React from "react";
+import { Form, Input, Button, DatePicker } from "antd";
+import { IVoucher } from "../../../common/voucher";
+import dayjs from "dayjs";
 
 type FormVoucherProps = {
-  // onSubmit: (values: IUsers) => void;
-  mode: string
-}
+  onSubmit: (values: IVoucher) => void;
+};
 
-const FormVoucher: React.FC<FormVoucherProps> = ({ mode }) => {
-  const [form] = Form.useForm()
-  const [fileList, setFileList] = useState<any[]>([])
-  const [showUploadButton, setShowUploadButton] = useState(mode === 'create')
+const FormVoucher: React.FC<IVoucher & FormVoucherProps> = ({
+  onSubmit,
+  Name,
+  Quantity,
+  reduced_amount,
+  price_order,
+  description,
+  expiration_date,
+}) => {
+  const [form] = Form.useForm();
 
-  // const handlePreview = async (file: any) => {
-  //     // if (!file.url && !file.preview) {
-  //     //     file.preview = await getBase64(file.originFileObj);
-  //     // }
-  // };
-
-  const handleChange = (info: any) => {
-    setFileList(info.fileList)
-  }
-
-  const handleRemoveImage = () => {
-    setFileList([])
-    setShowUploadButton(true)
-  }
+  const onFinish = (values: any) => {
+    onSubmit(values as IVoucher);
+  };
 
   return (
     <Form
@@ -35,99 +29,65 @@ const FormVoucher: React.FC<FormVoucherProps> = ({ mode }) => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       autoComplete="off"
+      initialValues={{
+        Name,
+        Quantity,
+        reduced_amount,
+        price_order,
+        description,
+        expiration_date,
+      }}
+      onFinish={onFinish}
     >
       <Form.Item
-        label={'userName'}
-        name="userName"
-        rules={[{ required: true, message: 'Please input Full Name' }]}
-      >
-        <Input />
-      </Form.Item>
-      {mode === 'create' && (
-        <>
-          <Form.Item
-            label={'email'}
-            name="email"
-            rules={[{ required: true, message: 'Please input Email' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label={'password'}
-            name="password"
-            rules={[{ required: true, message: 'Please input password' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label={'role'}
-            name="role"
-            rules={[{ required: true, message: 'Please input role' }]}
-          >
-            <Input />
-          </Form.Item>
-        </>
-      )}
-      <Form.Item
-        label={'deliveryAddress'}
-        name="deliveryAddress"
-        rules={[{ required: true, message: 'Please input deliveryAddress' }]}
+        label={"Name"}
+        name="Name"
+        rules={[{ required: true, message: "Please input Name" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={'gender'}
-        name="gender"
-        rules={[{ required: true, message: 'Please input gender' }]}
+        label={"Quantity"}
+        name="Quantity"
+        rules={[{ required: true, message: "Please input Quantity" }]}
       >
-        <Input />
+        <Input type="number" />
       </Form.Item>
       <Form.Item
-        label={'dateOfBirth'}
-        name="dateOfBirth"
-        rules={[{ required: true, message: 'Please input dateOfBirth' }]}
+        label={"Reduced amount"}
+        name="reduced_amount"
+        rules={[{ required: true, message: "Please input Reduced amount" }]}
       >
-        <Input />
+        <Input type="number" />
       </Form.Item>
       <Form.Item
-        label={'avt'}
-        name="avt"
-        rules={[{ required: true, message: 'Please select avatar' }]}
+        label={"Price order"}
+        name="price_order"
+        rules={[{ required: true, message: "Please input Price order" }]}
       >
-        {!showUploadButton ? (
-          <div>
-            <Image src={fileList[0]?.thumbUrl} alt="Avatar" />
-            <Button onClick={handleRemoveImage}>Remove Image</Button>
-          </div>
-        ) : (
-          <>
-            <Upload
-              name="avt"
-              listType="picture-card"
-              fileList={fileList}
-              onChange={handleChange}
-              beforeUpload={() => false}
-            >
-              {fileList.length >= 1 ? null : (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
-              )}
-            </Upload>
-          </>
-        )}
+        <Input type="number" />
+      </Form.Item>
+      <Form.Item
+        label={"Description"}
+        name="description"
+        rules={[{ required: true, message: "Please input Description" }]}
+      >
+        <Input.TextArea />
       </Form.Item>
 
+      <Form.Item
+        label={"Expiration date"}
+        rules={[{ required: true, message: "Please input Expiration date" }]}
+      >
+        <DatePicker defaultValue={dayjs(expiration_date, "YYYY-MM-DD")} />
+      </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Save
         </Button>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default FormVoucher
+export default FormVoucher;
