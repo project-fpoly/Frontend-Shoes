@@ -1,243 +1,203 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Table, Tooltip, Tag, Avatar } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
-  LoadingOutlined,
   ExclamationCircleOutlined,
-} from '@ant-design/icons'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../../redux/store'
-import { useState } from 'react'
-import { ISale } from '../../../common/products'
-import { ColumnsType } from 'antd/es/table'
-import { Button, Table, Tooltip, Image, Modal } from 'antd'
-import { removeProduct, createProduct, update } from '../../../features/product'
-import HeaderTable from '../../../components/Admin/Layout/HeaderTable'
-import { IStateProduct } from '../../../common/redux/type'
-import SaleForm from '../../../components/Admin/Sale'
-import Filter from '../Products/ProductFilter'
-import ProducModal from '../Products/ProducModal'
-// import ProducModal from './ProducModal';
-// import Filter from './ProductFilter';
+  LoadingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { ColumnsType } from "antd/es/table";
+import { format, isAfter } from "date-fns";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
+import { AppDispatch } from "../../../redux/store";
+import { ISale } from "../../../common/sale";
+import { createSale, fetchAllSales } from "../../../features/sale";
+import { IStateSale } from "../../../common/redux/type";
+import FormSale from "../../../components/Admin/Sale/FormSale";
+
 const SaleManager: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [DetailSale, setDetailSale] = useState<ISale>();
   const [currentPage, setCurrentPage] = useState(1)
   const [Search, setSearch] = useState('')
+  const { sales, loading } = useSelector((state: IStateSale) => state.sale) || {};
 
-  const dispatch = useDispatch<AppDispatch>()
-  const { products, loading, totalProducts } = useSelector(
-    (state: IStateProduct) => state.product
-  )
+  const user=useSelector((state:any)=>state.auth.user)
 
-  const [selectedProduct, setSelectedProduct] = useState<ISale | null>(null)
-  const [modalVisible, setModalVisible] = useState(false)
+  useEffect(() => {
+    dispatch(fetchAllSales({ page: currentPage, limit: 10, keyword: Search }));
+  }, [dispatch]);
 
-  const handleRowClick = (product: ISale) => {
-    setSelectedProduct(product)
-    setModalVisible(true)
-  }
-  const closeModal = () => {
-    setSelectedProduct(null)
-    setModalVisible(false)
-  }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  const [productsState, setProductsState] = useState<ISale>()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-
-  const handleCreateProduct = (newProduct: ISale) => {
-    dispatch(createProduct(newProduct))
+  const handleCreateSale = (newSale: ISale) => {
+    dispatch(createSale(newSale))
     setIsModalOpen(false)
   }
-  const handleUpdateProduct = (newProduct: ISale) => {
-    dispatch(update({ id: productsState?._id as string, newProduct }))
-    setIsModalUpdateOpen(false)
-  }
-  const toggleModal = (product: ISale) => {
-    setIsModalUpdateOpen(!isModalUpdateOpen)
-    setProductsState(product)
-  }
+  const handleUpdateSale = (sale: ISale) => {
+    console.log(sale);
+  };
 
-  const deleteProduct = (record: ISale) => {
+  const toggleModal = (sale: ISale) => {
+    setIsModalUpdateOpen(true);
+    console.log(sale);
+    setDetailSale(sale);
+  };
+
+  const deleteVoucher = (sale: ISale) => {
     Modal.confirm({
-      title: 'Confirm Delete',
+      title: "Confirm Deletion",
       icon: <ExclamationCircleOutlined />,
-      content: 'Do you want to delete this product?',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        if (!record._id) return
-        record._id && dispatch(removeProduct(record._id))
-      },
-      onCancel() {},
-    })
-  }
+      content: "Are you sure you want to delete this campaign?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      // onOk() {
+      //   dispatch(deleteeUser([user._id]))
+      // },
+      // onCancel() {},
+    });
+  };
+
   const columns: ColumnsType<ISale> = [
     {
-      title: 'No.',
-      dataIndex: 'index',
+      title: "No.",
+      dataIndex: "index",
       render: (_, __, index) => index + 1,
-      align: 'right',
+      align: "center",
     },
     {
-      title: 'Campaign Name',
-      dataIndex: 'name',
+      title: "Campaign Name",
+      dataIndex: "name",
     },
     {
-      title: 'Product Name',
-      dataIndex: 'name',
+      title: "Description",
+      dataIndex: "description",
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
+      title: "Discount",
+      dataIndex: "discount",
     },
     {
-      title: 'Created Date',
-      dataIndex: '',
+      title: "Expiration date",
+      dataIndex: "expiration_date",
+      align: "center",
+      render: (expiration_date) => {
+        const currentDate = new Date();
+        const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
+
+        if (isAfter(new Date(expiration_date), currentDate)) {
+          return <span style={{ color: "green" }}>{formattedDate}</span>;
+        } else {
+          return <span style={{ color: "red" }}>{formattedDate}</span>;
+        }
+      },
     },
     {
-      title: 'Expiration Date',
-      dataIndex: '',
+      title: "Create date",
+      dataIndex: "createdAt",
+      align: "center",
+      render: (date) => format(new Date(date), "dd-MM-yyyy"),
     },
     {
-      title: 'Created By',
-      dataIndex: 'price',
+      title: "Create by",
+      dataIndex: "create_by",
+      align: "left",
+      render: (create_by) => create_by.email,
     },
     {
-      title: 'Discout',
-      dataIndex: 'sale',
+      title: "Product",
+      dataIndex: "product",
     },
     {
-      title: 'Action',
-      key: 'action',
-      align: 'center',
-      className: 'action-cell',
+      title: "Action",
+      key: "action",
+      align: "center",
       render: (_, record) => (
-        <div style={{ textAlign: 'center' }}>
-          <Tooltip title={'Edit'}>
-            <Button type="link">
-              <EditOutlined onClick={() => toggleModal(record)} />
+        <div style={{ textAlign: "center" }}>
+          {record.create_by?._id ==DetailSale?._id &&(
+            <Tooltip title="Edit">
+            <Button type="link" onClick={() => toggleModal(record)}>
+              <EditOutlined />
             </Button>
           </Tooltip>
-          <Tooltip title={'Delete'}>
-            <Button type="link">
-              <DeleteOutlined onClick={() => deleteProduct(record)} />
+          )}
+          <Tooltip title="Delete">
+            <Button type="link" onClick={() => deleteVoucher(record)}>
+              <DeleteOutlined />
             </Button>
           </Tooltip>
         </div>
       ),
     },
-  ]
+  ];
 
   const defaultValue: ISale = {
-    name: 'Giày Nike cap cấp',
-    description: 'Mô tả chiến dịch',
-    sale: 5,
-    discount: 10,
+    _id: DetailSale?._id || "",
+    name: DetailSale?.name || "",
+    quantity: DetailSale?.quantity || 0,
+    discount: DetailSale?.discount || 0,
+    description: DetailSale?.description || "",
+    expiration_date: DetailSale?.expiration_date || "2024-01-01",
+  };
+  const defaultInitValue: ISale = {
+    _id: "",
+    name: "",
     quantity: 0,
-    create_date: '',
-    expiration_date: '',
-  }
-  const Value = {
-    name: productsState?.name || 'Tên của sản phẩm',
-    description: productsState?.description || 'Mô tả của sản phẩm',
-    sale: productsState?.sale || 0,
-    discount: productsState?.discount || 0,
-    quantity: productsState?.quantity || 0,
-    create_date: productsState?.create_date || '',
-    expiration_date: productsState?.expiration_date || '',
-  }
-  const searchProduct = (value: string) => {
-    setSearch(value)
-  }
+    discount: 0,
+    description: "",
+    expiration_date: "2024-01-01",
+  };
+  const searchSale = (value: string) => {
+    console.log(value);
+  };
 
   return (
     <div>
       <HeaderTable
         showModal={() => setIsModalOpen(true)}
-        onSubmitt={searchProduct}
-        name={'Product'}
+        onSubmitt={(value) => searchSale(value)}
+        name="Sale"
       />
-      <Filter page={currentPage} searchKeyword={Search} />
-      {loading === 'pending' ? (
+      {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
-          <LoadingOutlined style={{ fontSize: 14 }} spin />
+          <LoadingOutlined style={{ fontSize: 24 }} spin />
         </div>
       ) : (
-        <>
-          <Table
-            style={{
-              marginTop: '15px',
-            }}
-            columns={columns}
-            dataSource={products}
-            bordered
-            size="small"
-            pagination={{
-              current: currentPage,
-              total: totalProducts,
-              showTotal: (total) => ` ${total} items`,
-              onChange: handlePageChange,
-            }}
-            onRow={(record) => ({
-              onClick: (event) => {
-                const target = event.target as Element
-                const isAction =
-                  target.classList.contains('action-cell') ||
-                  target.closest('.action-cell')
-                if (!isAction) {
-                  handleRowClick(record)
-                }
-              },
-            })}
-          />
-          <Modal
-            title={'Create new Product'}
-            open={isModalOpen}
-            onOk={() => setIsModalOpen(false)}
-            onCancel={() => setIsModalOpen(false)}
-            footer={null}
-            maskClosable={false}
-            destroyOnClose={true}
-          >
-            <SaleForm
-              mode="create"
-              onSubmit={handleCreateProduct}
-              {...defaultValue}
-            />
-          </Modal>
-
-          <Modal
-            title={'Update Product'}
-            open={isModalUpdateOpen}
-            onOk={() => setIsModalUpdateOpen(false)}
-            onCancel={() => setIsModalUpdateOpen(false)}
-            destroyOnClose={true}
-            footer={null}
-          >
-            <SaleForm
-              mode={'update'}
-              onSubmit={handleUpdateProduct}
-              {...Value}
-            />
-          </Modal>
-
-          <Modal
-            title={selectedProduct?.name}
-            visible={modalVisible}
-            onCancel={closeModal}
-            footer={null}
-          >
-            {selectedProduct && ProducModal(selectedProduct)}
-          </Modal>
-        </>
+        <Table
+          style={{ marginTop: "15px" }}
+          columns={columns}
+          dataSource={sales}
+          bordered
+          size="small"
+        />
       )}
+
+      <Modal
+        title="Create New Campaign"
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        maskClosable={false}
+        destroyOnClose={true}
+      >
+        <FormSale onSubmit={handleCreateSale} {...defaultInitValue} />
+      </Modal>
+      <Modal
+        title="Update Sale"
+        open={isModalUpdateOpen}
+        onOk={() => setIsModalUpdateOpen(false)}
+        onCancel={() => setIsModalUpdateOpen(false)}
+        destroyOnClose={true}
+        footer={null}
+      >
+        <FormSale onSubmit={handleUpdateSale} {...defaultValue} />
+      </Modal>
     </div>
-  )
-}
+  );
+};
 
 export default SaleManager
