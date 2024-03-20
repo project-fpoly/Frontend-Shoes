@@ -30,12 +30,12 @@ const CategoriesManager: React.FC = () => {
   }
 
   const { categories, loading, totalDocs } = useSelector(
-    (state: IStateCategory) => state.category
+    (state: IStateCategory) => state.category,
   )
 
   useEffect(() => {
     dispatch(
-      fetchAllCategories({ page: currentPage, limit: 10, keyword: Search })
+      fetchAllCategories({ page: currentPage, limit: 10, keyword: Search }),
     )
   }, [dispatch, currentPage, Search])
   const handleCreateCategory = (newCategory: ICategory) => {
@@ -44,7 +44,7 @@ const CategoriesManager: React.FC = () => {
   }
   const handleUpdateCategory = (newCategory: ICategory) => {
     dispatch(
-      updateCategory({ id: categoriesState?._id as string, newCategory })
+      updateCategory({ id: categoriesState?._id as string, newCategory }),
     )
     setIsModalUpdateOpen(false)
   }

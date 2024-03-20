@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
-import { FilterOutlined } from '@ant-design/icons'
-import { Collapse, Radio, Button, RadioChangeEvent } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../../redux/store'
-import { IStateProduct } from '../../../common/redux/type'
-import { getProductsWithFilters } from '../../../features/product'
+
+import { useState, useEffect } from "react";
+import { FilterOutlined } from "@ant-design/icons";
+import { Collapse, Radio, Button, RadioChangeEvent, Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
+import { IStateProduct } from "../../../common/redux/type";
+import { getProductsWithFilters } from "../../../features/product";
+
 
 const { Panel } = Collapse
 
@@ -61,7 +63,7 @@ const Filter = (props: FilterProps) => {
         | 'asc_sale'
         | 'desc_sale'
         | 'asc_rate'
-        | 'desc_rate'
+        | 'desc_rate',
     )
   }
 
@@ -83,28 +85,31 @@ const Filter = (props: FilterProps) => {
     handleFilter()
   }, [dispatch, selectedSort, props.page, props.searchKeyword])
 
-  return (
-    <Collapse defaultActiveKey={['0']}>
-      <Panel
-        header={
-          <span onClick={handleToggleFilter}>
-            <FilterOutlined /> Bộ lọc
-          </span>
-        }
-        key="1"
-      >
-        <Radio.Group
-          options={sortOptions}
-          onChange={handleSortChange}
-          value={selectedSort}
-        />
 
-        <Button onClick={handleResetFilter} loading={loading === 'pending'}>
-          Reset
-        </Button>
-      </Panel>
-    </Collapse>
-  )
-}
+    return (
+        <>
+            <span onClick={handleToggleFilter}>
+                <FilterOutlined /> Bộ lọc
+            </span>
+            <Modal
+                title="Bộ lọc"
+                visible={showFilter}
+                onCancel={handleToggleFilter}
+                footer={[
+                    <Button key="reset" onClick={handleResetFilter} loading={loading === "pending"}>
+                        Reset
+                    </Button>,
+                ]}
+            >
+                <Collapse defaultActiveKey={["0"]}>
+                    <Panel header="Sắp xếp" key="1">
+                        <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
+                    </Panel>
+                </Collapse>
+            </Modal>
+        </>
+    );
+};
 
-export default Filter
+export default Filter;
+

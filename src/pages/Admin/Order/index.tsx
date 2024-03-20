@@ -61,7 +61,7 @@ const OrderManager = ({ data }: Props) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
-      })
+      }),
     )
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
@@ -82,7 +82,7 @@ const OrderManager = ({ data }: Props) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
-      })
+      }),
     )
   }
   const handleUpdateOrder = async (updateOrderData: any) => {
@@ -341,7 +341,7 @@ const OrderManager = ({ data }: Props) => {
             className="mx-2"
             onChange={(_, dateString) =>
               setDayStart(
-                Array.isArray(dateString) ? dateString.join(',') : dateString
+                Array.isArray(dateString) ? dateString.join(',') : dateString,
               )
             }
             placeholder="Start Date"
@@ -349,7 +349,7 @@ const OrderManager = ({ data }: Props) => {
           <DatePicker
             onChange={(_, dateString) =>
               setDayEnd(
-                Array.isArray(dateString) ? dateString.join(',') : dateString
+                Array.isArray(dateString) ? dateString.join(',') : dateString,
               )
             }
             placeholder="End Date"

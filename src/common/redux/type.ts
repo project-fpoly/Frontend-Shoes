@@ -3,6 +3,7 @@ import { ICategory } from '../category'
 import { INotification } from '../notification'
 import { ICmt, IProduct } from '../products'
 import { IUsers } from '../users'
+import { IVoucher } from '../voucher'
 
 export interface initialProduct {
   loading: 'idle' | 'pending' | 'fulfilled' | 'failed'
@@ -17,6 +18,11 @@ export interface initialUser {
   users: IUser[] | []
   user: IUser | ''
   totalDocs: number
+}
+export interface initialVoucher {
+  loading: 'idle' | 'pending' | 'fulfilled' | 'failed'
+  vouchers: IVoucher[] | []
+  voucher: IVoucher | ''
 }
 export interface initialCmt {
   loading: 'idle' | 'pending' | 'fulfilled' | 'failed'
@@ -49,6 +55,14 @@ export interface IStateUser {
   user: {
     users: IUsers[]
     user: IUsers
+    loading: string
+    totalDocs: number
+  }
+}
+export interface IStateVoucher {
+  voucher: {
+    vouchers: IVoucher[]
+    voucher: IVoucher
     loading: string
     totalDocs: number
   }

@@ -19,9 +19,6 @@ const Guest_Checkout = () => {
   const redirectUrl= useSelector((state: any) => state.vnPay.redirectUrl)
   const [paymentMethod, setPaymentMethod] = useState('Thanh toán tiền mặt');
 
-  console.log(redirectUrl)
-
-  
   const accessToken = localStorage.getItem('accessToken')
 
   let totalPrice = 0
@@ -72,27 +69,37 @@ const Guest_Checkout = () => {
     address: string
     payment_method:string
   }) => {
-    const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method};
-    console.log(request)
-    const{shippingAddress,payment_method} = request
+    const request = {
+      shippingAddress: {
+        fullname: formValues.fullname,
+        address: formValues.address,
+        email: formValues.email,
+        phone: formValues.phone,
+      },
+      payment_method: formValues.payment_method,
+    }
+    const { shippingAddress, payment_method } = request
+
     if (accessToken) {
       if (cart) {
-        const { cartItems } = cart;
-        dispatch(createOrder({ cartItems , shippingAddress,payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cart
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       } else {
-        const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, shippingAddress,payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cartSession
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       }
     } else {
       const { cartItems } = cartSession
 
-      dispatch(createOrder({ cartItems, shippingAddress,payment_method, totalPrice }));
-      sessionStorage.removeItem("cart");
-      // navigate("../../order");
+      dispatch(
+        createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
+      )
+      sessionStorage.removeItem('cart')
+      navigate('../../order')
     }
   }
   // React.useEffect(() => {

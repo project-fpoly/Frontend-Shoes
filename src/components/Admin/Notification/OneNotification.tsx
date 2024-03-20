@@ -11,7 +11,7 @@ const OneNotification = () => {
   const { id } = useParams()
   const dispatch = useDispatch<AppDispatch>()
   const { notification } = useSelector(
-    (state: IStateNotification) => state.notification
+    (state: IStateNotification) => state.notification,
   )
 
   useEffect(() => {

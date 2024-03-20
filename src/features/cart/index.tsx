@@ -22,10 +22,10 @@ export const fetchProducts = createAsyncThunk(
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }
-    const data = await response.json();
-    return data.products;
-  }
-);
+    const data = await response.json()
+    return data.products
+  },
+)
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async (cartItem: CartItem) => {
@@ -47,10 +47,9 @@ export const addToCart = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               "Content-Type": "application/json; charset=UTF-8",
             },
-          }
-        );
-        notification.success({ message: response.data.message });
-        return response.data.cart;
+          },
+        )
+        return response.data.cart
       } else {
         response = await axios.post(
           "http://localhost:9000/api/order/carts",
@@ -63,19 +62,19 @@ export const addToCart = createAsyncThunk(
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json; charset=UTF-8",
             },
-          }
-        );
+          },
+        )
         return sessionStorage.setItem(
-          "cart",
+          'cart',
           JSON.stringify(response.data.cart)
-        );
+        )
       }
     } catch (error: any) {
       throw new Error(error.message);
     }
-  }
-);
-export const getCartItems = createAsyncThunk("cart/getCartItems", async () => {
+  },
+)
+export const getCartItems = createAsyncThunk('cart/getCartItems', async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/order/carts", {
       headers: {
@@ -96,7 +95,7 @@ export const createOrder = createAsyncThunk(
     cartItems,
     shippingAddress,
     totalPrice,
-    payment_method
+    payment_method,
   }: {
     cartItems: Array<{
       product: string;
@@ -106,35 +105,35 @@ export const createOrder = createAsyncThunk(
       size: string;
     }>;
     shippingAddress: {
-      fullname: string;
-      phone: string;
-      address: string;
-      email: string;
-    };
-    totalPrice: number;
-    payment_method:string;
+      fullname: string
+      phone: string
+      address: string
+      email: string
+    }
+    totalPrice: number
+    payment_method: string
   }) => {
     try {
       console.log(payment_method)
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
         const response = await axios.post(
-          "http://localhost:9000/api/order/bills/",
-          { shippingAddress, cartItems,payment_method },
+          'http://localhost:9000/api/order/bills/',
+          { shippingAddress, cartItems, payment_method },
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               "Content-Type": "application/json; charset=UTF-8",
             },
-          }
-        );
-        notification.success({ message: response.data.message });
-        return response.data.cart;
+          },
+        )
+        notification.success({ message: response.data.message })
+        return response.data.cart
       } else {
         const response = await axios.post(
-          "http://localhost:9000/api/order/bills/",
-          { cartItems, shippingAddress,payment_method, totalPrice },
+          'http://localhost:9000/api/order/bills/',
+          { cartItems, shippingAddress, payment_method, totalPrice },
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -156,7 +155,10 @@ export const createOrder = createAsyncThunk(
           var objectStore = transaction.objectStore("my_object_store");
 
           // Lưu trữ dữ liệu từ response.data.data vào IndexedDB
-          var clearRequest = objectStore.clear();
+          objectStore.add({
+            key: response.data.data.trackingNumber,
+            value: response.data.data,
+          })
 
           // Hoàn thành giao dịch
           transaction.oncomplete = function () {
@@ -166,17 +168,17 @@ export const createOrder = createAsyncThunk(
           // Xử lý lỗi giao dịch
           transaction.onerror = function (event: any) {
             console.error(
-              "Lỗi khi lưu dữ liệu vào IndexedDB: " + event.target.errorCode
-            );
-          };
-        };
+              'Lỗi khi lưu dữ liệu vào IndexedDB: ' + event.target.errorCode,
+            )
+          }
+        }
 
         // Xử lý sự kiện khi có lỗi mở hoặc tạo cơ sở dữ liệu
         request.onerror = function (event: any) {
           console.error(
-            "Lỗi khi mở hoặc tạo cơ sở dữ liệu: " + event.target.errorCode
-          );
-        };
+            'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ' + event.target.errorCode,
+          )
+        }
 
         // Xử lý sự kiện khi cần tạo lại cơ sở dữ liệu hoặc lưu trữ đối tượng
         request.onupgradeneeded = function (event: any) {
@@ -196,8 +198,8 @@ export const createOrder = createAsyncThunk(
 
       throw new Error(error.response.data.message);
     }
-  }
-);
+  },
+)
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (product: string, thunkApi) => {
@@ -212,10 +214,10 @@ export const removeFromCart = createAsyncThunk(
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               "Content-Type": "application/json; charset=UTF-8",
             },
-          }
-        );
-        notification.success({ message: response.data.message });
-        thunkApi.dispatch(getCartItems());  
+          },
+        )
+        notification.success({ message: response.data.message })
+        thunkApi.dispatch(getCartItems())
 
         return response.data;
       } else {
@@ -226,18 +228,18 @@ export const removeFromCart = createAsyncThunk(
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json; charset=UTF-8",
             },
-          }
-        );
-        notification.success({ message: response.data.message });
-        return response.data;
+          },
+        )
+        notification.success({ message: response.data.message })
+        return response.data
       }
     } catch (error: any) {
       notification.error({ message: error.message });
 
       throw new Error(error.response.data.message);
     }
-  }
-);
+  },
+)
 export const updateProductCart = createAsyncThunk(
   "cart/updateProductCart",
   async (
@@ -252,7 +254,7 @@ export const updateProductCart = createAsyncThunk(
       size: string;
       quantity: number;
     },
-    thunkApi
+    thunkApi,
   ) => {
     try {
       const response = await axios.put(
@@ -264,9 +266,9 @@ export const updateProductCart = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             "Content-Type": "application/json; charset=UTF-8",
           },
-        }
-      );
-      thunkApi.dispatch(getCartItems());
+        },
+      )
+      thunkApi.dispatch(getCartItems())
 
       return response.data;
     } catch (error: any) {
@@ -274,8 +276,8 @@ export const updateProductCart = createAsyncThunk(
 
       throw new Error(error.response.data.message);
     }
-  }
-);
+  },
+)
 
 const cartSlice = createSlice({
   name: "cart",

@@ -88,12 +88,7 @@ const SizeGuide: React.FC = () => (
         </span>
 
         <h1 className="text-3xl font-bold">Size guide</h1>
-        <Table
-          className="w-[1000px]"
-          columns={columns}
-          dataSource={data}
-          scroll={{ x: 2000 }}
-        />
+        <Table columns={columns} dataSource={data} scroll={{ x: 2000 }} />
       </div>
     </div>
   </>
