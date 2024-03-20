@@ -7,7 +7,7 @@ import orderReducer from '../features/order/index'
 import notificationSlice from '../features/notification'
 import cartSlice from '../features/cart'
 import authSlice from '../features/auth/index'
-
+import vnPaySlice from '../features/vnPay/index';
 export const store = configureStore({
   reducer: {
     product: productSlice,
@@ -18,6 +18,7 @@ export const store = configureStore({
     notification: notificationSlice,
     cart: cartSlice,
     auth: authSlice,
+    vnPay: vnPaySlice,
   },
 })
 
