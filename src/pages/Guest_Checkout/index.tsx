@@ -69,6 +69,7 @@ const Guest_Checkout = () => {
     address: string
     payment_method:string
   }) => {
+
     const request = {
       shippingAddress: {
         fullname: formValues.fullname,
@@ -91,15 +92,18 @@ const Guest_Checkout = () => {
         dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
         sessionStorage.removeItem('cart')
         navigate('../../order')
+
       }
     } else {
       const { cartItems } = cartSession
+
 
       dispatch(
         createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
       )
       sessionStorage.removeItem('cart')
       navigate('../../order')
+
     }
   }
   // React.useEffect(() => {
@@ -234,7 +238,7 @@ const Guest_Checkout = () => {
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Subtotal</div>
               <div className="text-[#6b7280]">
-                {cart ? cart?.totalPrice : totalPrice} <span>VND</span>
+                {cart ? cart?.totalPrice : totalPrice} <span>đ</span>
               </div>
             </div>
             <div className="flex justify-between items-center my-5">
@@ -246,7 +250,7 @@ const Guest_Checkout = () => {
               <div>Total</div>
               <div>
                 {cart ? cart?.totalPrice : totalPrice}{' '}
-                <span className="font-light">VND</span>
+                <span className="font-light">đ</span>
               </div>
             </div>
             <hr />
@@ -254,59 +258,59 @@ const Guest_Checkout = () => {
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {cart
               ? cart?.cartItems.map((cartItem: any, index: number) => (
-                  <>
-                    <div key={index} className="col-span-1">
-                      <figure className="col-span-1">
-                        <Link to={'/'}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={cartItem.images[0]}
-                            alt=""
-                          />
-                        </Link>
-                      </figure>
-                    </div>
-                    <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(cartItem.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(cartItem.product)}
-                      </p>
-                      <p className="text-[#6b7280]">{cartItem.size}</p>
-                      <p className="text-[#6b7280]">{cartItem.quantity}</p>
-                      <p className="text-[#6b7280]">{cartItem.price}</p>
-                    </div>
-                  </>
-                ))
+                <>
+                  <div key={index} className="col-span-1">
+                    <figure className="col-span-1">
+                      <Link to={'/'}>
+                        <img
+                          className="h-full w-full object-cover object-center"
+                          src={cartItem.images[0]}
+                          alt=""
+                        />
+                      </Link>
+                    </figure>
+                  </div>
+                  <div className="col-span-1">
+                    <h2 className="text-xl">
+                      {getProductName(cartItem.product)}
+                    </h2>
+                    <p className="text-[#6b7280]">
+                      {getCateName(cartItem.product)}
+                    </p>
+                    <p className="text-[#6b7280]">{cartItem.size}</p>
+                    <p className="text-[#6b7280]">{cartItem.quantity}</p>
+                    <p className="text-[#6b7280]">{cartItem.price}</p>
+                  </div>
+                </>
+              ))
               : cartSession?.cartItems.map((item: any, index: number) => (
-                  <>
-                    <div key={index} className="col-span-1">
-                      <figure className="col-span-1">
-                        <Link to={'/'}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={item.images[0]}
-                            alt=""
-                          />
-                        </Link>
-                      </figure>
-                    </div>
-                    <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(item.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(item.product)}
-                      </p>
-                      <p className="text-[#6b7280]">{item.size}</p>
-                      <p className="text-[#6b7280]">{item.quantity}</p>
-                      <p className="text-[#6b7280]">
-                        {item.price * item.quantity}
-                      </p>
-                    </div>
-                  </>
-                ))}
+                <>
+                  <div key={index} className="col-span-1">
+                    <figure className="col-span-1">
+                      <Link to={'/'}>
+                        <img
+                          className="h-full w-full object-cover object-center"
+                          src={item.images[0]}
+                          alt=""
+                        />
+                      </Link>
+                    </figure>
+                  </div>
+                  <div className="col-span-1">
+                    <h2 className="text-xl">
+                      {getProductName(item.product)}
+                    </h2>
+                    <p className="text-[#6b7280]">
+                      {getCateName(item.product)}
+                    </p>
+                    <p className="text-[#6b7280]">{item.size}</p>
+                    <p className="text-[#6b7280]">{item.quantity}</p>
+                    <p className="text-[#6b7280]">
+                      {item.price * item.quantity}
+                    </p>
+                  </div>
+                </>
+              ))}
           </div>
         </div>
       </div>

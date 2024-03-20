@@ -23,11 +23,14 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { toInteger } from 'lodash'
 import { IProduct } from '../../common/products'
 import usesessionStorage from '../../hooks'
+import SlideAlso from '../../components/Detail/SlideAlso'
+import { formatCurrency } from '../../hooks/utils'
 
 const Cart = () => {
   const ref = useRef<any>({})
   const dispatch = useDispatch<AppDispatch>()
   const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const shoes = useSelector((state: IStateProduct) => state.product.products)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const [forceRender, setForceRender] = useState(0)
   const [merge, setMerge] = usesessionStorage<{ cartItems: any }>('cart', {
@@ -59,6 +62,7 @@ const Cart = () => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [dispatch])
+
   const next = () => {
     ref.current.slickNext()
   }
@@ -186,53 +190,111 @@ const Cart = () => {
 
   return (
     <>
-      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1200px] lg:mx-auto">
+      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] xl:w-[1100px] lg:mx-auto">
         <div className="lg:flex lg:gap-6">
           <div className="shopping-cart-bag lg:w-[65%]">
             <h2 className="text-3xl font-semibold text-center lg:text-left lg:my-4">
               Bag
             </h2>
-            <div className="text-center mb-12 sm:hidden lg:flex">
+            <div className="text-center mb-12 lg:hidden">
               <p>
-                <span className="text-[#6b7280] pr-2 mr-2 border-r-2">
+                <span className="text-[#707072] pr-2 mr-2 border-r-2 border-[#707072]">
                   {cart
                     ? cart?.cartItems.length
                     : cartSession?.cartItems.length}{' '}
                   items
                 </span>
-                {cart ? cart?.totalPrice : totalPrice}
-                <span className="font-light">VND</span>
+                {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
               </p>
             </div>
             {cart
               ? cart?.cartItems?.map((cartItem: any, index: number) => {
-                  const sizes = getProductSize(cartItem.product)
-                  console.log(sizes)
-                  return (
-                    <div
-                      key={`${cartItem.product}-${cartItem.size}`}
-                      className="cart-item flex mb-8"
-                    >
-                      <figure className="w-[220px]">
-                        <Link to={'/'}>
-                          <img src={cartItem.images[0]} alt="" />
-                        </Link>
-                      </figure>
-                      <div className="cart-item-content flex w-full ml-4">
-                        <div className="flex flex-1 flex-col justify-between">
-                          <div className="">
-                            <div className="flex justify-between">
-                              <h2 className="font-semibold text-xl">
-                                {getProductName(cartItem.product)}
-                              </h2>
-                              <p className="text-xl font-semibold">
-                                {cartItem.price * cartItem.quantity}
-                                <span className="font-light">VND</span>
-                              </p>
-                            </div>
-                            <p className="text-lg text-[#565656]">
-                              {getCateName(cartItem.product)}
+                const sizes = getProductSize(cartItem.product)
+                console.log(sizes)
+                return (
+                  <div
+                    key={`${cartItem.product}-${cartItem.size}`}
+                    className="cart-item flex mb-8"
+                  >
+                    <figure className="w-[220px]">
+                      <Link to={'/'}>
+                        <img src={cartItem.images[0]} alt="" />
+                      </Link>
+                    </figure>
+                    <div className="cart-item-content flex w-full ml-4">
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div className="">
+                          <div className="flex justify-between">
+                            <h2 className="font-semibold sm:text-xl text-sm">
+                              {getProductName(cartItem.product)}
+                            </h2>
+                            <p className="text-sm font-semibold sm:text-xl">
+                              {formatCurrency(cartItem.price * cartItem.quantity)}
+
                             </p>
+                          </div>
+                          <p className="text-sm sm:text-xl text-[#565656] my-2">
+                            {getCateName(cartItem.product)}
+                          </p>
+
+
+                          <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
+                            <div>
+                              <label htmlFor="">Size</label>
+                              <select
+                                value={cartItem.size}
+                                name="size"
+                                id=""
+                                className="px-1 ml-1 text-[12px] text-[#6b7280] sm:text-lg"
+                                onChange={(
+                                  event: React.ChangeEvent<HTMLSelectElement>
+                                ) =>
+                                  handleSizeChange(
+                                    index,
+                                    cartItem.product,
+                                    event
+                                  )
+                                }
+                              >
+                                {sizes && Array.isArray(sizes) ? (
+                                  sizes.map((size: any, index: number) => (
+                                    <option key={index} value={size.name}>
+                                      {size.name}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option value="">No sizes available</option>
+                                )}
+                              </select>
+                            </div>
+                            <div className="ml-2">
+                              <label htmlFor="">Quanlity</label>
+                              <select
+                                value={cartItem.quantity}
+                                name="quanlity"
+                                id=""
+                                className="px-2 ml-1"
+                                onChange={(
+                                  event: React.ChangeEvent<HTMLSelectElement>
+                                ) =>
+                                  handleQuantityChange(
+                                    index,
+                                    cartItem.product,
+                                    event
+                                  )
+                                }
+                              >
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                                <option value={6}>6</option>
+                                <option value={7}>7</option>
+                                <option value={8}>8</option>
+                                <option value={9}>9</option>
+                                <option value={10}>10</option>
+                              </select>
 
                             <div className="flex text-lg text-[#6b7280]">
                               <div>
@@ -292,61 +354,64 @@ const Cart = () => {
                                   <option value={10}>10</option>
                                 </select>
                               </div>
+
                             </div>
                           </div>
-                          <div className="cart-item-content-action">
-                            <ul className="flex">
-                              <li>
-                                <GrFavorite
-                                  style={{
-                                    fontSize: '24px',
-                                    marginRight: '12px',
-                                  }}
-                                />
-                              </li>
-                              <li>
-                                <RiDeleteBin6Line
-                                  className="hover:cursor-pointer"
-                                  onClick={() =>
-                                    removeItemFromCart(cartItem.product)
-                                  }
-                                  style={{ fontSize: '24px' }}
-                                />
-                              </li>
-                            </ul>
-                          </div>
+                        </div>
+                        <div className="cart-item-content-action">
+                          <ul className="flex">
+                            <li>
+                              <GrFavorite
+                                style={{
+                                  fontSize: '24px',
+                                  marginRight: '12px',
+                                }}
+                              />
+                            </li>
+                            <li>
+                              <RiDeleteBin6Line
+                                className="hover:cursor-pointer"
+                                onClick={() =>
+                                  removeItemFromCart(cartItem.product)
+                                }
+                                style={{ fontSize: '24px' }}
+                              />
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>
-                  )
-                })
+                  </div>
+                )
+              })
               : cartSession?.cartItems.map((item: any, index: any) => {
-                  const sizes = getProductSize(item.product)
-                  return (
-                    <div
-                      key={`${item.product}-${item.size}`}
-                      className="cart-item flex mb-8"
-                    >
-                      <figure className="w-[220px]">
-                        <Link to={'/'}>
-                          <img src={item.images[0]} alt="" />
-                        </Link>
-                      </figure>
-                      <div className="cart-item-content flex w-full ml-4">
-                        <div className="flex flex-1 flex-col justify-between">
-                          <div className="">
-                            <div className="flex justify-between">
-                              <h2 className="font-semibold text-xl">
-                                {getProductName(item.product)}
-                              </h2>
-                              <p className="text-xl font-semibold">
-                                {item.price * item.quantity}
-                                <span className="font-light">VND</span>
-                              </p>
-                            </div>
-                            <p className="text-lg text-[#565656]">
-                              {getCateName(item.product)}
+                const sizes = getProductSize(item.product)
+                return (
+                  <div
+                    key={`${item.product}-${item.size}`}
+                    className="cart-item flex mb-8"
+                  >
+                    <figure className="w-[220px]">
+                      <Link to={'/'}>
+                        <img src={item.images[0]} alt="" />
+                      </Link>
+                    </figure>
+                    <div className="cart-item-content flex w-full ml-4">
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div className="">
+                          <div className="flex justify-between">
+                            <h2 className="font-semibold text-xl">
+                              {getProductName(item.product)}
+                            </h2>
+                            <p className="text-xl font-semibold">
+                              {formatCurrency(item.price * item.quantity)}
+
                             </p>
+                          </div>
+                          <p className="text-lg text-[#565656]">
+                            {getCateName(item.product)}
+                          </p>
+
 
                             <div className="flex text-lg text-[#6b7280]">
                               <div>
@@ -428,25 +493,27 @@ const Cart = () => {
                               </li>
                             </ul>
                           </div>
+
                         </div>
                       </div>
                     </div>
-                  )
-                })}
+                  </div>
+                )
+              })}
             <hr />
           </div>
           <div className="shopping-cart-summary lg:w-[35%]">
             <h2 className="text-3xl font-semibold my-4">Summary</h2>
             <div>
-              <div className="text-[18px] font-semibold">
+              <div className="text-[18px] font-medium">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
                     Subtotal
                     <FaQuestionCircle className="ml-2" />
                   </div>
                   <div>
-                    {cart ? cart?.totalPrice : totalPrice}
-                    <span className="font-light">VND</span>
+                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
+
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
@@ -459,9 +526,7 @@ const Cart = () => {
                 <div className="flex justify-between items-center my-4 lg:my-5">
                   <div>Total</div>
                   <div>
-                    {cart ? cart?.totalPrice : totalPrice}
-
-                    <span className="font-light">VND</span>
+                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
                   </div>
                 </div>
                 <div className="hidden lg:block">
@@ -541,8 +606,8 @@ const Cart = () => {
         </Button>
       </div>
 
-      <div className="favourites my-8 lg:px-8">
-        <h2 className="text-3xl font-semibold mx-4">You Might Also Like</h2>
+      <div className="favourites my-8 sm:px-4 lg:px-8">
+        {/* <h2 className="text-3xl font-semibold mx-4">You Might Also Like</h2>
         <div className="flex flex-row-reverse mr-4 my-4 text-[#CACACB]">
           <div>
             <button
@@ -650,7 +715,8 @@ const Cart = () => {
               </Link>
             </div>
           </Slider>
-        </div>
+        </div> */}
+        <SlideAlso shoes={shoes} ></SlideAlso>
       </div>
     </>
   )
