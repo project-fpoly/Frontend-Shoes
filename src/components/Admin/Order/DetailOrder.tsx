@@ -17,7 +17,7 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
     const user = users.find((user: IUsers) => user._id === userId)
     return user ? user.userName : 'Khách'
   }
-
+  console.log(order)
   const { cartItems } = order
   console.log(cartItems)
   const quantity = order.cartItems.map((item) => item.quantity)
@@ -47,9 +47,7 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
       title: 'Image',
       dataIndex: 'images',
       render: (images) => {
-        return images.map((image: string) => (
-          <img className="w-28 h-28 " src={image} />
-        ))
+        return  <img className="w-28 h-28 " src={images[0]} />
       },
       className: 'flex items-center gap-x-2  justify-center',
       align: 'center',

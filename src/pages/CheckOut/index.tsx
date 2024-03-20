@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Form, Input, Radio } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
@@ -9,6 +9,7 @@ import { IStateProduct } from '../../common/redux/type'
 import { createOrder, getCartItems } from '../../features/cart'
 import { fetchAllProducts } from '../../features/product'
 import { IUsers } from '../../common/users'
+import { createPaymentUrl } from '../../features/vnPay'
 
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -16,13 +17,34 @@ const CheckOut = () => {
   const { cart } = useSelector((state: any) => state.cart.cartItems)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
-
+  const redirectUrl= useSelector((state: any) => state.vnPay.redirectUrl)
+  const [paymentMethod, setPaymentMethod] = useState('Thanh toán tiền mặt');
   let totalPrice = 0
-
   cartSession?.cartItems.forEach((item: any) => {
     totalPrice += item.price * item.quantity
   })
-
+  useEffect(() => {
+    if (paymentMethod === "vnPay") {
+      if (redirectUrl){
+        window.open(redirectUrl, '_blank');
+    }
+    dispatch(createPaymentUrl({ amount: totalPrice ?totalPrice:cart?.totalPrice,
+      bankCode: "VNBANK",
+      language: "vn",})) 
+    }
+  }, [paymentMethod, dispatch,redirectUrl ]);
+  const handlePaymentMethodChange = (e:any) => {
+    console.log(e.target.value)
+    setPaymentMethod(e.target.value);
+    if (e.target.value === 'vnpay') {
+      if (redirectUrl) {
+        window.open(redirectUrl, '_blank');
+        
+      } else {
+        // Xử lý trường hợp redirectUrl không có giá trị
+      }
+    }
+  };
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -45,26 +67,39 @@ const CheckOut = () => {
     phone: string
     address: string
   }) => {
-    const request = { shippingAddress: { fullname: formValues.fullname, address: formValues.address, email: formValues.email, phone: formValues.phone }, payment_method: formValues.payment_method };
+
+    const request = {
+      shippingAddress: {
+        fullname: formValues.fullname,
+        address: formValues.address,
+        email: formValues.email,
+        phone: formValues.phone,
+      },
+      payment_method: formValues.payment_method,
+    }
     const { shippingAddress, payment_method } = request
     if (accessToken) {
       if (cart) {
-        const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cart
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       } else {
-        const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cartSession
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
+
       }
     } else {
       const { cartItems } = cartSession
 
-      dispatch(createOrder({ cartItems, shippingAddress, payment_method, totalPrice }));
-      sessionStorage.removeItem("cart");
-      navigate("../../order");
+      dispatch(
+        createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
+      )
+      sessionStorage.removeItem('cart')
+      navigate('../../order')
+
     }
   }
   const fullname = user?.userName
@@ -205,9 +240,9 @@ const CheckOut = () => {
                 ]}
                 initialValue="Thanh toán tiền mặt"
               >
-                <Radio.Group defaultValue="Thanh toán tiền mặt">
+                <Radio.Group value={paymentMethod} onChange={handlePaymentMethodChange} >
                   <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
-                  <Radio value="vnpay">VNPAY</Radio>
+                  <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
               <Button

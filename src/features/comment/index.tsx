@@ -3,6 +3,7 @@ import { initialCmt } from '../../common/redux/type'
 import { isRejected } from '@reduxjs/toolkit/react'
 import {
   createComment,
+  deleteComment,
   getComment,
   getCommentByProduct,
 } from '../../services/comment'
@@ -33,7 +34,7 @@ export const fetchAllComment = createAsyncThunk(
     } catch (error) {
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const fetchAllCommentByProduct = createAsyncThunk(
   '/comment/fetchAllCommentByProduct',
@@ -44,7 +45,7 @@ export const fetchAllCommentByProduct = createAsyncThunk(
     } catch (error) {
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const createCommnets = createAsyncThunk(
   '/comment/createCommnets',
@@ -57,7 +58,20 @@ export const createCommnets = createAsyncThunk(
       console.log('hi')
       return isRejected('Error fetching data')
     }
-  }
+  },
+)
+export const deleteCommentById = createAsyncThunk(
+  '/comment/deleteCommentById',
+  async (commnet: ICmt, thunkApi) => {
+    try {
+      const respone = await deleteComment(commnet._id)
+      thunkApi.dispatch(fetchAllCommentByProduct(commnet.shoeId as any))
+      return respone
+    } catch (error) {
+      console.log('hi')
+      return isRejected('Error fetching data')
+    }
+  },
 )
 
 /// đây là chỗ chọc vào kho để lấy db
@@ -99,6 +113,15 @@ export const commentSlice = createSlice({
       state.loading = 'failed'
     })
     builder.addCase(createCommnets.fulfilled, (state) => {
+      state.loading = 'fulfilled'
+    })
+    builder.addCase(deleteCommentById.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(deleteCommentById.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(deleteCommentById.fulfilled, (state) => {
       state.loading = 'fulfilled'
     })
   },

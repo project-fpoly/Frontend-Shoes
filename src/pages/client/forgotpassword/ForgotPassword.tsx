@@ -12,7 +12,7 @@ const ForgotPassword = () => {
         'http://localhost:9000/api/auth/forgot-password',
         {
           email: values?.email,
-        }
+        },
       )
       if (response && response.status === 200) {
         response.data.message && alert(response.data.message)

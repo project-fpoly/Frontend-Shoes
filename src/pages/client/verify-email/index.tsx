@@ -16,7 +16,7 @@ const VerifyEmail = () => {
           {
             email: params.get('email'),
             emailVerificationToken: values?.code ?? '',
-          }
+          },
         )
         if (response && response.status === 200) {
           alert(response.data?.message)
