@@ -12,6 +12,7 @@ import usesessionStorage from '../../../hooks'
 import { addToCart } from '../../../features/cart'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
+import { formatCurrency } from '../../../hooks/utils'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -93,7 +94,7 @@ const InfoShoe = (props: Props) => {
     setIsModalOpen(true)
   }
   return (
-    <>
+    <div className='lg:w-[40%] w-full'>
       <ConfigProvider
         theme={{
           components: {
@@ -106,12 +107,12 @@ const InfoShoe = (props: Props) => {
         }}
       >
         <div
-          className={clsx('flex flex-col gap-6 w-[500px]', style.containerInfo)}
+          className={clsx('flex flex-col gap-6', style.containerInfo)}
         >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{category.name}</p>
-            <h3 className="my-10 text-xl">{shoe.price}</h3>
+            <h3 className="my-5 text-xl">{formatCurrency(shoe.price)}</h3>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
             <p>Select size</p>
@@ -170,7 +171,7 @@ const InfoShoe = (props: Props) => {
                 <Image width={70} src={shoe?.images!} />
                 <span>
                   <p>{shoe.name}</p>
-                  <p>{shoe.price}</p>
+                  <p>{formatCurrency(shoe.price)}</p>
                 </span>
               </div>
               <h2 className="text-2xl ">{category?.name}</h2>
@@ -183,7 +184,7 @@ const InfoShoe = (props: Props) => {
           </ModalCustom>
         </div>
       </ConfigProvider>
-    </>
+    </div>
   )
 }
 
