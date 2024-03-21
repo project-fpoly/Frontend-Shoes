@@ -4,7 +4,7 @@ import style from './index.module.scss'
 import clsx from 'clsx'
 import ModalCustom from '../../Modal'
 import { useState } from 'react'
-import { Image, notification, Button, ConfigProvider, Alert } from 'antd'
+import { Image, notification, Button, ConfigProvider } from 'antd'
 import Colspace from './Colspace'
 import { Link } from 'react-router-dom'
 import { CiHeart } from 'react-icons/ci'
@@ -12,10 +12,6 @@ import usesessionStorage from '../../../hooks'
 import { addToCart } from '../../../features/cart'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
-
-import { formatCurrency } from '../../../hooks/utils'
-
-import ModalCart from '../../Modal/modalCart'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -27,7 +23,6 @@ const InfoShoe = (props: Props) => {
   const [size, setSize] = useState('')
   const [activeButton, setActiveButton] = useState(null)
   const dispatch = useDispatch<AppDispatch>()
-  const [isModalOpenCart, setIsModalOpenCart] = useState(false)
 
   const handleClick = (index: any) => {
     setActiveButton(index === activeButton ? null : index)
@@ -49,9 +44,6 @@ const InfoShoe = (props: Props) => {
         break
     }
   }
-
-  ;<Alert message="Success Tips" type="success" showIcon />
-
   const [cart, setCart] = usesessionStorage<{ cartItems: IProduct[] }>('cart', {
     cartItems: [],
   })
@@ -77,7 +69,7 @@ const InfoShoe = (props: Props) => {
       // If the product was not found in the cart, add it with quantity 1
       if (
         !updatedCart?.find(
-          (item) => item.product === product && item.size === size,
+          (item) => item.product === product && item.size === size
         )
       ) {
         updatedCart?.push({
@@ -89,22 +81,19 @@ const InfoShoe = (props: Props) => {
           quantity: 1,
         })
       }
-    }
 
-    ;<Alert
-      message="Success Tips"
-      description="Detailed description and advice about successful copywriting."
-      type="success"
-      showIcon
-    />
+      openNotification('success')
+      setCart({ cartItems: updatedCart })
+    }
   }
   const storedData = localStorage.getItem('cart')
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => {
     setIsModalOpen(true)
   }
   return (
-    <div className='lg:w-[40%] w-full'>
+    <>
       <ConfigProvider
         theme={{
           components: {
@@ -117,12 +106,12 @@ const InfoShoe = (props: Props) => {
         }}
       >
         <div
-          className={clsx('flex flex-col gap-6', style.containerInfo)}
+          className={clsx('flex flex-col gap-6 w-[500px]', style.containerInfo)}
         >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{category.name}</p>
-            <h3 className="my-5 text-xl">{formatCurrency(shoe.price)}</h3>
+            <h3 className="my-10 text-xl">{shoe.price}</h3>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
             <p>Select size</p>
@@ -141,7 +130,7 @@ const InfoShoe = (props: Props) => {
                   key={item.name}
                   className={clsx(
                     style.button,
-                    index === activeButton ? 'border-black' : '',
+                    index === activeButton ? 'border-black' : ''
                   )}
                 >
                   {item.name}
@@ -181,7 +170,7 @@ const InfoShoe = (props: Props) => {
                 <Image width={70} src={shoe?.images!} />
                 <span>
                   <p>{shoe.name}</p>
-                  <p>{formatCurrency(shoe.price)}</p>
+                  <p>{shoe.price}</p>
                 </span>
               </div>
               <h2 className="text-2xl ">{category?.name}</h2>
@@ -192,20 +181,9 @@ const InfoShoe = (props: Props) => {
               </p>
             </div>
           </ModalCustom>
-          <ModalCart
-            isModalOpenCart={isModalOpenCart}
-            setIsModalOpenCart={setIsModalOpenCart}
-          >
-            <div></div>
-            <div className="flex gap-5">
-              {' '}
-              <button>cc</button>
-              <button>csadsac</button>
-            </div>
-          </ModalCart>
         </div>
       </ConfigProvider>
-    </div>
+    </>
   )
 }
 
