@@ -9,6 +9,7 @@ import io from 'socket.io-client'
 import { message, notification } from 'antd'
 import { AppDispatch } from './redux/store'
 import { fetchAllUsers } from './features/user'
+import { fetchAllNotification } from './features/notification'
 
 function App() {
   const user = useSelector((state) => state.auth.user)
@@ -24,11 +25,16 @@ function App() {
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })
+    console.log("chua thong bao",user.userName);
+    
     if (user?.role == 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
+        dispatch(fetchAllNotification())
+        console.log("co thong bao",user.userName);
       })
     }
+    console.log("vc");
     return () => {
       socket.disconnect()
     }
