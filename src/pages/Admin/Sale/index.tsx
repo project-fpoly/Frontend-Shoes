@@ -28,6 +28,7 @@ const SaleManager: React.FC = () => {
 
   const user=useSelector((state:any)=>state.auth.user)
 
+
   useEffect(() => {
     dispatch(fetchAllSales({ page: currentPage, limit: 10, keyword: Search }));
   }, [dispatch]);

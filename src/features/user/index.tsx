@@ -38,7 +38,7 @@ export const fetchAllUsers = createAsyncThunk(
       console.log('error')
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const fetchOneUsers = createAsyncThunk(
   '/user/fetchOneUsers',
@@ -52,7 +52,7 @@ export const fetchOneUsers = createAsyncThunk(
       console.log('error')
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
 export const createNewUser = createAsyncThunk(
   '/user/createNewUser',
@@ -63,7 +63,7 @@ export const createNewUser = createAsyncThunk(
     } catch (error) {
       return isRejected('Error create user')
     }
-  }
+  },
 )
 
 export const updateUser = createAsyncThunk(
@@ -76,7 +76,7 @@ export const updateUser = createAsyncThunk(
     } catch (error) {
       return isRejected('Error updating user')
     }
-  }
+  },
 )
 export const deleteeUser = createAsyncThunk(
   '/user/deleteUser',
@@ -89,7 +89,7 @@ export const deleteeUser = createAsyncThunk(
     } catch (error) {
       return isRejected('Error updating user')
     }
-  }
+  },
 )
 /// đây là chỗ chọc vào kho để lấy db
 export const userSlice = createSlice({

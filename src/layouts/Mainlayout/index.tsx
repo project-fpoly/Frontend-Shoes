@@ -7,7 +7,7 @@ function MainLayout() {
     <>
       <div className="bg-white ">
         <NavBar></NavBar>
-        <div className="min-h-[500px] mt-[80px]">
+        <div className="min-h-[500px] ">
           <Outlet></Outlet>
         </div>
         <Footer></Footer>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Form, Input, Radio } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
@@ -8,13 +8,16 @@ import { AppDispatch } from '../../redux/store'
 import { IStateProduct } from '../../common/redux/type'
 import { createOrder, getCartItems } from '../../features/cart'
 import { fetchAllProducts } from '../../features/product'
+import { createPaymentUrl } from '../../features/vnPay'
 
 const Guest_Checkout = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-
+  
   const { cart } = useSelector((state: any) => state.cart.cartItems)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
+  const redirectUrl= useSelector((state: any) => state.vnPay.redirectUrl)
+  const [paymentMethod, setPaymentMethod] = useState('Thanh toán tiền mặt');
 
   const accessToken = localStorage.getItem('accessToken')
 
@@ -23,7 +26,28 @@ const Guest_Checkout = () => {
   cartSession?.cartItems.forEach((item: any) => {
     totalPrice += item.price * item.quantity
   })
-
+  useEffect(() => {
+    if (paymentMethod === "vnPay") {
+      if (redirectUrl){
+        window.open(redirectUrl, '_blank');
+    }
+    dispatch(createPaymentUrl({ amount: totalPrice,
+      bankCode: "VNBANK",
+      language: "vn",})) 
+    }
+  }, [paymentMethod, dispatch, redirectUrl, ]);
+  const handlePaymentMethodChange = (e:any) => {
+    console.log(e.target.value)
+    setPaymentMethod(e.target.value);
+    if (e.target.value === 'vnpay') {
+      if (redirectUrl) {
+        window.open(redirectUrl, '_blank');
+        
+      } else {
+        // Xử lý trường hợp redirectUrl không có giá trị
+      }
+    }
+  };
   const { products } = useSelector((state: IStateProduct) => state.product)
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId)
@@ -43,27 +67,43 @@ const Guest_Checkout = () => {
     email: string
     phone: string
     address: string
+    payment_method:string
   }) => {
-    const request = { shippingAddress: {fullname:formValues.fullname,address:formValues.address,email:formValues.email,phone:formValues.phone}, payment_method:formValues.payment_method };
-    const{shippingAddress,payment_method} = request
+
+    const request = {
+      shippingAddress: {
+        fullname: formValues.fullname,
+        address: formValues.address,
+        email: formValues.email,
+        phone: formValues.phone,
+      },
+      payment_method: formValues.payment_method,
+    }
+    const { shippingAddress, payment_method } = request
+
     if (accessToken) {
       if (cart) {
-        const { cartItems } = cart;
-        dispatch(createOrder({ cartItems, shippingAddress,payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cart
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
       } else {
-        const { cartItems } = cartSession;
-        dispatch(createOrder({ cartItems, shippingAddress,payment_method }));
-        sessionStorage.removeItem("cart");
-        navigate("../../order");
+        const { cartItems } = cartSession
+        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        sessionStorage.removeItem('cart')
+        navigate('../../order')
+
       }
     } else {
       const { cartItems } = cartSession
 
-      dispatch(createOrder({ cartItems, shippingAddress,payment_method, totalPrice }));
-      sessionStorage.removeItem("cart");
-      navigate("../../order");
+
+      dispatch(
+        createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
+      )
+      sessionStorage.removeItem('cart')
+      navigate('../../order')
+
     }
   }
   // React.useEffect(() => {
@@ -168,28 +208,7 @@ const Guest_Checkout = () => {
                 </Form.Item>
               </div>
 
-              {/* <Checkbox onChange={onChange} className="my-12">
-                I have read and consent to eShopWorld processing my information
-                in accordance with the{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Privacy Statement
-                </a>{" "}
-                and{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Cookie Policy
-                </a>{" "}
-                . eShopWorld is a trusted Nike partner.
-              </Checkbox> */}
-
-              {/* <Form.Item name="fieldA" valuePropName="checked">
-                                <Checkbox />
-                            </Form.Item> */}
+             
               <Form.Item
                 name="payment_method"
                 rules={[
@@ -197,9 +216,9 @@ const Guest_Checkout = () => {
                 ]}
                 initialValue="Thanh toán tiền mặt"
               >
-                <Radio.Group defaultValue="Thanh toán tiền mặt">
+                <Radio.Group value={paymentMethod} onChange={handlePaymentMethodChange} >
                   <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
-                  <Radio value="vnpay">VNPAY</Radio>
+                  <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
               <Button
@@ -219,7 +238,7 @@ const Guest_Checkout = () => {
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Subtotal</div>
               <div className="text-[#6b7280]">
-                {cart ? cart?.totalPrice : totalPrice} <span>VND</span>
+                {cart ? cart?.totalPrice : totalPrice} <span>đ</span>
               </div>
             </div>
             <div className="flex justify-between items-center my-5">
@@ -231,7 +250,7 @@ const Guest_Checkout = () => {
               <div>Total</div>
               <div>
                 {cart ? cart?.totalPrice : totalPrice}{' '}
-                <span className="font-light">VND</span>
+                <span className="font-light">đ</span>
               </div>
             </div>
             <hr />
@@ -239,59 +258,59 @@ const Guest_Checkout = () => {
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {cart
               ? cart?.cartItems.map((cartItem: any, index: number) => (
-                  <>
-                    <div key={index} className="col-span-1">
-                      <figure className="col-span-1">
-                        <Link to={'/'}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={cartItem.images[0]}
-                            alt=""
-                          />
-                        </Link>
-                      </figure>
-                    </div>
-                    <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(cartItem.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(cartItem.product)}
-                      </p>
-                      <p className="text-[#6b7280]">{cartItem.size}</p>
-                      <p className="text-[#6b7280]">{cartItem.quantity}</p>
-                      <p className="text-[#6b7280]">{cartItem.price}</p>
-                    </div>
-                  </>
-                ))
+                <>
+                  <div key={index} className="col-span-1">
+                    <figure className="col-span-1">
+                      <Link to={'/'}>
+                        <img
+                          className="h-full w-full object-cover object-center"
+                          src={cartItem.images[0]}
+                          alt=""
+                        />
+                      </Link>
+                    </figure>
+                  </div>
+                  <div className="col-span-1">
+                    <h2 className="text-xl">
+                      {getProductName(cartItem.product)}
+                    </h2>
+                    <p className="text-[#6b7280]">
+                      {getCateName(cartItem.product)}
+                    </p>
+                    <p className="text-[#6b7280]">{cartItem.size}</p>
+                    <p className="text-[#6b7280]">{cartItem.quantity}</p>
+                    <p className="text-[#6b7280]">{cartItem.price}</p>
+                  </div>
+                </>
+              ))
               : cartSession?.cartItems.map((item: any, index: number) => (
-                  <>
-                    <div key={index} className="col-span-1">
-                      <figure className="col-span-1">
-                        <Link to={'/'}>
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={item.images[0]}
-                            alt=""
-                          />
-                        </Link>
-                      </figure>
-                    </div>
-                    <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(item.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(item.product)}
-                      </p>
-                      <p className="text-[#6b7280]">{item.size}</p>
-                      <p className="text-[#6b7280]">{item.quantity}</p>
-                      <p className="text-[#6b7280]">
-                        {item.price * item.quantity}
-                      </p>
-                    </div>
-                  </>
-                ))}
+                <>
+                  <div key={index} className="col-span-1">
+                    <figure className="col-span-1">
+                      <Link to={'/'}>
+                        <img
+                          className="h-full w-full object-cover object-center"
+                          src={item.images[0]}
+                          alt=""
+                        />
+                      </Link>
+                    </figure>
+                  </div>
+                  <div className="col-span-1">
+                    <h2 className="text-xl">
+                      {getProductName(item.product)}
+                    </h2>
+                    <p className="text-[#6b7280]">
+                      {getCateName(item.product)}
+                    </p>
+                    <p className="text-[#6b7280]">{item.size}</p>
+                    <p className="text-[#6b7280]">{item.quantity}</p>
+                    <p className="text-[#6b7280]">
+                      {item.price * item.quantity}
+                    </p>
+                  </div>
+                </>
+              ))}
           </div>
         </div>
       </div>

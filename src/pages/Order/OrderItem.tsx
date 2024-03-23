@@ -64,7 +64,7 @@ export default function OrderItem({ data }: Props) {
       getAllRequest.onerror = function (event: any) {
         console.error(
           'Lỗi khi truy vấn dữ liệu từ IndexedDB:',
-          event.target.errorCode
+          event.target.errorCode,
         )
       }
     }
@@ -73,7 +73,7 @@ export default function OrderItem({ data }: Props) {
     request.onerror = function (event: any) {
       console.error(
         'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ',
-        event.target.errorCode
+        event.target.errorCode,
       )
     }
   }, [])
@@ -86,7 +86,7 @@ export default function OrderItem({ data }: Props) {
         search: Search,
         start: dayStart,
         end: dayEnd,
-      })
+      }),
     )
     dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -247,7 +247,7 @@ export default function OrderItem({ data }: Props) {
           className="mx-2"
           onChange={(_, dateString) =>
             setDayStart(
-              Array.isArray(dateString) ? dateString.join(',') : dateString
+              Array.isArray(dateString) ? dateString.join(',') : dateString,
             )
           }
           placeholder="Start Date"
@@ -255,7 +255,7 @@ export default function OrderItem({ data }: Props) {
         <DatePicker
           onChange={(_, dateString) =>
             setDayEnd(
-              Array.isArray(dateString) ? dateString.join(',') : dateString
+              Array.isArray(dateString) ? dateString.join(',') : dateString,
             )
           }
           placeholder="End Date"

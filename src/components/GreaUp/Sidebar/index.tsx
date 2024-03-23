@@ -16,7 +16,7 @@ function getItem(
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group'
+  type?: 'group',
 ): MenuItem {
   return {
     key,
@@ -76,7 +76,7 @@ const Sidebar = (props: Props) => {
         break
       case 'Over':
         dispact(
-          featchProductByPrice({ minPrice: 500000, maxPrice: 999999999999999 })
+          featchProductByPrice({ minPrice: 500000, maxPrice: 999999999999999 }),
         )
         break
       default:

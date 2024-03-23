@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 const SignupPage = () => {
   const [passwordHelp, setPasswordHelp] = useState<string | undefined>(
-    undefined
+    undefined,
   )
   const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<
     string | undefined
@@ -18,7 +18,7 @@ const SignupPage = () => {
       const data = { ...values }
       const response = await axios.post(
         'http://localhost:9000/api/auth/signup',
-        data
+        data,
       )
       if (response && response.status === 200) {
         message.success('Signup successfully')
@@ -37,14 +37,14 @@ const SignupPage = () => {
   const validatePassword = (_: any, value: string) => {
     if (value.length < 8) {
       setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
       )
       return Promise.reject('')
     }
 
     if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
       setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
       )
       return Promise.reject('')
     }
@@ -55,14 +55,14 @@ const SignupPage = () => {
   const validateConfirmPassword = (_: any, value: string) => {
     if (value.length < 8) {
       setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
       )
       return Promise.reject('')
     }
 
     if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
       setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.'
+        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
       )
       return Promise.reject('')
     }

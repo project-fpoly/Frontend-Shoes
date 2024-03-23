@@ -22,7 +22,7 @@ const Password = () => {
         .map(function (c) {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
         })
-        .join('')
+        .join(''),
     )
     return JSON.parse(jsonPayload)['_id']
   }
@@ -33,7 +33,7 @@ const Password = () => {
         {
           email,
           password: values.password,
-        }
+        },
       )
       if (response && response.status === 200) {
         const userID = getUserID(response.data.accessToken)
