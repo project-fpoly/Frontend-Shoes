@@ -25,13 +25,13 @@ function App() {
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })
-    console.log("chua thong bao",user.userName);
+    console.log("chua thong bao",user?.userName);
     
     if (user?.role == 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification())
-        console.log("co thong bao",user.userName);
+        console.log("co thong bao",user?.userName);
       })
     }
     console.log("vc");
