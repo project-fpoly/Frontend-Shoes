@@ -6,4 +6,5 @@ export interface ISale {
   quantity: number;
   expiration_date: string;
   create_by?: any;
+  start_date?: string
 }

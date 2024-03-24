@@ -14,6 +14,8 @@ const FormSale: React.FC<ISale & FormSaleProps> = ({
   discount,
   description,
   expiration_date,
+
+
 }) => {
   const [form] = Form.useForm();
 
@@ -44,13 +46,7 @@ const FormSale: React.FC<ISale & FormSaleProps> = ({
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        label={"Quantity"}
-        name="quantity"
-        rules={[{ required: true, message: "Please input Quantity" }]}
-      >
-        <Input type="number" />
-      </Form.Item>
+
       <Form.Item
         label={"Discount"}
         name="discount"
@@ -67,11 +63,27 @@ const FormSale: React.FC<ISale & FormSaleProps> = ({
       </Form.Item>
 
       <Form.Item
+          label={"Product"}
+          name="product"
+          rules={[{ required: true, message: "Please input Product" }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         label={"Expiration date"}
         rules={[{ required: true, message: "Please input Expiration date" }]}
       >
         <DatePicker defaultValue={dayjs(expiration_date, "YYYY-MM-DD")} />
       </Form.Item>
+
+      <Form.Item
+          label={"Start date"}
+          rules={[{ required: true, message: "Please input Expiration date" }]}
+      >
+        <DatePicker defaultValue={dayjs(expiration_date, "YYYY-MM-DD")} />
+      </Form.Item>
+
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Save
