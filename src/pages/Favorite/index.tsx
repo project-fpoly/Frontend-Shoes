@@ -37,7 +37,7 @@ const Favorites = () => {
             <Space direction="vertical" style={{ width: '100%' }}>
 
                 <Typography className="home_title" style={{ paddingLeft: '50px' }}>
-                    Find Your Next Favourite
+                    Find Your Next Favourites
                 </Typography>
                 <Swiper
                     modules={[Navigation, Pagination, A11y]}
