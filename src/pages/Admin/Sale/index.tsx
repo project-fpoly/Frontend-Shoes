@@ -417,7 +417,10 @@ const SaleManager: React.FC = () => {
   const [detailSale, setDetailSale] = useState<ISale>();
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { sales, loading } = useSelector((state: IStateSale) => state.sale) || {};
+  const { sales, loading } = useSelector(
+      (state: IStateSale) => state.sale
+  ) || {};
+
   const user = useSelector((state: any) => state.auth.user);
 
   useEffect(() => {
@@ -434,17 +437,21 @@ const SaleManager: React.FC = () => {
 
   const toggleModal = (sale: ISale) => {
     setIsModalUpdateOpen(true);
+    console.log(sale)
     setDetailSale(sale);
   };
 
   const deleteSale = (sale: ISale) => {
     Modal.confirm({
-      title: "Confirm Deletion",
+      title: 'Confirm Deletion',
       icon: <ExclamationCircleOutlined />,
-      content: "Are you sure you want to delete this campaign?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
+      content: 'Are you sure you want to delete this Campaign?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: () => {
+        // call api delete
+      }
     });
   };
 
@@ -472,16 +479,20 @@ const SaleManager: React.FC = () => {
       dataIndex: "expiration_date",
       align: "center",
       render: (expiration_date) => {
-        const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
-        const isExpired = isAfter(new Date(expiration_date), new Date());
-        return <span style={{ color: isExpired ? "red" : "green" }}>{formattedDate}</span>;
+        console.log(!!expiration_date)
+        if (expiration_date) {
+          const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
+          const isExpired = isAfter(new Date(expiration_date), new Date());
+          return <span style={{color: isExpired ? "red" : "green"}}>{formattedDate}</span>;
+        }
+        return '';
       },
     },
     {
       title: "Create date",
       dataIndex: "createdAt",
       align: "center",
-      render: (date) => format(new Date(date), "dd-MM-yyyy"),
+      render: (date) => date ? format(new Date(date), "dd-MM-yyyy") : '',
     },
     {
       title: "Create by",
@@ -519,10 +530,21 @@ const SaleManager: React.FC = () => {
   const defaultValues: ISale = {
     _id: detailSale?._id || '',
     name: detailSale?.name || '',
-    quantity: detailSale?.quantity || 0,
-    discount: detailSale?.discount || 0,
     description: detailSale?.description || '',
-    expiration_date: detailSale?.expiration_date || '2024-01-01',
+    discount: detailSale?.discount || 0,
+    quantity: detailSale?.quantity || 0,
+    expiration_date: detailSale?.expiration_date,
+    start_date:detailSale?.start_date,
+  };
+
+  const defaultInitValue: ISale = {
+    _id: "",
+    name: "",
+    description: "",
+    discount: 0,
+    quantity: 0,
+    expiration_date: new Date().getTime(),
+    start_date: new Date().getTime()
   };
 
   const searchSale = (value: string) => {
@@ -552,27 +574,27 @@ const SaleManager: React.FC = () => {
 
         <Modal
             title="Create New Campaign"
-            visible={isModalOpen}
+            open={isModalOpen}
             onOk={() => setIsModalOpen(false)}
             onCancel={() => setIsModalOpen(false)}
             footer={null}
             maskClosable={false}
             destroyOnClose={true}
         >
-          <FormSale onSubmit={handleCreateSale} {...defaultValues} />
+          <FormSale onSubmit={handleCreateSale} {...defaultInitValue} />
         </Modal>
+
         <Modal
             title="Update Sale"
-            visible={isModalUpdateOpen}
+            open={isModalUpdateOpen}
             onOk={() => setIsModalUpdateOpen(false)}
             onCancel={() => setIsModalUpdateOpen(false)}
-            footer={null}
             destroyOnClose={true}
+            footer={null}
         >
           <FormSale onSubmit={handleUpdateSale} {...defaultValues} />
         </Modal>
       </div>
   );
 };
-
 export default SaleManager;
