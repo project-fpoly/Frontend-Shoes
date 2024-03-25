@@ -313,9 +313,7 @@ export const productSlice = createSlice({
     })
     builder.addCase(getProductsWithFilters.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
-      state.products = Array.isArray(action.payload.data)
-        ? action.payload.data
-        : []
+      state.products = action.payload.data
       state.totalProducts = action.payload.totalProducts
     })
     // get one Product

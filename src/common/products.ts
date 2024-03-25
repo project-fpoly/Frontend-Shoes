@@ -17,7 +17,11 @@ export interface IProduct {
     name?: string;
   };
   price: number;
-  sale: number;
+  sale?: string | {
+    _id: string;
+    Name: string;
+    discout: number;
+  };
   discount?: number;
   quantity: number;
   sold_count?: number;
