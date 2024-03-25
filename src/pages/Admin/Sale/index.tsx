@@ -549,7 +549,7 @@ const SaleManager: React.FC = () => {
 
   const searchSale = (value: string) => {
     setSearch(value);
-  };
+  }
 
   return (
       <div>
