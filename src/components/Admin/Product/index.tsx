@@ -5,8 +5,9 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { IStateCategory } from "../../../common/redux/type";
+import { IStateCategory, IStateSale } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, StarFilled } from "@ant-design/icons";
+import { fetchAllSales } from '../../../features/sale';
 
 
 const { Option } = Select;
@@ -26,6 +27,13 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
     const { categories } = useSelector(
         (state: IStateCategory) => state.category
     );
+    // useEffect(() => {
+    //     dispatch(fetchAllSales({ page: 1, limit: 10, keyword: "" }));
+    // }, [dispatch]);
+    // const { sales } = useSelector(
+    //     (state: IStateSale) => state.sale
+    // );
+
     return (
         <Form
             form={form}
@@ -172,15 +180,25 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         </Col>
                     </Form.Item>
 
+                    {/* <Form>
+                        <Form.Item label="Sale" name="sale" rules={[{ required: true, message: 'Please select a sale' }]}>
+                            <Select placeholder="Select a sale" defaultValue={typeof sale === 'string' ? sale : sale?._id}>
+                                {sales.map((sale) => (
+                                    <Option key={sale._id} value={sale._id}>
+                                        {sale.Name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Form> */}
                     <Form.Item
-                        label="Sale"
+                        label="Sale product"
                         name="sale"
-                        rules={[{ required: true, message: "Please enter the sale" }]}
+                        rules={[{ required: true, message: "Please enter the product sale" }]}
                     >
-                        <Col>
-                            <InputNumber placeholder="Enter sale" defaultValue={sale} />
-                        </Col>
+                        <Input placeholder="Enter product sale" />
                     </Form.Item>
+
 
                     <Form.Item
                         label="discount"

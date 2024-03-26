@@ -3,7 +3,6 @@ export interface ISale {
   name?: string;
   description: string;
   discount?: number;
-  quantity: number;
   expiration_date: string;
   create_by?: any;
 }

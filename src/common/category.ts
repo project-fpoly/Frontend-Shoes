@@ -5,6 +5,7 @@ export interface ICategory {
   imageUrl?: string
   status?: string
   viewCount?: number
+  products?: string[]
   createdAt?: string
   updatedAt?: string
 }

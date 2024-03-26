@@ -1,3 +1,5 @@
+import { ISale } from "./sale"
+
 interface ISize {
   id?: string
   name: string
@@ -17,11 +19,7 @@ export interface IProduct {
     name?: string;
   };
   price: number;
-  sale?: string | {
-    _id: string;
-    Name: string;
-    discout: number;
-  };
+  sale?: string | ISale;
   discount?: number;
   quantity: number;
   sold_count?: number;
@@ -55,14 +53,4 @@ export interface ICmt {
   likes?: string[]
   createdAt?: Date
   updatedAt?: Date
-}
-export interface ISale {
-  _id?: string
-  name?: string
-  description: string
-  sale: number
-  discount?: number
-  quantity: number
-  create_date: Date
-  expiration_date: Date
 }

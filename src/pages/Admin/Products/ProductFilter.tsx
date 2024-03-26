@@ -93,7 +93,7 @@ const Filter = (props: FilterProps) => {
             </span>
             <Modal
                 title="Bộ lọc"
-                visible={showFilter}
+                open={showFilter}
                 onCancel={handleToggleFilter}
                 footer={[
                     <Button key="reset" onClick={handleResetFilter} loading={loading === "pending"}>
