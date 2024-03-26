@@ -31,8 +31,6 @@ import OrderPage from '../pages/Order/OrderPage.tsx'
 import Favorites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
-// import Sale from '../pages/Sale/index.tsx'
-// import Membership from '../pages/Membership/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
 import Membership from '../pages/Membership/index.tsx'
 import NotFound from '../pages/NotFound/index.tsx'
@@ -95,5 +93,7 @@ const Router = () => {
     </>
   )
 }
+
+
 
 export default Router
