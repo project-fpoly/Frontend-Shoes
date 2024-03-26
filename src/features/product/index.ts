@@ -447,7 +447,7 @@ export const productSlice = createSlice({
       featchProductByGender.fulfilled,
       (state, action) => {
         state.loading = "fulfilled";
-        state.products = action.payload;
+        state.products = action.payload.data;
       }
     );
 
