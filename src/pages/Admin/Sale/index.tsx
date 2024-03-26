@@ -510,16 +510,22 @@ const SaleManager: React.FC = () => {
       align: 'center',
       render: (_, record) => (
           <div style={{ textAlign: 'center' }}>
-            {record.create_by?._id === user._id && (
-                <Tooltip title="Edit">
-                  <Button type="link" onClick={() => toggleModal(record)}>
-                    <EditOutlined />
-                  </Button>
-                </Tooltip>
-            )}
+            {/*{record.create_by?._id === user._id && (*/}
+            {/*    <Tooltip title="Edit">*/}
+            {/*      <Button type="link" onClick={() => toggleModal(record)}>*/}
+            {/*        <EditOutlined />*/}
+            {/*      </Button>*/}
+            {/*    </Tooltip>*/}
+            {/*)}*/}
             <Tooltip title="Delete">
               <Button type="link" onClick={() => deleteSale(record)}>
                 <DeleteOutlined />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Edit">
+              <Button type="link" onClick={() => toggleModal(record)}>
+                <EditOutlined />
               </Button>
             </Tooltip>
           </div>
