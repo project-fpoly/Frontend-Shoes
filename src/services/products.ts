@@ -85,7 +85,7 @@ export const updatePrroduct = async (
 export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => {
   try {
     const product: Partial<IProduct> = {
-      delete: true
+      isDeleted: true
     };
 
     const response: AxiosResponse<IProduct> = await instance.patch(
@@ -107,7 +107,7 @@ export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => 
 export const tryRestoreProduct = async (id: string): Promise<IProduct | null> => {
   try {
     const product: Partial<IProduct> = {
-      delete: false
+      isDeleted: false
     };
 
     const response: AxiosResponse<IProduct> = await instance.patch(

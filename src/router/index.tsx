@@ -35,6 +35,7 @@ import SaleManager from '../pages/Admin/Sale/index.tsx'
 // import Membership from '../pages/Membership/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
 import Membership from '../pages/Membership/index.tsx'
+import NotFound from '../pages/NotFound/index.tsx'
 
 
 const Router = () => {
@@ -89,6 +90,7 @@ const Router = () => {
         <Route path="reset-password" element={<ResetPassword />}></Route>
         <Route path="forgotpassword" element={<ForgotPassword />}></Route>
         <Route path="verify-email" element={<VerifyEmail />}></Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
