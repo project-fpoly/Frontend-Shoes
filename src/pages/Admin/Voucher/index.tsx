@@ -148,8 +148,8 @@ const VoucherManager: React.FC = () => {
     reduced_amount: DetailVouche?.reduced_amount || 0,
     price_order: DetailVouche?.price_order || 0,
     description: DetailVouche?.description || '',
-    start_date:DetailVouche?.start_date || '2024-01-01',
-    expiration_date: DetailVouche?.expiration_date || '2024-01-01',
+    start_date:DetailVouche?.start_date,
+    expiration_date: DetailVouche?.expiration_date,
   }
   const defaultInitValue: IVoucher = {
     _id: '',

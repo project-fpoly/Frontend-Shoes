@@ -25,11 +25,14 @@ const NavRight = () => {
       >
         <CiSearch size={23} />
       </button>
-      <CiHeart
-        className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"
-        size={43}
-      />
-      <Link to="cart">
+        <Link to="favorites">
+          <CiHeart
+            className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"
+            size={43}
+          />
+        </Link>
+
+        <Link to="cart">
         <IoBagOutline
           className="mt-1 cursor-pointer hover:bg-[#e5e5e5] rounded-full p-2 "
           size={43}

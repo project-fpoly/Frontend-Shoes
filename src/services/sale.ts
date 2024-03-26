@@ -7,7 +7,14 @@ import { CustomError } from "../common/error";
 export const getSales = async (page = 1, limit = 10, keyword = "") => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/sale?page=${page}&limit=${limit}&keyword=${keyword}`
+      `/api/sale?page=${page}&limit=${limit}&keyword=${keyword}`,
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        }
     );
     return response.data || response;
   } catch (error) {
