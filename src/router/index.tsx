@@ -31,7 +31,10 @@ import OrderPage from '../pages/Order/OrderPage.tsx'
 import Favorites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
-  import Sale from '../pages/Sale/index.tsx'
+
+import Sale from '../pages/Sale/index.tsx'
+import Membership from '../pages/Membership/index.tsx'
+import NotFound from '../pages/NotFound/index.tsx'
 
 const Router = () => {
   const user = useSelector((state: any) => state.auth.user)
@@ -53,6 +56,7 @@ const Router = () => {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/sale" element={<Sale />} />
+          <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
         </Route>
 
@@ -84,6 +88,7 @@ const Router = () => {
         <Route path="reset-password" element={<ResetPassword />}></Route>
         <Route path="forgotpassword" element={<ForgotPassword />}></Route>
         <Route path="verify-email" element={<VerifyEmail />}></Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )

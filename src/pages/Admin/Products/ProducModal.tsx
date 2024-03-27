@@ -85,14 +85,14 @@ const ProducModal = (selectedProduct: IProduct) => {
         </Row>
       </Descriptions.Item>
 
-      <Descriptions.Item>
+      {/* <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
             <strong>Sale</strong> %
           </Col>
           <Col span={16}>{selectedProduct.sale} %</Col>
         </Row>
-      </Descriptions.Item>
+      </Descriptions.Item> */}
 
       <Descriptions.Item>
         <Row gutter={16}>
