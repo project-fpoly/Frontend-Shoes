@@ -7,12 +7,12 @@ import {
   SolutionOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Badge, List } from 'antd'
+import { Badge, List, Select } from 'antd'
 import { differenceInMilliseconds, format, formatDistanceToNow } from 'date-fns'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { IStateNotification } from '../../../common/redux/type'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   fetchAllNotification,
   updateNotificationById,
@@ -22,24 +22,48 @@ import { useNavigate } from 'react-router-dom'
 import { INotification } from '../../../common/notification'
 const AllNotification = () => {
   const navigate = useNavigate()
+  const { Option } = Select
   const dispatch = useDispatch<AppDispatch>()
+  const [selectedValue, setSelectedValue] = useState('')
   const { notifications: notification } = useSelector(
     (state: IStateNotification) => state.notification,
   )
   useEffect(() => {
-    dispatch(fetchAllNotification())
+    dispatch(fetchAllNotification(''))
   }, [dispatch])
   const currentDateTime: Date = new Date()
   const handleItemClick = async (item: INotification) => {
     if (!item.isRead) {
       await dispatch(updateNotificationById(item._id))
-      dispatch(fetchAllNotification())
+      dispatch(fetchAllNotification(''))
     }
     navigate(`/admin/notification/${item._id}`)
+  }
+  const handleSelectChange = async (value: string) => {
+    await dispatch(fetchAllNotification(value))
+    setSelectedValue(value)
   }
   return (
     <>
       <div style={{ maxHeight: '75vh', overflowY: 'auto' }}>
+        <Select
+          defaultValue=""
+          style={{
+            width: 120,
+            marginRight: 10,
+            top: '0px',
+            right: '0px',
+          }}
+          onChange={handleSelectChange}
+          value={selectedValue}
+        >
+          <Option value="">Tất cả</Option>
+          <Option value="user">user</Option>
+          <Option value="order">order</Option>
+          <Option value="promotion">promotion</Option>
+          <Option value="product">product</Option>
+          <Option value="category">category</Option>
+        </Select>
         <List
           itemLayout="vertical"
           dataSource={notification}

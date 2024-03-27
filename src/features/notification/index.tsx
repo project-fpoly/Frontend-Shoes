@@ -16,9 +16,9 @@ const initialState: initialNotification = {
 ///// Đây là actions
 export const fetchAllNotification = createAsyncThunk(
   '/user/fetchAllNotification',
-  async () => {
+  async (type:string) => {
     try {
-      const respone = await getAllNotification()
+      const respone = await getAllNotification(type)
       return respone
     } catch (error) {
       console.log('hi')

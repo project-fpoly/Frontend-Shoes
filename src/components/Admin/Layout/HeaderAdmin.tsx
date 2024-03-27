@@ -12,6 +12,7 @@ import {
   Popover,
   List,
   message,
+  Select,
 } from 'antd'
 import {
   AlertOutlined,
@@ -41,21 +42,23 @@ const { Search } = Input
 
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate()
-
+  const { Option } = Select
   const user = useSelector((state) => state.auth.user)
   const [visible, setVisible] = useState(false)
+  const [selectedValue, setSelectedValue] = useState('');
+
   const dispatch = useDispatch<AppDispatch>()
   const { notifications: notification } = useSelector(
     (state: IStateNotification) => state.notification,
   )
   useEffect(() => {
-    dispatch(fetchAllNotification())
+    dispatch(fetchAllNotification(""))
   }, [dispatch])
 
   const handleItemClick = async (item: INotification) => {
     if (!item.isRead) {
       await dispatch(updateNotificationById(item._id))
-      dispatch(fetchAllNotification())
+      dispatch(fetchAllNotification(""))
     }
     navigate(`/admin/notification/${item._id}`)
   }
@@ -82,9 +85,32 @@ const AdminHeader: React.FC = () => {
   const unreadNotificationsCount = notification.filter(
     (item) => !item.isRead,
   ).length
+  const handleSelectChange = async (value:string) => {
+    await dispatch(fetchAllNotification(value))
+    setSelectedValue(value); 
+  };
   const notificationContent = (
     <>
       <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <Select
+          defaultValue=""
+          style={{
+            width: 120,
+            marginRight: 10,
+            position: 'absolute',
+            top: '10px',
+            right: '40px',
+          }}
+          onChange={handleSelectChange} // Thêm sự kiện onChange và gọi hàm xử lý handleSelectChange
+      value={selectedValue} // Gán giá trị được chọn từ state vào Select
+        >
+          <Option value="">Tất cả</Option>
+          <Option value="user">user</Option>
+          <Option value="order">order</Option>
+          <Option value="promotion">promotion</Option>
+          <Option value="product">product</Option>
+          <Option value="category">category</Option>
+        </Select>
         <List
           itemLayout="vertical"
           dataSource={notification}
