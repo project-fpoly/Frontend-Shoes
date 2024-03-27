@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios'
 import instance from '../core/Api'
 
-export const getAllNotification = async () => {
+export const getAllNotification = async (type:string) => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/notification/role`,
+      `/api/notification/role?type=${type}`,
       {
         headers: {
           'Access-Control-Allow-Origin': '*',
