@@ -17,28 +17,30 @@ function App() {
   useEffect(() => {
     dispatch(getUserByID())
     const socket = io('http://localhost:9000', { transports: ['websocket'] })
-    socket.on('connection', () => {
+    
+    socket.on('connect', () => {
       console.log('Connected to Socket io')
+      socket.emit('check_active', { _id: localStorage.getItem("userID") })
+      
     })
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })
-    console.log("chua thong bao",user?.userName);
-    
+    console.log('chua thong bao', user)
+
     if (user?.role == 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
-        dispatch(fetchAllNotification(""))
-        console.log("co thong bao",user?.userName);
+        dispatch(fetchAllNotification(''))
+        console.log('co thong bao', user?.userName)
       })
     }
-    console.log("vc");
     return () => {
-      socket.disconnect()
-    }
-  }, [])
+      socket.disconnect();
+    };
+  }, [dispatch])
 
   return (
     <>
