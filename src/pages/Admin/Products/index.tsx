@@ -6,6 +6,7 @@ import {
     ExclamationCircleOutlined,
     EyeOutlined,
     WarningFilled,
+    SyncOutlined,
 
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +14,8 @@ import { AppDispatch } from "../../../redux/store";
 import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
-import { Button, Table, Tooltip, Image, Modal, Row, Col } from "antd";
-import { removeProduct, createProduct, update, tryDelete,tryRestore } from "../../../features/product";
+import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag } from "antd";
+import { removeProduct, createProduct, update, tryDelete, tryRestore } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
@@ -29,8 +30,6 @@ const ProductsManager: React.FC = () => {
     );
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
-
-
     const handleRowClick = (product: IProduct) => {
         setSelectedProduct(product);
         setModalVisible(true);
@@ -110,16 +109,12 @@ const ProductsManager: React.FC = () => {
             title: "Images",
             dataIndex: "images",
             className: "action-cell",
+            align: "center",
             render: (images) => <Image src={images[0]} width={50} className="action-cell" />,
         },
         {
             title: "quantity",
             dataIndex: "quantity",
-        },
-        {
-            title: 'Category',
-            dataIndex: 'categoryId',
-            render: category => category.name
         },
         {
             title: "Price",
@@ -135,7 +130,11 @@ const ProductsManager: React.FC = () => {
             align: "center",
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
-                    {record.isDeleted ? <WarningFilled /> : "" }
+                    {record.isDeleted ?
+                        <Tag icon={<SyncOutlined spin />} color="processing">
+                            processing
+                        </Tag> : ""
+                    }
                 </div>
             ),
         },
@@ -174,7 +173,7 @@ const ProductsManager: React.FC = () => {
         description: "Mô tả của sản phẩm",
         categoryId: "65899c32bb48834579fde67e",
         price: 999999,
-        sale: 5,
+        sale: "",
         discount: 10,
         quantity: 20,
         sold_count: 0,
@@ -205,7 +204,7 @@ const ProductsManager: React.FC = () => {
         description: productsState?.description ? productsState?.description : "Mô tả của sản phẩm",
         categoryId: productsState?.categoryId ? productsState?.categoryId : "ID danh mục của sản phẩm",
         price: productsState?.price ? productsState?.price : 0,
-        sale: productsState?.sale ? productsState?.sale : 0,
+        sale: productsState?.sale ? productsState?.sale : '',
         discount: productsState?.discount ? productsState?.discount : 0,
         quantity: productsState?.quantity ? productsState?.quantity : 0,
         sold_count: productsState?.sold_count ? productsState?.sold_count : 0,
@@ -264,6 +263,7 @@ const ProductsManager: React.FC = () => {
                         columns={columns}
                         dataSource={products}
                         bordered
+
                         rowClassName={rowClassName}
                         size="small"
                         pagination={{
