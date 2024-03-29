@@ -30,7 +30,7 @@ function App() {
     if (user?.role == 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
-        dispatch(fetchAllNotification())
+        dispatch(fetchAllNotification(""))
         console.log("co thong bao",user?.userName);
       })
     }
