@@ -3,6 +3,7 @@ import ListProduct from '../../components/GreaUp/Products'
 import Sidebar from '../../components/GreaUp/Sidebar'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  featchProductByRelase,
   fetchAllProducts,
   fetchProductsByPriceLowOrHight,
 } from '../../features/product'
@@ -24,6 +25,10 @@ const GreaUp = () => {
   const handleChange = (value: string) => {
     switch (value) {
       case 'Newest':
+        dispact(featchProductByRelase('desc_release_date'))
+        break
+      case 'Oldest':
+        dispact(featchProductByRelase('asc_release_date'))
         break
       case 'High-Low':
         dispact(fetchProductsByPriceLowOrHight('desc'))
@@ -58,6 +63,10 @@ const GreaUp = () => {
             {
               value: 'Newest',
               label: 'Newest',
+            },
+            {
+              value: 'Oldest',
+              label: 'Oldest',
             },
             {
               value: 'High-Low',

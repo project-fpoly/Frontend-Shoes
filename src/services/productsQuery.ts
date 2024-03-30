@@ -508,4 +508,26 @@ export const searchByKeyword = async (keyword: string) => {
     );
   }
 };
+
+export const filterProductByRelase = async (keyword: string) => {
+  try {
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+      `/api/product/?sortOrder=${keyword}`
+    );
+    const data = response.data || [];
+    return data;
+  } catch (error) {
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message ||
+      "Error while fetching Products have been filtered by sale quantity ";
+    notification.error({ message: errorMessage });
+    throw new Error(
+      "Error while fetching Products have been filtered by sale quantity "
+    );
+  }
+};
+
+// 
+
 // ...
