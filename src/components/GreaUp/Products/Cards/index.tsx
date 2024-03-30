@@ -1,4 +1,5 @@
 import { IProduct } from '../../../../common/products'
+import { formatCurrency } from '../../../../hooks/utils'
 import style from './index.module.scss'
 import { Link } from 'react-router-dom'
 
@@ -23,7 +24,7 @@ const Card = (props: Props) => {
                   alt="BigCo Inc. logo"
                 />
                 <p>{item.name}</p>
-                <h2>{item.price}</h2>
+                <h2>{formatCurrency(item.price)}</h2>
               </Link>
             </div>
           )

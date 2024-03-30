@@ -13,7 +13,7 @@ interface Props {
 const SlideAlso = ({ shoes }: Props) => {
   return (
     <>
-      <h1 className="my-5 text-4xl font-medium">You Might Also Like</h1>
+      <h1 className="my-5 text-4xl font-medium ">You Might Also Like</h1>
       <Swiper
         breakpoints={{
           576: {
@@ -22,7 +22,7 @@ const SlideAlso = ({ shoes }: Props) => {
           },
           1024: {
             // width: 768,
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
         spaceBetween={28}
@@ -37,7 +37,7 @@ const SlideAlso = ({ shoes }: Props) => {
               <Link to={`/detail/${shoe._id}`}>
                 <img
                   className="rounded-lg"
-                  src={'/src/assets/air-jordan-1-low-se-shoes-ZbxSRp.jpg'}
+                  src={shoe.images ? shoe.images[0] : ''}
                   alt="BigCo Inc. logo"
                 />
                 <h2 className="font-bold">{shoe.name}</h2>
