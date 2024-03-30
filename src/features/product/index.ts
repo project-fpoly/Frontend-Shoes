@@ -1,4 +1,5 @@
 import {
+  filterProductByRelase,
   genderFilterProducts,
   priceFilterProducts,
   searchByKeyword,
@@ -274,6 +275,7 @@ export const featchProductByGender = createAsyncThunk(
   async (gender: string) => {
     try {
       const respone = await genderFilterProducts(gender);
+      console.log(respone.data)
       return respone.data || [];
 
     } catch (error) {
@@ -281,6 +283,21 @@ export const featchProductByGender = createAsyncThunk(
     }
   }
 )
+
+export const featchProductByRelase = createAsyncThunk(
+
+  "product/featchProductByRelase",
+  async (relase: string) => {
+    try {
+      const respone = await filterProductByRelase(relase);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+
 
 /// đây là chỗ chọc vào kho để lấy db
 export const productSlice = createSlice({
@@ -444,9 +461,24 @@ export const productSlice = createSlice({
     builder.addCase(
       featchProductByGender.fulfilled,
       (state, action) => {
-        state.loading = "fulfilled";
-        state.products = action.payload.data;
-      }
+        state.loading = "fulfilled";   
+       state.products = action.payload as IProduct[]
+         }
+    );
+    //Filter product by relase
+
+       builder.addCase(featchProductByRelase.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByRelase.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByRelase.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";   
+       state.products = action.payload as IProduct[]
+         }
     );
 
   },

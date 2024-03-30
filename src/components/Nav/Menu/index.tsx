@@ -18,18 +18,7 @@ const MenuNav = () => {
         <Link to="/greaup">
           <h1 className="font-bold">Products</h1>
         </Link>
-      ),
-      key: 'SubMenuCart',
-      children: [
-        {
-          type: 'group',
-          label: (
-            <Link to="/greaup">
-              <h1 className="font-bold">DetailCart</h1>
-            </Link>
-          ),
-        },
-      ],
+      ) 
     },
     {
       label: (
