@@ -126,8 +126,6 @@ export const fetchProductById = createAsyncThunk(
     try {
       const respone = await getProductById(id)
       thunkApi.dispatch(fetchProductsByCategory(respone?.data?.categoryId!))
-      thunkApi.dispatch(fetchCategoryById(respone?.data?.categoryId!))
-
       return respone.data
     } catch (error) {
       return isRejected('Error fetching data')

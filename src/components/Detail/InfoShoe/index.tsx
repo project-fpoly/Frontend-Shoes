@@ -12,6 +12,7 @@ import usesessionStorage from '../../../hooks'
 import { addToCart } from '../../../features/cart'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
+import { formatCurrency } from '../../../hooks/utils'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -48,7 +49,7 @@ const InfoShoe = (props: Props) => {
     cartItems: [],
   })
 
-  const { _id: product, sizes, color, images, price, ...shoeCart } = shoe
+  const { _id: product, categoryId, sizes, color, images, price, ...shoeCart } = shoe
 
   const accessToken = localStorage.getItem('accessToken')
 
@@ -110,8 +111,8 @@ const InfoShoe = (props: Props) => {
         >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
-            <p>{category.name}</p>
-            <h3 className="my-10 text-xl">{shoe.price}</h3>
+            <p>{categoryId?.name}</p>
+            <h3 className="my-10 text-xl">{formatCurrency(shoe.price)}</h3>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
             <p>Select size</p>
