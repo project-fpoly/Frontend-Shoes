@@ -13,7 +13,7 @@ import { AppDispatch } from '../../redux/store'
 import {
   getCartItems,
   removeFromCart,
-  synchronizeCart,
+  getProvinces,
   updateProductCart,
 } from '../../features/cart'
 import { CartItem } from '../../common/order'
@@ -37,7 +37,17 @@ const Cart = () => {
     cartItems: [],
   })
   const navigate = useNavigate()
-
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  }
+  fetch(
+    'https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1',
+    requestOptions,
+  )
+    .then((response) => response.json())
+    .then((result) => console.log(result))
+    .catch((error) => console.log('error', error))
   const accessToken = localStorage.getItem('accessToken')
   let totalPrice = 0
   cartSession?.cartItems.forEach((item: any) => {
@@ -61,7 +71,12 @@ const Cart = () => {
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
-  }, [dispatch])
+    getProvinces('a')
+  }, [
+    dispatch,
+    cart?.cartItems?.length > 0,
+    cartSession?.cartItems?.length > 0,
+  ])
 
   const next = () => {
     ref.current.slickNext()
@@ -207,194 +222,223 @@ const Cart = () => {
                 {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
               </p>
             </div>
-            {cart ? cart?.cartItems?.map((cartItem: any, index: number) => {
-  const sizes = getProductSize(cartItem.product);
-  console.log(sizes);
-  return (
-    <div
-      key={`${cartItem.product}-${cartItem.size}`}
-      className="cart-item flex mb-8"
-    >
-      <figure className="w-[220px]">
-        <Link to={'/'}>
-          <img src={cartItem.images[0]} alt="" />
-        </Link>
-      </figure>
-      <div className="cart-item-content flex w-full ml-4">
-        <div className="flex flex-1 flex-col justify-between">
-          <div className="">
-            <div className="flex justify-between">
-              <h2 className="font-semibold sm:text-xl text-sm">
-                {getProductName(cartItem.product)}
-              </h2>
-              <p className="text-sm font-semibold sm:text-xl">
-                {formatCurrency(cartItem.price * cartItem.quantity)}
-              </p>
-            </div>
-            <p className="text-sm sm:text-xl text-[#565656] my-2">
-              {getCateName(cartItem.product)}
-            </p>
-            <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
-              <div>
-                <label htmlFor="">Size</label>
-                <select
-                  value={cartItem.size}
-                  name="size"
-                  id=""
-                  className="px-1 ml-1 text-[12px] text-[#6b7280] sm:text-lg"
-                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleSizeChange(index, cartItem.product, event)
-                  }
-                >
-                  {sizes && Array.isArray(sizes) ? (
-                    sizes.map((size: any, index: number) => (
-                      <option key={index} value={size.name}>
-                        {size.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="">No sizes available</option>
-                  )}
-                </select>
-              </div>
-              <div className="ml-2">
-                <label htmlFor="">Quantity</label>
-                <select
-                  value={cartItem.quantity}
-                  name="quantity"
-                  id=""
-                  className="px-2 ml-1"
-                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleQuantityChange(index, cartItem.product, event)
-                  }
-                >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className="cart-item-content-action">
-            <ul className="flex">
-              <li>
-                <GrFavorite
-                  style={{
-                    fontSize: '24px',
-                    marginRight: '12px',
-                  }}
-                />
-              </li>
-              <li>
-                <RiDeleteBin6Line
-                  className="hover:cursor-pointer"
-                  onClick={() => removeItemFromCart(cartItem.product)}
-                  style={{ fontSize: '24px' }}
-                />
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}) : cartSession?.cartItems.map((item: any, index: any) => {
-  const sizes = getProductSize(item.product);
-  return (
-    <div
-      key={`${item.product}-${item.size}`}
-      className="cart-item flex mb-8"
-    >
-      <figure className="w-[220px]">
-        <Link to={'/'}>
-          <img src={item.images[0]} alt="" />
-        </Link>
-      </figure>
-      <div className="cart-item-content flex w-full ml-4">
-        <div className="flex flex-1 flex-col justify-between">
-          <div className="">
-            <div className="flex justify-between">
-              <h2 className="font-semibold text-xl">
-                {getProductName(item.product)}
-              </h2>
-              <p className="text-xl font-semibold">
-                {formatCurrency(item.price * item.quantity)}
-              </p>
-            </div>
-            <p className="text-lg text-[#565656]">
-              {getCateName(item.product)}
-            </p>
-            <div className="flex text-lg text-[#6b7280]">
-              <div>
-                <label htmlFor="">Size</label>
-                <select
-                  value={item.size}
-                  name="size"
-                  id=""
-                  className="px-2 ml-1"
-                  onChange={(e) =>
-                    updateCartItem(index, 'size', e.target.value as any)
-                  }
-                >
-                  {sizes && Array.isArray(sizes) ? (
-                    sizes.map((size: any, index: number) => (
-                      <option key={index} value={size.name}>
-                        {size.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="">No sizes available</option>
-                  )}
-                </select>
-              </div>
-              <div className="ml-2">
-                <label htmlFor="">Quantity</label>
-                <select
-                  value={item.quantity}
-                  name="quantity"
-                  id=""
-                  className="px-2 ml-1"
-                  onChange={(e) =>
-                    updateCartItem(index, 'quantity', e.target.value as any)
-                  }
-                >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className="cart-item-content-action">
-            <ul className="flex">
-              <li>
-                <GrFavorite
-                  style={{
-                    fontSize: '24px',
-                    marginRight: '12px',
-                  }}
-                />
-              </li>
-              <li>
-                <RiDeleteBin6Line
-                  className="hover:cursor-pointer"
-                  onClick={() =>
-                    removeItemFromCartSession(item.product, item.size)
-                  }
-                  style={{ fontSize: '24px' }}
-                />
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-})}
+            {cart
+              ? cart?.cartItems?.map((cartItem: any, index: number) => {
+                  const sizes = getProductSize(cartItem.product)
+                  console.log(sizes)
+                  return (
+                    <div
+                      key={`${cartItem.product}-${cartItem.size}`}
+                      className="cart-item flex mb-8"
+                    >
+                      <figure className="w-[220px]">
+                        <Link to={'/'}>
+                          <img src={cartItem.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                      <div className="cart-item-content flex w-full ml-4">
+                        <div className="flex flex-1 flex-col justify-between">
+                          <div className="">
+                            <div className="flex justify-between">
+                              <h2 className="font-semibold sm:text-xl text-sm">
+                                {getProductName(cartItem.product)}
+                              </h2>
+                              <p className="text-sm font-semibold sm:text-xl">
+                                {formatCurrency(
+                                  cartItem.price * cartItem.quantity,
+                                )}
+                              </p>
+                            </div>
+                            <p className="text-sm sm:text-xl text-[#565656] my-2">
+                              {getCateName(cartItem.product)}
+                            </p>
+                            <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
+                              <div>
+                                <label htmlFor="">Size</label>
+                                <select
+                                  value={cartItem.size}
+                                  name="size"
+                                  id=""
+                                  className="px-1 ml-1 text-[12px] text-[#6b7280] sm:text-lg"
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLSelectElement>,
+                                  ) =>
+                                    handleSizeChange(
+                                      index,
+                                      cartItem.product,
+                                      event,
+                                    )
+                                  }
+                                >
+                                  {sizes && Array.isArray(sizes) ? (
+                                    sizes.map((size: any, index: number) => (
+                                      <option key={index} value={size.name}>
+                                        {size.name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="">No sizes available</option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="ml-2">
+                                <label htmlFor="">Quantity</label>
+                                <select
+                                  value={cartItem.quantity}
+                                  name="quantity"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLSelectElement>,
+                                  ) =>
+                                    handleQuantityChange(
+                                      index,
+                                      cartItem.product,
+                                      event,
+                                    )
+                                  }
+                                >
+                                  {[...Array(10)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                      {i + 1}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="cart-item-content-action">
+                            <ul className="flex">
+                              <li>
+                                <GrFavorite
+                                  style={{
+                                    fontSize: '24px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                              </li>
+                              <li>
+                                <RiDeleteBin6Line
+                                  className="hover:cursor-pointer"
+                                  onClick={() =>
+                                    removeItemFromCart(cartItem.product)
+                                  }
+                                  style={{ fontSize: '24px' }}
+                                />
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })
+              : cartSession?.cartItems.map((item: any, index: any) => {
+                  const sizes = getProductSize(item.product)
+                  return (
+                    <div
+                      key={`${item.product}-${item.size}`}
+                      className="cart-item flex mb-8"
+                    >
+                      <figure className="w-[220px]">
+                        <Link to={'/'}>
+                          <img src={item.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                      <div className="cart-item-content flex w-full ml-4">
+                        <div className="flex flex-1 flex-col justify-between">
+                          <div className="">
+                            <div className="flex justify-between">
+                              <h2 className="font-semibold text-xl">
+                                {getProductName(item.product)}
+                              </h2>
+                              <p className="text-xl font-semibold">
+                                {formatCurrency(item.price * item.quantity)}
+                              </p>
+                            </div>
+                            <p className="text-lg text-[#565656]">
+                              {getCateName(item.product)}
+                            </p>
+                            <div className="flex text-lg text-[#6b7280]">
+                              <div>
+                                <label htmlFor="">Size</label>
+                                <select
+                                  value={item.size}
+                                  name="size"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(e) =>
+                                    updateCartItem(
+                                      index,
+                                      'size',
+                                      e.target.value as any,
+                                    )
+                                  }
+                                >
+                                  {sizes && Array.isArray(sizes) ? (
+                                    sizes.map((size: any, index: number) => (
+                                      <option key={index} value={size.name}>
+                                        {size.name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="">No sizes available</option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="ml-2">
+                                <label htmlFor="">Quantity</label>
+                                <select
+                                  value={item.quantity}
+                                  name="quantity"
+                                  id=""
+                                  className="px-2 ml-1"
+                                  onChange={(e) =>
+                                    updateCartItem(
+                                      index,
+                                      'quantity',
+                                      e.target.value as any,
+                                    )
+                                  }
+                                >
+                                  {[...Array(10)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                      {i + 1}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="cart-item-content-action">
+                            <ul className="flex">
+                              <li>
+                                <GrFavorite
+                                  style={{
+                                    fontSize: '24px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                              </li>
+                              <li>
+                                <RiDeleteBin6Line
+                                  className="hover:cursor-pointer"
+                                  onClick={() =>
+                                    removeItemFromCartSession(
+                                      item.product,
+                                      item.size,
+                                    )
+                                  }
+                                  style={{ fontSize: '24px' }}
+                                />
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
 
             <hr />
           </div>
@@ -409,7 +453,6 @@ const Cart = () => {
                   </div>
                   <div>
                     {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
-
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
@@ -432,35 +475,16 @@ const Cart = () => {
               <div className="mt-5 hidden lg:block">
                 {cart || cartSession?.cartItems.length ? (
                   <>
-                    {accessToken ? (
+                    <>
                       <Button
                         onClick={() => navigate('./checkout')}
                         style={{ background: 'rgb(17, 17, 17)' }}
                         block
-                        className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
+                        className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700"
                       >
                         <p> Checkout</p>
                       </Button>
-                    ) : (
-                      <>
-                        <Button
-                          onClick={() => navigate('./guest_checkout')}
-                          style={{ background: 'rgb(17, 17, 17)' }}
-                          block
-                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
-                        >
-                          <p>Guest Checkout</p>
-                        </Button>
-                        <Button
-                          onClick={() => navigate('../signin')}
-                          style={{ background: 'rgb(17, 17, 17)' }}
-                          block
-                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700"
-                        >
-                          <p>Member Checkout</p>
-                        </Button>
-                      </>
-                    )}
+                    </>
                   </>
                 ) : null}
               </div>
@@ -612,7 +636,7 @@ const Cart = () => {
             </div>
           </Slider>
         </div> */}
-        <SlideAlso shoes={shoes} ></SlideAlso>
+        <SlideAlso shoes={shoes}></SlideAlso>
       </div>
     </>
   )

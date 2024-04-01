@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form, Input, Radio } from 'antd'
+import { Button, Checkbox, Form, Input, Radio, Select } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import { TbTruckDelivery } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 import { IStateProduct } from '../../common/redux/type'
-import { createOrder, getCartItems } from '../../features/cart'
+import { createOrder, getCartItems, getProvinces } from '../../features/cart'
 import { fetchAllProducts } from '../../features/product'
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
@@ -15,36 +15,15 @@ const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const order = useSelector((state: any) => state.cart.orderData)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
-  const redirectUrl= useSelector((state: any) => state.vnPay.redirectUrl)
-  const [paymentMethod, setPaymentMethod] = useState('Thanh toán tiền mặt');
+
   let totalPrice = 0
   cartSession?.cartItems.forEach((item: any) => {
     totalPrice += item.price * item.quantity
   })
-  useEffect(() => {
-    if (paymentMethod === "vnPay") {
-      if (redirectUrl){
-        window.open(redirectUrl, '_blank');
-    }
-    dispatch(createPaymentUrl({ amount: totalPrice ?totalPrice:cart?.totalPrice,
-      bankCode: "VNBANK",
-      language: "vn",})) 
-    }
-  }, [paymentMethod, dispatch,redirectUrl ]);
-  const handlePaymentMethodChange = (e:any) => {
-    console.log(e.target.value)
-    setPaymentMethod(e.target.value);
-    if (e.target.value === 'vnpay') {
-      if (redirectUrl) {
-        window.open(redirectUrl, '_blank');
-        
-      } else {
-        // Xử lý trường hợp redirectUrl không có giá trị
-      }
-    }
-  };
+
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -55,28 +34,32 @@ const CheckOut = () => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.categoryId.name : 'N/A'
   }
-
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [])
   const [form] = Form.useForm()
-  const handleFormSubmit = (formValues: {
+  const handleFormSubmit = async (formValues: {
+    firstName: string
+    lastName: string
     fullname: string
     email: string
     phone: string
     address: string
+    province: string
+    payment_method: string
   }) => {
-
+    console.log(formValues)
     const request = {
       shippingAddress: {
-        fullname: formValues.fullname,
-        address: formValues.address,
+        fullname: formValues.firstName + ' ' + formValues.lastName,
+        address: formValues.address + ' ' + formValues.province,
         email: formValues.email,
         phone: formValues.phone,
       },
       payment_method: formValues.payment_method,
     }
+    console.log(request)
     const { shippingAddress, payment_method } = request
     if (accessToken) {
       if (cart) {
@@ -84,12 +67,33 @@ const CheckOut = () => {
         dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
         sessionStorage.removeItem('cart')
         navigate('../../order')
+        if (payment_method === 'vnPay') {
+          const redirectUrl = await dispatch(
+            createPaymentUrl({
+              amount: totalPrice ? totalPrice : cart?.totalPrice,
+              bankCode: 'VNBANK',
+              language: 'vn',
+              orderId: order.trackingNumber,
+            }),
+          )
+          window.open(redirectUrl.payload, '_blank')
+        }
       } else {
         const { cartItems } = cartSession
         dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
         sessionStorage.removeItem('cart')
         navigate('../../order')
-
+        if (payment_method === 'vnPay') {
+          const redirectUrl = await dispatch(
+            createPaymentUrl({
+              amount: totalPrice ? totalPrice : cart?.totalPrice,
+              bankCode: 'VNBANK',
+              language: 'vn',
+              orderId: order.trackingNumber,
+            }),
+          )
+          window.open(redirectUrl.payload, '_blank')
+        }
       }
     } else {
       const { cartItems } = cartSession
@@ -98,15 +102,24 @@ const CheckOut = () => {
         createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
       )
       sessionStorage.removeItem('cart')
-      navigate('../../order')
-
+      if (payment_method === 'vnPay') {
+        const redirectUrl = await dispatch(
+          createPaymentUrl({
+            amount: totalPrice ? totalPrice : cart?.totalPrice,
+            bankCode: 'VNBANK',
+            language: 'vn',
+            orderId: order.trackingNumber,
+          }),
+        )
+        window.open(redirectUrl.payload, '_blank')
+      }
+      // navigate('../../order')
     }
   }
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
   const phone = user?.phoneNumbers
-
   React.useEffect(() => {
     form.setFieldsValue({
       fullname,
@@ -150,32 +163,29 @@ const CheckOut = () => {
                 <h2 className="text-2xl mb-4">Your delivery information</h2>
 
                 <Form.Item
-                  name="fullname"
+                  name="firstName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
                   ]}
                 >
                   <Input
-                    name="fullname"
+                    name="firstName"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Fullname"
+                    placeholder="First name"
                   />
                 </Form.Item>
-
                 <Form.Item
-                  name="address"
+                  name="lastName"
                   rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your address details!',
-                    },
+                    { required: true, message: 'Please enter your last name!' },
                   ]}
                 >
                   <Input
+                    name="lastName"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Address Line 1"
+                    placeholder="Last name"
                   />
                 </Form.Item>
 
@@ -209,30 +219,40 @@ const CheckOut = () => {
                     placeholder="Phone Number"
                   />
                 </Form.Item>
+                <Form.Item
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your address details!',
+                    },
+                  ]}
+                >
+                  <Input
+                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
+                    size="large"
+                    placeholder="Address"
+                  />
+                </Form.Item>
+                {/* <Form.Item
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your Province/Municipality!',
+                    },
+                  ]}
+                >
+                  <Select
+                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black py-7 rounded-lg "
+                    size="large"
+                    placeholder="Province/Municipality"
+                  >
+                    <Select.Option value={'a'}>a</Select.Option>
+                  </Select>
+                </Form.Item> */}
               </div>
 
-              {/* <Checkbox onChange={onChange} className="my-12">
-                I have read and consent to eShopWorld processing my information
-                in accordance with the{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Privacy Statement
-                </a>{" "}
-                and{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Cookie Policy
-                </a>{" "}
-                . eShopWorld is a trusted Nike partner.
-              </Checkbox> */}
-
-              {/* <Form.Item name="fieldA" valuePropName="checked">
-                                <Checkbox />
-                            </Form.Item> */}
               <Form.Item
                 name="payment_method"
                 rules={[
@@ -240,7 +260,7 @@ const CheckOut = () => {
                 ]}
                 initialValue="Thanh toán tiền mặt"
               >
-                <Radio.Group value={paymentMethod} onChange={handlePaymentMethodChange} >
+                <Radio.Group>
                   <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
                   <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
@@ -282,51 +302,51 @@ const CheckOut = () => {
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {cart
               ? cart?.cartItems.map((cartItem: any, index: number) => (
-                <>
-                  <div key={index} className="col-span-1">
-                    <figure className="col-span-1">
-                      <Link to={'/'}>
-                        <img src={cartItem.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                  </div>
-                  <div className="col-span-1">
-                    <h2 className="text-xl">
-                      {getProductName(cartItem.product)}
-                    </h2>
-                    <p className="text-[#6b7280]">
-                      {getCateName(cartItem.product)}
-                    </p>
-                    <p className="text-[#6b7280]">{cartItem.size}</p>
-                    <p className="text-[#6b7280]">{cartItem.quantity}</p>
-                    <p className="text-[#6b7280]">{cartItem.price}</p>
-                  </div>
-                </>
-              ))
+                  <>
+                    <div key={index} className="col-span-1">
+                      <figure className="col-span-1">
+                        <Link to={'/'}>
+                          <img src={cartItem.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                    </div>
+                    <div className="col-span-1">
+                      <h2 className="text-xl">
+                        {getProductName(cartItem.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        {getCateName(cartItem.product)}
+                      </p>
+                      <p className="text-[#6b7280]">{cartItem.size}</p>
+                      <p className="text-[#6b7280]">{cartItem.quantity}</p>
+                      <p className="text-[#6b7280]">{cartItem.price}</p>
+                    </div>
+                  </>
+                ))
               : cartSession?.cartItems.map((item: any, index: number) => (
-                <>
-                  <div key={index} className="col-span-1">
-                    <figure className="col-span-1">
-                      <Link to={'/'}>
-                        <img src={item.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                  </div>
-                  <div className="col-span-1">
-                    <h2 className="text-xl">
-                      {getProductName(item.product)}
-                    </h2>
-                    <p className="text-[#6b7280]">
-                      {getCateName(item.product)}
-                    </p>
-                    <p className="text-[#6b7280]">{item.size}</p>
-                    <p className="text-[#6b7280]">{item.quantity}</p>
-                    <p className="text-[#6b7280]">
-                      {item.price * item.quantity}
-                    </p>
-                  </div>
-                </>
-              ))}
+                  <>
+                    <div key={index} className="col-span-1">
+                      <figure className="col-span-1">
+                        <Link to={'/'}>
+                          <img src={item.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                    </div>
+                    <div className="col-span-1">
+                      <h2 className="text-xl">
+                        {getProductName(item.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        {getCateName(item.product)}
+                      </p>
+                      <p className="text-[#6b7280]">{item.size}</p>
+                      <p className="text-[#6b7280]">{item.quantity}</p>
+                      <p className="text-[#6b7280]">
+                        {item.price * item.quantity}
+                      </p>
+                    </div>
+                  </>
+                ))}
           </div>
         </div>
       </div>
