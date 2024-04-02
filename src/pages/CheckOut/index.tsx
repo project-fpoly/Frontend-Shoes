@@ -215,7 +215,7 @@ const CheckOut = () => {
             window.open(redirectUrl.payload, '_blank')
           }
         }
-        // navigate('../../order')
+        navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)

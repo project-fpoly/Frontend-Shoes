@@ -24,7 +24,7 @@ const HeaderTableAdminOrder = (props: IProps) => {
           onSearch={handleSearch}
           enterButton={
             <>
-              <SearchOutlined className=" text-white hover:text-white" />
+              <SearchOutlined className="text-white hover:text-white" />
             </>
           }
         />
