@@ -13,7 +13,6 @@ import { AppDispatch } from '../../redux/store'
 import {
   getCartItems,
   removeFromCart,
-  getProvinces,
   updateProductCart,
 } from '../../features/cart'
 import { CartItem } from '../../common/order'
@@ -37,17 +36,6 @@ const Cart = () => {
     cartItems: [],
   })
   const navigate = useNavigate()
-  var requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-  }
-  fetch(
-    'https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1',
-    requestOptions,
-  )
-    .then((response) => response.json())
-    .then((result) => console.log(result))
-    .catch((error) => console.log('error', error))
   const accessToken = localStorage.getItem('accessToken')
   let totalPrice = 0
   cartSession?.cartItems.forEach((item: any) => {
@@ -71,7 +59,6 @@ const Cart = () => {
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
-    getProvinces('a')
   }, [
     dispatch,
     cart?.cartItems?.length > 0,

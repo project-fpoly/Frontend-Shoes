@@ -6,8 +6,16 @@ import { TbTruckDelivery } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 import { IStateProduct } from '../../common/redux/type'
-import { createOrder, getCartItems, getProvinces } from '../../features/cart'
+import { createOrder, getCartItems } from '../../features/cart'
+import {
+  getProvinces,
+  getDistricts,
+  getWards,
+  getShippingOrders,
+} from '../../features/address'
+
 import { fetchAllProducts } from '../../features/product'
+
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
 
@@ -16,14 +24,26 @@ const CheckOut = () => {
   const navigate = useNavigate()
   const { cart } = useSelector((state: any) => state.cart.cartItems)
   const order = useSelector((state: any) => state.cart.orderData)
+  const provinces = useSelector((state: any) => state.address.province)
+  const districts = useSelector((state: any) => state.address.district)
+  const wards = useSelector((state: any) => state.address.ward)
+  const shippingOrder = useSelector((state: any) => state.address.shipping)
+  const [province, setProvince] = useState(null)
+  const [district, setDistrict] = useState(null)
+  const [ward, setWard] = useState(null)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
 
-  let totalPrice = 0
+  let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity
+    totalCart += item.price * item.quantity
   })
-
+  cart?.cartItems.forEach((item: any) => {
+    totalCart += item.price * item.quantity
+  })
+  const totalPrice = shippingOrder
+    ? shippingOrder.service_fee + totalCart
+    : totalCart
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -34,10 +54,59 @@ const CheckOut = () => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.categoryId.name : 'N/A'
   }
+  const hanlderChangeProvince = (value: any, option: any) => {
+    setProvince(option.data_province_id)
+  }
+  const hanlderChangeDistrict = (value: any, option: any) => {
+    setDistrict(option.data_district_id)
+  }
+  const hanlderChangeWard = (value: any, option: any) => {
+    setWard(option.data_ward_id)
+  }
+  const items = cart
+    ? cart.cartItems.map((cartItem: any) => {
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
+    : cartSession?.cartItems.map((cartItem: any) => {
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
-  }, [])
+    dispatch(getProvinces('a'))
+    dispatch(getDistricts(province))
+    dispatch(getWards(district))
+    dispatch(
+      getShippingOrders({
+        service_type_id: 2,
+        from_district_id: 1915,
+        to_district_id: district,
+        to_ward_code: ward,
+        height: 20,
+        length: 30,
+        weight: 3000,
+        width: 40,
+        insurance_value: 0,
+        coupon: null,
+        items: items,
+      }),
+    )
+    console.log('district', district)
+  }, [province, district, ward])
   const [form] = Form.useForm()
   const handleFormSubmit = async (formValues: {
     firstName: string
@@ -47,13 +116,21 @@ const CheckOut = () => {
     phone: string
     address: string
     province: string
+    district: string
+    ward: string
     payment_method: string
   }) => {
-    console.log(formValues)
     const request = {
       shippingAddress: {
         fullname: formValues.firstName + ' ' + formValues.lastName,
-        address: formValues.address + ' ' + formValues.province,
+        address:
+          formValues.address +
+          ' ' +
+          formValues.ward +
+          ' ' +
+          formValues.district +
+          ' ' +
+          formValues.province,
         email: formValues.email,
         phone: formValues.phone,
       },
@@ -61,61 +138,90 @@ const CheckOut = () => {
     }
     console.log(request)
     const { shippingAddress, payment_method } = request
-    if (accessToken) {
-      if (cart) {
-        const { cartItems } = cart
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
-        sessionStorage.removeItem('cart')
-        navigate('../../order')
-        if (payment_method === 'vnPay') {
-          const redirectUrl = await dispatch(
-            createPaymentUrl({
-              amount: totalPrice ? totalPrice : cart?.totalPrice,
-              bankCode: 'VNBANK',
-              language: 'vn',
-              orderId: order.trackingNumber,
+    let redirectUrl = '' as any
+
+    try {
+      if (accessToken) {
+        if (cart) {
+          const { cartItems } = cart
+          await dispatch(
+            createOrder({
+              cartItems,
+              shippingAddress,
+              payment_method,
+              totalPrice,
             }),
           )
+          sessionStorage.removeItem('cart')
+          if (payment_method === 'vnPay' && order) {
+            redirectUrl = await dispatch(
+              createPaymentUrl({
+                amount: totalPrice,
+                bankCode: 'VNBANK',
+                language: 'vn',
+                orderId: order.trackingNumber,
+              }),
+            )
+          }
+        } else if (cartSession && cartSession.cartItems) {
+          const { cartItems } = cartSession
+          await dispatch(
+            createOrder({
+              cartItems,
+              shippingAddress,
+              payment_method,
+              totalPrice,
+            }),
+          )
+          sessionStorage.removeItem('cart')
+          if (payment_method === 'vnPay' && order) {
+            redirectUrl = await dispatch(
+              createPaymentUrl({
+                amount: totalPrice,
+                bankCode: 'VNBANK',
+                language: 'vn',
+                orderId: order.trackingNumber,
+              }),
+            )
+          }
+        }
+
+        if (redirectUrl) {
           window.open(redirectUrl.payload, '_blank')
         }
+
+        navigate('../../order')
       } else {
         const { cartItems } = cartSession
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        await dispatch(
+          createOrder({
+            cartItems,
+            shippingAddress,
+            payment_method,
+            totalPrice,
+          }),
+        )
         sessionStorage.removeItem('cart')
-        navigate('../../order')
-        if (payment_method === 'vnPay') {
-          const redirectUrl = await dispatch(
+        if (payment_method === 'vnPay' && order) {
+          redirectUrl = await dispatch(
             createPaymentUrl({
-              amount: totalPrice ? totalPrice : cart?.totalPrice,
+              amount: totalPrice,
               bankCode: 'VNBANK',
               language: 'vn',
               orderId: order.trackingNumber,
             }),
           )
-          window.open(redirectUrl.payload, '_blank')
+          if (redirectUrl) {
+            window.open(redirectUrl.payload, '_blank')
+          }
         }
+        // navigate('../../order')
       }
-    } else {
-      const { cartItems } = cartSession
-
-      dispatch(
-        createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
-      )
-      sessionStorage.removeItem('cart')
-      if (payment_method === 'vnPay') {
-        const redirectUrl = await dispatch(
-          createPaymentUrl({
-            amount: totalPrice ? totalPrice : cart?.totalPrice,
-            bankCode: 'VNBANK',
-            language: 'vn',
-            orderId: order.trackingNumber,
-          }),
-        )
-        window.open(redirectUrl.payload, '_blank')
-      }
-      // navigate('../../order')
+    } catch (error) {
+      console.error('Error:', error)
     }
   }
+
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
@@ -219,6 +325,92 @@ const CheckOut = () => {
                     placeholder="Phone Number"
                   />
                 </Form.Item>
+
+                <Form.Item
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your Province/Municipality!',
+                    },
+                  ]}
+                >
+                  <Select
+                    className=""
+                    size="large"
+                    placeholder="Province/Municipality"
+                    onChange={hanlderChangeProvince}
+                  >
+                    {provinces &&
+                      provinces?.map((province: any) => (
+                        <Select.Option
+                          key={province.ProvinceID}
+                          value={province.ProvinceName}
+                          data_province_id={province.ProvinceID}
+                        >
+                          {province.ProvinceName}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+                {province && (
+                  <Form.Item
+                    name="district"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your District!',
+                      },
+                    ]}
+                  >
+                    <Select
+                      className=""
+                      size="large"
+                      placeholder="District"
+                      onChange={hanlderChangeDistrict}
+                    >
+                      {districts &&
+                        districts?.map((district: any) => (
+                          <Select.Option
+                            key={district.DistrictID}
+                            value={district.DistrictName}
+                            data_district_id={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                )}
+                {district && (
+                  <Form.Item
+                    name="ward"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your Ward!',
+                      },
+                    ]}
+                  >
+                    <Select
+                      className=""
+                      size="large"
+                      onChange={hanlderChangeWard}
+                      placeholder="Ward"
+                    >
+                      {wards &&
+                        wards.map((ward: any) => (
+                          <Select.Option
+                            key={ward.WardCode}
+                            value={ward.WardName}
+                            data_ward_id={ward.WardCode}
+                          >
+                            {ward.WardName}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                )}
                 <Form.Item
                   name="address"
                   rules={[
@@ -231,26 +423,9 @@ const CheckOut = () => {
                   <Input
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Address"
+                    placeholder="detailed address, house number or easy-to-find place"
                   />
                 </Form.Item>
-                {/* <Form.Item
-                  name="province"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your Province/Municipality!',
-                    },
-                  ]}
-                >
-                  <Select
-                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black py-7 rounded-lg "
-                    size="large"
-                    placeholder="Province/Municipality"
-                  >
-                    <Select.Option value={'a'}>a</Select.Option>
-                  </Select>
-                </Form.Item> */}
               </div>
 
               <Form.Item
@@ -282,18 +457,20 @@ const CheckOut = () => {
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Subtotal</div>
               <div className="text-[#6b7280]">
-                {cart ? cart?.totalPrice : totalPrice} <span>đ</span>
+                {totalCart} <span>đ</span>
               </div>
             </div>
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Delivery/Shipping</div>
-              <div className="text-[#6b7280]">Free</div>
+              <div className="text-[#6b7280]">
+                {shippingOrder ? shippingOrder.service_fee + 'đ' : 'Free'}
+              </div>
             </div>
             <hr />
             <div className="flex justify-between items-center my-5">
               <div>Total</div>
               <div>
-                {cart ? cart?.totalPrice : totalPrice}{' '}
+                {totalPrice}
                 <span className="font-light">đ</span>
               </div>
             </div>

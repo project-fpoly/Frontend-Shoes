@@ -114,12 +114,11 @@ export const createOrder = createAsyncThunk(
     thunkApi,
   ) => {
     try {
-      console.log(payment_method)
       const accessToken = localStorage.getItem('accessToken')
       if (accessToken) {
         const response = await axios.post(
           'http://localhost:9000/api/order/bills/',
-          { shippingAddress, cartItems, payment_method },
+          { shippingAddress, cartItems, payment_method, totalPrice },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -129,6 +128,7 @@ export const createOrder = createAsyncThunk(
           },
         )
         notification.success({ message: response.data.message })
+        thunkApi.dispatch(saveOrderData(response.data.data))
         return response.data.cart
       } else {
         const response = await axios.post(
@@ -232,20 +232,7 @@ export const updateProductCart = createAsyncThunk(
     }
   },
 )
-export const getProvinces = createAsyncThunk(
-  'cart/province',
-  async (q: string) => {
-    try {
-      const response = await axios.get(
-        `https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1`,
-      )
-      console.log(response)
-      return response
-    } catch (error: any) {
-      throw new Error(error.response.data.message)
-    }
-  },
-)
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
@@ -255,20 +242,6 @@ const cartSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(getProvinces.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(getProvinces.fulfilled, (state, action) => {
-        state.loading = false
-        state.cart = action.payload
-      })
-      .addCase(getProvinces.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.error.message ?? 'Failed to fetch products'
-      })
-
     builder
       .addCase(addToCart.pending, (state) => {
         state.loading = true
