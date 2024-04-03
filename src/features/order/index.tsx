@@ -75,10 +75,10 @@ export const updateOrder = createAsyncThunk(
 )
 export const fetchOneOrder = createAsyncThunk(
   'order/fetchOneOrder',
-  async (trackingNumber: string) => {
+  async (params: { search?: string }, { dispatch }) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/order/bills/${trackingNumber}`,
+        `http://localhost:9000/api/order/bills/guest?search=${params}`,
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -86,6 +86,8 @@ export const fetchOneOrder = createAsyncThunk(
           },
         },
       )
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+
       return response.data
     } catch (error: any) {
       console.log(error)
