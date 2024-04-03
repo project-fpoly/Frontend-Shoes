@@ -43,7 +43,7 @@ const GreaUp = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(false)
   return (
     <>
-      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
+      <span className={clsx('flex gap-5  justify-end mr-5 mb-5 pt-[72px]  z-20')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
@@ -79,7 +79,7 @@ const GreaUp = () => {
           ]}
         />
       </span>
-      <div className="flex  mx-10 justify-center items-center">
+      <div className="flex  mx-10 justify-center">
         <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>

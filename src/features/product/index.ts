@@ -1,8 +1,11 @@
 import {
+  colorFilterProducts,
   filterProductByRelase,
   genderFilterProducts,
+  materialFilterProducts,
   priceFilterProducts,
   searchByKeyword,
+  sizeFilterProducts,
   sortOrderProducts,
 } from './../../services/productsQuery'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
@@ -275,7 +278,20 @@ export const featchProductByGender = createAsyncThunk(
   async (gender: string) => {
     try {
       const respone = await genderFilterProducts(gender);
-      console.log(respone.data)
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+/// size
+export const featchProductBySize = createAsyncThunk(
+
+  "product/featchProductBySize",
+  async (size: string) => {
+    try {
+      const respone = await sizeFilterProducts(size);
       return respone.data || [];
 
     } catch (error) {
@@ -290,6 +306,34 @@ export const featchProductByRelase = createAsyncThunk(
   async (relase: string) => {
     try {
       const respone = await filterProductByRelase(relase);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+
+
+export const featchProductByColor = createAsyncThunk(
+
+  "product/featchProductByColor",
+  async (color: string) => {
+    try {
+      const respone = await colorFilterProducts(color);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+export const featchProductByMaterial = createAsyncThunk(
+
+  "product/featchProductByMaterial",
+  async (material: string) => {
+    try {
+      const respone = await materialFilterProducts(material);
       return respone.data || [];
 
     } catch (error) {
@@ -461,13 +505,12 @@ export const productSlice = createSlice({
     builder.addCase(
       featchProductByGender.fulfilled,
       (state, action) => {
-        state.loading = "fulfilled";   
-       state.products = action.payload as IProduct[]
-         }
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
     );
     //Filter product by relase
-
-       builder.addCase(featchProductByRelase.pending, (state) => {
+    builder.addCase(featchProductByRelase.pending, (state) => {
       state.loading = 'pending'
     })
     builder.addCase(featchProductByRelase.rejected, (state) => {
@@ -476,9 +519,51 @@ export const productSlice = createSlice({
     builder.addCase(
       featchProductByRelase.fulfilled,
       (state, action) => {
-        state.loading = "fulfilled";   
-       state.products = action.payload as IProduct[]
-         }
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by size
+    builder.addCase(featchProductBySize.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductBySize.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductBySize.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by color
+    builder.addCase(featchProductByColor.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByColor.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByColor.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by material
+    builder.addCase(featchProductByMaterial.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByMaterial.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByMaterial.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
     );
 
   },

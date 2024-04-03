@@ -23,7 +23,7 @@ const Card = (props: Props) => {
 
             {shoes?.map((item, index) => {
               return (
-                <div key={index + 1} className="mb-28 ">
+                <div key={index + 1} className="mb-0">
                   <Link className="flex flex-col gap-6" to={`/detail/${item._id}`}>
                     <img
                       className={style.image}
