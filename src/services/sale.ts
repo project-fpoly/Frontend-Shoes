@@ -7,7 +7,14 @@ import { CustomError } from "../common/error";
 export const getSales = async (page = 1, limit = 10, keyword = "") => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/sale?page=${page}&limit=${limit}&keyword=${keyword}`
+      `/api/sale?page=${page}&limit=${limit}&keyword=${keyword}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     );
     return response.data || response;
   } catch (error) {
@@ -18,7 +25,14 @@ export const getSales = async (page = 1, limit = 10, keyword = "") => {
 
 export const getSaleById = async (id: string) => {
   try {
-    const response: AxiosResponse = await instance.get(`/api/sale/${id}`);
+    const response: AxiosResponse = await instance.get(`/api/sale/${id}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      });
     return response.data || response;
   } catch (error) {
     console.log(error);
@@ -30,7 +44,14 @@ export const addSale = async (sale: ISale): Promise<ISale | null> => {
   try {
     const response: AxiosResponse<ISale> = await instance.post(
       "/api/sale",
-      sale
+      sale,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     );
     notification.success({ message: "Campaign added successfully" });
     return response.data || response;
