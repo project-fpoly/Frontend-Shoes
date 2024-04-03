@@ -1,12 +1,13 @@
 import { Form, Input, Select, InputNumber, Button, Row, Col, Radio, DatePicker } from 'antd';
-import { IProduct } from "../../../common/products";
+import { IProduct, ISale } from "../../../common/products";
 import { fetchAllCategories } from "../../../features/category";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { IStateCategory } from "../../../common/redux/type";
+import { IStateCategory, IStateSale } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, StarFilled } from "@ant-design/icons";
+import { fetchAllSales } from '../../../features/sale';
 
 
 const { Option } = Select;
@@ -19,13 +20,21 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
     const handleFormSubmitCreate = (values: IProduct) => {
         onSubmit(values);
     };
-    const dispatch = useDispatch<AppDispatch>();
+    const categoryDispatch = useDispatch<AppDispatch>();
+    const saleDispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
-        dispatch(fetchAllCategories({ page: 1, limit: 10, keyword: "" }));
-    }, [dispatch]);
-    const { categories } = useSelector(
-        (state: IStateCategory) => state.category
-    );
+        categoryDispatch(fetchAllCategories({ page: 1, limit: 10, keyword: '' }));
+    }, [categoryDispatch]);
+
+    const { categories } = useSelector((state: IStateCategory) => state.category);
+
+    useEffect(() => {
+        saleDispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
+    }, [saleDispatch]);
+
+    const { sales } = useSelector((state: IStateSale) => state.sale) || {};
+
     return (
         <Form
             form={form}
@@ -171,15 +180,18 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             <InputNumber placeholder="Enter quantity" defaultValue={quantity} />
                         </Col>
                     </Form.Item>
-
                     <Form.Item
-                        label="Sale"
+                        label="Sales"
                         name="sale"
-                        rules={[{ required: true, message: "Please enter the sale" }]}
+                        rules={[{ required: true, message: "Please select a sale" }]}
                     >
-                        <Col>
-                            <InputNumber placeholder="Enter sale" defaultValue={sale} />
-                        </Col>
+                        <Select placeholder="Select a sale" defaultValue={typeof sale === 'object' ? sale._id : sale}>
+                            {sales.map((sale) => (
+                                <Select.Option key={sale._id} value={sale._id}>
+                                    {sale.name}
+                                </Select.Option>
+                            ))}
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
@@ -279,7 +291,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     <Form.Item
                         label="gender"
                         name="gender"
-                        rules={[{ message: "Please enter the product gender" }]}
+                        rules={[{ required: true, message: "Please enter the product gender" }]}
                     >
                         <Radio.Group defaultValue={gender}>
                             <Radio value={'nam'}>Nam</Radio>
