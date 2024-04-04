@@ -28,29 +28,29 @@ const NavBar = () => {
   const user = useSelector((state: any) => state.auth.user)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY >= 100) {
-        setPosition(true)
-      } else {
-        setPosition(false)
-      }
-    }
-    const handleScrollTop = (e: any) => {
-      if (e.deltaY === 100) {
-        setShowNav(true)
-      } else {
-        setShowNav(false)
-      }
-    }
-    window.addEventListener('wheel', handleScrollTop)
-    window.addEventListener('scroll', handleScroll)
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY >= 100) {
+  //       setPosition(true)
+  //     } else {
+  //       setPosition(false)
+  //     }
+  //   }
+  //   const handleScrollTop = (e: any) => {
+  //     if (e.deltaY === 100) {
+  //       setShowNav(true)
+  //     } else {
+  //       setShowNav(false)
+  //     }
+  //   }
+  //   window.addEventListener('wheel', handleScrollTop)
+  //   window.addEventListener('scroll', handleScroll)
 
-    return () => {
-      window.removeEventListener('wheel', handleScrollTop)
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('wheel', handleScrollTop)
+  //     window.removeEventListener('scroll', handleScroll)
+  //   }
+  // }, [])
 
   const handleLogout = () => {
     localStorage.clear()
@@ -131,12 +131,12 @@ const NavBar = () => {
 
         <div
           className={clsx(
-            'flex fixed bg-white w-full justify-evenly z-50',
+            'flex  bg-white w-full justify-evenly z-50',
             showNav ? 'hidden' : '',
             position ? 'top-0' : '',
           )}
         >
-          <div className="flex justify-evenly py-2 mx-24 gap-[200px] z-10">
+          <div className="flex justify-evenly mx-24 gap-[200px] z-10">
             <Link to={'/'}>
               <SiNike className="hover:opacity-75" size={50} />
             </Link>
