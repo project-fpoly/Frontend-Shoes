@@ -44,6 +44,7 @@ import { notification } from 'antd'
 import { AppDispatch } from '../redux/store.ts'
 import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
+import Contact from '../pages/Contact/index.tsx'
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -87,6 +88,7 @@ const Router = (user: any) => {
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/order/guest" element={<GuestOrder />} />
           <Route path="/sale" element={<Sale />} />

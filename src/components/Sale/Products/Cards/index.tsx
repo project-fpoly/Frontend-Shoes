@@ -24,8 +24,8 @@ const Card = (props: Props) => {
                   alt="BigCo Inc. logo"
                 />
                 <p>{item.name}</p>
-                <h2>{formatCurrency(item.price)}</h2>
-
+                <h2 style={{ textDecoration: 'line-through' }}>{formatCurrency(item.price)}</h2>
+                <h2 style={{ fontSize: 20, color: 'red', fontWeight: 500 }}>{formatCurrency(item.price)}</h2>
                 <div
                   style={{
                     position: 'absolute',
