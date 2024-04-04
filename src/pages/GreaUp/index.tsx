@@ -3,6 +3,7 @@ import ListProduct from '../../components/GreaUp/Products'
 import Sidebar from '../../components/GreaUp/Sidebar'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  featchProductByRelase,
   fetchAllProducts,
   fetchProductsByPriceLowOrHight,
 } from '../../features/product'
@@ -24,6 +25,10 @@ const GreaUp = () => {
   const handleChange = (value: string) => {
     switch (value) {
       case 'Newest':
+        dispact(featchProductByRelase('desc_release_date'))
+        break
+      case 'Oldest':
+        dispact(featchProductByRelase('asc_release_date'))
         break
       case 'High-Low':
         dispact(fetchProductsByPriceLowOrHight('desc'))
@@ -38,7 +43,7 @@ const GreaUp = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(false)
   return (
     <>
-      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
+      <span className={clsx('flex gap-5  justify-end mr-5 mb-5 pt-[72px]  z-20')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
@@ -60,6 +65,10 @@ const GreaUp = () => {
               label: 'Newest',
             },
             {
+              value: 'Oldest',
+              label: 'Oldest',
+            },
+            {
               value: 'High-Low',
               label: 'Price: High-Low',
             },
@@ -70,7 +79,7 @@ const GreaUp = () => {
           ]}
         />
       </span>
-      <div className="flex  mx-10 justify-center items-center">
+      <div className="flex  mx-10 justify-center">
         <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>

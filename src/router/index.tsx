@@ -54,8 +54,8 @@ const Router = (user: any) => {
       socket.emit('check_active', { _id: localStorage.getItem('userID') })
       console.log('chua thong bao', user)
     })
-    socket.on('new_user_login', () => {})
-    socket.on('log_out', () => {})
+    socket.on('new_user_login', () => { })
+    socket.on('log_out', () => { })
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })

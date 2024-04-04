@@ -5,8 +5,11 @@ import style from './index.module.scss'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import {
+  featchProductByColor,
   featchProductByGender,
+  featchProductByMaterial,
   featchProductByPrice,
+  featchProductBySize,
 } from '../../../features/product'
 import { genderFilterProducts } from '../../../services/productsQuery'
 type MenuItem = Required<MenuProps>['items'][number]
@@ -27,34 +30,44 @@ function getItem(
   } as MenuItem
 }
 
+
 const items: MenuProps['items'] = [
-  getItem('Gender', 'gender', '', [
-    getItem('Men', 'Men'),
-    getItem('Women', 'Women'),
+
+  getItem('Gender', 'Gender', '', [
+    getItem('Men', 'nam'),
+    getItem('Women', 'nữ'),
   ]),
-
-  getItem('Shop by price', 'sub2', '', [
-    getItem('Under 5,000,000', 'Under'),
-    getItem('Over 5,000,000đ', 'Over'),
+  getItem('Shop by price', 'Price', '', [
+    getItem('0  to  1,000,000', 'Under'),
+    getItem('1,000,000  to  5,000,000đ', 'Over'),
   ]),
+  getItem('Size', 'Size', '', [
+    getItem('36', '36'),
+    getItem('37', '37'),
+    getItem('38', '38'),
+    getItem('39', '39'),
+    getItem('40', '40'),
+    getItem('41', '41'),
+    getItem('42', '42'),
+  ]),
+  getItem('Color', 'Color', '', [
+    getItem('Black', 'black'),
+    getItem('White', 'white'),
+    getItem('Green', 'green'),
+  ]),
+  getItem('Material', 'Material', '', [
+    getItem('Plastic', 'plastic'),
+    getItem('Eva', 'eva'),
+    getItem('Leather', 'leather'),
+  ]),
+  // getItem('Color', 'Color', '', [
+  //   getItem('Black', 'black'),
+  //   getItem('White', 'white'),
+  //   getItem('Green', 'green'),
+  // ]),
 
-  getItem('Sale & offers', 'offers', '', [getItem('Sale', '9')]),
-
-  getItem('Size', 'sub4', '', [getItem('Option h', 'sad')]),
-  getItem('Colour', 'sub58', '', [getItem('Option ss7', 'a7')]),
-  getItem('Brand', 'sub6', '', [getItem('Option 1b1', 's11')]),
-  getItem('Icon', 'sub7', '', [getItem('Option 12312', '121')]),
-  getItem('Technology', 'sub8', '', [getItem('Option 13', '13')]),
-  getItem('Shoe Height', 'sub9', '', [getItem('Option 14', '14')]),
-  getItem('Material', 'sub10', '', [getItem('Option 15', '15')]),
-  getItem('Benefits', 'sub11', '', [getItem('Option 16', '16')]),
-  getItem('Benefits', 'sub12', '', [getItem('Option 17', '17')]),
-  getItem('Benefits', 'sub13', '', [getItem('Option 18', '18')]),
-  getItem('Benefits', 'sub14', '', [getItem('Option 19', '19')]),
-  getItem('Benefits', 'sub15', '', [getItem('Option 20', '20')]),
-  getItem('Benefits', 'sub16', '', [getItem('Option 21', '21')]),
-  getItem('Benefits', 'sub17', '', [getItem('Option 22', '22')]),
 ]
+
 
 interface Props {
   hideFilter: boolean
@@ -63,23 +76,27 @@ const Sidebar = (props: Props) => {
   const dispact = useDispatch<AppDispatch>()
   // const shoes = useSelector((state: IStateProduct) => state.product.products);
   const { hideFilter } = props
-  const onClick: MenuProps['onClick'] = (e) => {
-    switch (e.key) {
-      case 'Men':
-        dispact(featchProductByGender('nam'))
+  const onClick: MenuProps['onClick'] = (e: any) => {
+    switch (e.keyPath[1]) {
+      case 'Gender':
+        dispact(featchProductByGender(e.keyPath[0]))
         break
-      case 'Women':
-        dispact(featchProductByGender('nữ'))
+      case 'Size':
+        dispact(featchProductBySize(e.keyPath[0]))
         break
-      case 'Under':
-        dispact(featchProductByPrice({ minPrice: 0, maxPrice: 500000 }))
+      case 'Price':
+
+
+        const valuePrice = e.keyPath[0] === 'Under' ? { minPrice: 0, maxPrice: 500000 } : { minPrice: 500000, maxPrice: 999999999999999 };
+        dispact(featchProductByPrice(valuePrice))
         break
-      case 'Over':
-        dispact(
-          featchProductByPrice({ minPrice: 500000, maxPrice: 999999999999999 }),
-        )
+      case 'Color':
+        dispact(featchProductByColor(e.keyPath[0]))
         break
-      default:
+      case 'Material':
+        dispact(featchProductByMaterial(e.keyPath[0]))
+        break
+      default: ''
         break
     }
   }
@@ -103,23 +120,11 @@ const Sidebar = (props: Props) => {
             style={{ width: 256 }}
             defaultSelectedKeys={['1']}
             defaultOpenKeys={[
-              'sub1',
-              'sub2',
-              'sub3',
-              'sub4',
-              'sub5',
-              'sub6',
-              'sub7',
-              'sub8',
-              'sub9',
-              'sub10',
-              'sub11',
-              'sub12',
-              'sub13',
-              'sub14',
-              'sub15',
-              'sub16',
-              'sub17',
+              'Size',
+              'Gender',
+              'Price',
+              'Color',
+              'Material',
             ]}
             mode="inline"
             items={items}

@@ -81,37 +81,37 @@ const SaleManager: React.FC = () => {
       title: "Discount",
       dataIndex: "discount",
     },
-    // {
-    //   title: "Expiration date",
-    //   dataIndex: "expiration_date",
-    //   align: "center",
-    //   render: (expiration_date) => {
-    //     const currentDate = new Date();
-    //     const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
+    {
+      title: "Expiration date",
+      dataIndex: "expiration_date",
+      align: "center",
+      render: (expiration_date) => {
+        const currentDate = new Date();
+        const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
 
-    //     if (isAfter(new Date(expiration_date), currentDate)) {
-    //       return <span style={{ color: "green" }}>{formattedDate}</span>;
-    //     } else {
-    //       return <span style={{ color: "red" }}>{formattedDate}</span>;
-    //     }
-    //   },
-    // },
-    // {
-    //   title: "Create date",
-    //   dataIndex: "createdAt",
-    //   align: "center",
-    //   render: (date) => format(new Date(date), "dd-MM-yyyy"),
-    // },
-    // {
-    //   title: "Create by",
-    //   dataIndex: "create_by",
-    //   align: "left",
-    //   render: (create_by) => create_by.email,
-    // },
-    // {
-    //   title: "Product",
-    //   dataIndex: "product",
-    // },
+        if (isAfter(new Date(expiration_date), currentDate)) {
+          return <span style={{ color: "green" }}>{formattedDate}</span>;
+        } else {
+          return <span style={{ color: "red" }}>{formattedDate}</span>;
+        }
+      },
+    },
+    {
+      title: "Create date",
+      dataIndex: "createdAt",
+      align: "center",
+      render: (date) => format(new Date(date), "dd-MM-yyyy"),
+    },
+    {
+      title: "Create by",
+      dataIndex: "create_by",
+      align: "left",
+      render: (create_by) => create_by.email,
+    },
+    {
+      title: "Product",
+      dataIndex: "product",
+    },
     {
       title: "Action",
       key: "action",
