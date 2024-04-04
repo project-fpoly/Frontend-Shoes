@@ -18,7 +18,7 @@ export const fetchOrders = createAsyncThunk(
       end?: string
       search?: string
     },
-    { dispatch },
+    thunkApi,
   ) => {
     try {
       const response = await axios.get(
@@ -32,9 +32,10 @@ export const fetchOrders = createAsyncThunk(
           },
         },
       )
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
-
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }),
+      )
       return response.data
     } catch (error: any) {
       throw error.response.data
@@ -45,7 +46,7 @@ export const updateOrder = createAsyncThunk(
   'order/updateOrder',
   async (
     { id, updateOrderData }: { id: string; updateOrderData: any },
-    { dispatch },
+    thunkApi,
   ) => {
     try {
       if (typeof id === 'string') {
@@ -60,7 +61,7 @@ export const updateOrder = createAsyncThunk(
             },
           },
         )
-        await dispatch(fetchOrders({ page: 1, limit: 10 }))
+        thunkApi.dispatch(fetchOrders({}))
         notification.success({ message: response.data.message })
 
         return response.data
@@ -75,10 +76,32 @@ export const updateOrder = createAsyncThunk(
 )
 export const fetchOneOrder = createAsyncThunk(
   'order/fetchOneOrder',
-  async (id: string) => {
+  async (params: { search?: string }, { dispatch }) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/order/admin/bills/${id}`,
+        `http://localhost:9000/api/order/bills/guest?search=${params}`,
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        },
+      )
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+
+      return response.data
+    } catch (error: any) {
+      console.log(error)
+      throw error.response.data
+    }
+  },
+)
+export const SearchOrder = createAsyncThunk(
+  'order/SearchOrder',
+  async (params: { search?: string }, { dispatch }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/order/admin/bills/search?search=${params}`,
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -87,8 +110,11 @@ export const fetchOneOrder = createAsyncThunk(
           },
         },
       )
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+
       return response.data
     } catch (error: any) {
+      console.log(error)
       throw error.response.data
     }
   },
@@ -129,7 +155,7 @@ export const updateManyOrders = createAsyncThunk(
       isPaid: boolean
       isDelivered: string
     },
-    { dispatch },
+    thunkApi,
   ) => {
     try {
       const response = await axios.put(
@@ -147,8 +173,7 @@ export const updateManyOrders = createAsyncThunk(
           },
         },
       )
-      console.log(response)
-      await dispatch(fetchOrders({ page: 1, limit: 10 }))
+      thunkApi.dispatch(fetchOrders({}))
       notification.success({ message: response.data.message })
       return response.data
     } catch (error: any) {
@@ -297,10 +322,27 @@ const orderSlice = createSlice({
         state.error = null
       })
       .addCase(fetchOneOrder.fulfilled, (state, action) => {
+        console.log(state)
+        console.log(action)
         state.isLoading = false
         state.orders = action.payload
       })
       .addCase(fetchOneOrder.rejected, (state: any, action) => {
+        state.isLoading = false
+        state.error = action.error.message
+      })
+    builder
+      .addCase(SearchOrder.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(SearchOrder.fulfilled, (state, action) => {
+        console.log(state)
+        console.log(action)
+        state.isLoading = false
+        state.orders = action.payload
+      })
+      .addCase(SearchOrder.rejected, (state: any, action) => {
         state.isLoading = false
         state.error = action.error.message
       })
