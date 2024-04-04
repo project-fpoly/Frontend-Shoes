@@ -44,34 +44,34 @@ import { notification } from 'antd'
 import { AppDispatch } from '../redux/store.ts'
 import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
-const Router = (user:any) => {
+const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     const socket = io('http://localhost:9000', { transports: ['websocket'] })
-    
+
     socket.on('connect', () => {
       console.log('Connected to Socket io')
-      socket.emit('check_active', { _id: localStorage.getItem("userID") })
-      console.log("chua thong bao",user);
+      socket.emit('check_active', { _id: localStorage.getItem('userID') })
+      console.log('chua thong bao', user)
     })
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })
-    
+
     if (user.user && user.user.role === 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
-        console.log("co thong bao",user);
+        console.log('co thong bao', user)
       })
     }
 
     return () => {
-      socket.disconnect();
-    };
-  }, [dispatch,user])
+      socket.disconnect()
+    }
+  }, [dispatch, user])
   return (
     <>
       <Routes>
@@ -88,7 +88,7 @@ const Router = (user:any) => {
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
-          {/* <Route path="/order/guest" element={<GuestOrder />} /> */}
+          <Route path="/order/guest" element={<GuestOrder />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />

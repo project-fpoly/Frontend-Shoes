@@ -20,7 +20,12 @@ import {
 import { CartItem, IBill } from '../../../common/order'
 import { AppDispatch, RootState } from '../../../redux/store'
 import { ColumnsType } from 'antd/es/table'
-import { deleteOrder, fetchOrders, updateOrder } from '../../../features/order'
+import {
+  deleteOrder,
+  fetchOrders,
+  updateOrder,
+  SearchOrder,
+} from '../../../features/order'
 import FormOrder from '../../../components/Admin/Order/FormOrder'
 import moment from 'moment'
 import { IStateProduct } from '../../../common/redux/type'
@@ -41,21 +46,21 @@ const OrderManager = () => {
   const [dayStart, setDayStart] = useState('')
   const [dayEnd, setDayEnd] = useState('')
   const [Search, setSearch] = useState('')
-  const [_, setSelectedValue] = useState('')
+  const [selectedValue, setSelectedValue] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
   const [loading, setLoading] = useState(false)
-  const [isSelect, SetIsSelect] = useState(false)
-  const orders = useSelector((state: RootState) => state.order.orders)
-  const isLoading = useSelector((state: RootState) => state.order.isLoading)
-  const pagination = useSelector((state: RootState) => state.order.pagination)
+  const { orders, pagination, isLoading } = useSelector(
+    (state: RootState) => state.order,
+  )
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { users } = useSelector((state: IUsers) => state.user)
   useEffect(() => {
+    console.log(pagination.totalOrders)
     dispatch(
       fetchOrders({
         page: currentPage,
-        limit: pageSize,
+        limit: 10,
         search: Search,
         start: dayStart,
         end: dayEnd,
@@ -70,9 +75,6 @@ const OrderManager = () => {
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page)
     setPageSize(pageSize)
-    const url = `?page=${page}`
-    navigate(url)
-
     dispatch(
       fetchOrders({
         page: page,
@@ -145,6 +147,7 @@ const OrderManager = () => {
       render: (_, __, index) => index + 1,
       align: 'center',
     },
+
     {
       title: 'Items',
       dataIndex: 'cartItems',
@@ -220,6 +223,7 @@ const OrderManager = () => {
           <Select
             placeholder="is Delevered"
             onChange={(value) => searchOrder(value)}
+            value={selectedValue}
           >
             <Select.Option value="">Tất cả trạng thái</Select.Option>
             <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
@@ -232,46 +236,91 @@ const OrderManager = () => {
       ),
       dataIndex: 'isDelivered',
       align: 'center',
-      render: (isDelivered: string) => {
-        let tagColor = ''
-        let tagContent = ''
-        let tagIcon = null
-        switch (isDelivered) {
-          case 'Chờ xác nhận':
-            tagColor = 'default'
-            tagContent = 'Chờ xác nhận'
-            tagIcon = <ClockCircleOutlined />
-            break
-          case 'Chờ lấy hàng':
-            // Xử lý khi isDelivered là "Đã hủy"
-            tagColor = 'purple'
-            tagContent = 'Chờ lấy hàng'
-            tagIcon = <SyncOutlined spin />
-            break
-          case 'Đang giao hàng':
-            tagColor = 'processing'
-            tagContent = 'Đang giao hàng'
-            tagIcon = <CarOutlined />
-            break
-          case 'Đã giao hàng':
-            tagColor = 'success'
-            tagContent = 'Đã giao hàng'
-            tagIcon = <CheckCircleOutlined />
-            break
+      className: 'action-cell',
 
-          default:
-            tagColor = 'error'
-            tagContent = 'Đã hủy'
-            tagIcon = <CloseCircleOutlined />
-            break
-        }
-
+      render: (isDelivered: string, item) => {
         return (
           <span>
             {
-              <Tag icon={tagIcon} color={tagColor}>
-                {tagContent}
-              </Tag>
+              <Select
+                className="min-w-52 text-center border-none focus:ring-0 outline-none"
+                onChange={(value) =>
+                  dispatch(
+                    updateOrder({
+                      id: item?._id as string,
+                      updateOrderData: {
+                        isDelivered: value,
+                      },
+                    }),
+                  )
+                }
+                value={isDelivered}
+              >
+                {isDelivered === 'Chờ xác nhận' && (
+                  <>
+                    <Select.Option className="action-cell" value="Chờ lấy hàng">
+                      <Tag icon={<SyncOutlined spin />} color="purple">
+                        Chờ lấy hàng
+                      </Tag>
+                    </Select.Option>
+                    <Select.Option className="action-cell" value="Đã huỷ">
+                      <Tag icon={<CloseCircleOutlined />} color="error">
+                        Đã hủy
+                      </Tag>
+                    </Select.Option>
+                  </>
+                )}
+                {isDelivered === 'Chờ lấy hàng' && (
+                  <>
+                    <Select.Option
+                      className="action-cell"
+                      value="Đang giao hàng"
+                    >
+                      <Tag icon={<CarOutlined />} color="processing">
+                        Đang giao hàng
+                      </Tag>
+                    </Select.Option>
+                    <Select.Option className="action-cell" value="Đã huỷ">
+                      {' '}
+                      <Tag icon={<CloseCircleOutlined />} color="error">
+                        Đã hủy
+                      </Tag>
+                    </Select.Option>
+                  </>
+                )}
+                {isDelivered === 'Đang giao hàng' && (
+                  <>
+                    <Select.Option className="action-cell" value="Đã giao hàng">
+                      {' '}
+                      <Tag icon={<CheckCircleOutlined />} color="success">
+                        Đã giao hàng
+                      </Tag>
+                    </Select.Option>
+                    <Select.Option className="action-cell" value="Đã huỷ">
+                      Đã huỷ
+                    </Select.Option>
+                  </>
+                )}
+                {isDelivered === 'Đã giao hàng' && (
+                  <>
+                    <Select.Option className="action-cell" value="Đã giao hàng">
+                      <Tag icon={<CheckCircleOutlined />} color="success">
+                        Đã giao hàng
+                      </Tag>
+                    </Select.Option>
+                  </>
+                )}
+                {isDelivered === 'Đã huỷ' && (
+                  <>
+                    <Select.Option className="action-cell" value="Đã huỷ">
+                      {' '}
+                      <Tag icon={<CloseCircleOutlined />} color="error">
+                        Đã hủy
+                      </Tag>
+                    </Select.Option>
+                  </>
+                )}
+              </Select>
             }
           </span>
         )
@@ -332,7 +381,19 @@ const OrderManager = () => {
         <div className="flex items-end">
           <HeaderTableAdminOrder
             showModal={() => {}}
-            onSubmitt={(value) => searchOrder(value)}
+            onSubmitt={(value) =>
+              value
+                ? dispatch(SearchOrder(value as any))
+                : dispatch(
+                    fetchOrders({
+                      page: currentPage,
+                      limit: pageSize,
+                      search: Search,
+                      start: dayStart,
+                      end: dayEnd,
+                    }),
+                  )
+            }
             name={'Orders '}
           />
           <DatePicker
