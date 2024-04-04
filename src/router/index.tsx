@@ -88,7 +88,7 @@ const Router = (user:any) => {
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
-          <Route path="/order/guest" element={<GuestOrder />} />
+          {/* <Route path="/order/guest" element={<GuestOrder />} /> */}
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />

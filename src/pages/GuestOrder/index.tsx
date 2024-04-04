@@ -7,14 +7,9 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { fetchOneOrder } from '../../features/order/index'
-import { IStateProduct } from '../../../common/redux/type'
+import { IStateProduct } from '../../common/redux/type'
 
-type IProps = {
-  showModal: () => void
-  name: string
-  onSubmitt: (value: string) => void
-}
-const GuestOrder = (props: IProps) => {
+const GuestOrder = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [value, setValue] = useState<string>('')
   const orders = useSelector((state: RootState) => state.order.orders)
