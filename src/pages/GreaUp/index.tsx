@@ -13,12 +13,13 @@ import { Select } from 'antd'
 import { GrTransaction } from 'react-icons/gr'
 import clsx from 'clsx'
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
+import InfiniteScroll from 'react-infinite-scroll-component';
 const GreaUp = () => {
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const loading = useSelector((state: IStateProduct) => state.product.loading)
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    dispact(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     document.title = 'Greaup'
   }, [])
 
@@ -43,7 +44,7 @@ const GreaUp = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(false)
   return (
     <>
-      <span className={clsx('flex gap-5  justify-end mr-5 mb-5 pt-[72px]  z-20')}>
+      <span className={clsx('flex gap-5  justify-end mr-5 mb-5   z-20')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
