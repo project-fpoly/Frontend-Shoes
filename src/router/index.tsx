@@ -22,7 +22,7 @@ import ResetPassword from '../pages/client/reset-password.tsx'
 import ForgotPassword from '../pages/client/forgotpassword/ForgotPassword.tsx'
 import VerifyEmail from '../pages/client/verify-email'
 import { PrivateRoute } from './privateRoutes'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Women from '../pages/Women/index.tsx'
 import Men from '../pages/Men/index.tsx'
 import Delivery from '../components/Help/Delivery.tsx'
@@ -35,10 +35,43 @@ import Sale from '../pages/Sale/index.tsx'
 import Membership from '../pages/Membership/index.tsx'
 import NotFound from '../pages/NotFound/index.tsx'
 import GuestOrder from '../pages/GuestOrder/index.tsx'
+import '../App.module.scss'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { useEffect } from 'react'
+import io from 'socket.io-client'
+import { notification } from 'antd'
+import { AppDispatch } from '../redux/store.ts'
+import { fetchAllUsers } from '../features/user/index.tsx'
+import { fetchAllNotification } from '../features/notification/index.tsx'
+const Router = (user:any) => {
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    const socket = io('http://localhost:9000', { transports: ['websocket'] })
+    
+    socket.on('connect', () => {
+      console.log('Connected to Socket io')
+      socket.emit('check_active', { _id: localStorage.getItem("userID") })
+      console.log("chua thong bao",user);
+    })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
+    socket.on('update_user_status', () => {
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    })
+    
+    if (user.user && user.user.role === 'admin') {
+      socket.on('newNotification', (data) => {
+        notification.success({ message: data.message })
+        dispatch(fetchAllNotification(''))
+        console.log("co thong bao",user);
+      })
+    }
 
-const Router = () => {
-  const user = useSelector((state: any) => state.auth.user)
-
+    return () => {
+      socket.disconnect();
+    };
+  }, [dispatch,user])
   return (
     <>
       <Routes>
@@ -55,7 +88,7 @@ const Router = () => {
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
-          <Route path="/order/guest" element={<GuestOrder />} />
+          {/* <Route path="/order/guest" element={<GuestOrder />} /> */}
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
@@ -64,7 +97,7 @@ const Router = () => {
         <Route
           path="/admin"
           element={
-            <PrivateRoute user={user}>
+            <PrivateRoute user={user.user}>
               <AdminLayout />
             </PrivateRoute>
           }

@@ -37,7 +37,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { INotification } from '../../common/notification'
-import { AppDispatch } from '../../redux/store'
+import { AppDispatch, RootState } from '../../redux/store'
 import {
   fetchAllNotification,
   updateNotificationById,
@@ -50,7 +50,7 @@ const { Title, Text } = Typography
 const AdminDashboard = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const notifications = useSelector((state) => state.notification.notifications)
+  const notifications = useSelector((state:RootState) => state.notification.notifications)
   const data = [
     { name: 'Jan', profit: 2400 },
     { name: 'Feb', profit: 1398 },
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
   const handleItemClick = async (item: INotification) => {
     if (!item.isRead) {
       await dispatch(updateNotificationById(item._id))
-      dispatch(fetchAllNotification())
+      dispatch(fetchAllNotification("admin"))
     }
     navigate(`/admin/notification/${item._id}`)
   }
