@@ -34,6 +34,7 @@ import SaleManager from '../pages/Admin/Sale/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
 import Membership from '../pages/Membership/index.tsx'
 import NotFound from '../pages/NotFound/index.tsx'
+import GuestOrder from '../pages/GuestOrder/index.tsx'
 import '../App.module.scss'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -87,6 +88,7 @@ const Router = (user:any) => {
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/order" element={<OrderPage />} />
+          <Route path="/order/guest" element={<GuestOrder />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />

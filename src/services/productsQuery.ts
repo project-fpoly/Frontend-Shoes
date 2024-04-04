@@ -186,9 +186,10 @@ export const filterProducts = async (
 };
 //Lọc theo id Category
 export const categoryFilterProducts = async (CategoryId: string) => {
+  console.log(CategoryId._id!)
   try {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
-      `api/product?categoryFilter=${CategoryId}`
+      `api/product?categoryFilter=${CategoryId._id}`
     );
     const data = response.data || [];
     return data;

@@ -9,7 +9,8 @@ import cartSlice from '../features/cart'
 import authSlice from '../features/auth/index'
 import voucherSlice from '../features/voucher'
 import vnPaySlice from '../features/vnPay/index'
-
+import adressSlice from '../features/address/index'
+import  saleSlice  from '../features/sale'
 export const store = configureStore({
   reducer: {
     product: productSlice,
@@ -22,6 +23,8 @@ export const store = configureStore({
     auth: authSlice,
     voucher: voucherSlice,
     vnPay: vnPaySlice,
+    address: adressSlice,
+    sale: saleSlice
   },
 })
 

@@ -75,20 +75,22 @@ export const updateOrder = createAsyncThunk(
 )
 export const fetchOneOrder = createAsyncThunk(
   'order/fetchOneOrder',
-  async (id: string) => {
+  async (params: { search?: string }, { dispatch }) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/order/admin/bills/${id}`,
+        `http://localhost:9000/api/order/bills/guest?search=${params}`,
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json; charset=UTF-8',
           },
         },
       )
+      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+
       return response.data
     } catch (error: any) {
+      console.log(error)
       throw error.response.data
     }
   },
@@ -297,6 +299,8 @@ const orderSlice = createSlice({
         state.error = null
       })
       .addCase(fetchOneOrder.fulfilled, (state, action) => {
+        console.log(state)
+        console.log(action)
         state.isLoading = false
         state.orders = action.payload
       })
