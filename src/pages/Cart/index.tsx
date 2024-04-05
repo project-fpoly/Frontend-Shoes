@@ -296,65 +296,65 @@ const Cart = () => {
                                 <option value={10}>10</option>
                               </select>
 
-                            <div className="flex text-lg text-[#6b7280]">
-                              <div>
-                                <label htmlFor="">Size</label>
-                                <select
-                                  value={cartItem.size}
-                                  name="size"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(
-                                    event: React.ChangeEvent<HTMLSelectElement>,
-                                  ) =>
-                                    handleSizeChange(
-                                      index,
-                                      cartItem.product,
-                                      event,
-                                    )
-                                  }
-                                >
-                                  {sizes && Array.isArray(sizes) ? (
-                                    sizes.map((size: any, index: number) => (
-                                      <option key={index} value={size.name}>
-                                        {size.name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="">No sizes available</option>
-                                  )}
-                                </select>
+                              <div className="flex text-lg text-[#6b7280]">
+                                <div>
+                                  <label htmlFor="">Size</label>
+                                  <select
+                                    value={cartItem.size}
+                                    name="size"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLSelectElement>,
+                                    ) =>
+                                      handleSizeChange(
+                                        index,
+                                        cartItem.product,
+                                        event,
+                                      )
+                                    }
+                                  >
+                                    {sizes && Array.isArray(sizes) ? (
+                                      sizes.map((size: any, index: number) => (
+                                        <option key={index} value={size.name}>
+                                          {size.name}
+                                        </option>
+                                      ))
+                                    ) : (
+                                      <option value="">No sizes available</option>
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="ml-2">
+                                  <label htmlFor="">Quanlity</label>
+                                  <select
+                                    value={cartItem.quantity}
+                                    name="quanlity"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLSelectElement>,
+                                    ) =>
+                                      handleQuantityChange(
+                                        index,
+                                        cartItem.product,
+                                        event,
+                                      )
+                                    }
+                                  >
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
+                                    <option value={6}>6</option>
+                                    <option value={7}>7</option>
+                                    <option value={8}>8</option>
+                                    <option value={9}>9</option>
+                                    <option value={10}>10</option>
+                                  </select>
+                                </div>
                               </div>
-                              <div className="ml-2">
-                                <label htmlFor="">Quanlity</label>
-                                <select
-                                  value={cartItem.quantity}
-                                  name="quanlity"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(
-                                    event: React.ChangeEvent<HTMLSelectElement>,
-                                  ) =>
-                                    handleQuantityChange(
-                                      index,
-                                      cartItem.product,
-                                      event,
-                                    )
-                                  }
-                                >
-                                  <option value={1}>1</option>
-                                  <option value={2}>2</option>
-                                  <option value={3}>3</option>
-                                  <option value={4}>4</option>
-                                  <option value={5}>5</option>
-                                  <option value={6}>6</option>
-                                  <option value={7}>7</option>
-                                  <option value={8}>8</option>
-                                  <option value={9}>9</option>
-                                  <option value={10}>10</option>
-                                </select>
-                              </div>
-
                             </div>
                           </div>
                         </div>
@@ -383,8 +383,7 @@ const Cart = () => {
                     </div>
                   </div>
                 )
-              })
-              : cartSession?.cartItems.map((item: any, index: any) => {
+              }) : cartSession?.cartItems.map((item: any, index: any) => {
                 const sizes = getProductSize(item.product)
                 return (
                   <div
@@ -413,95 +412,94 @@ const Cart = () => {
                           </p>
 
 
-                            <div className="flex text-lg text-[#6b7280]">
-                              <div>
-                                <label htmlFor="">Size</label>
-                                <select
-                                  value={item.size}
-                                  name="size"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(e) =>
-                                    updateCartItem(
-                                      index,
-                                      'size',
-                                      e.target.value as any,
-                                    )
-                                  }
-                                >
-                                  {sizes && Array.isArray(sizes) ? (
-                                    sizes.map((size: any, index: number) => (
-                                      <option key={index} value={size.name}>
-                                        {size.name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="">No sizes available</option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="ml-2">
-                                <label htmlFor="">Quanlity</label>
-                                <select
-                                  value={item.quantity}
-                                  name="quantity"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(e) =>
-                                    updateCartItem(
-                                      index,
-                                      'quantity',
-                                      e.target.value as any,
-                                    )
-                                  }
-                                >
-                                  <option value={1}>1</option>
-                                  <option value={2}>2</option>
-                                  <option value={3}>3</option>
-                                  <option value={4}>4</option>
-                                  <option value={5}>5</option>
-                                  <option value={6}>6</option>
-                                  <option value={7}>7</option>
-                                  <option value={8}>8</option>
-                                  <option value={9}>9</option>
-                                  <option value={10}>10</option>
-                                </select>
-                              </div>
+                          <div className="flex text-lg text-[#6b7280]">
+                            <div>
+                              <label htmlFor="">Size</label>
+                              <select
+                                value={item.size}
+                                name="size"
+                                id=""
+                                className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    'size',
+                                    e.target.value as any,
+                                  )
+                                }
+                              >
+                                {sizes && Array.isArray(sizes) ? (
+                                  sizes.map((size: any, index: number) => (
+                                    <option key={index} value={size.name}>
+                                      {size.name}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option value="">No sizes available</option>
+                                )}
+                              </select>
+                            </div>
+                            <div className="ml-2">
+                              <label htmlFor="">Quanlity</label>
+                              <select
+                                value={item.quantity}
+                                name="quantity"
+                                id=""
+                                className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    'quantity',
+                                    e.target.value as any,
+                                  )
+                                }
+                              >
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                                <option value={6}>6</option>
+                                <option value={7}>7</option>
+                                <option value={8}>8</option>
+                                <option value={9}>9</option>
+                                <option value={10}>10</option>
+                              </select>
                             </div>
                           </div>
-                          <div className="cart-item-content-action">
-                            <ul className="flex">
-                              <li>
-                                <GrFavorite
-                                  style={{
-                                    fontSize: '24px',
-                                    marginRight: '12px',
-                                  }}
-                                />
-                              </li>
-                              <li>
-                                <RiDeleteBin6Line
-                                  className="hover:cursor-pointer"
-                                  onClick={() =>
-                                    removeItemFromCartSession(
-                                      item.product,
-                                      item.size,
-                                    )
-                                  }
-                                  style={{ fontSize: '24px' }}
-                                />
-                              </li>
-                            </ul>
-                          </div>
-
+                        </div>
+                        <div className="cart-item-content-action">
+                          <ul className="flex">
+                            <li>
+                              <GrFavorite
+                                style={{
+                                  fontSize: '24px',
+                                  marginRight: '12px',
+                                }}
+                              />
+                            </li>
+                            <li>
+                              <RiDeleteBin6Line
+                                className="hover:cursor-pointer"
+                                onClick={() =>
+                                  removeItemFromCartSession(
+                                    item.product,
+                                    item.size,
+                                  )
+                                }
+                                style={{ fontSize: '24px' }}
+                              />
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>
                   </div>
                 )
-              })}
-            <hr />
-          </div>
+              })
+            }
+          <hr />
+        </div>
           <div className="shopping-cart-summary lg:w-[35%]">
             <h2 className="text-3xl font-semibold my-4">Summary</h2>
             <div>
@@ -593,7 +591,7 @@ const Cart = () => {
             )}
           </div>
         </div>
-      </div>
+      </div >
       <div className="fixed z-10 bottom-0 h-[120px] w-full bg-white px-4 leading-[120px] lg:hidden">
         <Button
           style={{ background: 'rgb(17, 17, 17)' }}
