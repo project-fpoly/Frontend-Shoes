@@ -29,6 +29,7 @@ export interface initialSale {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   sales: ISale[] | [];
   sale: ISale | "";
+  totalDocs: number;
 }
 export interface initialCmt {
   loading: "idle" | "pending" | "fulfilled" | "failed";
