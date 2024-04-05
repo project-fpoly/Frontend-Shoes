@@ -7,6 +7,7 @@ const initialState: initialSale = {
   loading: 'idle',
   sales: [],
   sale: '',
+  totalDocs: 0,
 };
 
 export const fetchAllSales = createAsyncThunk(
@@ -16,7 +17,7 @@ export const fetchAllSales = createAsyncThunk(
       const response = await getSales(page, limit, keyword);
       return response;
     } catch (error) {
-      throw new Error('Lỗi khi lấy dữ liệu');
+      throw new Error('Error fetching data');
     }
   }
 );
@@ -29,7 +30,7 @@ export const removeSale = createAsyncThunk(
       thunkApi.dispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
       return response;
     } catch (error) {
-      throw new Error('Lỗi khi xóa');
+      throw new Error('Error deleting sale');
     }
   }
 );
@@ -42,7 +43,7 @@ export const createSale = createAsyncThunk(
       thunkApi.dispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
       return response;
     } catch (error) {
-      throw new Error('Lỗi khi tạo bán hàng');
+      throw new Error('Error creating sale');
     }
   }
 );
@@ -55,7 +56,7 @@ export const updateSales = createAsyncThunk(
       thunkApi.dispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
       return response;
     } catch (error) {
-      throw new Error('Lỗi khi cập nhật bán hàng');
+      throw new Error('Error updating sale');
     }
   }
 );
@@ -75,6 +76,42 @@ export const saleSlice = createSlice({
       .addCase(fetchAllSales.fulfilled, (state, action) => {
         state.loading = 'fulfilled';
         state.sales = Array.isArray(action.payload.data) ? action.payload.data : [];
+      })
+      .addCase(removeSale.pending, (state) => {
+        state.loading = 'pending';
+      })
+      .addCase(removeSale.rejected, (state) => {
+        state.loading = 'failed';
+      })
+      .addCase(removeSale.fulfilled, (state, action) => {
+        state.loading = 'fulfilled';
+        state.sales = Array.isArray(action.payload) ? action.payload : [];
+        // Update totalDocs if needed
+        state.totalDocs = state.sales.length;
+      })
+      .addCase(createSale.pending, (state) => {
+        state.loading = 'pending';
+      })
+      .addCase(createSale.rejected, (state) => {
+        state.loading = 'failed';
+      })
+      .addCase(createSale.fulfilled, (state, action) => {
+        state.loading = 'fulfilled';
+        state.sales = Array.isArray(action.payload) ? action.payload : [];
+        // Update totalDocs if needed
+        state.totalDocs = state.sales.length;
+      })
+      .addCase(updateSales.pending, (state) => {
+        state.loading = 'pending';
+      })
+      .addCase(updateSales.rejected, (state) => {
+        state.loading = 'failed';
+      })
+      .addCase(updateSales.fulfilled, (state, action) => {
+        state.loading = 'fulfilled';
+        state.sales = Array.isArray(action.payload) ? action.payload : [];
+        // Update totalDocs if needed
+        state.totalDocs = state.sales.length;
       });
   },
 });

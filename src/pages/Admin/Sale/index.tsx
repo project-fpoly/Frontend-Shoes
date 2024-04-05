@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Table, Tooltip, Tag, Avatar } from "antd";
+import { Button, Modal, Table, Tooltip } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
-  ExclamationCircleOutlined,
   LoadingOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { ColumnsType } from "antd/es/table";
@@ -13,144 +11,125 @@ import { format, isAfter } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { AppDispatch } from "../../../redux/store";
 import { ISale } from "../../../common/sale";
-import { createSale, fetchAllSales } from "../../../features/sale";
+import { createSale, fetchAllSales, updateSales, removeSale } from "../../../features/sale";
 import { IStateSale } from "../../../common/redux/type";
 import FormSale from "../../../components/Admin/Sale/FormSale";
 
 const SaleManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-  const [DetailSale, setDetailSale] = useState<ISale>();
-  const [currentPage, setCurrentPage] = useState(1)
-  const [Search, setSearch] = useState('')
-  const { sales, loading } = useSelector((state: IStateSale) => state.sale) || {};
+  const [saleState, setSale] = useState<ISale>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
 
-  const user=useSelector((state:any)=>state.auth.user)
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
+  const { sales, loading, totalDocs } = useSelector(
+    (state: IStateSale) => state.sale
+  );
 
   useEffect(() => {
     dispatch(fetchAllSales({ page: currentPage, limit: 10, keyword: Search }));
-  }, [dispatch]);
+  }, [dispatch, currentPage, Search]);
 
   const handleCreateSale = (newSale: ISale) => {
-    dispatch(createSale(newSale))
-    setIsModalOpen(false)
-  }
-  const handleUpdateSale = (sale: ISale) => {
-    console.log(sale);
+    dispatch(createSale(newSale));
+    setIsModalOpen(false);
   };
 
-  const toggleModal = (sale: ISale) => {
-    setIsModalUpdateOpen(true);
-    console.log(sale);
-    setDetailSale(sale);
+  const handleUpdateSale = async (newSale: ISale) => {
+    await dispatch(updateSales({ id: saleState?._id as string, newSale }));
+    setIsModalUpdateOpen(false);
   };
 
-  const deleteVoucher = (sale: ISale) => {
-    Modal.confirm({
-      title: "Confirm Deletion",
-      icon: <ExclamationCircleOutlined />,
-      content: "Are you sure you want to delete this campaign?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      // onOk() {
-      //   dispatch(deleteeUser([user._id]))
-      // },
-      // onCancel() {},
-    });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const toggleModal = (category: ISale) => {
+    setIsModalUpdateOpen(!isModalUpdateOpen);
+    setSale(category);
   };
 
   const columns: ColumnsType<ISale> = [
     {
-      title: "No.",
-      dataIndex: "index",
-      render: (_, __, index) => index + 1,
-      align: "center",
-    },
-    {
-      title: "Campaign Name",
+      title: "Name",
       dataIndex: "name",
+      key: "name",
     },
     {
       title: "Description",
       dataIndex: "description",
+      key: "description",
     },
     {
       title: "Discount",
       dataIndex: "discount",
+      key: "discount",
     },
-    // {
-    //   title: "Expiration date",
-    //   dataIndex: "expiration_date",
-    //   align: "center",
-    //   render: (expiration_date) => {
-    //     const currentDate = new Date();
-    //     const formattedDate = format(new Date(expiration_date), "dd-MM-yyyy");
-
-    //     if (isAfter(new Date(expiration_date), currentDate)) {
-    //       return <span style={{ color: "green" }}>{formattedDate}</span>;
-    //     } else {
-    //       return <span style={{ color: "red" }}>{formattedDate}</span>;
-    //     }
-    //   },
-    // },
-    // {
-    //   title: "Create date",
-    //   dataIndex: "createdAt",
-    //   align: "center",
-    //   render: (date) => format(new Date(date), "dd-MM-yyyy"),
-    // },
-    // {
-    //   title: "Create by",
-    //   dataIndex: "create_by",
-    //   align: "left",
-    //   render: (create_by) => create_by.email,
-    // },
-    // {
-    //   title: "Product",
-    //   dataIndex: "product",
-    // },
     {
-      title: "Action",
-      key: "action",
-      align: "center",
+      title: 'Created By',
+      dataIndex: 'create_by',
+      key: 'create_by',
+      render: (createBy) => (
+        <>
+          <div>{createBy.email}</div>
+        </>
+      ),
+    },
+    {
+      title: ' Products',
+      dataIndex: 'product',
+      key: 'product',
+      render: (products) => (
+        <div>{products.length}</div>
+      ),
+    },
+    {
+      title: "Expiration Date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (date: string) => format(new Date(date), "dd/MM/yyyy"),
+    },
+    {
+      title: "Expiration Date",
+      dataIndex: "expiration_date",
+      key: "expiration_date",
+      render: (date: string) => format(new Date(date), "dd/MM/yyyy"),
+    },
+    {
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
-        <div style={{ textAlign: "center" }}>
-          {record.create_by?._id ==DetailSale?._id &&(
-            <Tooltip title="Edit">
-            <Button type="link" onClick={() => toggleModal(record)}>
-              <EditOutlined />
-            </Button>
+        <span>
+          <Tooltip title="Edit">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => toggleModal(record)}
+            />
           </Tooltip>
-          )}
           <Tooltip title="Delete">
-            <Button type="link" onClick={() => deleteVoucher(record)}>
-              <DeleteOutlined />
-            </Button>
+            <Button
+             
+              shape="circle"
+              icon={<DeleteOutlined />}
+           
+            />
           </Tooltip>
-        </div>
+        </span>
       ),
     },
   ];
 
   const defaultValue: ISale = {
-    _id: DetailSale?._id || "",
-    name: DetailSale?.name || "",
-    quantity: DetailSale?.quantity || 0,
-    discount: DetailSale?.discount || 0,
-    description: DetailSale?.description || "",
-    expiration_date: DetailSale?.expiration_date || "2024-01-01",
+    _id: saleState?._id || "",
+    name: saleState?.name || "",
+    discount: saleState?.discount || 0,
+    description: saleState?.description || "",
+    expiration_date: saleState?.expiration_date || "2024-01-01",
   };
-  const defaultInitValue: ISale = {
-    _id: "",
-    name: "",
-    quantity: 0,
-    discount: 0,
-    description: "",
-    expiration_date: "2024-01-01",
-  };
+
   const searchSale = (value: string) => {
     console.log(value);
   };
@@ -178,18 +157,18 @@ const SaleManager: React.FC = () => {
 
       <Modal
         title="Create New Campaign"
-        open={isModalOpen}
+        visible={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
         maskClosable={false}
         destroyOnClose={true}
       >
-        <FormSale onSubmit={handleCreateSale} {...defaultInitValue} />
+        <FormSale onSubmit={handleCreateSale} {...defaultValue} />
       </Modal>
       <Modal
         title="Update Sale"
-        open={isModalUpdateOpen}
+        visible={isModalUpdateOpen}
         onOk={() => setIsModalUpdateOpen(false)}
         onCancel={() => setIsModalUpdateOpen(false)}
         destroyOnClose={true}
@@ -201,4 +180,4 @@ const SaleManager: React.FC = () => {
   );
 };
 
-export default SaleManager
+export default SaleManager;
