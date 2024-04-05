@@ -20,7 +20,7 @@ const Card = (props: Props) => {
             : item.price;
 
           return (
-            <div key={index + 1} className="mb-28 ">
+            <div key={index + 1} className="mb-10">
               <Link className="flex flex-col gap-6" to={`/detail/${item._id}`} style={{ position: 'relative' }}>
                 <img
                   className={style.image}

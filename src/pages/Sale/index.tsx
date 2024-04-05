@@ -45,9 +45,9 @@ const Sale = () => {
   return (
     <div className="px-10">
 
-      <Typography className="home_title">Sale Shoes</Typography>
+      <Typography style={{ fontSize: 24, fontWeight: 500 }} className='mt-5'>Sale Shoes</Typography>
 
-      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
+      <span className={clsx('flex gap-5 justify-end mr-5 mb-5')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
