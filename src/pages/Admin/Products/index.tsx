@@ -173,7 +173,7 @@ const ProductsManager: React.FC = () => {
         description: "Mô tả của sản phẩm",
         categoryId: "65899c32bb48834579fde67e",
         price: 999999,
-        sale: "",
+        sale: "66030dcf3d637f68fefc2852",
         discount: 10,
         quantity: 20,
         sold_count: 0,
@@ -201,10 +201,12 @@ const ProductsManager: React.FC = () => {
         product_id: productsState?.product_id ? productsState?.product_id : "Mã số sản phẩm",
         SKU: productsState?.SKU ? productsState?.SKU : "Mã tồn kho của sản phẩm",
         name: productsState?.name ? productsState?.name : "Tên của sản phẩm",
-        description: productsState?.description ? productsState?.description : "Mô tả của sản phẩm",
-        categoryId: productsState?.categoryId ? productsState?.categoryId : "ID danh mục của sản phẩm",
+        description: productsState?.description ? productsState?.description : "Chưa có mô tả của sản phẩm",
+        categoryId: typeof productsState?.categoryId === 'object' && productsState?.categoryId?.name
+            ? productsState?.categoryId._id
+            : "Chưa có ID danh mục",
         price: productsState?.price ? productsState?.price : 0,
-        sale: productsState?.sale ? productsState?.sale : '',
+        sale: typeof productsState?.sale === 'object' && productsState?.sale?._id ? productsState?.sale._id : "Chưa có giá trị sale",
         discount: productsState?.discount ? productsState?.discount : 0,
         quantity: productsState?.quantity ? productsState?.quantity : 0,
         sold_count: productsState?.sold_count ? productsState?.sold_count : 0,
@@ -233,6 +235,7 @@ const ProductsManager: React.FC = () => {
         hits: productsState?.hits ? productsState?.hits : 0,
         isDeleted: productsState?.isDeleted ? productsState?.isDeleted : false
     };
+    console.log('value', Value)
     const searchProduct = (value: string) => {
         setSearch(value);
     };
