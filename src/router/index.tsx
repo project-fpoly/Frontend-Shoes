@@ -21,8 +21,8 @@ import SizeGuide from '../pages/SizeGuide'
 import ResetPassword from '../pages/client/reset-password.tsx'
 import ForgotPassword from '../pages/client/forgotpassword/ForgotPassword.tsx'
 import VerifyEmail from '../pages/client/verify-email'
-import { PrivateRoute } from './privateRoutes.tsx'
-import { useSelector } from 'react-redux'
+import { PrivateRoute } from './privateRoutes'
+import { useDispatch, useSelector } from 'react-redux'
 import Women from '../pages/Women/index.tsx'
 import Men from '../pages/Men/index.tsx'
 import Delivery from '../components/Help/Delivery.tsx'
@@ -32,11 +32,56 @@ import Favorites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
+
 import FeatureDashboard from '../pages/Admin/Dashboard/Dashboard.tsx'
 
-const Router = () => {
-  const user = useSelector((state: any) => state.auth.user)
+import Membership from '../pages/Membership/index.tsx'
+import NotFound from '../pages/NotFound/index.tsx'
+import GuestOrder from '../pages/GuestOrder/index.tsx'
+import '../App.module.scss'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { useEffect } from 'react'
+import io from 'socket.io-client'
+import { notification } from 'antd'
+import { AppDispatch } from '../redux/store.ts'
+import { fetchAllUsers } from '../features/user/index.tsx'
+import { fetchAllNotification } from '../features/notification/index.tsx'
+import Contact from '../pages/Contact/index.tsx'
+import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 
+const Router = (user: any) => {
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    const socket = io('http://localhost:9000', { transports: ['websocket'] })
+
+    socket.on('connect', () => {
+      console.log('Connected to Socket io')
+      if (localStorage.getItem('userID') == null) {
+        return
+      } else {
+        socket.emit('check_active', { _id: localStorage.getItem('userID') })
+        console.log('chua thong bao', user)
+      }
+    })
+    socket.on('new_user_login', () => { })
+    socket.on('log_out', () => { })
+    socket.on('update_user_status', () => {
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    })
+
+    if (user.user && user.user.role === 'admin') {
+      socket.on('newNotification', (data) => {
+        notification.success({ message: data.message })
+        dispatch(fetchAllNotification(''))
+        console.log('co thong bao', user)
+      })
+    }
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [dispatch, user])
   return (
     <>
       <Routes>
@@ -52,8 +97,11 @@ const Router = () => {
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
+          <Route path="/order/guest" element={<GuestOrder />} />
           <Route path="/sale" element={<Sale />} />
+          <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
         </Route>
@@ -61,7 +109,7 @@ const Router = () => {
         <Route
           path="/admin"
           element={
-            <PrivateRoute user={user}>
+            <PrivateRoute user={user.user}>
               <AdminLayout />
             </PrivateRoute>
           }
@@ -80,6 +128,7 @@ const Router = () => {
             element={<NotificationsAdmin />}
           />
           <Route path="/admin/voucher" element={<Voucher />} />
+          <Route path="/admin/setting/sendNotification" element={<SendNotification />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>
@@ -88,6 +137,7 @@ const Router = () => {
         <Route path="reset-password" element={<ResetPassword />}></Route>
         <Route path="forgotpassword" element={<ForgotPassword />}></Route>
         <Route path="verify-email" element={<VerifyEmail />}></Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )

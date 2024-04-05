@@ -1,0 +1,11 @@
+.text-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+    /* Hiệu ứng khi thay đổi max-height */
+}
+
+.visible {
+    max-height: 200px;
+    /* Giá trị max-height phải lớn hơn chiều cao tối đa của nội dung */
+}

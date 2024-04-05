@@ -92,7 +92,6 @@ const Delivery: React.FC = () => {
         </Space>
 
         <Space direction="vertical" style={{ flexBasis: '36%' }}>
-          {/* Phần bên phải */}
           <Space
             direction="vertical"
             className="mt-10 mb-5"

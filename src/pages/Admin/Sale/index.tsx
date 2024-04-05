@@ -1,243 +1,183 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Table, Tooltip } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   LoadingOutlined,
-  ExclamationCircleOutlined,
-} from '@ant-design/icons'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../../redux/store'
-import { useState } from 'react'
-import { ISale } from '../../../common/products'
-import { ColumnsType } from 'antd/es/table'
-import { Button, Table, Tooltip, Image, Modal } from 'antd'
-import { removeProduct, createProduct, update } from '../../../features/product'
-import HeaderTable from '../../../components/Admin/Layout/HeaderTable'
-import { IStateProduct } from '../../../common/redux/type'
-import SaleForm from '../../../components/Admin/Sale'
-import Filter from '../Products/ProductFilter'
-import ProducModal from '../Products/ProducModal'
-// import ProducModal from './ProducModal';
-// import Filter from './ProductFilter';
+} from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { ColumnsType } from "antd/es/table";
+import { format, isAfter } from "date-fns";
+import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
+import { AppDispatch } from "../../../redux/store";
+import { ISale } from "../../../common/sale";
+import { createSale, fetchAllSales, updateSales, removeSale } from "../../../features/sale";
+import { IStateSale } from "../../../common/redux/type";
+import FormSale from "../../../components/Admin/Sale/FormSale";
+
 const SaleManager: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [Search, setSearch] = useState('')
-
-  const dispatch = useDispatch<AppDispatch>()
-  const { products, loading, totalProducts } = useSelector(
-    (state: IStateProduct) => state.product,
-  )
-
-  const [selectedProduct, setSelectedProduct] = useState<ISale | null>(null)
-  const [modalVisible, setModalVisible] = useState(false)
-
-  const handleRowClick = (product: ISale) => {
-    setSelectedProduct(product)
-    setModalVisible(true)
-  }
-  const closeModal = () => {
-    setSelectedProduct(null)
-    setModalVisible(false)
-  }
+  const dispatch = useDispatch<AppDispatch>();
+  const [saleState, setSale] = useState<ISale>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [Search, setSearch] = useState("");
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+  };
 
-  const [productsState, setProductsState] = useState<ISale>()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+  const { sales, loading, totalDocs } = useSelector(
+    (state: IStateSale) => state.sale
+  );
 
-  const handleCreateProduct = (newProduct: ISale) => {
-    dispatch(createProduct(newProduct))
-    setIsModalOpen(false)
-  }
-  const handleUpdateProduct = (newProduct: ISale) => {
-    dispatch(update({ id: productsState?._id as string, newProduct }))
-    setIsModalUpdateOpen(false)
-  }
-  const toggleModal = (product: ISale) => {
-    setIsModalUpdateOpen(!isModalUpdateOpen)
-    setProductsState(product)
-  }
+  useEffect(() => {
+    dispatch(fetchAllSales({ page: currentPage, limit: 10, keyword: Search }));
+  }, [dispatch, currentPage, Search]);
 
-  const deleteProduct = (record: ISale) => {
-    Modal.confirm({
-      title: 'Confirm Delete',
-      icon: <ExclamationCircleOutlined />,
-      content: 'Do you want to delete this product?',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        if (!record._id) return
-        record._id && dispatch(removeProduct(record._id))
-      },
-      onCancel() {},
-    })
-  }
+  const handleCreateSale = (newSale: ISale) => {
+    dispatch(createSale(newSale));
+    setIsModalOpen(false);
+  };
+
+  const handleUpdateSale = async (newSale: ISale) => {
+    await dispatch(updateSales({ id: saleState?._id as string, newSale }));
+    setIsModalUpdateOpen(false);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const toggleModal = (category: ISale) => {
+    setIsModalUpdateOpen(!isModalUpdateOpen);
+    setSale(category);
+  };
+
   const columns: ColumnsType<ISale> = [
     {
-      title: 'No.',
-      dataIndex: 'index',
-      render: (_, __, index) => index + 1,
-      align: 'right',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Campaign Name',
-      dataIndex: 'name',
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: 'Product Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-    },
-    {
-      title: 'Created Date',
-      dataIndex: '',
-    },
-    {
-      title: 'Expiration Date',
-      dataIndex: '',
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
     },
     {
       title: 'Created By',
-      dataIndex: 'price',
-    },
-    {
-      title: 'Discout',
-      dataIndex: 'sale',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      align: 'center',
-      className: 'action-cell',
-      render: (_, record) => (
-        <div style={{ textAlign: 'center' }}>
-          <Tooltip title={'Edit'}>
-            <Button type="link">
-              <EditOutlined onClick={() => toggleModal(record)} />
-            </Button>
-          </Tooltip>
-          <Tooltip title={'Delete'}>
-            <Button type="link">
-              <DeleteOutlined onClick={() => deleteProduct(record)} />
-            </Button>
-          </Tooltip>
-        </div>
+      dataIndex: 'create_by',
+      key: 'create_by',
+      render: (createBy) => (
+        <>
+          <div>{createBy.email}</div>
+        </>
       ),
     },
-  ]
+    {
+      title: ' Products',
+      dataIndex: 'product',
+      key: 'product',
+      render: (products) => (
+        <div>{products.length}</div>
+      ),
+    },
+    {
+      title: "Expiration Date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (date: string) => format(new Date(date), "dd/MM/yyyy"),
+    },
+    {
+      title: "Expiration Date",
+      dataIndex: "expiration_date",
+      key: "expiration_date",
+      render: (date: string) => format(new Date(date), "dd/MM/yyyy"),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <span>
+          <Tooltip title="Edit">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => toggleModal(record)}
+            />
+          </Tooltip>
+          <Tooltip title="Delete">
+            <Button
+             
+              shape="circle"
+              icon={<DeleteOutlined />}
+           
+            />
+          </Tooltip>
+        </span>
+      ),
+    },
+  ];
 
   const defaultValue: ISale = {
-    name: 'Giày Nike cap cấp',
-    description: 'Mô tả chiến dịch',
-    sale: 5,
-    discount: 10,
-    quantity: 0,
-    create_date: '',
-    expiration_date: '',
-  }
-  const Value = {
-    name: productsState?.name || 'Tên của sản phẩm',
-    description: productsState?.description || 'Mô tả của sản phẩm',
-    sale: productsState?.sale || 0,
-    discount: productsState?.discount || 0,
-    quantity: productsState?.quantity || 0,
-    create_date: productsState?.create_date || '',
-    expiration_date: productsState?.expiration_date || '',
-  }
-  const searchProduct = (value: string) => {
-    setSearch(value)
-  }
+    _id: saleState?._id || "",
+    name: saleState?.name || "",
+    discount: saleState?.discount || 0,
+    description: saleState?.description || "",
+    expiration_date: saleState?.expiration_date || "2024-01-01",
+  };
+
+  const searchSale = (value: string) => {
+    console.log(value);
+  };
 
   return (
     <div>
       <HeaderTable
         showModal={() => setIsModalOpen(true)}
-        onSubmitt={searchProduct}
-        name={'Product'}
+        onSubmitt={(value) => searchSale(value)}
+        name="Sale"
       />
-      <Filter page={currentPage} searchKeyword={Search} />
-      {loading === 'pending' ? (
+      {loading === "pending" ? (
         <div className="flex justify-center items-center mt-16">
-          <LoadingOutlined style={{ fontSize: 14 }} spin />
+          <LoadingOutlined style={{ fontSize: 24 }} spin />
         </div>
       ) : (
-        <>
-          <Table
-            style={{
-              marginTop: '15px',
-            }}
-            columns={columns}
-            dataSource={products}
-            bordered
-            size="small"
-            pagination={{
-              current: currentPage,
-              total: totalProducts,
-              showTotal: (total) => ` ${total} items`,
-              onChange: handlePageChange,
-            }}
-            onRow={(record) => ({
-              onClick: (event) => {
-                const target = event.target as Element
-                const isAction =
-                  target.classList.contains('action-cell') ||
-                  target.closest('.action-cell')
-                if (!isAction) {
-                  handleRowClick(record)
-                }
-              },
-            })}
-          />
-          <Modal
-            title={'Create new Product'}
-            open={isModalOpen}
-            onOk={() => setIsModalOpen(false)}
-            onCancel={() => setIsModalOpen(false)}
-            footer={null}
-            maskClosable={false}
-            destroyOnClose={true}
-          >
-            <SaleForm
-              mode="create"
-              onSubmit={handleCreateProduct}
-              {...defaultValue}
-            />
-          </Modal>
-
-          <Modal
-            title={'Update Product'}
-            open={isModalUpdateOpen}
-            onOk={() => setIsModalUpdateOpen(false)}
-            onCancel={() => setIsModalUpdateOpen(false)}
-            destroyOnClose={true}
-            footer={null}
-          >
-            <SaleForm
-              mode={'update'}
-              onSubmit={handleUpdateProduct}
-              {...Value}
-            />
-          </Modal>
-
-          <Modal
-            title={selectedProduct?.name}
-            visible={modalVisible}
-            onCancel={closeModal}
-            footer={null}
-          >
-            {selectedProduct && ProducModal(selectedProduct)}
-          </Modal>
-        </>
+        <Table
+          style={{ marginTop: "15px" }}
+          columns={columns}
+          dataSource={sales}
+          bordered
+          size="small"
+        />
       )}
-    </div>
-  )
-}
 
-export default SaleManager
+      <Modal
+        title="Create New Campaign"
+        visible={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        maskClosable={false}
+        destroyOnClose={true}
+      >
+        <FormSale onSubmit={handleCreateSale} {...defaultValue} />
+      </Modal>
+      <Modal
+        title="Update Sale"
+        visible={isModalUpdateOpen}
+        onOk={() => setIsModalUpdateOpen(false)}
+        onCancel={() => setIsModalUpdateOpen(false)}
+        destroyOnClose={true}
+        footer={null}
+      >
+        <FormSale onSubmit={handleUpdateSale} {...defaultValue} />
+      </Modal>
+    </div>
+  );
+};
+
+export default SaleManager;

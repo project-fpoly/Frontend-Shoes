@@ -1,6 +1,4 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
-button, [type='submit'] {
-    background-color: #1677ff;
-}
+@tailwind utilities;  
+

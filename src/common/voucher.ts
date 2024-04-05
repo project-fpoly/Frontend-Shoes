@@ -4,7 +4,8 @@ export interface IVoucher {
     Quantity: number
     reduced_amount: number
     price_order: number
-    description: string
+    description: string,
+    start_date:string
     expiration_date: string
     create_by?:any
   }

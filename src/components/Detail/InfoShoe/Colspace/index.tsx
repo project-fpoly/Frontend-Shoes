@@ -88,8 +88,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           <Popconfirm
             title="Delete "
             description="Are you sure to delete this commnet?"
-            onConfirm={confirm}
-            okText="Yes"
+            onConfirm={confirm }
+            okText={<button className='text-white'> Yes</button>}
             cancelText="No"
           >
             <button className="flex flex-start py-2 hover:bg-gray-100 rounded-sm">
@@ -255,8 +255,10 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           </span>
           {accessToken && (
             <>
+
+
               <div className="flex gap-5">
-                <Image width={80} src={shoe.image} />
+                <Image width={80} src={shoe.images ? shoe.images[0] : ''} />
                 <p>{shoe.name}</p>
               </div>
               <form

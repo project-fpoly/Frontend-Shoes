@@ -5,38 +5,43 @@ import 'slick-carousel/slick/slick-theme.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getUserByID } from './features/auth'
-import io from 'socket.io-client'
-import { message, notification } from 'antd'
 import { AppDispatch } from './redux/store'
-import { fetchAllUsers } from './features/user'
+import { useNavigate } from 'react-router-dom'
+import { JwtPayload, jwtDecode } from 'jwt-decode'
 
 function App() {
-  const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const user = useSelector((state: any) => state.auth.user)
+  const token = localStorage.getItem('accessToken')
   useEffect(() => {
+    const checkToken = () => {
+      if (token === undefined || token === null || token === '') {
+        console.error('undefined')
+      } else {
+        try {
+          const decoded: JwtPayload = jwtDecode(token)
+          const diff = new Date().getTime() / 1000 - decoded!.exp!
+          if (diff > 0) {
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('email')
+            localStorage.removeItem('userID')
+          }
+        } catch (error) {
+          console.log('Invalid token: ' + token)
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('email')
+          localStorage.removeItem('userID')
+        }
+      }
+    }
+    checkToken()
     dispatch(getUserByID())
-    const socket = io('http://localhost:9000', { transports: ['websocket'] })
-    socket.on('connection', () => {
-      console.log('Connected to Socket io')
-    })
-    socket.on('new_user_login', () => {})
-    socket.on('log_out', () => {})
-    socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
-    })
-    if (user?.role == 'admin') {
-      socket.on('newNotification', (data) => {
-        notification.success({ message: data.message })
-      })
-    }
-    return () => {
-      socket.disconnect()
-    }
-  }, [])
+  }, [dispatch])
 
   return (
     <>
-      <Router></Router>
+      <Router user={user}></Router>
     </>
   )
 }
