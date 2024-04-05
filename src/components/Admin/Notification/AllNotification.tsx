@@ -28,6 +28,7 @@ const AllNotification = () => {
   const { notifications: notification } = useSelector(
     (state: IStateNotification) => state.notification,
   )
+  const { user } = useSelector((state: any) => state.auth)
   useEffect(() => {
     dispatch(fetchAllNotification(''))
   }, [dispatch])
@@ -39,6 +40,12 @@ const AllNotification = () => {
     }
     navigate(`/admin/notification/${item._id}`)
   }
+  const handleItemClickofMember = async (item: INotification) => {
+    if (!item.isRead) {
+      await dispatch(updateNotificationById(item._id))
+      dispatch(fetchAllNotification(''))
+    }
+  }
   const handleSelectChange = async (value: string) => {
     await dispatch(fetchAllNotification(value))
     setSelectedValue(value)
@@ -46,24 +53,27 @@ const AllNotification = () => {
   return (
     <>
       <div style={{ maxHeight: '75vh', overflowY: 'auto' }}>
-        <Select
-          defaultValue=""
-          style={{
-            width: 120,
-            marginRight: 10,
-            top: '0px',
-            right: '0px',
-          }}
-          onChange={handleSelectChange}
-          value={selectedValue}
-        >
-          <Option value="">Tất cả</Option>
-          <Option value="user">user</Option>
-          <Option value="order">order</Option>
-          <Option value="promotion">promotion</Option>
-          <Option value="product">product</Option>
-          <Option value="category">category</Option>
-        </Select>
+        {user?.role === 'admin' && (
+          <Select
+            defaultValue=""
+            style={{
+              width: 120,
+              marginRight: 10,
+              top: '0px',
+              right: '0px',
+            }}
+            onChange={handleSelectChange}
+            value={selectedValue}
+          >
+            <Option value="">Tất cả</Option>
+            <Option value="user">user</Option>
+            <Option value="order">order</Option>
+            <Option value="promotion">promotion</Option>
+            <Option value="product">product</Option>
+            <Option value="category">category</Option>
+          </Select>
+        )}
+
         <List
           itemLayout="vertical"
           dataSource={notification}
@@ -92,7 +102,11 @@ const AllNotification = () => {
                 className={`${styles.notificationItem} ${
                   item.isRead ? styles.readItem : styles.unreadItem
                 }`}
-                onClick={() => handleItemClick(item)}
+                onClick={() =>
+                  user?.role === 'member'
+                    ? handleItemClickofMember(item)
+                    : handleItemClick(item)
+                }
               >
                 <div style={{ marginBottom: '16px', padding: 5 }}>
                   <h3>{iconMap[item.type]}</h3>

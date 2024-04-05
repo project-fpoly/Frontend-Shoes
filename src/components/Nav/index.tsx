@@ -1,9 +1,7 @@
-
-
 import { SiJordan } from 'react-icons/si'
 
 import { Popover, Avatar, ConfigProvider, message, Button } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { UserOutlined, InboxOutlined } from '@ant-design/icons'
 import { SiNike } from 'react-icons/si'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -13,6 +11,7 @@ import NavRight from './NavRight'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserByID, setUser } from '../../features/auth'
 import io from 'socket.io-client'
+import AllNotification from '../Admin/Notification/AllNotification'
 const NavBar = () => {
   const content = (
     <div>
@@ -76,6 +75,17 @@ const NavBar = () => {
             <SiJordan size={28} className="hover:opacity-70" />
           </Link>
           <div className="flex gap-3 cursor-pointer ">
+            {user?.role === 'member' && (
+              <Popover
+                className="hover:opacity-70"
+                content={<AllNotification />}
+                trigger="click"
+                title="Hộp thư của bạn"
+              >
+                <InboxOutlined />
+              </Popover>
+            )}
+            <span>|</span>
             <Popover
               className="hover:opacity-70"
               content={content}
