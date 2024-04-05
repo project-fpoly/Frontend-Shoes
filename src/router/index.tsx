@@ -32,6 +32,7 @@ import Favorites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
+import FeatureDashboard from '../pages/Admin/Dashboard/Dashboard.tsx'
 
 const Router = () => {
   const user = useSelector((state: any) => state.auth.user)
@@ -54,6 +55,7 @@ const Router = () => {
           <Route path="/order" element={<OrderPage />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
+          <Route path="/dashboard" element={<FeatureDashboard />} />
         </Route>
 
         <Route
@@ -71,6 +73,8 @@ const Router = () => {
           <Route path="/admin/comment" element={<CommentManager />} />
           <Route path="/admin/orders" element={<OrderManager />} />
           <Route path="/admin/sale" element={<SaleManager />} />
+          <Route path="/admin/dashboard" element={<FeatureDashboard />} />
+
           <Route
             path="/admin/notification/:id"
             element={<NotificationsAdmin />}
