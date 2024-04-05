@@ -32,6 +32,9 @@ import Favorites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
+
+import FeatureDashboard from '../pages/Admin/Dashboard/Dashboard.tsx'
+
 import Membership from '../pages/Membership/index.tsx'
 import NotFound from '../pages/NotFound/index.tsx'
 import GuestOrder from '../pages/GuestOrder/index.tsx'
@@ -100,6 +103,7 @@ const Router = (user: any) => {
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
+          <Route path="/dashboard" element={<FeatureDashboard />} />
         </Route>
 
         <Route
@@ -117,6 +121,8 @@ const Router = (user: any) => {
           <Route path="/admin/comment" element={<CommentManager />} />
           <Route path="/admin/orders" element={<OrderManager />} />
           <Route path="/admin/sale" element={<SaleManager />} />
+          <Route path="/admin/dashboard" element={<FeatureDashboard />} />
+
           <Route
             path="/admin/notification/:id"
             element={<NotificationsAdmin />}
