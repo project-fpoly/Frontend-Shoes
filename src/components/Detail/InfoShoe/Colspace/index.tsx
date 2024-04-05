@@ -88,8 +88,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           <Popconfirm
             title="Delete "
             description="Are you sure to delete this commnet?"
-            onConfirm={confirm}
-            okText="Yes"
+            onConfirm={confirm }
+            okText={<button className='text-white'> Yes</button>}
             cancelText="No"
           >
             <button className="flex flex-start py-2 hover:bg-gray-100 rounded-sm">
