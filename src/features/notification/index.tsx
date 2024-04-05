@@ -2,15 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { initialNotification } from '../../common/redux/type'
 import { isRejected } from '@reduxjs/toolkit/react'
 import {
+  createNotification,
   getAllNotification,
   getOneNotification,
+  getSentNotification,
   updateNotification,
 } from '../../services/notification'
+import { ISendNoti } from '../../common/notification'
 
 const initialState: initialNotification = {
   loading: 'idle',
   notifications: [],
   notification: '',
+  listSend:[]
 }
 
 ///// Đây là actions
@@ -50,6 +54,30 @@ export const updateNotificationById = createAsyncThunk(
     }
   },
 )
+export const sendNotification = createAsyncThunk(
+  'notification/sendNotification',
+  async (data: ISendNoti,thunkApi) => {
+    try {
+      const responsive= await createNotification(data)
+      thunkApi.dispatch(fetchAllNotification(""))
+      thunkApi.dispatch(getSendNotifications())
+      return responsive
+    } catch (error) {
+      return isRejected('Error send notification ')
+    }
+  },
+)
+export const getSendNotifications = createAsyncThunk(
+  'notification/getSendNotifications',
+  async () => {
+    try {
+      const responsive= await getSentNotification()
+      return responsive
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  },
+)
 /// đây là chỗ chọc vào kho để lấy db
 export const notificationSlice = createSlice({
   name: 'user',
@@ -84,6 +112,25 @@ export const notificationSlice = createSlice({
     })
     builder.addCase(updateNotificationById.fulfilled, (state) => {
       state.loading = 'fulfilled'
+    })
+    builder.addCase(sendNotification.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(sendNotification.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(sendNotification.fulfilled, (state) => {
+      state.loading = 'fulfilled'
+    })
+    builder.addCase(getSendNotifications.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(getSendNotifications.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(getSendNotifications.fulfilled, (state,action) => {
+      state.loading = 'fulfilled'
+      state.listSend=action.payload
     })
   },
 })

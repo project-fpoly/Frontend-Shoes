@@ -9,6 +9,7 @@ import {
   CodeSandboxOutlined,
   GiftOutlined,
   ShoppingCartOutlined,
+  SendOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu, Space } from 'antd'
@@ -47,7 +48,9 @@ const items: MenuItem[] = [
   getItem(<Link to="sale">Sale</Link>, 'sub6', <ShoppingCartOutlined />),
   getItem(<Link to="comment">Comments</Link>, 'sub7', <WechatOutlined />),
   getItem(<Link to="voucher">Voucher</Link>, 'sub8', <GiftOutlined />),
-  getItem(<Link to="setting">Setting</Link>, 'sub9', <SettingOutlined />),
+  getItem("Setting", 'sub9', <SettingOutlined />,[
+    getItem(<Link to="setting/sendNotification">Send Notification</Link>, '5',<SendOutlined />),
+  ]),
 ]
 
 // submenu keys of first level

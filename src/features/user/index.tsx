@@ -84,7 +84,7 @@ export const deleteeUser = createAsyncThunk(
     try {
       const response = await deleteUsers(id)
       thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
-      thunkApi.dispatch(fetchAllNotification())
+      thunkApi.dispatch(fetchAllNotification(""))
       return response
     } catch (error) {
       return isRejected('Error updating user')

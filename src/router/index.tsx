@@ -45,6 +45,8 @@ import { AppDispatch } from '../redux/store.ts'
 import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
 import Contact from '../pages/Contact/index.tsx'
+import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
+
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -120,6 +122,7 @@ const Router = (user: any) => {
             element={<NotificationsAdmin />}
           />
           <Route path="/admin/voucher" element={<Voucher />} />
+          <Route path="/admin/setting/sendNotification" element={<SendNotification />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

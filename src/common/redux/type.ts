@@ -46,6 +46,7 @@ export interface initialNotification {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   notifications: INotification[] | [];
   notification: INotification | "";
+  listSend:INotification[]|[]
 }
 export interface IStateProduct {
   product: {
@@ -95,6 +96,7 @@ export interface IStateNotification {
     notification: INotification;
     loading: "idle" | "pending" | "fulfilled" | "failed";
     totalDocs: number;
+    listSend:INotification[]
   };
 }
 export interface IStateCategory {
