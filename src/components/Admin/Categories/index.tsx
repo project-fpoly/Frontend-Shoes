@@ -39,6 +39,7 @@ const FormCategory: React.FC<
       >
         <Input defaultValue={name} />
       </Form.Item>
+
       {mode === 'update' && (
         <>
           <Form.Item
@@ -82,6 +83,7 @@ const FormCategory: React.FC<
           </Form.Item>
         </>
       )}
+
       <Form.Item
         style={{ textAlign: 'right' }}
         wrapperCol={{ offset: 8, span: 16 }}

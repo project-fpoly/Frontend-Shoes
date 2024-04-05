@@ -38,10 +38,12 @@ const CategoriesManager: React.FC = () => {
       fetchAllCategories({ page: currentPage, limit: 10, keyword: Search }),
     )
   }, [dispatch, currentPage, Search])
+
   const handleCreateCategory = (newCategory: ICategory) => {
     dispatch(createCategory(newCategory))
     setIsModalOpen(false)
   }
+
   const handleUpdateCategory = (newCategory: ICategory) => {
     dispatch(
       updateCategory({ id: categoriesState?._id as string, newCategory }),
@@ -88,7 +90,7 @@ const CategoriesManager: React.FC = () => {
         if (!record._id) return
         record._id && dispatch(deleteCategory(record._id))
       },
-      onCancel() {},
+      onCancel() { },
     })
   }
 
@@ -131,6 +133,7 @@ const CategoriesManager: React.FC = () => {
               <EditOutlined onClick={() => toggleModal(record)} />
             </Button>
           </Tooltip>
+
           <Tooltip title={'delete'}>
             <Button type="link" onClick={() => removeCategory(record)}>
               <DeleteOutlined />

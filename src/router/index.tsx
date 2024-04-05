@@ -28,7 +28,7 @@ import Men from '../pages/Men/index.tsx'
 import Delivery from '../components/Help/Delivery.tsx'
 import Voucher from '../pages/Admin/Voucher'
 import OrderPage from '../pages/Order/OrderPage.tsx'
-import Favorites from '../pages/Favorite/index.tsx'
+import Favourites from '../pages/Favorite/index.tsx'
 import CheckOut from '../pages/CheckOut/index.tsx'
 import SaleManager from '../pages/Admin/Sale/index.tsx'
 import Sale from '../pages/Sale/index.tsx'
@@ -52,9 +52,9 @@ const Router = (user: any) => {
 
     socket.on('connect', () => {
       console.log('Connected to Socket io')
-      if(localStorage.getItem('userID')==null){
+      if (localStorage.getItem('userID') == null) {
         return
-      }else{
+      } else {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
         console.log('chua thong bao', user)
       }
@@ -91,7 +91,7 @@ const Router = (user: any) => {
           <Route path="/help/a/free-shipping" element={<Delivery />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
-          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/favourites" element={<Favourites />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/order/guest" element={<GuestOrder />} />
