@@ -36,7 +36,15 @@ const CommentManager = () => {
     return product ? product.name : 'N/A'
   }
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  const renderContent = (content: string) => {
+    if (content.length > 10) {
+      const chunks = content.match(/.{1,10}/g); 
+      if (chunks) {
+        return chunks.join(' '); 
+      }
+    }
+    return content;
+  };
   const columns: ColumnsType<ICmt> = [
     {
       title: 'No.',
@@ -62,7 +70,8 @@ const CommentManager = () => {
     {
       title: 'content',
       dataIndex: 'content',
-    },
+      render: (content) => renderContent(content),
+    },    
     {
       title: 'likes',
       dataIndex: 'likes',
