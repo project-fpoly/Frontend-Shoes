@@ -240,62 +240,6 @@ const Cart = () => {
 
                           <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
                             <div>
-                              <label htmlFor="">Size</label>
-                              <select
-                                value={cartItem.size}
-                                name="size"
-                                id=""
-                                className="px-1 ml-1 text-[12px] text-[#6b7280] sm:text-lg"
-                                onChange={(
-                                  event: React.ChangeEvent<HTMLSelectElement>
-                                ) =>
-                                  handleSizeChange(
-                                    index,
-                                    cartItem.product,
-                                    event
-                                  )
-                                }
-                              >
-                                {sizes && Array.isArray(sizes) ? (
-                                  sizes.map((size: any, index: number) => (
-                                    <option key={index} value={size.name}>
-                                      {size.name}
-                                    </option>
-                                  ))
-                                ) : (
-                                  <option value="">No sizes available</option>
-                                )}
-                              </select>
-                            </div>
-                            <div className="ml-2">
-                              <label htmlFor="">Quanlity</label>
-                              <select
-                                value={cartItem.quantity}
-                                name="quanlity"
-                                id=""
-                                className="px-2 ml-1"
-                                onChange={(
-                                  event: React.ChangeEvent<HTMLSelectElement>
-                                ) =>
-                                  handleQuantityChange(
-                                    index,
-                                    cartItem.product,
-                                    event
-                                  )
-                                }
-                              >
-                                <option value={1}>1</option>
-                                <option value={2}>2</option>
-                                <option value={3}>3</option>
-                                <option value={4}>4</option>
-                                <option value={5}>5</option>
-                                <option value={6}>6</option>
-                                <option value={7}>7</option>
-                                <option value={8}>8</option>
-                                <option value={9}>9</option>
-                                <option value={10}>10</option>
-                              </select>
-
                               <div className="flex text-lg text-[#6b7280]">
                                 <div>
                                   <label htmlFor="">Size</label>
@@ -498,8 +442,8 @@ const Cart = () => {
                 )
               })
             }
-          <hr />
-        </div>
+            <hr />
+          </div>
           <div className="shopping-cart-summary lg:w-[35%]">
             <h2 className="text-3xl font-semibold my-4">Summary</h2>
             <div>
