@@ -16,11 +16,11 @@ const Contact = () => {
                     ></iframe>
                 </Col>
                 <Col span={12}>
-                    <Typography className='contact-title'>Contact Us</Typography>
-                    <Typography className='slogan'>“We're Here to Help! Reach out to us anytime and we'll happily answer your questions”</Typography>
+                    <Typography className='font-bold text-4xl text-center'>Contact Us</Typography>
+                    <Typography className='text-base mt-5 text-center'>“We're Here to Help! Reach out to us anytime and we'll happily answer your questions”</Typography>
 
-                    <Space direction='vertical' className='px-7 py-3 mt-10' style={{ width: '100%', height: 350, background: '#EEE', borderRadius: 5 }}>
-                        <Typography className='send-title mb-3'>Send Message</Typography>
+                    <Space direction='vertical' className='px-10 py-5 mt-10 w-full h-96 bg-zinc-100 rounded-md'>
+                        <Typography className='font-bold text-2xl mb-3 text-slate-500'>Send Message</Typography>
 
                         <Form.Item
                             name="name"
@@ -57,28 +57,23 @@ const Contact = () => {
 
             <Space
                 direction="vertical"
-                className="mt-20 mb-5"
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr',
-                    textAlign: 'center',
-                }}
+                className="mt-20 mb-5 grid grid-cols-3 text-center"
             >
                 <Space direction="vertical">
-                    <MobileOutlined style={{ fontSize: '30px' }} />
+                    <MobileOutlined className='text-4xl' />
                     <Title level={5}>Products & orders</Title>
                     <a href="">0342683960 (Viettel)</a>
                     <a href="">05:00 - 23-00</a>
                 </Space>
                 <Space direction="vertical">
-                    <MessageOutlined style={{ fontSize: '30px' }} />
+                    <MessageOutlined className='text-4xl' />
                     <Title level={5}>Email</Title>
                     <a href="">ntl260303@gmail.com</a>
                     <a href="">05:00 - 23-00</a>
                     <a href="">7 days a week</a>
                 </Space>
                 <Space direction="vertical">
-                    <EnvironmentOutlined style={{ fontSize: '30px' }} />
+                    <EnvironmentOutlined className='text-4xl' />
                     <Title level={4}>Store locator</Title>
                     <a href="">FPT Polytechnic Building, <br />13 Trinh Van Bo Ward, <br />Xuan Phuong, Nam Tu Liem, Hanoi</a>
                 </Space>
