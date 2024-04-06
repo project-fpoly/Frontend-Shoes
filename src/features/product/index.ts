@@ -94,7 +94,6 @@ export const getProductsWithFilters = createAsyncThunk(
         gender,
         isDeleted
       )
-      console.log('hi', response)
       return response
     } catch (error) {
       throw new Error('Lỗi khi lấy dữ liệu')
