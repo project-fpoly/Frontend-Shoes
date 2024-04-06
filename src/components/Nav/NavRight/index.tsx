@@ -22,8 +22,9 @@ const NavRight = () => {
       <button
         onClick={() => setIsModalOpen(true)}
         className="cursor-pointer  hover:bg-[#e5e5e5] rounded-full px-3 "
+        style={{backgroundColor:"transparent"}}
       >
-        <CiSearch size={23} />
+        <CiSearch size={23}/>
       </button>
       <CiHeart
         className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"

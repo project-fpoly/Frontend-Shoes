@@ -51,6 +51,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
           />
           <button
             type="submit"
+            style={{backgroundColor:"transparent"}}
             className="cursor-pointer absolute top-[5%] left-0 hover:bg-[#e5e5e5] rounded-full p-2 z-20 "
           >
             <CiSearch size={23} />
@@ -60,6 +61,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
               reset()
               setData([])
             }}
+            style={{backgroundColor:"transparent"}}
             className="cursor-pointer absolute top-[5%] right-[7%] hover:opacity-75 rounded-full p-2 z-20 "
           >
             <MdOutlineClear size={22} />

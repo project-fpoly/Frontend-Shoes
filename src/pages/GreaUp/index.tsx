@@ -50,12 +50,12 @@ const GreaUp = () => {
           className="flex gap-2 cursor-pointer "
         >
           {hideFilter ? 'Hide fillter' : 'Show filter'}
-          <button>
+          <button style={{backgroundColor:"transparent"}}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button>Sort by :</button>
+        <button style={{backgroundColor:"transparent"}}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
