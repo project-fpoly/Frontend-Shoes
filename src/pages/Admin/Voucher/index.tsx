@@ -11,19 +11,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ColumnsType } from 'antd/es/table'
 import { format, isAfter } from 'date-fns'
 import HeaderTable from '../../../components/Admin/Layout/HeaderTable'
-import FormUser from '../../../components/Admin/User/FormUser'
-import { IUsers } from '../../../common/users'
 import { AppDispatch } from '../../../redux/store'
-import {
-  createNewUser,
-  deleteeUser,
-  fetchAllUsers,
-  updateUser,
-} from '../../../features/user'
 import { IStateVoucher } from '../../../common/redux/type'
-import { fetchVoucher } from '../../../features/voucher'
+import { createVoucher, deleteeVoucher, fetchVoucher, updateVoucher } from '../../../features/voucher'
 import { IVoucher } from '../../../common/voucher'
 import FormVoucher from '../../../components/Admin/Voucher/FormVoucher'
+import dayjs from 'dayjs'
 
 const VoucherManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -40,11 +33,13 @@ const VoucherManager: React.FC = () => {
   }, [dispatch])
 
   const handleCreateUser = (voucher: IVoucher) => {
-    console.log(voucher)
+    dispatch(createVoucher(voucher))
+    setIsModalOpen(false)
   }
 
   const handleUpdateUser = (voucher: IVoucher) => {
-    console.log(voucher)
+    dispatch(updateVoucher(voucher))
+    setIsModalUpdateOpen(false)
   }
 
   const toggleModal = (voucher: IVoucher) => {
@@ -53,7 +48,7 @@ const VoucherManager: React.FC = () => {
     setDetailVouche(voucher)
   }
 
-  const deleteVoucher = (user: IVoucher) => {
+  const deleteVoucher = (voucherId: string) => {
     Modal.confirm({
       title: 'Confirm Deletion',
       icon: <ExclamationCircleOutlined />,
@@ -61,12 +56,14 @@ const VoucherManager: React.FC = () => {
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
-      // onOk() {
-      //   dispatch(deleteeUser([user._id]))
-      // },
-      // onCancel() {},
-    })
-  }
+      onOk() {
+        dispatch(deleteeVoucher(voucherId));
+        setIsModalUpdateOpen(false); // Đóng modal sau khi xóa
+      },
+      onCancel() {},
+    });
+  };
+  
 
   const columns: ColumnsType<IVoucher> = [
     {
@@ -132,7 +129,7 @@ const VoucherManager: React.FC = () => {
             </Tooltip>
           )}
           <Tooltip title="Delete">
-            <Button type="link" onClick={() => deleteVoucher(record)}>
+            <Button type="link" onClick={() => deleteVoucher(record._id)}>
               <DeleteOutlined />
             </Button>
           </Tooltip>
@@ -148,8 +145,9 @@ const VoucherManager: React.FC = () => {
     reduced_amount: DetailVouche?.reduced_amount || 0,
     price_order: DetailVouche?.price_order || 0,
     description: DetailVouche?.description || '',
-    start_date:DetailVouche?.start_date || '2024-01-01',
-    expiration_date: DetailVouche?.expiration_date || '2024-01-01',
+    create_by: DetailVouche?.create_by || {},
+    start_date: DetailVouche?.start_date ? dayjs(DetailVouche.start_date) : dayjs('2024-01-01'),
+    expiration_date: DetailVouche?.expiration_date ? dayjs(DetailVouche.expiration_date) : dayjs('2024-01-01'),
   }
   const defaultInitValue: IVoucher = {
     _id: '',
@@ -158,8 +156,8 @@ const VoucherManager: React.FC = () => {
     reduced_amount: 0,
     price_order: 0,
     description: '',
-    start_date:"2024-01-01",
-    expiration_date: '2024-01-01',
+    start_date:dayjs(),
+    expiration_date: dayjs().subtract(1, 'day'),
   }
   const searchUser = (value: string) => {
     console.log(value)
