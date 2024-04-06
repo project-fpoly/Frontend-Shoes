@@ -46,7 +46,7 @@ import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
 import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
-import { getOrderByUsers } from '../features/order/index.tsx'
+import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -78,6 +78,9 @@ const Router = (user: any) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
         console.log('co thong bao', user)
+      })
+      socket.on('realtimeBillforAdmin', () => {
+        dispatch(fetchOrders({}))
       })
     }
 
