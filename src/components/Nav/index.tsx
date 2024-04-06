@@ -71,77 +71,78 @@ const NavBar = () => {
           },
         }}
       >
-        <div className="flex justify-between px-16 py-4 bg-[#f5f5f5]">
-          <Link to={'/'}>
-            <SiJordan size={28} className="hover:opacity-70" />
-          </Link>
-          <div className="flex gap-3 cursor-pointer ">
-            <Popover
-              className="hover:opacity-70"
-              content={content}
-              title="Title"
-            >
-              Find a store
-            </Popover>
-            <span>|</span>
-            <Link to={'/help'}>
-              <Popover className="hover:opacity-70" content={content} title="">
-                Help
-              </Popover>
-            </Link>
-            <span>|</span>
-            {user ? (
-              <Popover
-                className="flex gap-2 hover:opacity-70"
-                content={
-                  <>
-                    {user?.role === 'admin' && (
-                      <Link to="/admin">
-                        <h1 className="font-bold">Admin</h1>
-                      </Link>
-                    )}
-                    <Link to="">
-                      <h1 className="font-bold" onClick={handleLogout}>
-                        Logout
-                      </h1>
-                    </Link>
-                  </>
-                }
-                title="Account"
-              >
-                Hi, {user.userName}
-                <Avatar
-                  size={30}
-                  icon={<UserOutlined />}
-                  src={user?.avt?.url}
-                />
-                {/*<Button onClick={handleLogout}>Logout</Button>*/}
-              </Popover>
-            ) : (
-              <Popover
-                className="flex gap-2 hover:opacity-70"
-                content={content}
-                title="Account"
-              >
-                <Avatar size={30} icon={<UserOutlined />} />
-              </Popover>
-            )}
-          </div>
-        </div>
-
-        <div
-          className={clsx(
-            'flex  bg-white w-full justify-evenly z-50',
-            showNav ? 'hidden' : '',
-            position ? 'top-0' : '',
-          )}
-        >
-          <div className="flex justify-evenly mx-24 gap-[200px] z-10">
+        <div className={clsx('fixed z-50',
+          showNav ? 'hidden' : '',
+        )} >
+          <div className="flex  justify-between px-16  py-4 bg-[#f5f5f5]">
             <Link to={'/'}>
-              <SiNike className="hover:opacity-75" size={50} />
+              <SiJordan size={28} className="hover:opacity-70" />
             </Link>
-            <MenuNav></MenuNav>
-            <NavRight></NavRight>
+            <div className="flex gap-3 cursor-pointer ">
+              <Popover
+                className="hover:opacity-70"
+                content={content}
+                title="Title"
+              >
+                Find a store
+              </Popover>
+              <span>|</span>
+              <Link to={'/help'}>
+                <Popover className="hover:opacity-70" content={content} title="">
+                  Help
+                </Popover>
+              </Link>
+              <span>|</span>
+              {user ? (
+                <Popover
+                  className="flex gap-2 hover:opacity-70"
+                  content={
+                    <>
+                      {user?.role === 'admin' && (
+                        <Link to="/admin">
+                          <h1 className="font-bold">Admin</h1>
+                        </Link>
+                      )}
+                      <Link to="">
+                        <h1 className="font-bold" onClick={handleLogout}>
+                          Logout
+                        </h1>
+                      </Link>
+                    </>
+                  }
+                  title="Account"
+                >
+                  Hi, {user.userName}
+                  <Avatar
+                    size={30}
+                    icon={<UserOutlined />}
+                    src={user?.avt?.url}
+                  />
+                  {/*<Button onClick={handleLogout}>Logout</Button>*/}
+                </Popover>
+              ) : (
+                <Popover
+                  className="flex gap-2 hover:opacity-70"
+                  content={content}
+                  title="Account"
+                >
+                  <Avatar size={30} icon={<UserOutlined />} />
+                </Popover>
+              )}
+            </div>
+          </div>
+
+          <div
+            className={clsx(
+              'flex  bg-white w-full justify-evenly z-50')}
+          >
+            <div className="flex justify-evenly mx-24 gap-[100px] z-10">
+              <Link to={'/'}>
+                <SiNike className="hover:opacity-75" size={50} />
+              </Link>
+              <MenuNav></MenuNav>
+              <NavRight></NavRight>
+            </div>
           </div>
         </div>
 
