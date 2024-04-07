@@ -13,6 +13,7 @@ export interface initialProduct {
   category: ICategory | {};
   totalProducts: number;
   comments?: [];
+  loadingSearch: "idle" | "pending" | "fulfilled" | "failed";
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -55,6 +56,7 @@ export interface IStateProduct {
     loading: string;
     category: ICategory;
     totalProducts: number;
+    loadingSearch: string;
   };
 }
 export interface IStateUser {

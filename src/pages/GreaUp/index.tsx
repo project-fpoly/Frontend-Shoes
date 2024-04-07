@@ -13,8 +13,12 @@ import { Select } from 'antd'
 import { GrTransaction } from 'react-icons/gr'
 import clsx from 'clsx'
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
-import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingBar from 'react-top-loading-bar'
+
+
 const GreaUp = () => {
+
+
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const loading = useSelector((state: IStateProduct) => state.product.loading)
@@ -103,6 +107,7 @@ const GreaUp = () => {
           </>
         )}
       </div>
+      <LoadingBar color="#378CE7" progress={loading === 'fullfiled' ? 0 : 100} />
     </>
   )
 }

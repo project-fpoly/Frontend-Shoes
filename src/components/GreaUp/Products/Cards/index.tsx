@@ -15,7 +15,7 @@ const Card = (props: Props) => {
 
       {shoes.length === 0 ? (
         <div>
-          <div className='w-full flex text-3xl text-red-500 justify-center items-center mb-[500px]'>Danh mục này hiện tại chưa có sản phẩm nào </div>
+          <div className='w-full flex text-3xl   justify-center items-center mb-[500px]'>Danh mục này hiện tại chưa có sản phẩm nào </div>
         </div>
       ) : (
         <>

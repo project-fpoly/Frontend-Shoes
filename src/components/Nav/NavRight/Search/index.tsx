@@ -22,7 +22,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   const dispact = useDispatch<AppDispatch>()
   const [dataSearch, setData] = useState<IProduct[]>([])
   const shoes = useSelector((state: IStateProduct) => state.product.products)
-  const Loading = useSelector((state: IStateProduct) => state.product.loading)
+  const Loading = useSelector((state: IStateProduct) => state.product.loadingSearch)
   const { register, handleSubmit, reset } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = ({ resultSearch }) => {
     searchProductsByKeyword(resultSearch)
