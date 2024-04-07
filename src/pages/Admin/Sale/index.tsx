@@ -157,7 +157,7 @@ const SaleManager: React.FC = () => {
 
       <Modal
         title="Create New Campaign"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
@@ -168,7 +168,7 @@ const SaleManager: React.FC = () => {
       </Modal>
       <Modal
         title="Update Sale"
-        visible={isModalUpdateOpen}
+        open={isModalUpdateOpen}
         onOk={() => setIsModalUpdateOpen(false)}
         onCancel={() => setIsModalUpdateOpen(false)}
         destroyOnClose={true}
