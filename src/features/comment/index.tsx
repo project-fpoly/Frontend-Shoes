@@ -82,10 +82,14 @@ export const deleteCommentById = createAsyncThunk(
 export const updateCommentById = createAsyncThunk(
   '/comment/updateCommentById',
   async (comment: ICmt, thunkApi) => {
+    const { shoeId, ...data } = comment;
     try {
-      const respone = await updateComment(comment)
-      thunkApi.dispatch(fetchAllCommentByProduct(comment.shoeId as any))
-      console.log(respone);
+      const respone = await updateComment(data)
+      thunkApi.dispatch(fetchAllCommentByProduct(shoeId as any))
+      notification.success({
+        message: "Success",
+        description: `Delete comment successfully}`,
+      });
       return respone
     } catch (error) {
       console.log('hi')
