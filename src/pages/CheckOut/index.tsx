@@ -33,7 +33,6 @@ const CheckOut = () => {
   const [ward, setWard] = useState(null)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
-
   let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
     totalCart += item.price * item.quantity
@@ -41,8 +40,8 @@ const CheckOut = () => {
   cart?.cartItems.forEach((item: any) => {
     totalCart += item.price * item.quantity
   })
-  const totalPrice = shippingOrder
-    ? shippingOrder.service_fee + totalCart
+  const totalPrice = district
+    ? shippingOrder?.service_fee + totalCart
     : totalCart
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
@@ -105,8 +104,7 @@ const CheckOut = () => {
         items: items,
       }),
     )
-    console.log('district', district)
-  }, [province, district, ward])
+  }, [province, district, ward, order?.cartItems.length > 0])
   const [form] = Form.useForm()
   const handleFormSubmit = async (formValues: {
     firstName: string
@@ -136,7 +134,6 @@ const CheckOut = () => {
       },
       payment_method: formValues.payment_method,
     }
-    console.log(request)
     const { shippingAddress, payment_method } = request
     let redirectUrl = '' as any
 
@@ -144,7 +141,7 @@ const CheckOut = () => {
       if (accessToken) {
         if (cart) {
           const { cartItems } = cart
-          await dispatch(
+           const data = await dispatch(
             createOrder({
               cartItems,
               shippingAddress,
@@ -153,19 +150,20 @@ const CheckOut = () => {
             }),
           )
           sessionStorage.removeItem('cart')
-          if (payment_method === 'vnPay' && order) {
+          if (payment_method === 'vnPay' && data) {
             redirectUrl = await dispatch(
-              createPaymentUrl({
+              createPaymentUrl({  
                 amount: totalPrice,
                 bankCode: 'VNBANK',
                 language: 'vn',
-                orderId: order.trackingNumber,
+                orderId: data?.payload.trackingNumber,
+
               }),
             )
           }
         } else if (cartSession && cartSession.cartItems) {
           const { cartItems } = cartSession
-          await dispatch(
+          const data =  await dispatch(
             createOrder({
               cartItems,
               shippingAddress,
@@ -174,13 +172,14 @@ const CheckOut = () => {
             }),
           )
           sessionStorage.removeItem('cart')
-          if (payment_method === 'vnPay' && order) {
+          if (payment_method === 'vnPay' && data) {
+         
             redirectUrl = await dispatch(
               createPaymentUrl({
                 amount: totalPrice,
                 bankCode: 'VNBANK',
                 language: 'vn',
-                orderId: order.trackingNumber,
+                orderId: data?.payload.trackingNumber,
               }),
             )
           }
@@ -193,7 +192,7 @@ const CheckOut = () => {
         navigate('../../order')
       } else {
         const { cartItems } = cartSession
-        await dispatch(
+        const data = await dispatch(
           createOrder({
             cartItems,
             shippingAddress,
@@ -201,14 +200,17 @@ const CheckOut = () => {
             totalPrice,
           }),
         )
+       
         sessionStorage.removeItem('cart')
-        if (payment_method === 'vnPay' && order) {
+        if (payment_method === 'vnPay'&& data) {
+          console.log(totalPrice)
+          console.log(data)
           redirectUrl = await dispatch(
             createPaymentUrl({
               amount: totalPrice,
               bankCode: 'VNBANK',
               language: 'vn',
-              orderId: order.trackingNumber,
+              orderId: data?.payload.trackingNumber,
             }),
           )
           if (redirectUrl) {
@@ -463,7 +465,7 @@ const CheckOut = () => {
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Delivery/Shipping</div>
               <div className="text-[#6b7280]">
-                {shippingOrder ? shippingOrder.service_fee + 'đ' : 'Free'}
+                { district ? shippingOrder?.service_fee + 'đ' : 'Free'}
               </div>
             </div>
             <hr />
@@ -477,8 +479,9 @@ const CheckOut = () => {
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
-            {cart
-              ? cart?.cartItems.map((cartItem: any, index: number) => (
+            {cart || cartSession ? (
+              <>
+                {cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
@@ -488,19 +491,15 @@ const CheckOut = () => {
                       </figure>
                     </div>
                     <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(cartItem.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(cartItem.product)}
-                      </p>
+                      <h2 className="text-xl">{getProductName(cartItem.product)}</h2>
+                      <p className="text-[#6b7280]">{getCateName(cartItem.product)}</p>
                       <p className="text-[#6b7280]">{cartItem.size}</p>
                       <p className="text-[#6b7280]">{cartItem.quantity}</p>
                       <p className="text-[#6b7280]">{cartItem.price}</p>
                     </div>
                   </>
-                ))
-              : cartSession?.cartItems.map((item: any, index: number) => (
+                ))}
+                {cartSession?.cartItems.map((item: any, index: number) => (
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
@@ -510,20 +509,16 @@ const CheckOut = () => {
                       </figure>
                     </div>
                     <div className="col-span-1">
-                      <h2 className="text-xl">
-                        {getProductName(item.product)}
-                      </h2>
-                      <p className="text-[#6b7280]">
-                        {getCateName(item.product)}
-                      </p>
+                      <h2 className="text-xl">{getProductName(item.product)}</h2>
+                      <p className="text-[#6b7280]">{getCateName(item.product)}</p>
                       <p className="text-[#6b7280]">{item.size}</p>
                       <p className="text-[#6b7280]">{item.quantity}</p>
-                      <p className="text-[#6b7280]">
-                        {item.price * item.quantity}
-                      </p>
+                      <p className="text-[#6b7280]">{item.price * item.quantity}</p>
                     </div>
                   </>
                 ))}
+                 </>
+              ) : null}
           </div>
         </div>
       </div>
