@@ -70,7 +70,7 @@ const NavBar = () => {
           },
         }}
       >
-        <div className={clsx('fixed z-50',
+        <div className={clsx('fixed z-50 w-full',
           showNav ? 'hidden' : '',
         )} >
           <div className="flex  justify-between px-16  py-4 bg-[#f5f5f5]">

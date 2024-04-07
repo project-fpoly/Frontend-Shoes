@@ -12,7 +12,7 @@ const Home = () => {
     <div className="px-10">
       {!accessToken && (
         <>
-          <div className="flex justify-center mt-20 mb-1 items-center flex-col">
+          <div className="flex justify-center mt-10 mb-1 items-center flex-col">
             <h2>Move, Shop, Customise & Celebrate With Us.</h2>
             <p>
               No matter what you feel like doing today, It’s better as a Member.
