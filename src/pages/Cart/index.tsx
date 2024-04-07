@@ -13,7 +13,6 @@ import { AppDispatch } from '../../redux/store'
 import {
   getCartItems,
   removeFromCart,
-  synchronizeCart,
   updateProductCart,
 } from '../../features/cart'
 import { CartItem } from '../../common/order'
@@ -478,7 +477,7 @@ const Cart = () => {
               <div className="mt-5 hidden lg:block">
                 {cart || cartSession?.cartItems.length ? (
                   <>
-                    {accessToken ? (
+                    
                       <Button
                         onClick={() => navigate('./checkout')}
                         style={{ background: 'rgb(17, 17, 17)' }}
@@ -486,27 +485,7 @@ const Cart = () => {
                         className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
                       >
                         <p> Checkout</p>
-                      </Button>
-                    ) : (
-                      <>
-                        <Button
-                          onClick={() => navigate('./guest_checkout')}
-                          style={{ background: 'rgb(17, 17, 17)' }}
-                          block
-                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
-                        >
-                          <p>Guest Checkout</p>
-                        </Button>
-                        <Button
-                          onClick={() => navigate('../signin')}
-                          style={{ background: 'rgb(17, 17, 17)' }}
-                          block
-                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700"
-                        >
-                          <p>Member Checkout</p>
-                        </Button>
-                      </>
-                    )}
+                      </Button> 
                   </>
                 ) : null}
               </div>

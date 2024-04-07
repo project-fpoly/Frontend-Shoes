@@ -210,14 +210,14 @@ const CheckOut = () => {
               amount: totalPrice,
               bankCode: 'VNBANK',
               language: 'vn',
-              orderId: data?.payload.trackingNumber,
+              orderId: data.payload?.trackingNumber,
             }),
           )
           if (redirectUrl) {
             window.open(redirectUrl.payload, '_blank')
           }
         }
-        navigate('../../order/guest')
+        // navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)

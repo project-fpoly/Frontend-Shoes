@@ -6,11 +6,11 @@ export const createPaymentUrl = createAsyncThunk(
   "vnPay/createPaymentUrl",
   async ({ amount,
     bankCode,
-    language,}:{amount:number,bankCode:string,language:string}) => {
+    language,orderId}:{amount:number,bankCode:string,language:string,orderId:string}) => {
     try {
       const res = await axios.post("http://localhost:9000/order/create_payment_url", { amount,
       bankCode,
-      language,});
+      language,orderId});
       return res.data.data;
     } catch (error) {
       throw error;

@@ -16,7 +16,7 @@ const middlewares = [analyticApi.middleware]
 import voucherSlice from '../features/voucher'
 import vnPaySlice from '../features/vnPay/index'
 import saleSlice from '../features/sale'
-
+import adressSlice from '../features/address/index'
 export const store = configureStore({
   reducer: {
     product: productSlice,
@@ -29,7 +29,7 @@ export const store = configureStore({
     auth: authSlice,
     voucher: voucherSlice,
     vnPay: vnPaySlice,
-
+    address: adressSlice,
     [analyticApi.reducerPath]: analyticApi.reducer,
 
     sale: saleSlice
