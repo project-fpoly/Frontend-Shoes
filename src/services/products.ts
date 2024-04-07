@@ -89,7 +89,7 @@ export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => 
     };
 
     const response: AxiosResponse<IProduct> = await instance.patch(
-      `/api/product/${id}`,
+      `/api/product/${id}/delete`,
       product
     );
     notification.success({ message: "Product marked for deletion successfully" });
@@ -111,7 +111,7 @@ export const tryRestoreProduct = async (id: string): Promise<IProduct | null> =>
     };
 
     const response: AxiosResponse<IProduct> = await instance.patch(
-      `/api/product/${id}`,
+      `/api/product/${id}/restore`,
       product
     );
 

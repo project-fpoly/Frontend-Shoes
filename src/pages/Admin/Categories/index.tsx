@@ -121,6 +121,14 @@ const CategoriesManager: React.FC = () => {
       dataIndex: 'viewCount',
     },
     {
+      title: ' Products',
+      dataIndex: 'products',
+      key: 'product',
+      render: (products) => (
+        <div>{products.length}</div>
+      ),
+    },
+    {
       title: 'Action',
       key: 'action',
       align: 'center',

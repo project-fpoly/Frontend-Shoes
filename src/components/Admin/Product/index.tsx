@@ -9,6 +9,7 @@ import { IStateCategory, IStateSale } from "../../../common/redux/type";
 import { DeleteOutlined, FileImageOutlined, MinusCircleOutlined, PlusOutlined, StarFilled, UploadOutlined } from "@ant-design/icons";
 import { fetchAllSales } from '../../../features/sale';
 import axios, { AxiosResponse } from 'axios';
+import NumericInput from './input';
 
 const { Option } = Select;
 const normFile = (e: any) => {
@@ -290,12 +291,12 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             <Form.Item
                                 rules={[{ required: true, message: "Please enter the Release Date" }]}
                                 label="Release Date" name="release_date">
-                                <DatePicker format="DD-MM-YYYY" />
+                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                             </Form.Item>
                             <Form.Item
                                 rules={[{ required: true, message: "Please enter the Published Date" }]}
                                 label="Published Date" name="publishedDate" >
-                                <DatePicker format="DD-MM-YYYY" />
+                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                             </Form.Item>
                         </>
                     )}
@@ -353,7 +354,11 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             <Radio.Button value="nữ">Nữ</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
-                    <Form.Item style={{ maxHeight: 200, overflow: 'auto' }}>
+                    <Form.Item
+                        name="sizes"
+                        style={{ maxHeight: 180, overflow: 'auto',height:'80px' }}
+                        rules={[{ required: true, message: 'Please add at least one size' }]}
+                    >
                         <Form.List name="sizes">
                             {(fields, { add, remove }) => (
                                 <>
@@ -365,16 +370,27 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                                 <Form.Item
                                                     {...restField}
                                                     name={[name, 'name']}
-                                                    rules={[{ required: true, message: 'Missing size name' }]}
+                                                    rules={[{ required: true, message: 'Missing name' }]}
                                                 >
-                                                    <Input placeholder="Size Name" value={size?.name || ''} />
+                                                    <NumericInput
+                                                        value={size?.name || ''}
+                                                        onChange={(value) => form.setFieldsValue({ [`sizes[${name}].name`]: value })}
+                                                        min={36}
+                                                        max={42}
+                                                        step={1}
+                                                    />
                                                 </Form.Item>
                                                 <Form.Item
                                                     {...restField}
                                                     name={[name, 'quantity']}
                                                     rules={[{ required: true, message: 'Missing quantity' }]}
                                                 >
-                                                    <InputNumber placeholder="Quantity" min={1} value={size?.quantity || undefined} />
+                                                    <InputNumber
+                                                        placeholder="Quantity"
+                                                        min={1}
+                                                        value={size?.quantity || undefined}
+                                                        onChange={(value) => form.setFieldsValue({ [`sizes[${name}].quantity`]: value })}
+                                                    />
                                                 </Form.Item>
                                                 <MinusCircleOutlined onClick={() => remove(name)} />
                                             </Space>
@@ -389,6 +405,9 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             )}
                         </Form.List>
                     </Form.Item>
+
+
+
                     {mode === "create" && (
                         <>
                             <Form.Item
@@ -396,6 +415,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                 rules={[{ required: true, message: 'Please upload images!' }]}
                                 valuePropName="fileList"
                                 getValueFromEvent={normFile}
+                                style={{ maxHeight: 180, overflow: 'auto', height: '180px' }}
                             >
                                 <Upload
                                     name="logo"
@@ -413,7 +433,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     )}
                     {mode === "update" && (
                         <>
-                            <Form.Item rules={[{ required: true, message: 'Please input URL images' }]}>
+                            <Form.Item rules={[{ required: true, message: 'Please input URL images' }]} style={{ maxHeight: 180, overflow: 'auto' }}>
                                 <Form.List name="images" >
                                     {(fields, { add, remove }) => (
                                         <>

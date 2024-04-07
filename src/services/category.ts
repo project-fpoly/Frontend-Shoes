@@ -7,7 +7,14 @@ import { CustomError } from '../common/error'
 export const getCategories = async (page = 1, limit = 10, keyword = '') => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/categories?page=${page}&limit=${limit}&keyword=${keyword}`
+      `/api/categories?page=${page}&limit=${limit}&keyword=${keyword}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     )
     return response.data || response
   } catch (error) {
@@ -18,7 +25,15 @@ export const getCategories = async (page = 1, limit = 10, keyword = '') => {
 
 export const getCategoryById = async (id: string) => {
   try {
-    const response: AxiosResponse = await instance.get(`/api/categories/${id}`)
+    const response: AxiosResponse = await instance.get(`/api/categories/${id}`,
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }
+    )
     return response.data || response
   } catch (error) {
     console.log(error)
@@ -70,7 +85,14 @@ export const updateCate = async (
 export const deleteCate = async (id: string): Promise<ICategory | null> => {
   try {
     const response: AxiosResponse<ICategory> = await instance.delete(
-      `/api/categories/${id}`
+      `/api/categories/${id}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     )
     notification.success({ message: 'Category deleted successfully.' })
     return response.data || response
