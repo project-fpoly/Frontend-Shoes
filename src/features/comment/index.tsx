@@ -6,8 +6,10 @@ import {
   deleteComment,
   getComment,
   getCommentByProduct,
+  updateComment,
 } from '../../services/comment'
 import { ICmt } from '../../common/products'
+import { notification } from 'antd'
 
 const initialState: initialCmt = {
   loading: 'idle',
@@ -66,6 +68,10 @@ export const deleteCommentById = createAsyncThunk(
     try {
       const respone = await deleteComment(commnet._id)
       thunkApi.dispatch(fetchAllCommentByProduct(commnet.shoeId as any))
+      notification.success({
+        message: "Success",
+        description: `Delete comment successfully}`,
+      });
       return respone
     } catch (error) {
       console.log('hi')
@@ -73,6 +79,21 @@ export const deleteCommentById = createAsyncThunk(
     }
   },
 )
+export const updateCommentById = createAsyncThunk(
+  '/comment/updateCommentById',
+  async (comment: ICmt, thunkApi) => {
+    try {
+      const respone = await updateComment(comment)
+      thunkApi.dispatch(fetchAllCommentByProduct(comment.shoeId as any))
+      console.log(respone);
+      return respone
+    } catch (error) {
+      console.log('hi')
+      return isRejected('Error fetching data')
+    }
+  },
+)
+
 
 /// đây là chỗ chọc vào kho để lấy db
 export const commentSlice = createSlice({
@@ -124,7 +145,20 @@ export const commentSlice = createSlice({
     builder.addCase(deleteCommentById.fulfilled, (state) => {
       state.loading = 'fulfilled'
     })
+    builder.addCase(updateCommentById.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(updateCommentById.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(updateCommentById.fulfilled, (state) => {
+      console.log('ok  chua vạy');
+      state.loading = 'fulfilled'
+    })
   },
 })
 
 export default commentSlice.reducer
+
+
+

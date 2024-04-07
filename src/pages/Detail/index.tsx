@@ -12,6 +12,7 @@ import {
   fetchAllComment,
   fetchAllCommentByProduct,
 } from '../../features/comment'
+import LoadingBar from 'react-top-loading-bar'
 
 const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -36,13 +37,15 @@ const DetailShoe = () => {
 
   return (
     <>
-      <div className="lg:flex justify-center mt-28 lg:mx-[200px] mx-4 gap-20">
+      <div className="lg:flex justify-center mt-20 lg:mx-[200px] mx-4 gap-20">
         <Slide shoe={shoe}></Slide>
         <InfoShoe shoe={shoe} category={category}></InfoShoe>
       </div>
       <div className="mt-10 px-10">
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
+      <LoadingBar color="#378CE7" progress={Loading === 'fullfiled' ? 0 : 100} />
+
     </>
   )
 }
