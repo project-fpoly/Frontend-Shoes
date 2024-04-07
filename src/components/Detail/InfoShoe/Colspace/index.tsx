@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import type { CollapseProps } from 'antd'
 import {
@@ -44,6 +44,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const averageRating = totalStars / commnets.length
   const onChange = (key: string | string[]) => {
   }
+
   const handleShowModal = () => {
     setIsModalOpen(true)
   }
@@ -196,7 +197,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                     <Rate
                       disabled
                       className="text-black"
-                      defaultValue={comment.rating}
+                      value={comment.rating}
                     />
                     <span className=" flex flex-col gap-2  ">
                       <p className="text-3xl">{comment.content}</p>
@@ -217,9 +218,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
     const commnetcr = { content, rating }
-    const cmtId = idCmt?._id
+    const commentId = idCmt?._id
     const shoeId = shoe._id
-    const comentUpdate = { ...commnetcr, cmtId, shoeId }
+    const comentUpdate = { ...commnetcr, commentId, shoeId }
     if (typeCmt === 'CREATE') {
       dispatch(createCommnets(commnetcr as any))
       if (Loading === 'fulfilled') {
@@ -229,7 +230,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
         setRating(null)
       }
     } if (typeCmt === 'UPDATE') {
-      console.log(isModalOpen);
       setIsModalOpenCmt(false)
       setTypeCmt('')
       dispatch(updateCommentById(comentUpdate as any))

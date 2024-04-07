@@ -12,6 +12,7 @@ import { GrTransaction } from 'react-icons/gr';
 import Sidebar from '../../components/GreaUp/Sidebar';
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct';
 import ListProduct from '../../components/Sale/Products';
+import LoadingBar from 'react-top-loading-bar'
 
 const { Meta } = Card;
 
@@ -24,7 +25,7 @@ const Sale = () => {
 
   useEffect(() => {
     dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
-    document.title = 'Greaup';
+    document.title = 'Sale';
   }, []);
 
   const handleChange = (value: string) => {
@@ -51,15 +52,15 @@ const Sale = () => {
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
-          
+
         >
           {hideFilter ? 'Hide filter' : 'Show filter'}
-          <button style={{backgroundColor:"transparent"}}>
+          <button style={{ backgroundColor: "transparent" }}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button style={{backgroundColor:"transparent"}}>Sort by :</button>
+        <button style={{ backgroundColor: "transparent" }}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
@@ -103,6 +104,7 @@ const Sale = () => {
           </>
         )}
       </div>
+      <LoadingBar color="#378CE7" progress={loading === 'fullfiled' ? 0 : 100} />
     </div>
   );
 };
