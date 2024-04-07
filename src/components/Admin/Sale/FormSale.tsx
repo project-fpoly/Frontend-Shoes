@@ -10,7 +10,6 @@ type FormSaleProps = {
 const FormSale: React.FC<ISale & FormSaleProps> = ({
   onSubmit,
   name,
-  quantity,
   discount,
   description,
   expiration_date,
@@ -30,7 +29,7 @@ const FormSale: React.FC<ISale & FormSaleProps> = ({
       autoComplete="off"
       initialValues={{
         name,
-        quantity,
+   
         discount,
         description,
         expiration_date,
@@ -43,13 +42,6 @@ const FormSale: React.FC<ISale & FormSaleProps> = ({
         rules={[{ required: true, message: "Please input Campaign Name" }]}
       >
         <Input />
-      </Form.Item>
-      <Form.Item
-        label={"Quantity"}
-        name="quantity"
-        rules={[{ required: true, message: "Please input Quantity" }]}
-      >
-        <Input type="number" />
       </Form.Item>
       <Form.Item
         label={"Discount"}

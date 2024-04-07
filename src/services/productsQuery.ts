@@ -186,7 +186,6 @@ export const filterProducts = async (
 };
 //Lọc theo id Category
 export const categoryFilterProducts = async (CategoryId: string) => {
-  console.log(CategoryId._id!)
   try {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
       `api/product?categoryFilter=${CategoryId._id}`
@@ -239,10 +238,6 @@ export const sizeFilterProducts = async (size: string) => {
       `api/product?sizeFilter=${size}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by size successfully.",
-    });
     return data;
   } catch (error) {
     console.log(error);
@@ -269,7 +264,6 @@ export const priceFilterProducts = async (
     const data = response.data || [];
     return data;
   } catch (error) {
-    console.log(error);
     const customError = error as CustomError;
     const errorMessage =
       customError.response?.data?.message ||
@@ -288,10 +282,6 @@ export const materialFilterProducts = async (material: string) => {
       `api/product?materialFilter=${material}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by material successfully.",
-    });
     return data;
   } catch (error) {
     console.log(error);
@@ -508,4 +498,26 @@ export const searchByKeyword = async (keyword: string) => {
     );
   }
 };
+
+export const filterProductByRelase = async (keyword: string) => {
+  try {
+    const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
+      `/api/product/?sortOrder=${keyword}`
+    );
+    const data = response.data || [];
+    return data;
+  } catch (error) {
+    const customError = error as CustomError;
+    const errorMessage =
+      customError.response?.data?.message ||
+      "Error while fetching Products have been filtered by sale quantity ";
+    notification.error({ message: errorMessage });
+    throw new Error(
+      "Error while fetching Products have been filtered by sale quantity "
+    );
+  }
+};
+
+//
+
 // ...

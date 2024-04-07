@@ -1,7 +1,11 @@
 import {
+  colorFilterProducts,
+  filterProductByRelase,
   genderFilterProducts,
+  materialFilterProducts,
   priceFilterProducts,
   searchByKeyword,
+  sizeFilterProducts,
   sortOrderProducts,
 } from './../../services/productsQuery'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
@@ -28,6 +32,7 @@ const initialState: initialProduct = {
   product: {},
   category: '',
   totalProducts: 0,
+  loadingSearch: 'idle',
 }
 
 export const getProductsWithFilters = createAsyncThunk(
@@ -90,7 +95,6 @@ export const getProductsWithFilters = createAsyncThunk(
         gender,
         isDeleted
       )
-      console.log('hi', response)
       return response
     } catch (error) {
       throw new Error('Lỗi khi lấy dữ liệu')
@@ -281,6 +285,63 @@ export const featchProductByGender = createAsyncThunk(
     }
   }
 )
+/// size
+export const featchProductBySize = createAsyncThunk(
+
+  "product/featchProductBySize",
+  async (size: string) => {
+    try {
+      const respone = await sizeFilterProducts(size);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+
+export const featchProductByRelase = createAsyncThunk(
+
+  "product/featchProductByRelase",
+  async (relase: string) => {
+    try {
+      const respone = await filterProductByRelase(relase);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+
+
+export const featchProductByColor = createAsyncThunk(
+
+  "product/featchProductByColor",
+  async (color: string) => {
+    try {
+      const respone = await colorFilterProducts(color);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+export const featchProductByMaterial = createAsyncThunk(
+
+  "product/featchProductByMaterial",
+  async (material: string) => {
+    try {
+      const respone = await materialFilterProducts(material);
+      return respone.data || [];
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  }
+)
+
 
 /// đây là chỗ chọc vào kho để lấy db
 export const productSlice = createSlice({
@@ -400,13 +461,13 @@ export const productSlice = createSlice({
     })
     // search product by keyword
     builder.addCase(searchProductsByKeyword.pending, (state) => {
-      state.loading = 'pending'
+      state.loadingSearch = 'pending'
     })
     builder.addCase(searchProductsByKeyword.rejected, (state) => {
-      state.loading = 'failed'
+      state.loadingSearch = 'failed'
     })
     builder.addCase(searchProductsByKeyword.fulfilled, (state, action) => {
-      state.loading = 'fulfilled'
+      state.loadingSearch = 'fulfilled'
       state.products = Array.isArray(action.payload) ? action.payload : []
     })
     ///Filter products by price
@@ -445,7 +506,63 @@ export const productSlice = createSlice({
       featchProductByGender.fulfilled,
       (state, action) => {
         state.loading = "fulfilled";
-        state.products = action.payload.data;
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by relase
+    builder.addCase(featchProductByRelase.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByRelase.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByRelase.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by size
+    builder.addCase(featchProductBySize.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductBySize.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductBySize.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by color
+    builder.addCase(featchProductByColor.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByColor.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByColor.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
+      }
+    );
+    //Filter product by material
+    builder.addCase(featchProductByMaterial.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(featchProductByMaterial.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(
+      featchProductByMaterial.fulfilled,
+      (state, action) => {
+        state.loading = "fulfilled";
+        state.products = action.payload as IProduct[]
       }
     );
 

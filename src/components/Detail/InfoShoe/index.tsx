@@ -13,6 +13,7 @@ import { addToCart } from '../../../features/cart'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { formatCurrency } from '../../../hooks/utils'
+import ModalCmt from '../../Modal/ModalCmt'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -168,7 +169,7 @@ const InfoShoe = (props: Props) => {
           >
             <div className="flex flex-col gap-5">
               <div className="flex gap-3">
-                <Image width={70} src={shoe?.images!} />
+                <Image width={70} src={shoe.images ? shoe.images[0] : ''} />
                 <span>
                   <p>{shoe.name}</p>
                   <p>{shoe.price}</p>

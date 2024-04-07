@@ -3,6 +3,7 @@ import ListProduct from '../../components/GreaUp/Products'
 import Sidebar from '../../components/GreaUp/Sidebar'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  featchProductByRelase,
   fetchAllProducts,
   fetchProductsByPriceLowOrHight,
 } from '../../features/product'
@@ -12,18 +13,27 @@ import { Select } from 'antd'
 import { GrTransaction } from 'react-icons/gr'
 import clsx from 'clsx'
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
+import LoadingBar from 'react-top-loading-bar'
+
+
 const GreaUp = () => {
+
+
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const loading = useSelector((state: IStateProduct) => state.product.loading)
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    dispact(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     document.title = 'Greaup'
   }, [])
 
   const handleChange = (value: string) => {
     switch (value) {
       case 'Newest':
+        dispact(featchProductByRelase('desc_release_date'))
+        break
+      case 'Oldest':
+        dispact(featchProductByRelase('asc_release_date'))
         break
       case 'High-Low':
         dispact(fetchProductsByPriceLowOrHight('desc'))
@@ -38,18 +48,18 @@ const GreaUp = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(false)
   return (
     <>
-      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
+      <span className={clsx('flex gap-5  justify-end mr-5 mb-5   z-20')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
         >
           {hideFilter ? 'Hide fillter' : 'Show filter'}
-          <button>
+          <button style={{backgroundColor:"transparent"}}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button>Sort by :</button>
+        <button style={{backgroundColor:"transparent"}}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
@@ -58,6 +68,10 @@ const GreaUp = () => {
             {
               value: 'Newest',
               label: 'Newest',
+            },
+            {
+              value: 'Oldest',
+              label: 'Oldest',
             },
             {
               value: 'High-Low',
@@ -70,7 +84,7 @@ const GreaUp = () => {
           ]}
         />
       </span>
-      <div className="flex  mx-10 justify-center items-center">
+      <div className="flex  mx-10 justify-center">
         <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>
@@ -93,6 +107,7 @@ const GreaUp = () => {
           </>
         )}
       </div>
+      <LoadingBar color="#378CE7" progress={loading === 'fullfiled' ? 0 : 100} />
     </>
   )
 }

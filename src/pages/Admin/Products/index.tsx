@@ -120,10 +120,7 @@ const ProductsManager: React.FC = () => {
             title: "Price",
             dataIndex: "price",
         },
-        {
-            title: "Sale",
-            dataIndex: "sale",
-        },
+
         {
             title: "Is Deleted",
             key: "isDeleted",
@@ -145,7 +142,7 @@ const ProductsManager: React.FC = () => {
             className: "action-cell",
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
-                    <Tooltip title={"Views"}>
+                    <Tooltip title={"iewsV"}>
                         <Button type="link" >
                             <EyeOutlined onClick={() => handleRowClick(record)} />
                         </Button>
@@ -174,8 +171,8 @@ const ProductsManager: React.FC = () => {
         categoryId: "65899c32bb48834579fde67e",
         price: 999999,
         sale: "66030dcf3d637f68fefc2852",
-        discount: 10,
-        quantity: 20,
+        discount: 0,
+        quantity: 0,
         sold_count: 0,
         rating: 5,
         sizes: [
@@ -197,25 +194,22 @@ const ProductsManager: React.FC = () => {
         hits: 112,
         isDeleted: false
     };
+   
     const Value = {
         product_id: productsState?.product_id ? productsState?.product_id : "Mã số sản phẩm",
         SKU: productsState?.SKU ? productsState?.SKU : "Mã tồn kho của sản phẩm",
         name: productsState?.name ? productsState?.name : "Tên của sản phẩm",
         description: productsState?.description ? productsState?.description : "Chưa có mô tả của sản phẩm",
         categoryId: typeof productsState?.categoryId === 'object' && productsState?.categoryId?.name
-            ? productsState?.categoryId.name
+            ? productsState?.categoryId._id
             : "Chưa có ID danh mục",
         price: productsState?.price ? productsState?.price : 0,
-        sale: (productsState?.sale as { _id: string; name: string; discount: number; })?.name || 'Chưa có giá trị sale',
+        sale: typeof productsState?.sale === 'object' && productsState?.sale?._id ? productsState?.sale._id : "Chưa có giá trị sale",
         discount: productsState?.discount ? productsState?.discount : 0,
         quantity: productsState?.quantity ? productsState?.quantity : 0,
         sold_count: productsState?.sold_count ? productsState?.sold_count : 0,
         rating: productsState?.rating ? productsState?.rating : 0,
         sizes: productsState?.sizes ? productsState?.sizes : [
-            {
-                name: "39",
-                quantity: 10
-            }
         ],
         color: productsState?.color ? productsState?.color : "red" || "green" || "blue" || "yellow" || "black" || "white",
         material: productsState?.material ? productsState?.material : "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
@@ -235,7 +229,7 @@ const ProductsManager: React.FC = () => {
         hits: productsState?.hits ? productsState?.hits : 0,
         isDeleted: productsState?.isDeleted ? productsState?.isDeleted : false
     };
-    console.log('value', Value)
+   
     const searchProduct = (value: string) => {
         setSearch(value);
     };

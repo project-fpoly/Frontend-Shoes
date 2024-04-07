@@ -68,11 +68,18 @@ export const addSale = async (sale: ISale): Promise<ISale | null> => {
 export const updateSale = async (
   id: string,
   sale: ISale
-): Promise<ISale | null> => {
+): Promise<ISale > => {
   try {
     const response: AxiosResponse<ISale> = await instance.put(
       `/api/sale/${id}`,
-      sale
+      sale,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     );
     notification.success({ message: "Campaign updated successfully" });
     return response.data || response;
@@ -89,7 +96,14 @@ export const updateSale = async (
 export const deleteSale = async (id: string): Promise<ISale | null> => {
   try {
     const response: AxiosResponse<ISale> = await instance.delete(
-      `/api/sale/${id}`
+      `/api/sale/${id}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
     );
     notification.success({ message: "Campaign deleted successfully." });
     return response.data || response;
