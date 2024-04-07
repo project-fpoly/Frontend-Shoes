@@ -61,17 +61,16 @@ const CategoriesManager: React.FC = () => {
     name: 'Tên danh mục',
     description: 'Mô tả của danh mục',
     imageUrl:
-      'https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg',
+      'ahihi',
     status: 'active',
     viewCount: 123,
   }
   const Value = {
-    _id: categoriesState?._id || '',
-    name: categoriesState?.name || 'Tên danh mục',
-    description: categoriesState?.description || 'Mô tả của danh mục',
+    name: categoriesState?.name ? categoriesState?.name : 'Tên danh mục',
+    description: categoriesState?.description ? categoriesState?.description : 'Mô tả của danh mục',
     imageUrl:
       categoriesState?.imageUrl ||
-      'https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg',
+      'ahihi',
     status: categoriesState?.status || 'active',
     viewCount: categoriesState?.viewCount || 123,
   }
@@ -106,7 +105,9 @@ const CategoriesManager: React.FC = () => {
     {
       title: 'Image',
       dataIndex: 'imageUrl',
-      render: (imageUrl) => <Image src={imageUrl} width={50} />,
+      render: (imageUrlData) => (
+        <Image src={imageUrlData?.url} width={50} /> // Truy cập vào thuộc tính 'url'
+      ),
     },
     {
       title: 'Description',
