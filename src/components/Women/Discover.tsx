@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import { viewsFilterProducts } from '../../services/productsQuery'
 import { IProduct } from '../../common/products'
 import { Link } from 'react-router-dom'
-
 const Discover = () => {
   // const dispatch = useDispatch<AppDispatch>();
   const [products, setProducts] = useState<IProduct[]>([])
@@ -82,6 +81,7 @@ const Discover = () => {
           )}
         </Swiper>
       </Space>
+
     </>
   )
 }
