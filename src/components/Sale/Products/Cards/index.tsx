@@ -40,7 +40,7 @@ const Card = (props: Props) => {
                   <h2 style={{ textDecoration: 'line-through' }}>{formatCurrency(item.price)}</h2>
                 </Space>
                 {item.sale && typeof item.sale === 'object' && item.sale.discount !== undefined &&
-                  <p style={{ color: 'green', fontWeight: 500 }}>{item.sale.discount}% off</p>
+                  <p className='absolute right-10' style={{ color: 'red', fontWeight: 500 }}>{item.sale.discount}% off</p>
                 }
               </Link>
             </div>

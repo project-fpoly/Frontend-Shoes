@@ -2,7 +2,7 @@
 @tailwind components;
 
 @layer utilities {
-  button,
+  /* button,
   [type='submit'],
   .ant-btn-primary {
     -webkit-appearance: button;
@@ -14,7 +14,7 @@
   [type='submit']:hover,
   .ant-btn-primary:hover {
     background-color: rgb(51, 49, 90);
-  }
+  } */
 }
 
 @tailwind utilities;
