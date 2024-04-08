@@ -55,9 +55,9 @@ const Router = (user: any) => {
 
     socket.on('connect', () => {
       console.log('Connected to Socket io')
-      if(localStorage.getItem('userID')==null){
+      if (localStorage.getItem('userID') == null) {
         return
-      }else{
+      } else {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
         console.log('chua thong bao', user)
       }

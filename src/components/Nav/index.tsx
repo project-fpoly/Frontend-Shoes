@@ -27,29 +27,29 @@ const NavBar = () => {
   const user = useSelector((state: any) => state.auth.user)
   const dispatch = useDispatch()
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY >= 100) {
-  //       setPosition(true)
-  //     } else {
-  //       setPosition(false)
-  //     }
-  //   }
-  //   const handleScrollTop = (e: any) => {
-  //     if (e.deltaY === 100) {
-  //       setShowNav(true)
-  //     } else {
-  //       setShowNav(false)
-  //     }
-  //   }
-  //   window.addEventListener('wheel', handleScrollTop)
-  //   window.addEventListener('scroll', handleScroll)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 100) {
+        setPosition(true)
+      } else {
+        setPosition(false)
+      }
+    }
+    const handleScrollTop = (e: any) => {
+      if (e.deltaY === 100) {
+        setShowNav(true)
+      } else {
+        setShowNav(false)
+      }
+    }
+    window.addEventListener('wheel', handleScrollTop)
+    window.addEventListener('scroll', handleScroll)
 
-  //   return () => {
-  //     window.removeEventListener('wheel', handleScrollTop)
-  //     window.removeEventListener('scroll', handleScroll)
-  //   }
-  // }, [])
+    return () => {
+      window.removeEventListener('wheel', handleScrollTop)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   const handleLogout = () => {
     localStorage.clear()
@@ -70,7 +70,10 @@ const NavBar = () => {
           },
         }}
       >
-        <div className="flex justify-between px-16 py-4 bg-[#f5f5f5]">
+     <div className={clsx('fixed z-50',
+        showNav ? 'hidden' : '',
+     )} >
+     <div className="flex  justify-between px-16  py-4 bg-[#f5f5f5]">
           <Link to={'/'}>
             <SiJordan size={28} className="hover:opacity-70" />
           </Link>
@@ -141,12 +144,9 @@ const NavBar = () => {
 
         <div
           className={clsx(
-            'flex  bg-white w-full justify-evenly z-50',
-            showNav ? 'hidden' : '',
-            position ? 'top-0' : '',
-          )}
+            'flex  bg-white w-full justify-evenly z-50')}
         >
-          <div className="flex justify-evenly mx-24 gap-[200px] z-10">
+          <div className="flex justify-evenly mx-24 gap-[100px] z-10">
             <Link to={'/'}>
               <SiNike className="hover:opacity-75" size={50} />
             </Link>
@@ -154,6 +154,7 @@ const NavBar = () => {
             <NavRight></NavRight>
           </div>
         </div>
+     </div>
 
         {/* <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">
           <h2>Move, Shop, Customise & Celebrate With Us.</h2>

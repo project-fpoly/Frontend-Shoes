@@ -80,7 +80,7 @@ const Sale = () => {
           ]}
         />
       </span>
-      <div className="flex justify-center items-center">
+      <div className="flex">
         <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>
