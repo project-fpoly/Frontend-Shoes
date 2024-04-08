@@ -3,6 +3,7 @@ import { initialUser } from '../../common/redux/type'
 import { isRejected } from '@reduxjs/toolkit/react'
 import {
   createUsers,
+  delete2Users,
   deleteUsers,
   getOneUsers,
   getUsers,
@@ -91,6 +92,19 @@ export const deleteeUser = createAsyncThunk(
     }
   },
 )
+export const deletee2User = createAsyncThunk(
+  '/user/delete2User',
+  async (id: string, thunkApi) => {
+    try {
+      const response = await delete2Users(id)
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      thunkApi.dispatch(fetchAllNotification(""))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
 /// đây là chỗ chọc vào kho để lấy db
 export const userSlice = createSlice({
   name: 'user',
@@ -167,6 +181,20 @@ export const userSlice = createSlice({
     builder.addCase(deleteeUser.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
       state.users = Array.isArray(action.payload) ? action.payload : []
+    })
+    builder.addCase(deletee2User.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(deletee2User.rejected, (state, action) => {
+      state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to delete user.',
+      })
+    })
+    builder.addCase(deletee2User.fulfilled, (state) => {
+      state.loading = 'fulfilled'
     })
   },
 })

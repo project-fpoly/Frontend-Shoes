@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import {
   createNewUser,
+  deletee2User,
   deleteeUser,
   fetchAllUsers,
   updateUser,
@@ -64,7 +65,7 @@ const UserManager: React.FC = () => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        dispact(deleteeUser([user._id]))
+        dispact(deletee2User(user._id))
       },
       onCancel() {},
     })
