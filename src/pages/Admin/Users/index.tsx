@@ -25,9 +25,11 @@ const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>()
   const [userss, setUser] = useState<IUsers>()
   const [currentPage, setCurrentPage] = useState(1)
+  const [size, setsize] = useState(10)
   const [Search, setSearch] = useState('')
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number,size:number) => {
     setCurrentPage(page)
+    setsize(size);
   }
   const {
     users: user,
@@ -35,8 +37,8 @@ const UserManager: React.FC = () => {
     totalDocs,
   } = useSelector((state: IStateUser) => state.user)
   useEffect(() => {
-    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }))
-  }, [dispact, currentPage, Search])
+    dispact(fetchAllUsers({ page: currentPage, pageSize: size, search: Search }))
+  }, [dispact, currentPage, Search,size])
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser))
     setIsModalOpen(false)
@@ -216,6 +218,7 @@ const UserManager: React.FC = () => {
           total: totalDocs,
           showTotal: (total) => ` ${total} items`,
           onChange: handlePageChange,
+          showSizeChanger:true
         }}
       />
       {/* )} */}
