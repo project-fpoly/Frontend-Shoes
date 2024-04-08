@@ -59,7 +59,7 @@ const UserManager: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-  const [UserRemove, setUserRemove] = useState(false)
+  const [UserRemove, setUserRemove] = useState(true)
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen)
     setUser(user)
@@ -221,11 +221,13 @@ const UserManager: React.FC = () => {
         onSubmitt={(value) => searchUser(value)}
         name={'User'}
       />
-      <Button
-        style={{ float: 'inline-end' }}
-        icon={UserRemove ? <DeleteOutlined /> : <UnorderedListOutlined />}
-        onClick={userRemoveHandle}
-      />
+       <Button
+      style={{ float: 'inline-end' }}
+      icon={UserRemove ? <DeleteOutlined /> : <UnorderedListOutlined />}
+      onClick={userRemoveHandle}
+    >
+      {UserRemove ? 'Xóa người dùng' : 'Danh sách người dùng'}
+    </Button>
       {/* {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
