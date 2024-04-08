@@ -107,7 +107,7 @@ export const deleteUsers = async (userIds: string[]) => {
     throw error
   }
 }
-export const delete2Users = async (userIds: string[]) => {
+export const delete2Users = async (userIds: string) => {
   try {
     const response: AxiosResponse = await instance.delete(
       (`/api/auth/user/${userIds}`),
