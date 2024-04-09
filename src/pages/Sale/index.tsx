@@ -104,7 +104,7 @@ const Sale = () => {
           </>
         )}
       </div>
-      <LoadingBar color="#378CE7" progress={loading === 'fullfiled' ? 0 : 100} />
+      <LoadingBar color="black" progress={loading === 'fullfiled' ? 0 : 100} />
     </div>
   );
 };
