@@ -7,6 +7,7 @@ import {
   updateCate,
 } from '../../services/category'
 import { ICategory } from '../../common/category'
+import { notification } from 'antd'
 
 const initialState: initialCategory = {
   loading: 'idle',
@@ -107,24 +108,32 @@ export const categorySlice = createSlice({
     builder.addCase(createCategory.pending, (state) => {
       state.loading = 'pending'
     })
-    builder.addCase(createCategory.rejected, (state) => {
+    builder.addCase(createCategory.rejected, (state, action) => {
       state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to create a new user.',
+      })
     })
     builder.addCase(createCategory.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
-      state.categories = Array.isArray(action.payload) ? action.payload : []
-      state.totalDocs = state.categories.length
+      const newCategory = action.payload as never
+      state.categories.push(newCategory)
     })
     builder.addCase(updateCategory.pending, (state) => {
       state.loading = 'pending'
     })
-    builder.addCase(updateCategory.rejected, (state) => {
+    builder.addCase(updateCategory.rejected, (state, action) => {
       state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to update user.',
+      })
     })
-    builder.addCase(updateCategory.fulfilled, (state, action) => {
+    builder.addCase(updateCategory.fulfilled, (state) => {
       state.loading = 'fulfilled'
-      state.categories = Array.isArray(action.payload) ? action.payload : []
-      state.totalDocs = state.categories.length
     })
   },
 })

@@ -1,17 +1,81 @@
-import { Button, Form, Input, Select } from 'antd'
-import { ICategory } from '../../../common/category'
+import React, { useState } from "react";
+import { Form, Input, Select, Upload, Button, Image, GetProp, UploadProps,} from "antd";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
+import { PlusOutlined } from "@ant-design/icons";
+import { ICategory } from "../../../common/category";
 
-const { Option } = Select
+const { Option } = Select;
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 
-const FormCategory: React.FC<
-  ICategory & { onSubmit: (values: ICategory) => void; mode: string }
-> = ({ name, description, onSubmit, imageUrl, status, viewCount, mode }) => {
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
+  
+
+
+const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void; mode: string }> = ({
+  name,
+  description,
+  onSubmit,
+  imageUrl,
+  status,
+  viewCount,
+  mode,
+}) => {
   const [form] = Form.useForm()
+  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [showUploadButton, setShowUploadButton] = useState(mode === 'create')
 
-  const handleFormSubmitCreate = (values: ICategory) => {
-    onSubmit(values)
-    console.log(values)
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType)
+    }
   }
+  const handleChange = (info: UploadChangeParam<UploadFile>) => {
+    setFileList(info.fileList);
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
+  const handleRemoveImage = () => {
+    setFileList([])
+    setShowUploadButton(true)
+  }
+
+  const handleFormSubmitCreate = (values: ICategory ) => {
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('description', values.description);
+    formData.append('viewCount', String(values.viewCount)); // Convert viewCount to string
+
+    if (values.imageUrl?.file?.originFileObj) {
+      formData.append('imageUrl', values.imageUrl.file.originFileObj);
+    } else {
+      formData.append('imageUrl', imageUrl); // Ensure imageUrl is of type File | Blob
+    }
+    
+    formData.append('status', String(values.status));
+
+    // Convert FormData to an object
+    const formDataObject: Partial<ICategory> = Array.from(formData.entries()).reduce(
+      (acc, [key, value]) => {
+        acc[key as keyof ICategory] = value; // Cast key to keyof ICategory
+        return acc;
+      },
+      {} as Partial<ICategory>,
+    );
+
+    onSubmit(formDataObject as ICategory); // Submit the form data
+};
 
   return (
     <Form
@@ -31,68 +95,87 @@ const FormCategory: React.FC<
       onFinish={handleFormSubmitCreate}
     >
       <Form.Item
-        label={'Name'}
+        label={"Name"}
         name="name"
         rules={[
-          { required: true, message: 'Please input the name of the category' },
+          { required: true, message: "Please input the name of the category" },
         ]}
       >
         <Input defaultValue={name} />
       </Form.Item>
-      {mode === 'update' && (
-        <>
-          <Form.Item
-            label={'Description'}
-            name="description"
-            rules={[
-              { required: false, message: 'Please input the description' },
-            ]}
-          >
-            <Input defaultValue={description} />
-          </Form.Item>
 
-          <Form.Item
-            label={'Image URL'}
-            name="imageUrl"
-            rules={[{ required: false, message: 'Please input the image URL' }]}
-          >
-            <Input defaultValue={imageUrl} />
-          </Form.Item>
 
-          <Form.Item
-            label={'Status'}
-            name="status"
-            rules={[{ required: false, message: 'Please select the status' }]}
-            initialValue="active"
-          >
-            <Select>
-              <Option value="active">Active</Option>
-              <Option value="inactive">Inactive</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label={'View Count'}
-            name="viewCount"
-            rules={[
-              { required: false, message: 'Please input the view count' },
-            ]}
-          >
-            <Input defaultValue={viewCount} />
-          </Form.Item>
-        </>
-      )}
       <Form.Item
-        style={{ textAlign: 'right' }}
+        label={"Description"}
+        name="description"
+        rules={[
+          { required: false, message: "Please input the description" },
+        ]}
+      >
+        <Input defaultValue={description} />
+      </Form.Item>
+
+      <Form.Item
+        label={'imageUrl'}
+        name="imageUrl"
+        rules={[{ required: true, message: 'Vui lòng chọn ảnh đại diện' }]}
+      >
+        {!showUploadButton ? (
+          <div>
+            <Image src={imageUrl.url} alt="Avatar" />
+            <Button onClick={handleRemoveImage}>Xóa ảnh</Button>
+          </div>
+        ) : (
+          <>
+            <Upload
+              name="imageUrl"
+              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+              listType="picture-circle"
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+              onRemove={handleRemoveImage}
+            >
+              {showUploadButton && (fileList.length >= 1 ? null : uploadButton)}
+            </Upload>
+          </>
+        )}
+      </Form.Item>
+
+      <Form.Item
+        label={"Status"}
+        name="status"
+        rules={[{ required: false, message: "Please select the status" }]}
+        initialValue="active"
+      >
+        <Select>
+          <Option value="active">Active</Option>
+          <Option value="inactive">Inactive</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label={"View Count"}
+        name="viewCount"
+        rules={[
+          { required: false, message: "Please input the view count" },
+        ]}
+      >
+        <Input defaultValue={viewCount} />
+      </Form.Item>
+
+
+      <Form.Item
+        style={{ textAlign: "right" }}
         wrapperCol={{ offset: 8, span: 16 }}
       >
         <Button>Cancel</Button>
-        <Button style={{ marginLeft: '5px' }} type="primary" htmlType="submit">
+        <Button style={{ marginLeft: "5px" }} type="primary" htmlType="submit">
           Save
         </Button>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default FormCategory
+export default FormCategory;
