@@ -156,7 +156,7 @@ const CommentManager = () => {
   return (
     <>
       <HeaderTable
-        showModal={() => setIsModalOpen(true)}
+        showModal={null}
         onSubmitt={(value) => searchCmt(value)}
         name={'Comment'}
       />
