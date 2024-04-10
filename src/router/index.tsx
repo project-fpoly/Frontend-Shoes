@@ -114,7 +114,14 @@ const Router = (user: any) => {
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute user={user.user}>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
         </Route>
 
         <Route
@@ -139,7 +146,10 @@ const Router = (user: any) => {
             element={<NotificationsAdmin />}
           />
           <Route path="/admin/voucher" element={<Voucher />} />
-          <Route path="/admin/setting/sendNotification" element={<SendNotification />} />
+          <Route
+            path="/admin/setting/sendNotification"
+            element={<SendNotification />}
+          />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

@@ -24,7 +24,6 @@ const NavBar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
   const [position, setPosition] = useState<boolean>(false)
   const user = useSelector((state: any) => state.auth.user)
-  console.log(user);
   const dispatch = useDispatch()
   const handleLogout = () => {
     localStorage.clear()

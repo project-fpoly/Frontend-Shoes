@@ -48,7 +48,7 @@ const NavProfile = () => {
         },
       }}
     >
-      <Menu className="flex w-[800px]  pt-8 gap-16 " mode="horizontal" items={items as any} />
+      <Menu className="flex w-[800px]    pt-8 gap-16 " mode="horizontal" items={items as any} />
 
     </ConfigProvider>
   )
