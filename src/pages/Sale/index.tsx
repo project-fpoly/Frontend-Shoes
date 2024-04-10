@@ -24,7 +24,7 @@ const Sale = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(true);
 
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
+    dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }));
     document.title = 'Sale';
   }, []);
 
