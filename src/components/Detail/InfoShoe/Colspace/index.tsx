@@ -220,9 +220,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
-    const commnetcr = { content, rating }
-    const commentId = idCmt?._id
     const shoeId = shoe._id
+    const commnetcr = { content, rating ,shoeId}
+    const commentId = idCmt?._id
     const comentUpdate = { ...commnetcr, commentId, shoeId }
     if (typeCmt === 'CREATE') {
       dispatch(createCommnets(commnetcr as any))

@@ -117,9 +117,7 @@ const Router = (user: any) => {
           <Route
             path="/profile"
             element={
-              <PrivateRoute user={user.user}>
-                <Profile />
-              </PrivateRoute>
+              <Profile />
             }
           />
         </Route>
