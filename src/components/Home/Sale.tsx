@@ -59,7 +59,7 @@ const Sale = () => {
           <div>Loading...</div>
         ) : (
           products.map((item, index) => (
-            <Link to={`/detail/${item._id}`}>
+            <Link key={index + 1} to={`/detail/${item._id}`}>
               <Card
                 onDragStart={(event) => event.preventDefault()}
                 key={index}

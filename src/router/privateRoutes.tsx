@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {JwtPayload, jwtDecode} from "jwt-decode";
+import IUser from '../types/user';
 
-export const PrivateRoute = ({ children, user }) => {
+export const PrivateRoute = ({ children, user } : ({children : JSX.Element  ,user: IUser}) ) => {
   const navigate = useNavigate()
   const token = localStorage.getItem("accessToken");
   useEffect(() => {
