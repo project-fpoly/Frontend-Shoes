@@ -107,7 +107,7 @@ const SaleManager: React.FC = () => {
             ),
         },
         {
-            title: "Expiration Date",
+            title: "Start Date",
             dataIndex: "start_date",
             key: "start_date",
             render: (date: string) => format(new Date(date), "dd/MM/yyyy"),
@@ -150,6 +150,7 @@ const SaleManager: React.FC = () => {
         discount: saleState?.discount || 0,
         description: saleState?.description || "",
         expiration_date: saleState?.expiration_date || "2024-01-01",
+        product: saleState?.product || "",
     };
 
     const searchSale = (value: string) => {
@@ -157,7 +158,7 @@ const SaleManager: React.FC = () => {
     };
 
     return (
-        <div>
+        <div >
             <HeaderTable
                 showModal={() => setIsModalOpen(true)}
                 onSubmitt={(value) => searchSale(value)}
