@@ -1,14 +1,13 @@
-
 import { useState, useEffect } from "react";
-import { FilterOutlined } from "@ant-design/icons";
-import { Collapse, Radio, Button, RadioChangeEvent, Modal } from "antd";
+import { CustomerServiceOutlined, FilterOutlined } from "@ant-design/icons";
+import { Collapse, Radio, Button, RadioChangeEvent, Drawer, FloatButton, Input, DatePicker } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateProduct } from "../../../common/redux/type";
 import { getProductsWithFilters } from "../../../features/product";
-
-
-const { Panel } = Collapse
+import NumericInput from "../../../components/Admin/Product/input";
+const { RangePicker } = DatePicker;
+const { Panel } = Collapse;
 
 const sortOptions = [
   { label: 'Tăng dần theo giá bán', value: 'asc' },
@@ -21,17 +20,18 @@ const sortOptions = [
   { label: 'Giảm dần theo giảm giá', value: 'desc_sale' },
   { label: 'Tăng dần theo đánh giá', value: 'asc_rate' },
   { label: 'Giảm dần theo đánh giá', value: 'desc_rate' },
-]
+];
 
 interface FilterProps {
-  page: number
-  searchKeyword: string
+  page: number;
+  pageSize: number;
+  searchKeyword: string;
 }
 
 const Filter = (props: FilterProps) => {
-  const dispatch = useDispatch<AppDispatch>()
-  const { loading } = useSelector((state: IStateProduct) => state.product)
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading } = useSelector((state: IStateProduct) => state.product);
+  //Size
   const [selectedSort, setSelectedSort] = useState<
     | 'asc'
     | 'desc'
@@ -44,72 +44,228 @@ const Filter = (props: FilterProps) => {
     | 'asc_rate'
     | 'desc_rate'
     | undefined
-  >()
+  >();
+  //Size
+  const [selectedSize, setSelectedSize] = useState<string | undefined>();
+  const sizeOptions = [
+    { label: "36", value: "36" },
+    { label: "37", value: "37" },
+    { label: "38", value: "38" },
+    { label: "39", value: "39" },
+    { label: "40", value: "40" },
+    { label: "41", value: "41" },
+    { label: "42", value: "42" },
+  ];
+  const handleSizeChange = (size: string) => {
+    setSelectedSize(size);
+  };
+  //Price
+  const [selectedMinPrice, setSelectedMinPrice] = useState<string>('');
+  const handleMinPriceChange = (minPrice: string) => {
+    setSelectedMinPrice(minPrice);
+    if (minPrice === '' && selectedMaxPrice !== undefined) {
+      setSelectedMaxPrice('');
+    }
+  };
 
-  const [showFilter, setShowFilter] = useState<boolean>(false)
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState<string>('');
+
+  const handleMaxPriceChange = (maxPrice: string) => {
+    setSelectedMaxPrice(maxPrice);
+  };
+  //Material
+  const [selectedMaterial, setSelectedMaterial] = useState<string | undefined>();
+  const materialsOptions = [
+    { label: "Leather", value: "Leather" },
+    { label: "Fabric", value: "Fabric" },
+    { label: "Rubber", value: "Rubber" },
+    { label: "Plastic", value: "Plastic" },
+    { label: "Velvet", value: "Velvet" },
+    { label: "EVA", value: "EVA" },
+    { label: "Mesh", value: "Mesh" },
+  ];
+  const handleMaterialChange = (material: string) => {
+    setSelectedMaterial(material);
+  };
+  //Date
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+
+  const handleStartDateChange = (date: any, dateString: string) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: any, dateString: string) => {
+    setEndDate(date);
+  };
+
+  //Color
+  const [selectedColor, setSelectedColor] = useState<string | undefined>();
+  const [selectedGender, setSelectedGender] = useState<string | undefined>();
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [showFloatButton, setShowFloatButton] = useState<boolean>(true);
+
   const handleToggleFilter = () => {
-    setShowFilter(!showFilter)
-  }
+    setShowFilter(!showFilter);
+  };
 
   const handleSortChange = (e: RadioChangeEvent) => {
-    setSelectedSort(
-      e.target.value as
-        | 'asc'
-        | 'desc'
-        | 'asc_views'
-        | 'desc_views'
-        | 'asc_sold'
-        | 'desc_sold'
-        | 'asc_sale'
-        | 'desc_sale'
-        | 'asc_rate'
-        | 'desc_rate',
-    )
-  }
+    setSelectedSort(e.target.value as
+      | 'asc'
+      | 'desc'
+      | 'asc_views'
+      | 'desc_views'
+      | 'asc_sold'
+      | 'desc_sold'
+      | 'asc_sale'
+      | 'desc_sale'
+      | 'asc_rate'
+      | 'desc_rate'
+    );
+  };
+
+
+
+
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleGenderChange = (gender: string) => {
+    setSelectedGender(gender);
+  };
 
   const handleResetFilter = () => {
-    setSelectedSort(undefined)
-  }
+    setSelectedSort(undefined);
+    setSelectedSize(undefined);
+    setSelectedMinPrice('');
+    setSelectedMaxPrice('');
+    setSelectedMaterial(undefined);
+    setStartDate(undefined);
+    setEndDate(undefined);
+    setSelectedColor(undefined);
+    setSelectedGender(undefined);
+
+  };
 
   useEffect(() => {
     const handleFilter = () => {
       const filters = {
         page: props.page,
-        pageSize: 10,
+        pageSize: props.pageSize,
         searchKeyword: props.searchKeyword,
         sort: selectedSort,
-      }
-      dispatch(getProductsWithFilters(filters))
-    }
+        size: selectedSize,
+        minPrice: selectedMinPrice,
+        maxPrice: selectedMaxPrice,
+        material: selectedMaterial,
+        startDate: startDate,
+        endDate: endDate,
+        color: selectedColor,
+        gender: selectedGender,
 
-    handleFilter()
-  }, [dispatch, selectedSort, props.page, props.searchKeyword])
+      };
 
+      dispatch(getProductsWithFilters(filters));
+    };
 
-    return (
-        <>
-            <span onClick={handleToggleFilter}>
-                <FilterOutlined /> Bộ lọc
-            </span>
-            <Modal
-                title="Bộ lọc"
-                open={showFilter}
-                onCancel={handleToggleFilter}
-                footer={[
-                    <Button key="reset" onClick={handleResetFilter} loading={loading === "pending"}>
-                        Reset
-                    </Button>,
-                ]}
-            >
-                <Collapse defaultActiveKey={["0"]}>
-                    <Panel header="Sắp xếp" key="1">
-                        <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
-                    </Panel>
-                </Collapse>
-            </Modal>
-        </>
-    );
+    handleFilter();
+  }, [
+    dispatch,
+    selectedSort,
+    selectedSize,
+    selectedMinPrice,
+    selectedMaxPrice,
+    selectedMaterial,
+    startDate,
+    endDate,
+    selectedColor,
+    selectedGender,
+    isDeleted,
+    props.page,
+    props.pageSize,
+    props.searchKeyword,
+
+  ]);
+  useEffect(() => {
+    setShowFloatButton(!showFilter);
+  }, [showFilter]);
+
+  return (
+    <>
+      {showFloatButton && (
+        <FloatButton
+          onClick={handleToggleFilter}
+          shape="square"
+          type="primary"
+          style={{ position: "fixed", top: 114, right: 44, zIndex: 9999, height: 25 }}
+          icon={<FilterOutlined />}
+        />
+      )}
+      <Drawer
+        title="Bộ lọc"
+        open={showFilter}
+        onClose={handleToggleFilter}
+        footer={[
+          <Button key="reset" onClick={handleResetFilter} loading={loading === "pending"}>
+            Reset
+          </Button>,
+        ]}
+      >
+        <Collapse defaultActiveKey={["0"]}>
+          <Panel header="Sắp xếp" key="1">
+            <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
+          </Panel>
+          <Panel header="Kích thước" key="2">
+            <Radio.Group options={sizeOptions} onChange={e => handleSizeChange(e.target.value)} value={selectedSize} />
+          </Panel>
+          <Panel header="Khoảng giá" key="3">
+            <Input.Group compact>
+              <NumericInput
+                placeholder="Min Price"
+                style={{ width: '50%' }}
+                value={selectedMinPrice}
+                onChange={handleMinPriceChange}
+                min={0}
+                max={20000000}
+                step={10000}
+              />
+              <NumericInput
+                placeholder="Max Price"
+                style={{ width: '50%' }}
+                value={selectedMaxPrice}
+                onChange={handleMaxPriceChange}
+                min={parseInt(selectedMinPrice) || 0} // Sử dụng selectedMinPrice nếu tồn tại, ngược lại sử dụng 500000
+                max={20000000}
+                step={300000}
+
+              />
+            </Input.Group>
+          </Panel>
+          <Panel header="Chất liệu" key="4">
+            <Radio.Group options={materialsOptions} onChange={e => handleMaterialChange(e.target.value)} value={selectedMaterial} />
+          </Panel>
+          <Panel header="Ngày đăng" key="5">
+          <RangePicker
+              onChange={(dates, dateStrings) => {
+                handleStartDateChange(dates, dateStrings[0]);
+                handleEndDateChange(dates, dateStrings[1]);
+              }}
+            />
+          </Panel>
+          <Panel header="Màu sắc" key="6">
+            {/* Render color options */}
+          </Panel>
+          <Panel header="Giới tính" key="7">
+            {/* Render gender options */}
+          </Panel>
+        </Collapse>
+      </Drawer>
+    </>
+  );
 };
 
 export default Filter;
-

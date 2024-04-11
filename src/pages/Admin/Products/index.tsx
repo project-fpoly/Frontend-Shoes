@@ -7,6 +7,7 @@ import {
     EyeOutlined,
     WarningFilled,
     SyncOutlined,
+    CustomerServiceOutlined,
 
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,16 +15,18 @@ import { AppDispatch } from "../../../redux/store";
 import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
-import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag } from "antd";
-import { removeProduct, createProduct, update, tryDelete, tryRestore } from "../../../features/product";
+import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag, FloatButton, Flex } from "antd";
+import { removeProduct, createProduct, update, tryDelete, tryRestore, getProductsWithFilters } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
 import ProducModal from './ProducModal';
 import Filter from './ProductFilter';
+import { searchByKeyword } from '../../../services/productsQuery';
 const ProductsManager: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [Search, setSearch] = useState("");
+    const [pageSize, setPageSize] = useState(10)
     const dispatch = useDispatch<AppDispatch>();
     const { products, loading, totalProducts } = useSelector(
         (state: IStateProduct) => state.product
@@ -40,8 +43,9 @@ const ProductsManager: React.FC = () => {
 
     };
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = (page: number, pageSize: number) => {
         setCurrentPage(page);
+        setPageSize(pageSize)
     };
 
     const [productsState, setProductsState] = useState<IProduct>();
@@ -50,10 +54,12 @@ const ProductsManager: React.FC = () => {
 
     const handleCreateProduct = (newProduct: IProduct) => {
         dispatch(createProduct(newProduct));
+        dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
         setIsModalOpen(false);
     };
     const handleUpdateProduct = (newProduct: IProduct) => {
         dispatch(update({ id: productsState?._id as string, newProduct }));
+        dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
         setIsModalUpdateOpen(false);
     };
     const toggleModal = (product: IProduct) => {
@@ -82,17 +88,6 @@ const ProductsManager: React.FC = () => {
     const rowClassName = (record: IProduct) => {
         return isRowDisabled(record) ? 'table-row-disabled' : '';
     };
-    const rowStyle = (record: IProduct) => {
-        if (isRowDisabled(record)) {
-            return {
-                style: {
-                    opacity: 0.5
-                }
-            };
-        }
-
-        return {};
-    }
 
     const columns: ColumnsType<IProduct> = [
         {
@@ -125,6 +120,7 @@ const ProductsManager: React.FC = () => {
             title: "Is Deleted",
             key: "isDeleted",
             align: "center",
+            fixed: 'right',
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
                     {record.isDeleted ?
@@ -179,7 +175,7 @@ const ProductsManager: React.FC = () => {
 
         ],
         color: "red" || "green" || "blue" || "yellow" || "black" || "white",
-        material: "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
+        material: "Mesh" || "EVA" || "Velvet" || "Plastic" || "Rubber" || "Fabric" || "Leather",
         release_date: "",
         images: [
         ],
@@ -202,7 +198,7 @@ const ProductsManager: React.FC = () => {
         description: productsState?.description ? productsState?.description : "",
         categoryId: typeof productsState?.categoryId === 'object' && productsState?.categoryId?.name
             ? productsState?.categoryId._id
-            : "Chưa có ID danh mục",
+            : "",
         price: productsState?.price ? productsState?.price : 0,
         sale: typeof productsState?.sale === 'object' && productsState?.sale?._id ? productsState?.sale._id : "",
         discount: productsState?.discount ? productsState?.discount : 0,
@@ -242,11 +238,9 @@ const ProductsManager: React.FC = () => {
                 <Col span={13}>
                     <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
                 </Col>
-                <Col span={12}>
-                    <Filter
-                        page={currentPage} searchKeyword={Search} />
-                </Col>
+
             </Row>
+            <Filter page={currentPage} searchKeyword={Search} pageSize={pageSize} />
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
                     <LoadingOutlined style={{ fontSize: 14 }} spin />
@@ -260,14 +254,15 @@ const ProductsManager: React.FC = () => {
                         columns={columns}
                         dataSource={products}
                         bordered
-
                         rowClassName={rowClassName}
                         size="small"
                         pagination={{
                             current: currentPage,
                             total: totalProducts,
+                            pageSize: pageSize,
                             showTotal: (total) => ` ${total} items`,
                             onChange: handlePageChange,
+                            showSizeChanger: true,
                         }}
                     />
                     <Modal

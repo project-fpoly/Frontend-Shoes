@@ -69,8 +69,8 @@ export const getProductsWithFilters = createAsyncThunk(
     | 'desc_rate'
     categoryId?: string
     size?: string
-    minPrice?: number
-    maxPrice?: number
+    minPrice?: string
+    maxPrice?: string
     material?: string
     startDate?: Date
     endDate?: Date
@@ -143,7 +143,7 @@ export const removeProduct = createAsyncThunk(
     try {
       const response = await deleteProduct(id)
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
       )
       return response
     } catch (error) {
@@ -190,8 +190,8 @@ export const tryDelete = createAsyncThunk(
     try {
       const response = await tryDeleteProduct(id);
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
-      );
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
+      )
       return response;
     } catch (error) {
       throw new Error("Error updating Product");
@@ -205,8 +205,8 @@ export const tryRestore = createAsyncThunk(
     try {
       const response = await tryRestoreProduct(id);
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
-      );
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
+      )
       return response;
     } catch (error) {
       throw new Error("Error updating Product");

@@ -185,13 +185,13 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         rules={[{ required: true, message: "Please select a material" }]}
                     >
                         <Select placeholder="Select a material" value="material">
-                            <Option value="leather">Leather</Option>
-                            <Option value="fabric">Fabric</Option>
-                            <Option value="rubber">Rubber</Option>
-                            <Option value="plastic">Plastic</Option>
-                            <Option value="velvet">Velvet</Option>
+                            <Option value="Leather">Leather</Option>
+                            <Option value="Fabric">Fabric</Option>
+                            <Option value="Rubber">Rubber</Option>
+                            <Option value="Plastic">Plastic</Option>
+                            <Option value="Velvet">Velvet</Option>
                             <Option value="EVA">EVA</Option>
-                            <Option value="mesh">Mesh</Option>
+                            <Option value="Mesh">Mesh</Option>
                         </Select>
                     </Form.Item>
 
@@ -356,7 +356,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     </Form.Item>
                     <Form.Item
                         name="sizes"
-                        style={{ maxHeight: 180, overflow: 'auto',height:'80px' }}
+                        style={{ maxHeight: 180, overflow: 'auto', height: '80px' }}
                         rules={[{ required: true, message: 'Please add at least one size' }]}
                     >
                         <Form.List name="sizes">

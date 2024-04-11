@@ -6,19 +6,40 @@ import { IUsers } from '../common/users'
 import IUser from './../types/user'
 import io from 'socket.io-client'
 
-export const Signup = (data: IUser) => {
-  return instance.post('/auth/signup', data)
-}
+export const Signup = async (data: IUser) => {
+  try {
+    const response = await instance.post('/auth/signup', data);
+    return response.data;
+  } catch (error: any) {
+    notification.error({
+      message: 'Đăng ký thất bại',
+      description: error.message || 'Có lỗi xảy ra khi đăng ký',
+    });
+    throw error;
+  }
+};
 
-export const Signin = (data: IUser) => {
-  return instance.post('/auth/signin', data)
-}
-
+export const Signin = async (data: IUser) => {
+  try {
+    const response = await instance.post('/auth/signin', data);
+    notification.success({
+      message: 'Đăng nhập thành công',
+      description: 'Bạn đã đăng nhập thành công.',
+    });
+    return response.data;
+  } catch (error: any) {
+    notification.error({
+      message: 'Đăng nhập thất bại',
+      description: error.message || 'Có lỗi xảy ra khi đăng nhập',
+    });
+    throw error;
+  }
+};
 export const ForgotPass = (data: IUser) => {
   return instance.post('/auth/forgotpassword', data)
 }
 
-export const getUsers = async (page = 1, pageSize = 10, search = '',isDelete=false) => {
+export const getUsers = async (page = 1, pageSize = 10, search = '', isDelete = false) => {
   try {
     const response: AxiosResponse = await instance.get(
       `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}&isDelete=${isDelete}`,
