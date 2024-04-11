@@ -2,6 +2,7 @@
 @tailwind components;
 
 @layer utilities {
+
   /* button,
   [type='submit'],
   .ant-btn-primary {
@@ -15,6 +16,30 @@
   .ant-btn-primary:hover {
     background-color: rgb(51, 49, 90);
   } */
+}
+
+/* .ant-menu-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.ant-menu-overflow-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-tabs-nav-list {
+  gap: 60px;
+}
+
+.ant-tabs-tab-active {
+  color: black !important
+}
+
+.ant-tabs-tab {
+  color: black
 }
 
 @tailwind utilities;

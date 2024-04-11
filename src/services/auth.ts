@@ -18,10 +18,10 @@ export const ForgotPass = (data: IUser) => {
   return instance.post('/auth/forgotpassword', data)
 }
 
-export const getUsers = async (page = 1, pageSize = 10, search = '') => {
+export const getUsers = async (page = 1, pageSize = 10, search = '',isDelete=false) => {
   try {
     const response: AxiosResponse = await instance.get(
-      `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}`,
+      `/api/auth/users?page=${page}&pageSize=${pageSize}&search=${search}&isDelete=${isDelete}`,
       {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -94,6 +94,24 @@ export const deleteUsers = async (userIds: string[]) => {
       '/api/auth/more-users',
       {
         data: { userIds },
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    )
+    notification.success(response.data)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+export const delete2Users = async (userIds: string) => {
+  try {
+    const response: AxiosResponse = await instance.delete(
+      (`/api/auth/user/${userIds}`),
+      {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

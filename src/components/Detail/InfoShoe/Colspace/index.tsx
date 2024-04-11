@@ -57,12 +57,15 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     reset,
     setValue,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       content: '',
     },
   })
+
+  const previousContent = watch('content')
 
   const { _id: shoeId } = shoe
   const [rating, setRating] = useState<any>(0)
@@ -217,9 +220,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
-    const commnetcr = { content, rating }
-    const commentId = idCmt?._id
     const shoeId = shoe._id
+    const commnetcr = { content, rating ,shoeId}
+    const commentId = idCmt?._id
     const comentUpdate = { ...commnetcr, commentId, shoeId }
     if (typeCmt === 'CREATE') {
       dispatch(createCommnets(commnetcr as any))
@@ -353,14 +356,29 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 </span>
               )}
 
-              <button
+              {previousContent === idCmt?.content && rating === idCmt?.rating ? (
+                <button
+                  disabled
+                  onClick={() => setTypeCmt('UPDATE')}
+                  type="submit"
+                  className="bg-blue-500  text-white  py-2 px-4 rounded w-[100px]"
+                >
+                  {Loading === 'pending' ? 'Loading...' : 'Send'}
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setTypeCmt('UPDATE')}
+                    type="submit"
+                    className="bg-blue-700 hover:bg-blue-800 font-bold text-white  py-2 px-4 rounded w-[100px]"
+                  >
+                    {Loading === 'pending' ? 'Loading...' : 'Send'}
+                  </button>
+                </>
 
-                onClick={() => setTypeCmt('UPDATE')}
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded w-[100px]"
-              >
-                {Loading === 'pending' ? 'Loading...' : 'Send'}
-              </button>
+              )}
+
+
             </form>
             <p>
               Describe what you liked, what you didn't like and other key

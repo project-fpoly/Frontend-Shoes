@@ -44,7 +44,7 @@ const DetailShoe = () => {
       <div className="mt-10 px-10">
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
-      <LoadingBar color="#378CE7" progress={Loading === 'fullfiled' ? 0 : 100} />
+      <LoadingBar color="black" progress={Loading === 'fullfiled' ? 0 : 100} />
 
     </>
   )

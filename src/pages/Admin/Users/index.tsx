@@ -3,6 +3,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   LoadingOutlined,
+  UnorderedListOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Modal, Table, Tag, Tooltip, notification } from 'antd'
@@ -13,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import {
   createNewUser,
+  deletee2User,
   deleteeUser,
   fetchAllUsers,
   updateUser,
@@ -25,9 +27,11 @@ const UserManager: React.FC = () => {
   const dispact = useDispatch<AppDispatch>()
   const [userss, setUser] = useState<IUsers>()
   const [currentPage, setCurrentPage] = useState(1)
+  const [size, setsize] = useState(10)
   const [Search, setSearch] = useState('')
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, size: number) => {
     setCurrentPage(page)
+    setsize(size)
   }
   const {
     users: user,
@@ -35,8 +39,15 @@ const UserManager: React.FC = () => {
     totalDocs,
   } = useSelector((state: IStateUser) => state.user)
   useEffect(() => {
-    dispact(fetchAllUsers({ page: currentPage, pageSize: 10, search: Search }))
-  }, [dispact, currentPage, Search])
+    dispact(
+      fetchAllUsers({
+        page: currentPage,
+        pageSize: size,
+        search: Search,
+        isDelete: false,
+      }),
+    )
+  }, [dispact, currentPage, Search, size])
   const handleCreateUser = (newUser: IUsers) => {
     dispact(createNewUser(newUser))
     setIsModalOpen(false)
@@ -48,6 +59,7 @@ const UserManager: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+  const [UserRemove, setUserRemove] = useState(true)
   const toggleModal = (user: IUsers) => {
     setIsModalUpdateOpen(!isModalUpdateOpen)
     setUser(user)
@@ -62,7 +74,9 @@ const UserManager: React.FC = () => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        dispact(deleteeUser([user._id]))
+        UserRemove
+          ? dispact(deletee2User(user._id))
+          : dispact(deleteeUser([user._id]))
       },
       onCancel() {},
     })
@@ -189,6 +203,17 @@ const UserManager: React.FC = () => {
   const searchUser = (value: string) => {
     setSearch(value)
   }
+  const userRemoveHandle = () => {
+    setUserRemove(!UserRemove)
+    dispact(
+      fetchAllUsers({
+        page: currentPage,
+        pageSize: size,
+        search: Search,
+        isDelete: UserRemove,
+      }),
+    )
+  }
   return (
     <div>
       <HeaderTable
@@ -196,6 +221,13 @@ const UserManager: React.FC = () => {
         onSubmitt={(value) => searchUser(value)}
         name={'User'}
       />
+       <Button
+      style={{ float: 'inline-end' }}
+      icon={UserRemove ? <DeleteOutlined /> : <UnorderedListOutlined />}
+      onClick={userRemoveHandle}
+    >
+      {UserRemove ? 'Xóa người dùng' : 'Danh sách người dùng'}
+    </Button>
       {/* {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">
@@ -216,6 +248,7 @@ const UserManager: React.FC = () => {
           total: totalDocs,
           showTotal: (total) => ` ${total} items`,
           onChange: handlePageChange,
+          showSizeChanger: true,
         }}
       />
       {/* )} */}

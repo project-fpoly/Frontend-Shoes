@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form, Input, Radio, Select } from 'antd'
+import React, { useEffect, useState, useRef } from 'react'
+import { Button, Checkbox, Form, Input, Radio, Select, Switch } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import { TbTruckDelivery } from 'react-icons/tb'
@@ -15,10 +15,12 @@ import {
 } from '../../features/address'
 
 import { fetchAllProducts } from '../../features/product'
+import { fetchOneVoucher } from '../../features/voucher'
 
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
-
+import { SearchOutlined } from '@ant-design/icons'
+import type { InputRef } from 'antd'
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
@@ -28,9 +30,26 @@ const CheckOut = () => {
   const districts = useSelector((state: any) => state.address.district)
   const wards = useSelector((state: any) => state.address.ward)
   const shippingOrder = useSelector((state: any) => state.address.shipping)
+  const { data } = useSelector((state: any) => state.voucher.voucher)
+  const message = useSelector((state: any) => state.voucher.voucher)
   const [province, setProvince] = useState(null)
   const [district, setDistrict] = useState(null)
   const [ward, setWard] = useState(null)
+  const [input, setInput] = useState(false)
+  const [voucherr, setVoucher] = useState('')
+  const inputRef = useRef(null)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        setInput(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
   let totalCart = 0
@@ -41,10 +60,13 @@ const CheckOut = () => {
     totalCart += item.price * item.quantity
   })
   const totalPrice = district
-    ? shippingOrder?.service_fee + totalCart
+    ? data?.Code === voucherr
+      ? shippingOrder?.service_fee + totalCart - data?.reduced_amount
+      : shippingOrder?.service_fee + totalCart
     : totalCart
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
+  console.log(products)
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.name : 'N/A'
@@ -104,7 +126,8 @@ const CheckOut = () => {
         items: items,
       }),
     )
-  }, [province, district, ward, order?.cartItems.length > 0])
+    dispatch(fetchOneVoucher(voucherr))
+  }, [province, district, ward, order?.cartItems.length > 0, voucherr])
   const [form] = Form.useForm()
   const handleFormSubmit = async (formValues: {
     firstName: string
@@ -141,39 +164,39 @@ const CheckOut = () => {
       if (accessToken) {
         if (cart) {
           const { cartItems } = cart
-           const data = await dispatch(
+          const data = await dispatch(
             createOrder({
               cartItems,
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
             }),
           )
           sessionStorage.removeItem('cart')
           if (payment_method === 'vnPay' && data) {
             redirectUrl = await dispatch(
-              createPaymentUrl({  
+              createPaymentUrl({
                 amount: totalPrice,
                 bankCode: 'VNBANK',
                 language: 'vn',
                 orderId: data?.payload.trackingNumber,
-
               }),
             )
           }
         } else if (cartSession && cartSession.cartItems) {
           const { cartItems } = cartSession
-          const data =  await dispatch(
+          const data = await dispatch(
             createOrder({
               cartItems,
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
             }),
           )
           sessionStorage.removeItem('cart')
           if (payment_method === 'vnPay' && data) {
-         
             redirectUrl = await dispatch(
               createPaymentUrl({
                 amount: totalPrice,
@@ -198,11 +221,12 @@ const CheckOut = () => {
             shippingAddress,
             payment_method,
             totalPrice,
+            voucherr,
           }),
         )
-       
+
         sessionStorage.removeItem('cart')
-        if (payment_method === 'vnPay'&& data) {
+        if (payment_method === 'vnPay' && data) {
           console.log(totalPrice)
           console.log(data)
           redirectUrl = await dispatch(
@@ -236,6 +260,9 @@ const CheckOut = () => {
       phone,
     })
   }, [form, fullname])
+  const handleSubmitVoucher = (values: any) => {
+    setVoucher(values.Code)
+  }
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
       <div className="grid grid-cols-2">
@@ -465,7 +492,39 @@ const CheckOut = () => {
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Delivery/Shipping</div>
               <div className="text-[#6b7280]">
-                { district ? shippingOrder?.service_fee + 'đ' : 'Free'}
+                {district ? shippingOrder?.service_fee + 'đ' : 'Free'}
+              </div>
+            </div>
+            <hr />
+            <div className="flex justify-between items-center my-5">
+              <div className="text-[#6b7280]">Voucher</div>
+              <div ref={inputRef}>
+                {input ? (
+                  <Form onFinish={handleSubmitVoucher}>
+                    <Form.Item name="Code">
+                      <Input
+                        name="Code"
+                        className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black"
+                        size="large"
+                        placeholder="Enter your voucher"
+                      />
+                    </Form.Item>
+                  </Form>
+                ) : data?.Code === voucherr ? (
+                  <p className="text-[#6b7280]">{data.Name}</p>
+                ) : (
+                  <Button
+                    className="border-none bg-none"
+                    onClick={() => setInput(true)}
+                  >
+                    <SearchOutlined className="flex items-end justify-center w-4" />
+                  </Button>
+                )}
+                {!message && voucherr && (
+                  <p className="text-[#6b7280] text-sm">
+                    mã giảm giá đã hết hạn hoặc không tồn tại
+                  </p>
+                )}
               </div>
             </div>
             <hr />
@@ -479,7 +538,7 @@ const CheckOut = () => {
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
-            {cart || cartSession ? (
+            {cart?.cartItems.length > 0 || cartSession?.cartItems.length > 0 ? (
               <>
                 {cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
@@ -491,8 +550,12 @@ const CheckOut = () => {
                       </figure>
                     </div>
                     <div className="col-span-1">
-                      <h2 className="text-xl">{getProductName(cartItem.product)}</h2>
-                      <p className="text-[#6b7280]">{getCateName(cartItem.product)}</p>
+                      <h2 className="text-xl">
+                        {getProductName(cartItem.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        {getCateName(cartItem.product)}
+                      </p>
                       <p className="text-[#6b7280]">{cartItem.size}</p>
                       <p className="text-[#6b7280]">{cartItem.quantity}</p>
                       <p className="text-[#6b7280]">{cartItem.price}</p>
@@ -509,16 +572,22 @@ const CheckOut = () => {
                       </figure>
                     </div>
                     <div className="col-span-1">
-                      <h2 className="text-xl">{getProductName(item.product)}</h2>
-                      <p className="text-[#6b7280]">{getCateName(item.product)}</p>
+                      <h2 className="text-xl">
+                        {getProductName(item.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        {getCateName(item.product)}
+                      </p>
                       <p className="text-[#6b7280]">{item.size}</p>
                       <p className="text-[#6b7280]">{item.quantity}</p>
-                      <p className="text-[#6b7280]">{item.price * item.quantity}</p>
+                      <p className="text-[#6b7280]">
+                        {item.price * item.quantity}
+                      </p>
                     </div>
                   </>
                 ))}
-                 </>
-              ) : null}
+              </>
+            ) : null}
           </div>
         </div>
       </div>
