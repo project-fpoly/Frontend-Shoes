@@ -43,7 +43,7 @@ const { Search } = Input
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate()
   const { Option } = Select
-  const user = useSelector((state) => state.auth.user)
+  const user = useSelector((state:any) => state.auth.user)
   const [visible, setVisible] = useState(false)
   const [selectedValue, setSelectedValue] = useState('');
 

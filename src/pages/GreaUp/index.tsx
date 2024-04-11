@@ -13,8 +13,13 @@ import { Select } from 'antd'
 import { GrTransaction } from 'react-icons/gr'
 import clsx from 'clsx'
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
-import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingBar from 'react-top-loading-bar'
+
+
+
 const GreaUp = () => {
+
+
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const loading = useSelector((state: IStateProduct) => state.product.loading)
@@ -50,12 +55,12 @@ const GreaUp = () => {
           className="flex gap-2 cursor-pointer "
         >
           {hideFilter ? 'Hide fillter' : 'Show filter'}
-          <button>
+          <button style={{ backgroundColor: "transparent" }}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button>Sort by :</button>
+        <button style={{ backgroundColor: "transparent" }}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
@@ -103,6 +108,7 @@ const GreaUp = () => {
           </>
         )}
       </div>
+      <LoadingBar color="black" progress={loading === 'fullfiled' ? 0 : 100} />
     </>
   )
 }

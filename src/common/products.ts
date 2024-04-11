@@ -19,8 +19,8 @@ export interface IProduct {
   price: number;
   sale?: string | {
     _id: string;
-    Name: string;
-    discout: number;
+    name: string;
+    discount: number;
   };
   discount?: number;
   quantity: number;
@@ -56,13 +56,4 @@ export interface ICmt {
   createdAt?: Date
   updatedAt?: Date
 }
-export interface ISale {
-  _id?: string
-  name?: string
-  description: string
-  sale: number
-  discount?: number
-  quantity: number
-  create_date: Date
-  expiration_date: Date
-}
+

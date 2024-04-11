@@ -102,7 +102,7 @@ const Help = () => {
       >
         <Space direction="vertical">
           <MobileOutlined style={{ fontSize: '40px' }} />
-          <Title level={5}>Products & orders</Title>
+          <Title level={5} className='mt-3'>Products & orders</Title>
           <a href="">12280903 (Viettel)</a>
           <a href="">12032487 (VTI)</a>
           <a href="">05:00 - 23-00</a>
@@ -110,14 +110,15 @@ const Help = () => {
         </Space>
         <Space direction="vertical" style={{ textAlign: 'center' }}>
           <MessageOutlined style={{ fontSize: '40px' }} />
-          <Title level={5}>Products & orders</Title>
+          <Title level={5} className='mt-3'>Products & orders</Title>
           <a href="">Chat with us</a>
           <a href="">24 hours a day</a>
           <a href="">7 days a week</a>
         </Space>
         <Space direction="vertical" style={{ textAlign: 'center' }}>
           <EnvironmentOutlined style={{ fontSize: '40px' }} />
-          <Title level={4}>Store locator</Title>
+          <Title level={5} className='mt-3'>Store locator</Title>
+          <a href="">FPT Polytechnic Building, 13 Trinh Van Bo Ward, <br />Xuan Phuong, Nam Tu Liem, Hanoi</a>
         </Space>
       </Space>
     </div>

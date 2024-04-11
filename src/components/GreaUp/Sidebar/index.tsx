@@ -38,8 +38,10 @@ const items: MenuProps['items'] = [
     getItem('Women', 'nữ'),
   ]),
   getItem('Shop by price', 'Price', '', [
-    getItem('0  to  1,000,000', 'Under'),
-    getItem('1,000,000  to  5,000,000đ', 'Over'),
+    getItem('0  to  1,000,000', '0  to  1,000,000'),
+    getItem('1,000,000đ  to  2,000,000đ', '1,000,000 to  2,000,000'),
+    getItem('2,000,000đ  to  5,000,000đ', '2,000,000  to  5,000,000'),
+    getItem('5,000,000đ  to  10,000,000đ', '5,000,000  to  10,000,000'),
   ]),
   getItem('Size', 'Size', '', [
     getItem('36', '36'),
@@ -85,10 +87,18 @@ const Sidebar = (props: Props) => {
         dispact(featchProductBySize(e.keyPath[0]))
         break
       case 'Price':
-
-
-        const valuePrice = e.keyPath[0] === 'Under' ? { minPrice: 0, maxPrice: 500000 } : { minPrice: 500000, maxPrice: 999999999999999 };
-        dispact(featchProductByPrice(valuePrice))
+        if (e.keyPath[0] === '0  to  1,000,000') {
+          console.log('hi');
+          dispact(featchProductByPrice({ minPrice: 0, maxPrice: 999999 }))
+        } if (e.keyPath[0] === '1,000,000 to  2,000,000') {
+          dispact(featchProductByPrice({ minPrice: 1000000, maxPrice: 1999999 }))
+        } if (e.keyPath[0] === '2,000,000  to  5,000,000') {
+          dispact(featchProductByPrice({ minPrice: 2000000, maxPrice: 4999999 }))
+        } if (e.keyPath[0] === '5,000,000  to  10,000,000') {
+          dispact(featchProductByPrice({ minPrice: 5000000, maxPrice: 9999999 }))
+        }
+        // const valuePrice = e.keyPath[0] === 'Under' ? { minPrice: 0, maxPrice: 500000 } : { minPrice: 500000, maxPrice: 999999999999999 };
+        // dispact(featchProductByPrice(valuePrice))
         break
       case 'Color':
         dispact(featchProductByColor(e.keyPath[0]))
@@ -107,6 +117,8 @@ const Sidebar = (props: Props) => {
         components: {
           Menu: {
             dangerItemActiveBg: '#fff2f0',
+            itemSelectedColor: 'black',
+            itemHoverBg: 'gray'
           },
         },
       }}

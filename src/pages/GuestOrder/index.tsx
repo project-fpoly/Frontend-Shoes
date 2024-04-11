@@ -13,20 +13,18 @@ const GuestOrder = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [value, setValue] = useState<string>('')
   const orders = useSelector((state: RootState) => state.order.orders)
-  const ord = useSelector((state: RootState) => state.order)
-  console.log(ord)
   const { products } = useSelector((state: IStateProduct) => state.product)
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.name : 'N/A'
   }
-
   useEffect(() => {
     dispatch(fetchOneOrder(value as any))
-  }, [value, orders?.length > 0])
+  }, [value])
   const handleSearch = (value: string) => {
     setValue(value)
   }
+  const a = orders.map((order: any)=>order.trackingNumber) 
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
       <Title level={3}> Search for orders</Title>
@@ -41,7 +39,7 @@ const GuestOrder = () => {
         }
         size="large"
       />
-      {orders?.length > 0 ? (
+      {orders?.length > 0 && value ===a[0]? (
         orders.map((order: any) => (
           <Card title="Order" style={{ width: '100%' }} className="mt-10">
             <Descriptions column={1} bordered>

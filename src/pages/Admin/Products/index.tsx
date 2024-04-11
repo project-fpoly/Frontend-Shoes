@@ -120,10 +120,7 @@ const ProductsManager: React.FC = () => {
             title: "Price",
             dataIndex: "price",
         },
-        {
-            title: "Sale",
-            dataIndex: "sale",
-        },
+
         {
             title: "Is Deleted",
             key: "isDeleted",
@@ -145,7 +142,7 @@ const ProductsManager: React.FC = () => {
             className: "action-cell",
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
-                    <Tooltip title={"Views"}>
+                    <Tooltip title={"iewsV"}>
                         <Button type="link" >
                             <EyeOutlined onClick={() => handleRowClick(record)} />
                         </Button>
@@ -167,15 +164,15 @@ const ProductsManager: React.FC = () => {
 
     const defaultValue: IProduct = {
 
-        product_id: "Mã số sản phẩm",
+        product_id: "",
         SKU: "SKU012",
-        name: "Giày Nike cap cấp",
+        name: "Giày Nike cao cấp",
         description: "Mô tả của sản phẩm",
-        categoryId: "65899c32bb48834579fde67e",
-        price: 999999,
+        categoryId: "",
+        price: 0,
         sale: "",
-        discount: 10,
-        quantity: 20,
+        discount: 0,
+        quantity: 0,
         sold_count: 0,
         rating: 5,
         sizes: [
@@ -194,30 +191,29 @@ const ProductsManager: React.FC = () => {
         gender: "nam" || "nữ",
         isPublished: true,
         publishedDate: "",
-        hits: 112,
+        hits: 0,
         isDeleted: false
     };
+
     const Value = {
-        product_id: productsState?.product_id ? productsState?.product_id : "Mã số sản phẩm",
-        SKU: productsState?.SKU ? productsState?.SKU : "Mã tồn kho của sản phẩm",
-        name: productsState?.name ? productsState?.name : "Tên của sản phẩm",
-        description: productsState?.description ? productsState?.description : "Mô tả của sản phẩm",
-        categoryId: productsState?.categoryId ? productsState?.categoryId : "ID danh mục của sản phẩm",
+        product_id: productsState?.product_id ? productsState?.product_id : "",
+        SKU: productsState?.SKU ? productsState?.SKU : "",
+        name: productsState?.name ? productsState?.name : "",
+        description: productsState?.description ? productsState?.description : "",
+        categoryId: typeof productsState?.categoryId === 'object' && productsState?.categoryId?.name
+            ? productsState?.categoryId._id
+            : "Chưa có ID danh mục",
         price: productsState?.price ? productsState?.price : 0,
-        sale: productsState?.sale ? productsState?.sale : '',
+        sale: typeof productsState?.sale === 'object' && productsState?.sale?._id ? productsState?.sale._id : "",
         discount: productsState?.discount ? productsState?.discount : 0,
         quantity: productsState?.quantity ? productsState?.quantity : 0,
         sold_count: productsState?.sold_count ? productsState?.sold_count : 0,
         rating: productsState?.rating ? productsState?.rating : 0,
         sizes: productsState?.sizes ? productsState?.sizes : [
-            {
-                name: "39",
-                quantity: 10
-            }
         ],
-        color: productsState?.color ? productsState?.color : "red" || "green" || "blue" || "yellow" || "black" || "white",
-        material: productsState?.material ? productsState?.material : "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
-        release_date: productsState?.release_date ? productsState?.release_date : "2021-02-28",
+        color: productsState?.color ? productsState?.color : "",
+        material: productsState?.material ? productsState?.material : "",
+        release_date: productsState?.release_date ? productsState?.release_date : "",
         images: productsState?.images ? productsState?.images : [
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg",
             "https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg"
@@ -226,13 +222,14 @@ const ProductsManager: React.FC = () => {
         blog: productsState?.blog ? productsState?.blog : "61f2a4c8e9a82f001f9e4a1c",
         warranty: productsState?.warranty ? productsState?.warranty : "1 year",
         tech_specs: productsState?.tech_specs ? productsState?.tech_specs : "",
-        stock_status: productsState?.stock_status ? productsState?.stock_status : "In stock" || "Out of stock" || "Pre-order" || "Backorder" || "Discontinued",
+        stock_status: productsState?.stock_status ? productsState?.stock_status : "",
         gender: productsState?.gender ? productsState?.gender : "nam" || "nữ",
         isPublished: productsState?.isPublished ? productsState?.isPublished : true,
-        publishedDate: productsState?.publishedDate ? productsState?.publishedDate : "2021-02-28",
+        publishedDate: productsState?.publishedDate ? productsState?.publishedDate : "",
         hits: productsState?.hits ? productsState?.hits : 0,
         isDeleted: productsState?.isDeleted ? productsState?.isDeleted : false
     };
+
     const searchProduct = (value: string) => {
         setSearch(value);
     };

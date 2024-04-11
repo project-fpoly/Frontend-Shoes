@@ -32,6 +32,7 @@ const initialState: initialProduct = {
   product: {},
   category: '',
   totalProducts: 0,
+  loadingSearch: 'idle',
 }
 
 export const getProductsWithFilters = createAsyncThunk(
@@ -94,7 +95,6 @@ export const getProductsWithFilters = createAsyncThunk(
         gender,
         isDeleted
       )
-      console.log('hi', response)
       return response
     } catch (error) {
       throw new Error('Lỗi khi lấy dữ liệu')
@@ -461,13 +461,13 @@ export const productSlice = createSlice({
     })
     // search product by keyword
     builder.addCase(searchProductsByKeyword.pending, (state) => {
-      state.loading = 'pending'
+      state.loadingSearch = 'pending'
     })
     builder.addCase(searchProductsByKeyword.rejected, (state) => {
-      state.loading = 'failed'
+      state.loadingSearch = 'failed'
     })
     builder.addCase(searchProductsByKeyword.fulfilled, (state, action) => {
-      state.loading = 'fulfilled'
+      state.loadingSearch = 'fulfilled'
       state.products = Array.isArray(action.payload) ? action.payload : []
     })
     ///Filter products by price

@@ -12,6 +12,7 @@ import { GrTransaction } from 'react-icons/gr';
 import Sidebar from '../../components/GreaUp/Sidebar';
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct';
 import ListProduct from '../../components/Sale/Products';
+import LoadingBar from 'react-top-loading-bar'
 
 const { Meta } = Card;
 
@@ -23,8 +24,8 @@ const Sale = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(true);
 
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
-    document.title = 'Greaup';
+    dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }));
+    document.title = 'Sale';
   }, []);
 
   const handleChange = (value: string) => {
@@ -45,20 +46,21 @@ const Sale = () => {
   return (
     <div className="px-10">
 
-      <Typography className="home_title">Sale Shoes</Typography>
+      <Typography style={{ fontSize: 24, fontWeight: 500 }} className='mt-5'>Sale Shoes</Typography>
 
-      <span className={clsx('flex gap-5 mt-5  justify-end mr-5 mb-5 pt-14')}>
+      <span className={clsx('flex gap-5 justify-end mr-5 mb-5')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
+
         >
           {hideFilter ? 'Hide filter' : 'Show filter'}
-          <button>
+          <button style={{ backgroundColor: "transparent" }}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button>Sort by :</button>
+        <button style={{ backgroundColor: "transparent" }}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
@@ -79,7 +81,7 @@ const Sale = () => {
           ]}
         />
       </span>
-      <div className="flex justify-center items-center">
+      <div className="flex">
         <div className="w-[auto] ">
           <Sidebar hideFilter={hideFilter} />
         </div>
@@ -102,6 +104,7 @@ const Sale = () => {
           </>
         )}
       </div>
+      <LoadingBar color="black" progress={loading === 'fullfiled' ? 0 : 100} />
     </div>
   );
 };

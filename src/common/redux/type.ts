@@ -13,6 +13,7 @@ export interface initialProduct {
   category: ICategory | {};
   totalProducts: number;
   comments?: [];
+  loadingSearch: "idle" | "pending" | "fulfilled" | "failed";
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -29,6 +30,7 @@ export interface initialSale {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   sales: ISale[] | [];
   sale: ISale | "";
+  totalDocs: number;
 }
 export interface initialCmt {
   loading: "idle" | "pending" | "fulfilled" | "failed";
@@ -46,6 +48,7 @@ export interface initialNotification {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   notifications: INotification[] | [];
   notification: INotification | "";
+  listSend:INotification[]|[]
 }
 export interface IStateProduct {
   product: {
@@ -55,6 +58,7 @@ export interface IStateProduct {
     loading: string;
     category: ICategory;
     totalProducts: number;
+    loadingSearch: string;
   };
 }
 export interface IStateUser {
@@ -95,6 +99,7 @@ export interface IStateNotification {
     notification: INotification;
     loading: "idle" | "pending" | "fulfilled" | "failed";
     totalDocs: number;
+    listSend:INotification[]
   };
 }
 export interface IStateCategory {

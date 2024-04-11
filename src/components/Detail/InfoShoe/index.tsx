@@ -13,6 +13,7 @@ import { addToCart } from '../../../features/cart'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { formatCurrency } from '../../../hooks/utils'
+import ModalCmt from '../../Modal/ModalCmt'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {

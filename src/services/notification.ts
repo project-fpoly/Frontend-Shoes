@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios'
 import instance from '../core/Api'
+import { ISendNoti } from '../common/notification'
+import { notification } from 'antd'
 
-export const getAllNotification = async (type:string) => {
+export const getAllNotification = async (type: string) => {
   try {
     const response: AxiosResponse = await instance.get(
       `/api/notification/role?type=${type}`,
@@ -11,7 +13,7 @@ export const getAllNotification = async (type:string) => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      }
+      },
     )
     return response.data
   } catch (error) {
@@ -28,7 +30,7 @@ export const getOneNotification = async (id: string) => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      }
+      },
     )
     return response.data
   } catch (error) {
@@ -36,28 +38,44 @@ export const getOneNotification = async (id: string) => {
   }
 }
 
-// export const createNotification = async (data: INotification) => {
-//   try {
-//     const response: AxiosResponse< {data:INotification[]; message: string;} > = await instance.post(
-//       "/api/auth/create",data,{
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       }
-//     );
-//     console.log(response);
-//     notification.success({message:response.data.message})
-//     return response.data.data;
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
+export const createNotification = async (data: ISendNoti) => {
+  try {
+    const response = await instance.post('/api/notification/create', data, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    },)
+    console.log(response)
+    notification.success({ message: 'Gửi thành công' })
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export const getSentNotification = async () => {
+  try {
+    const response = await instance.get('/api/notification/all/sendMember', {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    },)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 
 export const updateNotification = async (id: string) => {
   try {
     const response: AxiosResponse = await instance.put(
-      `/api/notification/update/${id}`
+      `/api/notification/update/${id}`,
     )
     return response.data
   } catch (error) {
