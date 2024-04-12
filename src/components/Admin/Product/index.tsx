@@ -113,16 +113,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         name="name"
                         rules={[{ required: true, message: "Please enter the product name" }]}
                     >
-                        <Input showCount maxLength={30} placeholder="Enter product name" />
+                        <Input.TextArea showCount maxLength={50} style={{ height: 50, resize: 'none' }} placeholder="Enter product name" />
                     </Form.Item>
-
-                    {/* <Form.Item
-                        label="SKU"
-                        name="SKU"
-                        rules={[{ required: true, message: "Please enter the SKU" }]}
-                    >
-                        <Input placeholder="Enter SKU" />
-                    </Form.Item> */}
 
 
 
@@ -155,60 +147,34 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         </Select>
                     </Form.Item>
 
-                    {/* <Form.Item
-                        label="videoUrl"
-                        name="video"
-                        rules={[{ required: true, message: "Please enter the product video" }]}
-                    >
-                        <Input placeholder="Enter product video" />
-                    </Form.Item> */}
-
-                    {/* <Form.Item
-                        label="ID blog"
-                        name="blog"
-                        rules={[{ required: true, message: "Please enter the product blog" }]}
-                    >
-                        <Input placeholder="Enter product blog" />
-                    </Form.Item> */}
-
-                    {/* <Form.Item
-                        label="Warranty"
-                        name="warranty"
-                        rules={[{ required: true, message: "Please enter the product warranty" }]}
-                    >
-                        <Input placeholder="Enter product warranty" />
-                    </Form.Item> */}
-
                     <Form.Item
                         label="Material"
                         name="material"
                         rules={[{ required: true, message: "Please select a material" }]}
                     >
                         <Select placeholder="Select a material" value="material">
-                            <Option value="leather">Leather</Option>
-                            <Option value="fabric">Fabric</Option>
-                            <Option value="rubber">Rubber</Option>
-                            <Option value="plastic">Plastic</Option>
-                            <Option value="velvet">Velvet</Option>
+                            <Option value="Leather">Leather</Option>
+                            <Option value="Fabric">Fabric</Option>
+                            <Option value="Rubber">Rubber</Option>
+                            <Option value="Plastic">Plastic</Option>
+                            <Option value="Velvet">Velvet</Option>
                             <Option value="EVA">EVA</Option>
-                            <Option value="mesh">Mesh</Option>
+                            <Option value="Mesh">Mesh</Option>
                         </Select>
                     </Form.Item>
-
 
                     <Form.Item
                         label="Tech specs"
                         name="tech_specs"
-                        rules={[{ required: true, message: "Please enter the product tech_specs" }]}
+                        rules={[{ required: true, message: "Please enter Tech specs" }]}
                     >
-                        <Input placeholder="Enter product tech_specs" value={tech_specs} />
+                        <Input.TextArea showCount maxLength={100} style={{ height: 80, resize: 'none' }} placeholder="Đặc tả kỹ thuật" />
                     </Form.Item>
 
                     <Form.Item
                         label="Description"
                         name="description"
                         rules={[{ required: true, message: "Please enter description" }]}
-                    // style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: '10px', marginTop: '20px' }}
                     >
                         <Input.TextArea showCount maxLength={500} style={{ height: 220, resize: 'none' }} placeholder="Enter product description" />
                     </Form.Item>
@@ -224,20 +190,19 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         name="price"
                         rules={[{ required: true, message: "Please enter the price" }]}
                     >
-                        <Col>
-                            <InputNumber placeholder="Enter price" value={price} />
-                        </Col>
+                        <NumericInput
+                            placeholder="Price"
+                            min={1}
+                            value={form.getFieldValue('price')}
+                            onChange={(value) => {
+                                const parsedPrice = parseFloat(value); // Chuyển đổi thành số
+                                form.setFieldsValue({ price: parsedPrice });
+                            }}
+                        />
                     </Form.Item>
 
-                    {/* <Form.Item
-                        label="quantity"
-                        name="quantity"
-                        rules={[{ required: true, message: "Please enter the quantity" }]}
-                    >
-                        <Col>
-                            <InputNumber placeholder="Enter quantity" value={quantity} />
-                        </Col>
-                    </Form.Item> */}
+
+
                     <Form.Item
                         label="Sales"
                         name="sale"
@@ -251,40 +216,6 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             ))}
                         </Select>
                     </Form.Item>
-
-                    {/* <Form.Item
-                        label="discount"
-                        name="discount"
-                        rules={[{ required: true, message: "Please enter the discount" }]}
-                    >
-                        <Col>
-                            <InputNumber placeholder="Enter discount" value={discount} />
-                        </Col>
-                    </Form.Item> */}
-
-                    {/* <Form.Item
-                        label="Hits"
-                        name="hits"
-                        rules={[{ required: true, message: "Please enter the hits" }]}
-                    >
-                        <Col>
-                            <InputNumber placeholder="Enter hits" value={hits} />
-                        </Col>
-                    </Form.Item> */}
-
-                    {/* <Form.Item
-                        label="Rating"
-                        name="rating"
-                        rules={[{ required: true, message: "Please enter the rating" }]}
-                    >
-                        <Select placeholder="Select rating" value={5}>
-                            <Select.Option value={1}>1 <StarFilled /></Select.Option>
-                            <Select.Option value={2}>2 <StarFilled /></Select.Option>
-                            <Select.Option value={3}>3 <StarFilled /></Select.Option>
-                            <Select.Option value={4}>4 <StarFilled /></Select.Option>
-                            <Select.Option value={5}>5 <StarFilled /></Select.Option>
-                        </Select>
-                    </Form.Item> */}
 
                     {mode === "create" && (
                         <>
@@ -333,17 +264,6 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                         </Select>
                     </Form.Item>
 
-                    {/* <Form.Item
-                        label="isPublished"
-                        name="isPublished"
-                        rules={[{ required: true, message: "Please enter the product isPublished" }]}
-                    >
-                        <Radio.Group>
-                            <Radio value={true}>Yes</Radio>
-                            <Radio value={false}>No</Radio>
-                        </Radio.Group>
-                    </Form.Item> */}
-
                     <Form.Item
                         name="gender"
                         label="Gender"
@@ -356,7 +276,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     </Form.Item>
                     <Form.Item
                         name="sizes"
-                        style={{ maxHeight: 180, overflow: 'auto',height:'80px' }}
+                        style={{ maxHeight: 180, overflow: 'auto', height: '120px' }}
                         rules={[{ required: true, message: 'Please add at least one size' }]}
                     >
                         <Form.List name="sizes">
@@ -405,8 +325,6 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             )}
                         </Form.List>
                     </Form.Item>
-
-
 
                     {mode === "create" && (
                         <>
@@ -460,16 +378,9 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                             </Form.Item>
                         </>
                     )}
-
-
                     {/* các trường khác cho cột thứ hai */}
                 </Col>
             </Row>
-
-
-
-
-
 
             {/* Các trường còn lại */}
 
