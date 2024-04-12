@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     DeleteOutlined,
     EditOutlined,
@@ -7,6 +7,8 @@ import {
     EyeOutlined,
     WarningFilled,
     SyncOutlined,
+    CustomerServiceOutlined,
+    UndoOutlined,
 
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,18 +16,20 @@ import { AppDispatch } from "../../../redux/store";
 import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
-import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag } from "antd";
-import { removeProduct, createProduct, update, tryDelete, tryRestore } from "../../../features/product";
+import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag, FloatButton, Flex } from "antd";
+import { removeProduct, createProduct, update, tryDelete, Restore, getProductsWithFilters } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
 import ProductForm from '../../../components/Admin/Product';
 import ProducModal from './ProducModal';
 import Filter from './ProductFilter';
+import { searchByKeyword } from '../../../services/productsQuery';
 const ProductsManager: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [Search, setSearch] = useState("");
+    const [pageSize, setPageSize] = useState(10)
     const dispatch = useDispatch<AppDispatch>();
-    const { products, loading, totalProducts } = useSelector(
+    const { products, loading, totalProducts} = useSelector(
         (state: IStateProduct) => state.product
     );
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
@@ -40,8 +44,9 @@ const ProductsManager: React.FC = () => {
 
     };
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = (page: number, pageSize: number) => {
         setCurrentPage(page);
+        setPageSize(pageSize)
     };
 
     const [productsState, setProductsState] = useState<IProduct>();
@@ -50,10 +55,12 @@ const ProductsManager: React.FC = () => {
 
     const handleCreateProduct = (newProduct: IProduct) => {
         dispatch(createProduct(newProduct));
+        dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
         setIsModalOpen(false);
     };
     const handleUpdateProduct = (newProduct: IProduct) => {
         dispatch(update({ id: productsState?._id as string, newProduct }));
+        dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
         setIsModalUpdateOpen(false);
     };
     const toggleModal = (product: IProduct) => {
@@ -65,7 +72,7 @@ const ProductsManager: React.FC = () => {
         Modal.confirm({
             title: "Confirm Delete",
             icon: <ExclamationCircleOutlined />,
-            content: "Do you want to delete this product?",
+            content: "Do you want marking product for deletion?",
             okText: "Yes",
             okType: "danger",
             cancelText: "No",
@@ -76,23 +83,62 @@ const ProductsManager: React.FC = () => {
             onCancel() { },
         });
     };
+    const restoreProduct = (record: IProduct) => {
+        Modal.confirm({
+            title: "Confirm Restor",
+            icon: <ExclamationCircleOutlined />,
+            content: "Do you want to restore this product?",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+                if (!record._id) return;
+                record._id && dispatch(Restore(record._id));
+            },
+            onCancel() { },
+        });
+    };
+    const deleteProduct = (record: IProduct) => {
+        Modal.confirm({
+          title: "Confirm Delete",
+          icon: <ExclamationCircleOutlined />,
+          content: "Do you want to delete this product?",
+          okText: "Yes",
+          okType: "danger",
+          cancelText: "No",
+          onOk() {
+            if (!record._id) return;
+            if (record.isDeleted) {
+              Modal.confirm({
+                title: "Confirm Permanent Delete",
+                icon: <ExclamationCircleOutlined />,
+                content: "Do you want to permanently delete this product?",
+                okText: "Yes",
+                okType: "danger",
+                cancelText: "No",
+                onOk() {
+                  if (record._id) {
+                    dispatch(removeProduct(record._id));
+                  }
+                },
+                onCancel() {},
+              });
+            } else {
+              if (record._id) {
+                dispatch(removeProduct(record._id));
+              }
+            }
+          },
+          onCancel() {},
+        });
+      };
+      
     const isRowDisabled = (record: IProduct) => {
         return record.isDeleted === true;
     };
     const rowClassName = (record: IProduct) => {
         return isRowDisabled(record) ? 'table-row-disabled' : '';
     };
-    const rowStyle = (record: IProduct) => {
-        if (isRowDisabled(record)) {
-            return {
-                style: {
-                    opacity: 0.5
-                }
-            };
-        }
-
-        return {};
-    }
 
     const columns: ColumnsType<IProduct> = [
         {
@@ -119,12 +165,16 @@ const ProductsManager: React.FC = () => {
         {
             title: "Price",
             dataIndex: "price",
+            render: (price: number) => (
+                <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(price)}</span>
+            ),
         },
 
         {
             title: "Is Deleted",
             key: "isDeleted",
             align: "center",
+            fixed: 'right',
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
                     {record.isDeleted ?
@@ -141,29 +191,45 @@ const ProductsManager: React.FC = () => {
             align: "center",
             className: "action-cell",
             render: (_, record) => (
-                <div style={{ textAlign: "center" }}>
-                    <Tooltip title={"iewsV"}>
-                        <Button type="link" >
-                            <EyeOutlined onClick={() => handleRowClick(record)} />
-                        </Button>
+              <div style={{ textAlign: "center" }}>
+                <Tooltip title={"Views"}>
+                  <Button type="link">
+                    <EyeOutlined onClick={() => handleRowClick(record)} />
+                  </Button>
+                </Tooltip>
+                <Tooltip title={"Edit"}>
+                  <Button type="link">
+                    <EditOutlined onClick={() => toggleModal(record)} />
+                  </Button>
+                </Tooltip>
+                {record.isDeleted ? (
+                  <>
+                    <Tooltip title={"Restore"}>
+                      <Button type="link">
+                        <UndoOutlined onClick={() => restoreProduct(record)} />
+                      </Button>
                     </Tooltip>
-                    <Tooltip title={"Edit"}>
-                        <Button type="link" >
-                            <EditOutlined onClick={() => toggleModal(record)} />
-                        </Button>
+                    <Tooltip title={"Delete Permanently"}>
+                      <Button type="link">
+                        <DeleteOutlined onClick={() => deleteProduct(record)} />
+                      </Button>
                     </Tooltip>
-                    <Tooltip title={"Delete"}>
-                        <Button type="link" >
-                            <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
-                        </Button>
-                    </Tooltip>
-                </div>
+                  </>
+                ) : (
+                  <Tooltip title={"Make Delete"}>
+                    <Button type="link">
+                      <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
+                    </Button>
+                  </Tooltip>
+                )}
+              </div>
             ),
-        },
+          },
+          
+
     ];
 
     const defaultValue: IProduct = {
-
         product_id: "",
         SKU: "SKU012",
         name: "Giày Nike cao cấp",
@@ -176,18 +242,17 @@ const ProductsManager: React.FC = () => {
         sold_count: 0,
         rating: 5,
         sizes: [
-
         ],
         color: "red" || "green" || "blue" || "yellow" || "black" || "white",
-        material: "leather" || "fabric" || "rubber" || "plastic" || "velvet" || "EVA" || "mesh",
+        material: "Mesh" || "EVA" || "Velvet" || "Plastic" || "Rubber" || "Fabric" || "Leather",
         release_date: "",
         images: [
         ],
         video: "https://res.cloudinary.com/dxspp5ba5/video/upload/v1708955796/dior-air-jordan-1-cinematic-sneaker-video_z63c37.mp4",
         blog: "61f2a4c8e9a82f001f9e4a1c",
         warranty: "1 year",
-        tech_specs: "Đặc tả kỹ thuật của sản phẩm",
-        stock_status: "In stock" || "Out of stock" || "Pre-order" || "Backorder" || "Discontinued",
+        tech_specs: "Giày đặc biệt",
+        stock_status: "In stock",
         gender: "nam" || "nữ",
         isPublished: true,
         publishedDate: "",
@@ -202,7 +267,7 @@ const ProductsManager: React.FC = () => {
         description: productsState?.description ? productsState?.description : "",
         categoryId: typeof productsState?.categoryId === 'object' && productsState?.categoryId?.name
             ? productsState?.categoryId._id
-            : "Chưa có ID danh mục",
+            : "",
         price: productsState?.price ? productsState?.price : 0,
         sale: typeof productsState?.sale === 'object' && productsState?.sale?._id ? productsState?.sale._id : "",
         discount: productsState?.discount ? productsState?.discount : 0,
@@ -242,11 +307,8 @@ const ProductsManager: React.FC = () => {
                 <Col span={13}>
                     <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
                 </Col>
-                <Col span={12}>
-                    <Filter
-                        page={currentPage} searchKeyword={Search} />
-                </Col>
             </Row>
+            <Filter page={currentPage} searchKeyword={Search} pageSize={pageSize}/>
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
                     <LoadingOutlined style={{ fontSize: 14 }} spin />
@@ -260,14 +322,15 @@ const ProductsManager: React.FC = () => {
                         columns={columns}
                         dataSource={products}
                         bordered
-
                         rowClassName={rowClassName}
                         size="small"
                         pagination={{
                             current: currentPage,
                             total: totalProducts,
+                            pageSize: pageSize,
                             showTotal: (total) => ` ${total} items`,
                             onChange: handlePageChange,
+                            showSizeChanger: true,
                         }}
                     />
                     <Modal

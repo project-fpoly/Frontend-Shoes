@@ -58,9 +58,9 @@ const items: MenuProps['items'] = [
     getItem('Green', 'green'),
   ]),
   getItem('Material', 'Material', '', [
-    getItem('Plastic', 'plastic'),
-    getItem('Eva', 'eva'),
-    getItem('Leather', 'leather'),
+    getItem('Plastic', 'Plastic'),
+    getItem('Eva', 'EVA'),
+    getItem('Leather', 'Leather'),
   ]),
   // getItem('Color', 'Color', '', [
   //   getItem('Black', 'black'),

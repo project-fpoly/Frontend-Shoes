@@ -81,27 +81,53 @@ const ProducModal = (selectedProduct: IProduct) => {
           <Col span={8}>
             <strong>Price</strong>
           </Col>
-          <Col span={16}>{selectedProduct.price}</Col>
+          <Col span={16}>
+            {selectedProduct.price.toLocaleString("en-US", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </Col>
         </Row>
       </Descriptions.Item>
 
-      {/* <Descriptions.Item>
+
+      <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
-            <strong>Sale</strong> %
+            <strong>Sale</strong>
           </Col>
-          <Col span={16}>{selectedProduct.sale} %</Col>
+          <Col span={16}>
+            {typeof selectedProduct.sale === 'object' && 'name' in selectedProduct.sale ? (
+              <>
+                {selectedProduct.sale.name} %
+              </>
+            ) : (
+              <>No sale available</>
+            )}
+          </Col>
         </Row>
-      </Descriptions.Item> */}
+      </Descriptions.Item>
+
 
       <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
             <strong>Discount</strong>%
           </Col>
-          <Col span={16}>{selectedProduct.discount}%</Col>
+          <Col span={16}>
+            {typeof selectedProduct.sale === 'object' && 'discount' in selectedProduct.sale ? (
+              <>
+                {selectedProduct.sale.discount}%
+              </>
+            ) : (
+              <>No discount available</>
+            )}
+          </Col>
         </Row>
       </Descriptions.Item>
+
+
+
 
       <Descriptions.Item>
         <Row gutter={16}>
