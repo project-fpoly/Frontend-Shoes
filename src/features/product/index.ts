@@ -33,6 +33,7 @@ const initialState: initialProduct = {
   category: '',
   totalProducts: 0,
   loadingSearch: 'idle',
+  isDeleted: false,
 }
 
 export const getProductsWithFilters = createAsyncThunk(
@@ -76,7 +77,7 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate?: Date
     color?: string
     gender?: string
-    isDeleted?: boolean
+    isDeleted?: boolean | string
   }) => {
     try {
       const response = await getProductsWithFilter(
@@ -142,9 +143,11 @@ export const removeProduct = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await deleteProduct(id)
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
+      );
+
       return response
     } catch (error) {
       throw new Error('Lỗi khi xóa sản phẩm')
@@ -155,16 +158,18 @@ export const createProduct = createAsyncThunk(
   'product/createProduct',
   async (newProduct: IProduct, thunkApi) => {
     try {
-      const response = await addProduct(newProduct)
+      const response = await addProduct(newProduct);
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
-      return response
+        getProductsWithFilters({ page: Number.MAX_SAFE_INTEGER, pageSize, searchKeyword: '' })
+      );
+      return response;
     } catch (error) {
-      throw new Error('Error create Product')
+      throw new Error('Error creating Product');
     }
   }
-)
+);
+
 export const update = createAsyncThunk(
   'product/updateProduct',
   async (
@@ -172,17 +177,19 @@ export const update = createAsyncThunk(
     thunkApi
   ) => {
     try {
-      const response = await updatePrroduct(id, newProduct)
+      const response = await updatePrroduct(id, newProduct);
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
-      return response
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
+      );
+
+      return response;
     } catch (error) {
-      throw new Error('Error updating Product')
+      throw new Error('Error updating Product');
     }
   }
-
 );
+
 
 export const tryDelete = createAsyncThunk(
   "product/tryDeleteProduct",
@@ -190,8 +197,8 @@ export const tryDelete = createAsyncThunk(
     try {
       const response = await tryDeleteProduct(id);
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
       return response;
     } catch (error) {
       throw new Error("Error updating Product");
@@ -199,14 +206,14 @@ export const tryDelete = createAsyncThunk(
   }
 );
 
-export const tryRestore = createAsyncThunk(
-  "product/tryRestoreProduct",
+export const Restore = createAsyncThunk(
+  "product/RestoreProduct",
   async (id: string, thunkApi) => {
     try {
       const response = await tryRestoreProduct(id);
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: "" })
+      );
       return response;
     } catch (error) {
       throw new Error("Error updating Product");
@@ -421,9 +428,28 @@ export const productSlice = createSlice({
     });
     builder.addCase(tryDelete.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload) ? action.payload : [];
+      const deletedProductId = action.payload?._id;
+      if (deletedProductId) {
+        state.products = state.products.map(product =>
+          product._id === deletedProductId ? { ...product, isDeleted: true } : product
+        );
+        state.totalProducts = state.products.length;
+      }
+    });
+
+    // Restore product
+    builder.addCase(Restore.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(Restore.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(Restore.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload.map(product => ({ ...product, isDeleted: false })) : [];
       state.totalProducts = state.products.length;
     });
+
 
     // remove product
     builder.addCase(removeProduct.pending, (state) => {

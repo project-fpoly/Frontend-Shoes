@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { CustomerServiceOutlined, FilterOutlined } from "@ant-design/icons";
-import { Collapse, Radio, Button, RadioChangeEvent, Drawer, FloatButton, Input, DatePicker } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
+import { Collapse, Radio, Button, RadioChangeEvent, Drawer, FloatButton, Input, DatePicker, Flex } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { IStateProduct } from "../../../common/redux/type";
 import { getProductsWithFilters } from "../../../features/product";
 import NumericInput from "../../../components/Admin/Product/input";
-const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
 const sortOptions = [
@@ -47,15 +46,6 @@ const Filter = (props: FilterProps) => {
   >();
   //Size
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
-  const sizeOptions = [
-    { label: "36", value: "36" },
-    { label: "37", value: "37" },
-    { label: "38", value: "38" },
-    { label: "39", value: "39" },
-    { label: "40", value: "40" },
-    { label: "41", value: "41" },
-    { label: "42", value: "42" },
-  ];
   const handleSizeChange = (size: string) => {
     setSelectedSize(size);
   };
@@ -87,22 +77,22 @@ const Filter = (props: FilterProps) => {
   const handleMaterialChange = (material: string) => {
     setSelectedMaterial(material);
   };
-  //Date
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
-
-  const handleStartDateChange = (date: any, dateString: string) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: any, dateString: string) => {
-    setEndDate(date);
-  };
-
   //Color
-  const [selectedColor, setSelectedColor] = useState<string | undefined>();
+  const [selectedColor, setSelectedColor] = useState(''); // Màu mặc định được chọn
+  const handleColorChange = (e: any) => {
+    setSelectedColor(e.target.value); // Cập nhật màu khi người dùng chọn
+  };
+  //Gender
   const [selectedGender, setSelectedGender] = useState<string | undefined>();
-  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const handleGenderChange = (gender: string) => {
+    setSelectedGender(gender);
+  };
+
+  const [isDeleted, setIsDeleted] = useState<boolean | string>("");
+  const handleDeletedChange = (deleted: boolean | string) => {
+    setIsDeleted(deleted);
+  };
+
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showFloatButton, setShowFloatButton] = useState<boolean>(true);
@@ -127,28 +117,15 @@ const Filter = (props: FilterProps) => {
   };
 
 
-
-
-
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-  };
-
-  const handleGenderChange = (gender: string) => {
-    setSelectedGender(gender);
-  };
-
   const handleResetFilter = () => {
     setSelectedSort(undefined);
     setSelectedSize(undefined);
     setSelectedMinPrice('');
     setSelectedMaxPrice('');
     setSelectedMaterial(undefined);
-    setStartDate(undefined);
-    setEndDate(undefined);
-    setSelectedColor(undefined);
+    setSelectedColor('');
     setSelectedGender(undefined);
-
+    setIsDeleted("");
   };
 
   useEffect(() => {
@@ -162,11 +139,9 @@ const Filter = (props: FilterProps) => {
         minPrice: selectedMinPrice,
         maxPrice: selectedMaxPrice,
         material: selectedMaterial,
-        startDate: startDate,
-        endDate: endDate,
         color: selectedColor,
         gender: selectedGender,
-
+        isDeleted: isDeleted,
       };
 
       dispatch(getProductsWithFilters(filters));
@@ -180,8 +155,6 @@ const Filter = (props: FilterProps) => {
     selectedMinPrice,
     selectedMaxPrice,
     selectedMaterial,
-    startDate,
-    endDate,
     selectedColor,
     selectedGender,
     isDeleted,
@@ -220,7 +193,15 @@ const Filter = (props: FilterProps) => {
             <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
           </Panel>
           <Panel header="Kích thước" key="2">
-            <Radio.Group options={sizeOptions} onChange={e => handleSizeChange(e.target.value)} value={selectedSize} />
+            <Radio.Group onChange={(e) => handleSizeChange(e.target.value)} value={selectedSize} style={{ display: "flex", flex: 1, justifyContent: "center" }}>
+              <Radio.Button key={1} value="36">36</Radio.Button>
+              <Radio.Button key={2} value="37">37</Radio.Button>
+              <Radio.Button key={3} value="38">38</Radio.Button>
+              <Radio.Button key={4} value="39">39</Radio.Button>
+              <Radio.Button key={5} value="40">40</Radio.Button>
+              <Radio.Button key={6} value="41">41</Radio.Button>
+              <Radio.Button key={7} value="42">42</Radio.Button>
+            </Radio.Group>
           </Panel>
           <Panel header="Khoảng giá" key="3">
             <Input.Group compact>
@@ -248,20 +229,31 @@ const Filter = (props: FilterProps) => {
           <Panel header="Chất liệu" key="4">
             <Radio.Group options={materialsOptions} onChange={e => handleMaterialChange(e.target.value)} value={selectedMaterial} />
           </Panel>
-          <Panel header="Ngày đăng" key="5">
-          <RangePicker
-              onChange={(dates, dateStrings) => {
-                handleStartDateChange(dates, dateStrings[0]);
-                handleEndDateChange(dates, dateStrings[1]);
-              }}
-            />
+
+          <Panel header="Màu sắc" key="5">
+            <Radio.Group onChange={handleColorChange} value={selectedColor}>
+              <Radio.Button value="red" style={{ backgroundColor: 'red' }}></Radio.Button>
+              <Radio.Button value="green" style={{ backgroundColor: 'green' }}></Radio.Button>
+              <Radio.Button value="blue" style={{ backgroundColor: 'blue' }}></Radio.Button>
+              <Radio.Button value="yellow" style={{ backgroundColor: 'yellow' }}></Radio.Button>
+              <Radio.Button value="black" style={{ backgroundColor: 'black' }}></Radio.Button>
+              <Radio.Button value="white" style={{ backgroundColor: 'white', border: '1px solid #ccc' }}></Radio.Button>
+            </Radio.Group>
           </Panel>
-          <Panel header="Màu sắc" key="6">
-            {/* Render color options */}
+          <Panel header="Giới tính" key="6">
+            <Radio.Group onChange={(e) => handleGenderChange(e.target.value)} value={selectedGender}>
+              <Radio.Button value="nam">Nam</Radio.Button>
+              <Radio.Button value="nữ">Nữ</Radio.Button>
+            </Radio.Group>
           </Panel>
-          <Panel header="Giới tính" key="7">
-            {/* Render gender options */}
+          <Panel header="Đã xóa" key="7">
+            <Radio.Group onChange={(e) => handleDeletedChange(e.target.value)} value={isDeleted}>
+              <Radio.Button value={true}>Đã xóa</Radio.Button>
+              <Radio.Button value={false}>Chưa xóa</Radio.Button>
+              <Radio.Button value={undefined}>Tất cả</Radio.Button>
+            </Radio.Group>
           </Panel>
+
         </Collapse>
       </Drawer>
     </>
