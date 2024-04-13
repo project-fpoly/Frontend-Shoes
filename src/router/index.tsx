@@ -53,6 +53,8 @@ import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
+import Nikentc from '../pages/App/Ntc/nikentc.tsx'
+import Nikeclubnrc from '../components/App/Nikeclubnrc.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -115,6 +117,8 @@ const Router = (user: any) => {
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/ntc-app" element={<Nikentc />} />
+          <Route path="/nrc-app" element={<Nikeclubnrc />} />
           <Route
             path="/profile"
             element={

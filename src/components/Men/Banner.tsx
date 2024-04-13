@@ -6,7 +6,7 @@ const Banner = () => {
     <Space direction="vertical" style={{ width: '100%' }}>
       <Typography className="home_title">Men</Typography>
       <img
-        src="../../../bannermen.jpg"
+        src="../../../bannerapp"
         alt=""
         className="w-full"
         style={{ height: 600 }}

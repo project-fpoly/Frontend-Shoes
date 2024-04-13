@@ -63,7 +63,7 @@ export const putVoucher = async (data: IVoucher) => {
     notification.success({ message: 'Cập nhật thành công' })
     return response.data
   } catch (error) {
-    notification.error({ message: 'Cập nhật thất bại' })
+    notification.error({ message: 'Cập nhật thất bại.' })
     console.error(error)
   }
 }

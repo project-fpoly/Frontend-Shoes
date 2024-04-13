@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from "react";
-import {Button, Modal, Table, Tooltip} from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Table, Tooltip } from "antd";
 import {
     DeleteOutlined,
-    EditOutlined, ExclamationCircleOutlined,
+    EditOutlined,
+    ExclamationCircleOutlined,
     LoadingOutlined,
 } from "@ant-design/icons";
-import {useDispatch, useSelector} from "react-redux";
-import {ColumnsType} from "antd/es/table";
-import {format, isAfter} from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { ColumnsType } from "antd/es/table";
+import { format, isAfter } from "date-fns";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
-import {AppDispatch} from "../../../redux/store";
-import {ISale} from "../../../common/sale";
-import {createSale, fetchAllSales, updateSales, removeSale} from "../../../features/sale";
-import {IStateSale} from "../../../common/redux/type";
+import { AppDispatch } from "../../../redux/store";
+import { ISale } from "../../../common/sale";
+import { createSale, fetchAllSales, updateSales, removeSale } from "../../../features/sale";
+import { IStateSale } from "../../../common/redux/type";
 import FormSale from "../../../components/Admin/Sale/FormSale";
 
 const SaleManager: React.FC = () => {
@@ -25,12 +26,12 @@ const SaleManager: React.FC = () => {
         setCurrentPage(page);
     };
 
-    const {sales, loading, totalDocs} = useSelector(
+    const { sales, loading, totalDocs } = useSelector(
         (state: IStateSale) => state.sale
     );
 
     useEffect(() => {
-        dispatch(fetchAllSales({page: currentPage, limit: 10, keyword: Search}));
+        dispatch(fetchAllSales({ page: currentPage, limit: 10, keyword: Search }));
     }, [dispatch, currentPage, Search]);
 
     const handleCreateSale = (newSale: ISale) => {
@@ -40,7 +41,7 @@ const SaleManager: React.FC = () => {
     };
 
     const handleUpdateSale = async (newSale: ISale) => {
-        await dispatch(updateSales({id: saleState?._id as string, newSale}));
+        await dispatch(updateSales({ id: saleState?._id as string, newSale }));
         setIsModalUpdateOpen(false);
     };
 
@@ -54,7 +55,7 @@ const SaleManager: React.FC = () => {
     const removeSales = (sales: ISale) => {
         Modal.confirm({
             title: 'Confirm Deletion',
-            icon: <ExclamationCircleOutlined/>,
+            icon: <ExclamationCircleOutlined />,
             content: 'Are you sure you want to delete this user?',
             okText: 'Yes',
             okType: 'danger',
@@ -121,25 +122,26 @@ const SaleManager: React.FC = () => {
         {
             title: "Actions",
             key: "actions",
+            align: 'center',
             render: (_, record) => (
-                <span>
-          <Tooltip title={"Edit"}>
-            <Button
-                type="primary"
-                shape="circle"
-                icon={<EditOutlined/>}
-                onClick={() => toggleModal(record)}
-            />
-          </Tooltip>
+                <span style={{ textAlign: 'center' }}>
+                    <Tooltip title={"Edit"}>
+                        <Button
+                            type="link"
+                            shape="circle"
+                            icon={<EditOutlined />}
+                            onClick={() => toggleModal(record)}
+                        />
+                    </Tooltip>
 
                     {record.role !== 'admin' && (
                         <Tooltip title={'Delete'}>
                             <Button type="link" onClick={() => removeSales(record)}>
-                                <DeleteOutlined/>
+                                <DeleteOutlined />
                             </Button>
                         </Tooltip>
                     )}
-        </span>
+                </span>
             ),
         },
     ];
@@ -166,11 +168,11 @@ const SaleManager: React.FC = () => {
             />
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
-                    <LoadingOutlined style={{fontSize: 24}} spin/>
+                    <LoadingOutlined style={{ fontSize: 24 }} spin />
                 </div>
             ) : (
                 <Table
-                    style={{marginTop: "15px"}}
+                    style={{ marginTop: "15px" }}
                     columns={columns}
                     dataSource={sales}
                     bordered

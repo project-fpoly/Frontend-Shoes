@@ -1,4 +1,5 @@
 import { Button, Image } from 'antd';
+import { Link } from 'react-router-dom';
 
 
 const NikeApps = () => {
@@ -19,7 +20,9 @@ const NikeApps = () => {
             <p className='font-bold'>Nike Run Club</p>
           </div>
           <p className='text-gray-700'>Run: Find the motivation you need to run better and more often.</p>
-          <Button className='w-24 rounded-xl hover:bg-black'>Dowload</Button>
+          <Link to="/nrc-app">
+            <Button className='w-24 rounded-xl hover:bg-black'>Dowload</Button>
+          </Link>
         </div>
         <div className='max-w-[350px] flex flex-col gap-5'>
           <Image
@@ -34,7 +37,9 @@ const NikeApps = () => {
             <p className='font-bold'>Nike Run Club</p>
           </div>
           <p className='text-gray-700'>Run: Find the motivation you need to run better and more often.</p>
-          <Button className='w-24 rounded-xl hover:bg-black'>Dowload</Button>
+          <Link to="/ntc-app">
+            <Button className='w-24 rounded-xl hover:bg-black'>Dowload</Button>
+          </Link>
         </div>
       </div>
     </div>
