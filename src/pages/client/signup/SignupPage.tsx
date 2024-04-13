@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, Button, message, notification } from 'antd'
+import { Form, Input, Button, notification } from 'antd'
 import { SiNike } from 'react-icons/si'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +23,7 @@ const SignupPage = () => {
       if (response && response.status === 200) {
         notification.success({
           message: 'Signup successfully'
-        }); 
+        });
         localStorage.setItem('accessToken', response.data.accessToken)
 
         //redirect to signup page
@@ -57,6 +57,7 @@ const SignupPage = () => {
     setPasswordHelp(undefined)
     return Promise.resolve()
   }
+
   const validateConfirmPassword = (_: any, value: string) => {
     if (value.length < 8) {
       setConfirmPasswordHelp(
@@ -78,11 +79,19 @@ const SignupPage = () => {
       setConfirmPasswordHelp('Confirm password does not match password.');
       return Promise.resolve({});
     }
-    
 
     setConfirmPasswordHelp(undefined)
     return Promise.resolve()
   }
+
+  const [loading, setLoading] = useState(false);
+  const handleClick = () => {
+    setLoading(true);
+    // Giả sử bạn muốn đợi 2 giây trước khi chuyển trạng thái loading trở lại false
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 flex items-center justify-center flex-col">
@@ -169,7 +178,7 @@ const SignupPage = () => {
             />
           </Form.Item>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
               className="rounded-full btn-primary-dark btn-md"
               htmlType="submit"
@@ -187,7 +196,31 @@ const SignupPage = () => {
             >
               Create an account
             </Button>
+          </div> */}
+
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              className="rounded-full btn-primary-dark btn-md"
+              htmlType="submit"
+              style={{
+                color: 'white',
+                backgroundColor: 'black',
+                borderColor: 'black',
+                padding: '24px',
+                fontSize: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: 'auto',
+              }}
+              onClick={handleClick}
+              loading={loading}
+            >
+              Create an account
+            </Button>
           </div>
+
         </Form>
       </section>
     </div>

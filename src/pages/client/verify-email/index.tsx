@@ -1,11 +1,35 @@
 import { SiNike } from 'react-icons/si'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, notification } from 'antd'
 import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const VerifyEmail = () => {
   const navigate = useNavigate()
   const [params] = useSearchParams()
+
+  // const onFinish = async (values: any) => {
+  //   if (!params.get('email')) {
+  //     alert('Missing email from URL')
+  //   } else {
+  //     try {
+  //       const response = await axios.post(
+  //         'http://localhost:9000/api/auth/verify-email',
+  //         {
+  //           email: params.get('email'),
+  //           emailVerificationToken: values?.code ?? '',
+  //         },
+  //       )
+  //       if (response && response.status === 200) {
+  //         alert(response.data?.message)
+  //         //redirect to home page
+  //         navigate('/signin')
+  //       }
+  //     } catch (error: any) {
+  //       error.response.data.error && alert(error.response.data.error)
+  //     }
+  //   }
+  // }
+
   const onFinish = async (values: any) => {
     if (!params.get('email')) {
       alert('Missing email from URL')
@@ -19,12 +43,15 @@ const VerifyEmail = () => {
           },
         )
         if (response && response.status === 200) {
-          alert(response.data?.message)
-          //redirect to home page
+          notification.success({ // Hiển thị thông báo thành công
+            message: response.data?.message
+          });
           navigate('/signin')
         }
       } catch (error: any) {
-        error.response.data.error && alert(error.response.data.error)
+        notification.error({ // Hiển thị thông báo lỗi
+          message: error.response.data.error
+        });
       }
     }
   }

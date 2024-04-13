@@ -78,7 +78,6 @@ const Nikeclubnrc = () => {
           }}
         >
           Track your runs, get coaching that adapts to you and bring your friends along for the ride. It's all possible with the Nike Run Club App.
-
         </Typography>
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '10px' }}>
@@ -229,7 +228,6 @@ const Nikeclubnrc = () => {
           }}
         >
           Whatever your goal, your Nike Coach has a plan for you. One that starts with your goals and fitness level, and adapts as you progress.
-
         </Typography>
 
 
