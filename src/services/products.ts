@@ -11,7 +11,13 @@ export const getProducts = async (
 ) => {
   try {
     const response: AxiosResponse = await instance.get(
-      `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`
+      `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
     return response?.data || response
   } catch (error) {
@@ -28,7 +34,13 @@ export const getProducts = async (
 export const getProductById = async (id: string) => {
   try {
     const response: AxiosResponse<IProduct> = await instance.get(
-      `/api/product/${id}`
+      `/api/product/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
     return response.data || response
   } catch (error) {
@@ -47,7 +59,13 @@ export const addProduct = async (
   try {
     const response: AxiosResponse<IProduct> = await instance.post(
       '/api/product',
-      product
+      product,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
     notification.success({ message: 'Product added successfully' })
     return response.data || response
@@ -68,7 +86,13 @@ export const updatePrroduct = async (
   try {
     const response: AxiosResponse<IProduct> = await instance.put(
       `/api/product/${id}`,
-      product
+      product,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
     notification.success({ message: 'Product updated successfully' })
     return response.data || response
@@ -134,7 +158,13 @@ export const tryRestoreProduct = async (id: string): Promise<IProduct | null> =>
 export const deleteProduct = async (id: string): Promise<IProduct | null> => {
   try {
     const response: AxiosResponse<IProduct> = await instance.delete(
-      `/api/product/${id}`
+      `/api/product/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
     notification.success({ message: 'Product deleted successfully.' })
     return response.data || response

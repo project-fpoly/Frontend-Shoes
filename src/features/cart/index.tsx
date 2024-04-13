@@ -28,7 +28,7 @@ export const fetchProducts = createAsyncThunk(
 )
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
-  async (cartItem: CartItem) => {
+  async (cartItem: CartItem, thunkApi) => {
     try {
       const accessToken = localStorage.getItem('accessToken')
       let response
@@ -101,32 +101,34 @@ export const getCartItems = createAsyncThunk(
 )
 export const createOrder = createAsyncThunk(
   'cart/createOrder',
-  async ({
-    cartItems,
-    shippingAddress,
-    totalPrice,
-    payment_method,
-    voucherr,
-  }: {
-    cartItems: Array<{
-      product: string
-      images: Array<string>
-      color: string
-      price: number
-      size: string
-    }>
-    shippingAddress: {
-      fullname: string
-      phone: string
-      address: string
-      email: string
-    }
-    totalPrice: number
-    payment_method: string
-    voucherr?: string
-  }) => {
+  async (
+    {
+      cartItems,
+      shippingAddress,
+      totalPrice,
+      payment_method,
+      voucherr,
+    }: {
+      cartItems: Array<{
+        product: string
+        images: Array<string>
+        color: string
+        price: number
+        size: string
+      }>
+      shippingAddress: {
+        fullname: string
+        phone: string
+        address: string
+        email: string
+      }
+      totalPrice: number
+      payment_method: string
+      voucherr?: string
+    },
+    thunkApi,
+  ) => {
     try {
-      console.log(payment_method)
       const accessToken = localStorage.getItem('accessToken')
       if (accessToken) {
         const response = await axios.post(
@@ -141,7 +143,8 @@ export const createOrder = createAsyncThunk(
           },
         )
         notification.success({ message: response.data.message })
-        return response.data.cart
+        thunkApi.dispatch(getCartItems())
+        return response.data.data
       } else {
         const response = await axios.post(
           'http://localhost:9000/api/order/bills/',
@@ -153,56 +156,8 @@ export const createOrder = createAsyncThunk(
             },
           },
         )
-        console.log(response.data.data)
-
         notification.success({ message: response.data.message })
-        var request = indexedDB.open('my_database', 1)
 
-        // Xử lý sự kiện khi cơ sở dữ liệu được mở hoặc tạo mới thành công
-        request.onsuccess = function (event: any) {
-          var db = event.target.result
-
-          // Tạo hoặc mở lưu trữ đối tượng
-          var transaction = db.transaction(['my_object_store'], 'readwrite')
-          var objectStore = transaction.objectStore('my_object_store')
-
-          // Lưu trữ dữ liệu từ response.data.data vào IndexedDB
-          objectStore.add({
-            key: response.data.data.trackingNumber,
-            value: response.data.data,
-          })
-
-          // Hoàn thành giao dịch
-          transaction.oncomplete = function () {
-            console.log('Dữ liệu đã được lưu vào IndexedDB.')
-          }
-
-          // Xử lý lỗi giao dịch
-          transaction.onerror = function (event: any) {
-            console.error(
-              'Lỗi khi lưu dữ liệu vào IndexedDB: ' + event.target.errorCode,
-            )
-          }
-        }
-
-        // Xử lý sự kiện khi có lỗi mở hoặc tạo cơ sở dữ liệu
-        request.onerror = function (event: any) {
-          console.error(
-            'Lỗi khi mở hoặc tạo cơ sở dữ liệu: ' + event.target.errorCode,
-          )
-        }
-
-        // Xử lý sự kiện khi cần tạo lại cơ sở dữ liệu hoặc lưu trữ đối tượng
-        request.onupgradeneeded = function (event: any) {
-          var db = event.target.result
-
-          // Tạo lưu trữ đối tượng nếu chưa tồn tại
-          var objectStore = db.createObjectStore('my_object_store', {
-            keyPath: 'id',
-          })
-          // Tạo chỉ mục nếu cần thiết
-          // objectStore.createIndex('index_name', 'property_name', { unique: false });
-        }
         return response.data.data
       }
     } catch (error: any) {
@@ -316,7 +271,7 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state: any, action) => {
         state.loading = false
-        state.cartItems.push(action.payload)
+        state.cartItems = action.payload
         state.totalPrice = action.payload.cart?.totalPrice
       })
       .addCase(addToCart.rejected, (state, action) => {

@@ -91,7 +91,7 @@ export const voucherSlice = createSlice({
     })
     builder.addCase(fetchVoucher.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
-      state.vouchers = Array.isArray(action.payload.data)
+      state.vouchers = Array.isArray(action.payload?.data)
         ? action.payload.data
         : []
     })

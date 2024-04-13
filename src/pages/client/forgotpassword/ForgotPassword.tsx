@@ -1,27 +1,35 @@
-import { Button, Form, Input } from 'antd'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { SiNike } from 'react-icons/si'
+import { Button, Form, Input, notification } from 'antd';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { SiNike } from 'react-icons/si';
 
 const ForgotPassword = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values:any) => {
     try {
       const response = await axios.post(
         'http://localhost:9000/api/auth/forgot-password',
         {
           email: values?.email,
         },
-      )
+      );
       if (response && response.status === 200) {
-        response.data.message && alert(response.data.message)
-        navigate('/signin')
+        response.data.message && notification.success({
+          message: response.data.message,
+          placement: 'top',
+        });
+        navigate('/signin');
       }
-    } catch (e) {
-      console.log(e)
+    } catch (e:any) {
+      console.log(e);
+      notification.error({
+        message: 'Error',
+        description: e.response ? e.response.data.message : 'An error occurred.',
+        placement: 'top',
+      });
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -80,7 +88,7 @@ const ForgotPassword = () => {
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

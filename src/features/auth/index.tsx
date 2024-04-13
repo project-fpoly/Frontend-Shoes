@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { AppDispatch } from '../../redux/store.ts'
 import axios from 'axios'
+import { notification } from 'antd'
 
 interface AuthState {
   user: any | null

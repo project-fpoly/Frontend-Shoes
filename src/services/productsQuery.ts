@@ -21,14 +21,14 @@ export const getProductsWithFilter = async (
     | "desc_rate",
   categoryId?: string,
   size?: string,
-  minPrice?: number,
-  maxPrice?: number,
+  minPrice?: string,
+  maxPrice?: string,
   material?: string,
   startDate?: Date,
   endDate?: Date,
   color?: string,
   gender?: string,
-  isDeleted?: boolean
+  isDeleted?: boolean | string
 ) => {
   try {
     let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
@@ -53,7 +53,17 @@ export const getProductsWithFilter = async (
       url += `&sizeFilter=${size}`;
     }
     if (minPrice !== undefined && maxPrice !== undefined) {
+      // Kiểm tra điều kiện 0 < maxPrice < minPrice
+      if (parseFloat(maxPrice) < parseFloat(minPrice)) {
+        // Nếu điều kiện đúng, đặt maxPrice thành undefined
+        maxPrice = undefined;
+      }
+      // Thêm điều kiện filter giá vào url
       url += `&priceFilter=${minPrice}->${maxPrice}`;
+    } else if (minPrice !== undefined) {
+      url += `&priceFilter=${minPrice}->`;
+    } else if (maxPrice !== undefined) {
+      url += `&priceFilter=->${maxPrice}`;
     }
     if (material) {
       url += `&materialFilter=${material}`;
@@ -67,18 +77,20 @@ export const getProductsWithFilter = async (
     if (gender) {
       url += `&genderFilter=${gender}`;
     }
-    if (isDeleted) {
+    if (isDeleted !== undefined && isDeleted !== "") { 
       url += `&deleteFilter=${isDeleted}`;
     }
-
     const response: AxiosResponse = await instance.get(url);
+    if (response.status === 404) {
+      return [];
+    }
     return response?.data || response;
   } catch (error) {
     console.log(error);
     const customError = error as CustomError;
     const errorMessage =
       customError.response?.data?.message || "Error while fetching products";
-    notification.error({ message: errorMessage });
+    notification.error({ message: errorMessage, duration: 1, });
     throw new Error("Error while fetching products");
   }
 };

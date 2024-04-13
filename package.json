@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "numeral": "^2.0.6",
+    "qs": "^6.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-highlight-words": "^0.20.0",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
+    "@types/qs": "^6.9.14",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.17",
     "@types/react-infinite-scroller": "^1.2.5",

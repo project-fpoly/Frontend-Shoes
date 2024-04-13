@@ -16,9 +16,9 @@ export default function OrderPage() {
   }, [dispatch])
 
   const { orders } = useSelector((state: RootState) => state.order)
-  console.log(orders)
   const dataGet = (data: string) =>
     orders?.filter((item: any) => item.isDelivered === data)
+
   const data1 = dataGet('Chờ xác nhận')
   const data2 = dataGet('Chờ lấy hàng')
   const data3 = dataGet('Đang giao hàng')
@@ -28,6 +28,11 @@ export default function OrderPage() {
   const items: TabsProps['items'] = orders && [
     {
       key: '0',
+      label: 'Tất cả trạng thái',
+      children: <OrderItem data={orders} />,
+    },
+    {
+      key: 'Chờ xác nhận',
       label: 'Chờ xác nhận',
       children: <OrderItem data={data1} />,
     },
