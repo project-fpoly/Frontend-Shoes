@@ -63,7 +63,7 @@ const ShopIcon = () => {
                 key={index}
                 alt="Product"
                 src={item.images ? item.images[0] : ''}
-                style={{ height: 250, width: 260 }}
+                style={{ height: 250, width: 260, objectFit: 'cover' }}
               />
             </Link>
           ))
