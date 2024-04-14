@@ -21,18 +21,24 @@ const ProducModal = (selectedProduct: IProduct) => {
           <Col span={16}>{selectedProduct.SKU}</Col>
         </Row>
       </Descriptions.Item>
+
       <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
             <strong>Category</strong>
           </Col>
           <Col span={16}>
-            {typeof selectedProduct.categoryId === 'string'
-              ? selectedProduct.categoryId
-              : selectedProduct.categoryId?.name}
+            {selectedProduct.categoryId && typeof selectedProduct.categoryId === 'object' && 'name' in selectedProduct.categoryId ? (
+              <>
+                {selectedProduct.categoryId.name}
+              </>
+            ) : (
+              <>N/A</>
+            )}
           </Col>
         </Row>
       </Descriptions.Item>
+
 
       <Descriptions.Item>
         <Row gutter={16}>
@@ -90,14 +96,13 @@ const ProducModal = (selectedProduct: IProduct) => {
         </Row>
       </Descriptions.Item>
 
-
       <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
             <strong>Sale</strong>
           </Col>
           <Col span={16}>
-            {typeof selectedProduct.sale === 'object' && 'name' in selectedProduct.sale ? (
+            {selectedProduct.sale && typeof selectedProduct.sale === 'object' && 'name' in selectedProduct.sale ? (
               <>
                 {selectedProduct.sale.name} %
               </>
@@ -108,14 +113,13 @@ const ProducModal = (selectedProduct: IProduct) => {
         </Row>
       </Descriptions.Item>
 
-
       <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
             <strong>Discount</strong>%
           </Col>
           <Col span={16}>
-            {typeof selectedProduct.sale === 'object' && 'discount' in selectedProduct.sale ? (
+            {selectedProduct.sale && typeof selectedProduct.sale === 'object' && 'discount' in selectedProduct.sale ? (
               <>
                 {selectedProduct.sale.discount}%
               </>
@@ -125,6 +129,7 @@ const ProducModal = (selectedProduct: IProduct) => {
           </Col>
         </Row>
       </Descriptions.Item>
+
 
 
 

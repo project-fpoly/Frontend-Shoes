@@ -16,7 +16,7 @@ import { AppDispatch } from "../../../redux/store";
 import { useState } from "react";
 import { IProduct } from "../../../common/products";
 import { ColumnsType } from "antd/es/table";
-import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag, FloatButton, Flex } from "antd";
+import { Button, Table, Tooltip, Image, Modal, Row, Col, Tag, FloatButton, Flex, message } from "antd";
 import { removeProduct, createProduct, update, tryDelete, Restore, getProductsWithFilters } from "../../../features/product";
 import HeaderTable from "../../../components/Admin/Layout/HeaderTable";
 import { IStateProduct } from "../../../common/redux/type";
@@ -29,7 +29,7 @@ const ProductsManager: React.FC = () => {
     const [Search, setSearch] = useState("");
     const [pageSize, setPageSize] = useState(10)
     const dispatch = useDispatch<AppDispatch>();
-    const { products, loading, totalProducts} = useSelector(
+    const { products, loading, totalProducts } = useSelector(
         (state: IStateProduct) => state.product
     );
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
@@ -100,39 +100,39 @@ const ProductsManager: React.FC = () => {
     };
     const deleteProduct = (record: IProduct) => {
         Modal.confirm({
-          title: "Confirm Delete",
-          icon: <ExclamationCircleOutlined />,
-          content: "Do you want to delete this product?",
-          okText: "Yes",
-          okType: "danger",
-          cancelText: "No",
-          onOk() {
-            if (!record._id) return;
-            if (record.isDeleted) {
-              Modal.confirm({
-                title: "Confirm Permanent Delete",
-                icon: <ExclamationCircleOutlined />,
-                content: "Do you want to permanently delete this product?",
-                okText: "Yes",
-                okType: "danger",
-                cancelText: "No",
-                onOk() {
-                  if (record._id) {
-                    dispatch(removeProduct(record._id));
-                  }
-                },
-                onCancel() {},
-              });
-            } else {
-              if (record._id) {
-                dispatch(removeProduct(record._id));
-              }
-            }
-          },
-          onCancel() {},
+            title: "Confirm Delete",
+            icon: <ExclamationCircleOutlined />,
+            content: "Do you want to delete this product?",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+                if (!record._id) return;
+                if (record.isDeleted) {
+                    Modal.confirm({
+                        title: "Confirm Permanent Delete",
+                        icon: <ExclamationCircleOutlined />,
+                        content: "Do you want to permanently delete this product?",
+                        okText: "Yes",
+                        okType: "danger",
+                        cancelText: "No",
+                        onOk() {
+                            if (record._id) {
+                                dispatch(removeProduct(record._id));
+                            }
+                        },
+                        onCancel() { },
+                    });
+                } else {
+                    if (record._id) {
+                        dispatch(removeProduct(record._id));
+                    }
+                }
+            },
+            onCancel() { },
         });
-      };
-      
+    };
+
     const isRowDisabled = (record: IProduct) => {
         return record.isDeleted === true;
     };
@@ -191,41 +191,41 @@ const ProductsManager: React.FC = () => {
             align: "center",
             className: "action-cell",
             render: (_, record) => (
-              <div style={{ textAlign: "center" }}>
-                <Tooltip title={"Views"}>
-                  <Button type="link">
-                    <EyeOutlined onClick={() => handleRowClick(record)} />
-                  </Button>
-                </Tooltip>
-                <Tooltip title={"Edit"}>
-                  <Button type="link">
-                    <EditOutlined onClick={() => toggleModal(record)} />
-                  </Button>
-                </Tooltip>
-                {record.isDeleted ? (
-                  <>
-                    <Tooltip title={"Restore"}>
-                      <Button type="link">
-                        <UndoOutlined onClick={() => restoreProduct(record)} />
-                      </Button>
+                <div style={{ textAlign: "center" }}>
+                    <Tooltip title={"Views"}>
+                        <Button type="link">
+                            <EyeOutlined onClick={() => handleRowClick(record)} />
+                        </Button>
                     </Tooltip>
-                    <Tooltip title={"Delete Permanently"}>
-                      <Button type="link">
-                        <DeleteOutlined onClick={() => deleteProduct(record)} />
-                      </Button>
+                    <Tooltip title={"Edit"}>
+                        <Button type="link">
+                            <EditOutlined onClick={() => toggleModal(record)} />
+                        </Button>
                     </Tooltip>
-                  </>
-                ) : (
-                  <Tooltip title={"Make Delete"}>
-                    <Button type="link">
-                      <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
-                    </Button>
-                  </Tooltip>
-                )}
-              </div>
+                    {record.isDeleted ? (
+                        <>
+                            <Tooltip title={"Restore"}>
+                                <Button type="link">
+                                    <UndoOutlined onClick={() => restoreProduct(record)} />
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title={"Delete Permanently"}>
+                                <Button type="link">
+                                    <DeleteOutlined onClick={() => deleteProduct(record)} />
+                                </Button>
+                            </Tooltip>
+                        </>
+                    ) : (
+                        <Tooltip title={"Make Delete"}>
+                            <Button type="link">
+                                <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
+                            </Button>
+                        </Tooltip>
+                    )}
+                </div>
             ),
-          },
-          
+        },
+
 
     ];
 
@@ -235,13 +235,14 @@ const ProductsManager: React.FC = () => {
         name: "Giày Nike cao cấp",
         description: "Mô tả của sản phẩm",
         categoryId: "",
-        price: 0,
+        price: 100000,
         sale: "",
         discount: 0,
         quantity: 0,
         sold_count: 0,
         rating: 5,
         sizes: [
+            { name: "36", quantity: 5 }
         ],
         color: "red" || "green" || "blue" || "yellow" || "black" || "white",
         material: "Mesh" || "EVA" || "Velvet" || "Plastic" || "Rubber" || "Fabric" || "Leather",
@@ -308,7 +309,7 @@ const ProductsManager: React.FC = () => {
                     <HeaderTable showModal={() => setIsModalOpen(true)} onSubmitt={searchProduct} name={"Product"} />
                 </Col>
             </Row>
-            <Filter page={currentPage} searchKeyword={Search} pageSize={pageSize}/>
+            <Filter page={currentPage} searchKeyword={Search} pageSize={pageSize} />
             {loading === "pending" ? (
                 <div className="flex justify-center items-center mt-16">
                     <LoadingOutlined style={{ fontSize: 14 }} spin />

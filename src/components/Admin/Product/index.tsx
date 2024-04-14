@@ -70,7 +70,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
     const saleDispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        categoryDispatch(fetchAllCategories({ page: 1, limit: 10, keyword: '' }));
+        categoryDispatch(fetchAllCategories({ page: 1, limit: 1000, keyword: '' }));
     }, [categoryDispatch]);
 
     const { categories } = useSelector((state: IStateCategory) => state.category);
@@ -192,7 +192,9 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     >
                         <NumericInput
                             placeholder="Price"
-                            min={1}
+                            min={100000}
+                            max={20000000}
+                            step={1000}
                             value={form.getFieldValue('price')}
                             onChange={(value) => {
                                 const parsedPrice = parseFloat(value); // Chuyển đổi thành số
@@ -295,6 +297,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                                     <NumericInput
                                                         value={size?.name || ''}
                                                         onChange={(value) => form.setFieldsValue({ [`sizes[${name}].name`]: value })}
+                                                        placeholder='Input size name'
                                                         min={36}
                                                         max={42}
                                                         step={1}
@@ -305,10 +308,12 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                                     name={[name, 'quantity']}
                                                     rules={[{ required: true, message: 'Missing quantity' }]}
                                                 >
-                                                    <InputNumber
+                                                    <NumericInput
                                                         placeholder="Quantity"
-                                                        min={1}
-                                                        value={size?.quantity || undefined}
+                                                        min={1} // Changed min value to 0
+                                                        max={200}
+                                                        step={1}
+                                                        value={size?.quantity ? String(size.quantity) : ''} // Convert number to string before assigning
                                                         onChange={(value) => form.setFieldsValue({ [`sizes[${name}].quantity`]: value })}
                                                     />
                                                 </Form.Item>

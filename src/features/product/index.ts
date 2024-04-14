@@ -68,6 +68,8 @@ export const getProductsWithFilters = createAsyncThunk(
     | 'desc_sale'
     | 'asc_rate'
     | 'desc_rate'
+    | 'asc_createdAt'
+    | 'desc_createdAt'
     categoryId?: string
     size?: string
     minPrice?: string
@@ -161,7 +163,7 @@ export const createProduct = createAsyncThunk(
       const response = await addProduct(newProduct);
       const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: Number.MAX_SAFE_INTEGER, pageSize, searchKeyword: '' })
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
       );
       return response;
     } catch (error) {
