@@ -15,11 +15,10 @@ import {
 } from '../../features/address'
 
 import { fetchAllProducts } from '../../features/product'
-import { fetchOneVoucher } from '../../features/voucher'
+import { fetchVoucher, fetchOneVoucher } from '../../features/voucher'
 
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
-import { SearchOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -30,28 +29,16 @@ const CheckOut = () => {
   const districts = useSelector((state: any) => state.address.district)
   const wards = useSelector((state: any) => state.address.ward)
   const shippingOrder = useSelector((state: any) => state.address.shipping)
-  const { data } = useSelector((state: any) => state.voucher.voucher)
+  const data = useSelector((state: any) => state.voucher.vouchers)
+  const voucher = useSelector((state: any) => state.voucher.voucher)
   const message = useSelector((state: any) => state.voucher.voucher)
   const [province, setProvince] = useState(null)
   const [district, setDistrict] = useState(null)
   const [ward, setWard] = useState(null)
-  const [input, setInput] = useState(false)
   const [voucherr, setVoucher] = useState('')
-  const inputRef = useRef(null)
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
-        setInput(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
+  console.log(cart)
   let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
     totalCart += item.price * item.quantity
@@ -60,13 +47,12 @@ const CheckOut = () => {
     totalCart += item.price * item.quantity
   })
   const totalPrice = district
-    ? data?.Code === voucherr
-      ? shippingOrder?.service_fee + totalCart - data?.reduced_amount
+    ? voucher?.data?.Code === voucherr
+      ? shippingOrder?.service_fee + totalCart - voucher?.data?.reduced_amount
       : shippingOrder?.service_fee + totalCart
     : totalCart
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
-  console.log(products)
   const getProductName = (shoeId: string) => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.name : 'N/A'
@@ -126,6 +112,7 @@ const CheckOut = () => {
         items: items,
       }),
     )
+    dispatch(fetchVoucher())
     dispatch(fetchOneVoucher(voucherr))
   }, [province, district, ward, order?.cartItems.length > 0, voucherr])
   const [form] = Form.useForm()
@@ -173,6 +160,7 @@ const CheckOut = () => {
               voucherr,
             }),
           )
+          console.log(data)
           sessionStorage.removeItem('cart')
           if (payment_method === 'vnPay' && data) {
             redirectUrl = await dispatch(
@@ -498,31 +486,29 @@ const CheckOut = () => {
             <hr />
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Voucher</div>
-              <div ref={inputRef}>
-                {input ? (
-                  <Form onFinish={handleSubmitVoucher}>
+              <div>
+                {data.length > 0 ? (
+                  <Form onFinish={handleSubmitVoucher} className="pt-[26px]">
                     <Form.Item name="Code">
-                      <Input
-                        name="Code"
-                        className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black"
-                        size="large"
-                        placeholder="Enter your voucher"
-                      />
+                      <Select
+                        defaultValue="hãy chọn mã giảm giá"
+                        onChange={(value: any) => setVoucher(value)}
+                      >
+                        {data?.map((voucher: any, index: number) => (
+                          <Select.Option
+                            key={index}
+                            value={voucher.Code}
+                            disabled={voucher.Quantity <= 0}
+                          >
+                            {voucher.Name}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Form>
-                ) : data?.Code === voucherr ? (
-                  <p className="text-[#6b7280]">{data.Name}</p>
                 ) : (
-                  <Button
-                    className="border-none bg-none"
-                    onClick={() => setInput(true)}
-                  >
-                    <SearchOutlined className="flex items-end justify-center w-4" />
-                  </Button>
-                )}
-                {!message && voucherr && (
-                  <p className="text-[#6b7280] text-sm">
-                    mã giảm giá đã hết hạn hoặc không tồn tại
+                  <p className="text-[#6b7280] text-xs">
+                    Hãy trở thành thành viên để nhận được những ưu đãi hấp dẫn
                   </p>
                 )}
               </div>

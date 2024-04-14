@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { viewsFilterProducts } from '../../services/productsQuery'
 import { IProduct } from '../../common/products'
 import { Link } from 'react-router-dom'
+
 const Discover = () => {
   // const dispatch = useDispatch<AppDispatch>();
   const [products, setProducts] = useState<IProduct[]>([])
@@ -67,7 +68,7 @@ const Discover = () => {
                           <img
                             alt="example"
                             src={item.images ? item.images[0] : ''}
-                            style={{ maxWidth: '100%', height: '270px' }}
+                            style={{ width: '100%', height: '270px', objectFit: 'cover' }}
                           />
                         }
                       >

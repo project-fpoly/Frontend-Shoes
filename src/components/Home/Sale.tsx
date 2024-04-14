@@ -69,7 +69,7 @@ const Sale = () => {
                   <img
                     alt="Product"
                     src={item.images ? item.images[0] : ''}
-                    style={{ height: 250 }}
+                    style={{ height: 250, objectFit: 'cover' }}
                     onClick={(e) => e.stopPropagation()}
                   />
                 }

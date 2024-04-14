@@ -18,7 +18,8 @@ const MenuNav = () => {
         <Link to="/greaup">
           <h1 className="font-bold">Products</h1>
         </Link>
-      )
+      ),
+      key: 'Products'
     },
     {
       label: (
@@ -43,6 +44,14 @@ const MenuNav = () => {
         </Link>
       ),
       key: 'Sale',
+    },
+    {
+      label: (
+        <Link to="/contact">
+          <h1 className="font-bold">Contact</h1>
+        </Link>
+      ),
+      key: 'Contact',
     },
   ]
   return (
