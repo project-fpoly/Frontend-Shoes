@@ -52,7 +52,7 @@ import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
-
+import { PrivateCheckout } from './PrivateCheckout.tsx'
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -65,8 +65,8 @@ const Router = (user: any) => {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
       }
     })
-    socket.on('new_user_login', () => { })
-    socket.on('log_out', () => { })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
     })
@@ -112,14 +112,16 @@ const Router = (user: any) => {
           <Route path="/order/thank-you" element={<ThankYou />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
-          <Route path="/cart/checkout" element={<CheckOut />} />
-          <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route
-            path="/profile"
+            path="/cart/checkout"
             element={
-              <Profile />
+              <PrivateCheckout>
+                <CheckOut />{' '}
+              </PrivateCheckout>
             }
           />
+          <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route
