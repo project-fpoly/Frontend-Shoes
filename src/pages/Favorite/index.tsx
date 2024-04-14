@@ -37,7 +37,8 @@ const Favorites = () => {
     }, [])
 
     return (
-        <>
+        <div className="px-10">
+
             <Space direction="vertical" style={{ width: '100%' }}>
                 <Typography className="home_title">Popular Right Now</Typography>
 
@@ -70,7 +71,7 @@ const Favorites = () => {
                                                     <img
                                                         alt="example"
                                                         src={item.images ? item.images[0] : ''}
-                                                        style={{ maxWidth: '100%', height: '350px' }}
+                                                        style={{ maxWidth: '100%', height: '350px', objectFit: 'cover' }}
                                                     />
                                                 }
                                             >
@@ -93,7 +94,7 @@ const Favorites = () => {
                     )}
                 </Swiper>
             </Space>
-        </>
+        </div>
     )
 }
 
