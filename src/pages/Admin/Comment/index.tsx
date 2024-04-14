@@ -184,7 +184,7 @@ const CommentManager = () => {
       {/* )} */}
       <Modal
         title="Create new comment"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
