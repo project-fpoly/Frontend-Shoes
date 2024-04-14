@@ -6,7 +6,7 @@ import Meta from 'antd/es/card/Meta'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { useEffect, useState } from 'react'
-import { viewsFilterProducts } from '../../services/productsQuery'
+import { genderFilterProducts } from '../../services/productsQuery'
 import { IProduct } from '../../common/products'
 import { Link } from 'react-router-dom'
 
@@ -19,7 +19,7 @@ const Discover = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const data = await viewsFilterProducts(10, 'desc_views')
+        const data = await genderFilterProducts("nữ")
         setProducts(data.data)
         setLoading(false)
       } catch (error) {
