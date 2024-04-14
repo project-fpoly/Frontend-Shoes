@@ -18,7 +18,9 @@ export const getProductsWithFilter = async (
     | "asc_sale"
     | "desc_sale"
     | "asc_rate"
-    | "desc_rate",
+    | "desc_rate"
+    | "asc_createdAt"
+    | "desc_createdAt",
   categoryId?: string,
   size?: string,
   minPrice?: string,
@@ -43,6 +45,8 @@ export const getProductsWithFilter = async (
       } else if (sort === "asc_sale" || sort === "desc_sale") {
         url += `&sortOrder=${sort}`;
       } else if (sort === "asc_rate" || sort === "desc_rate") {
+        url += `&sortOrder=${sort}`;
+      } else if (sort === "asc_createdAt" || sort === "desc_createdAt") {
         url += `&sortOrder=${sort}`;
       }
     }
@@ -77,7 +81,7 @@ export const getProductsWithFilter = async (
     if (gender) {
       url += `&genderFilter=${gender}`;
     }
-    if (isDeleted !== undefined && isDeleted !== "") { 
+    if (isDeleted !== undefined && isDeleted !== "") {
       url += `&deleteFilter=${isDeleted}`;
     }
     const response: AxiosResponse = await instance.get(url);

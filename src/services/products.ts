@@ -3,7 +3,8 @@ import instance from '../core/Api'
 import { AxiosResponse } from 'axios'
 import { notification } from 'antd'
 import { CustomError } from '../common/error'
-
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:9000', { transports: ['websocket'] });
 export const getProducts = async (
   page = 1,
   pageSize = 10,
@@ -67,7 +68,8 @@ export const addProduct = async (
         },
       }
     )
-    notification.success({ message: 'Product added successfully' })
+    // notification.success({ message: 'Product added successfully' })
+    socket.emit("client_add_product", { message: `Product ${product.name} added successfully`, status: true });
     return response.data || response
   } catch (error) {
     console.log(error)
@@ -94,7 +96,8 @@ export const updatePrroduct = async (
         },
       }
     )
-    notification.success({ message: 'Product updated successfully' })
+    // notification.success({ message: 'Product updated successfully' })
+    socket.emit("client_update_product", { message: `Product ${product.name} updated successfully`, status: true });
     return response.data || response
   } catch (error) {
     console.log(error)

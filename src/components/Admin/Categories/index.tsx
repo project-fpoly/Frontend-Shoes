@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Select, Upload, Button, Image, GetProp, UploadProps,} from "antd";
+import { Form, Input, Select, Upload, Button, Image, GetProp, UploadProps, InputNumber, } from "antd";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { PlusOutlined } from "@ant-design/icons";
 import { ICategory } from "../../../common/category";
@@ -14,7 +14,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = (error) => reject(error)
   })
-  
+
 
 
 const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void; mode: string }> = ({
@@ -28,8 +28,8 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
 }) => {
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [imageUrlState, setImageUrlState] = useState<{ url: string }>({ url: imageUrl?.url || '' });
   const [showUploadButton, setShowUploadButton] = useState(mode === 'create')
-
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType)
@@ -51,18 +51,19 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
     setShowUploadButton(true)
   }
 
-  const handleFormSubmitCreate = (values: ICategory ) => {
+  const handleFormSubmitCreate = (values: ICategory) => {
     const formData = new FormData();
+ 
     formData.append('name', values.name);
     formData.append('description', values.description);
     formData.append('viewCount', String(values.viewCount)); // Convert viewCount to string
 
     if (values.imageUrl?.file?.originFileObj) {
       formData.append('imageUrl', values.imageUrl.file.originFileObj);
-    } else {
-      formData.append('imageUrl', imageUrl); // Ensure imageUrl is of type File | Blob
+    } else if (typeof values.imageUrl === 'object' && values.imageUrl !== null) {
+      formData.append('imageUrl', values.imageUrl); // Ensure imageUrl is of type File | Blob
     }
-    
+
     formData.append('status', String(values.status));
 
     // Convert FormData to an object
@@ -74,8 +75,11 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
       {} as Partial<ICategory>,
     );
 
-    onSubmit(formDataObject as ICategory); // Submit the form data
-};
+
+    onSubmit(formDataObject as ICategory);
+
+  };
+
 
   return (
     <Form
@@ -115,32 +119,54 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
         <Input defaultValue={description} />
       </Form.Item>
 
-      <Form.Item
-        label={'imageUrl'}
-        name="imageUrl"
-        rules={[{ required: true, message: 'Vui lòng chọn ảnh đại diện' }]}
-      >
-        {!showUploadButton ? (
-          <div>
-            <Image src={imageUrl.url} alt="Avatar" />
-            <Button onClick={handleRemoveImage}>Xóa ảnh</Button>
-          </div>
-        ) : (
-          <>
-            <Upload
-              name="imageUrl"
-              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-              listType="picture-circle"
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-              onRemove={handleRemoveImage}
-            >
-              {showUploadButton && (fileList.length >= 1 ? null : uploadButton)}
-            </Upload>
-          </>
-        )}
-      </Form.Item>
+
+      {mode === "create" && (
+        <>
+          <Form.Item
+            label={'imageUrl'}
+            name="imageUrl"
+            rules={[{ required: true, message: 'Vui lòng chọn ảnh đại diện' }]}
+          >
+            {!showUploadButton ? (
+              <div>
+                <Image src={imageUrl.url} alt="Avatar" />
+                <Button onClick={handleRemoveImage}>Xóa ảnh</Button>
+              </div>
+            ) : (
+              <>
+                <Upload
+                  name="imageUrl"
+                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                  listType="picture-circle"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                  onRemove={handleRemoveImage}
+                >
+                  {fileList.length >= 1 ? null : uploadButton}
+                </Upload>
+              </>
+            )}
+          </Form.Item>
+        </>
+      )}
+   {mode === "update" && (
+        <Form.Item
+          label="Image URL"
+          name="imageUrl"
+          initialValue={imageUrlState.url}
+          rules={[{ required: true, message: 'Please enter the image URL' }]}
+        >
+          <Input
+            value={imageUrlState.url}
+            onChange={(e) => {
+              const newImageUrl = e.target.value;
+              setImageUrlState({ url: newImageUrl });
+            }}
+          />
+        </Form.Item>
+      )}
+
 
       <Form.Item
         label={"Status"}
@@ -157,12 +183,12 @@ const FormCategory: React.FC<ICategory & { onSubmit: (values: ICategory) => void
       <Form.Item
         label={"View Count"}
         name="viewCount"
-        rules={[
-          { required: false, message: "Please input the view count" },
-        ]}
+        initialValue={viewCount}
+        rules={[{ required: false, message: "Please input the view count" }]}
       >
-        <Input defaultValue={viewCount} />
+        <InputNumber />
       </Form.Item>
+
 
 
       <Form.Item

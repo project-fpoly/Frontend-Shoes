@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { FilterOutlined } from "@ant-design/icons";
-import { Collapse, Radio, Button, RadioChangeEvent, Drawer, FloatButton, Input, DatePicker, Flex } from "antd";
+import { Collapse, Radio, Button, RadioChangeEvent, Drawer, FloatButton, Input, DatePicker, Flex, Select, Slider, Steps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
-import { IStateProduct } from "../../../common/redux/type";
+import { IStateCategory, IStateProduct } from "../../../common/redux/type";
 import { getProductsWithFilters } from "../../../features/product";
 import NumericInput from "../../../components/Admin/Product/input";
+import { fetchAllCategories } from "../../../features/category";
 const { Panel } = Collapse;
+const { Option } = Select;
 
 const sortOptions = [
   { label: 'Tăng dần theo giá bán', value: 'asc' },
@@ -19,6 +21,8 @@ const sortOptions = [
   { label: 'Giảm dần theo giảm giá', value: 'desc_sale' },
   { label: 'Tăng dần theo đánh giá', value: 'asc_rate' },
   { label: 'Giảm dần theo đánh giá', value: 'desc_rate' },
+  { label: 'Tăng dần theo ngày tạo', value: 'asc_createdAt' },
+  { label: 'Giảm dần theo ngày tạo', value: 'desc_createdAt' },
 ];
 
 interface FilterProps {
@@ -30,6 +34,10 @@ interface FilterProps {
 const Filter = (props: FilterProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading } = useSelector((state: IStateProduct) => state.product);
+  useEffect(() => {
+    dispatch(fetchAllCategories({ page: 1, limit: 1000, keyword: '' }));
+  }, [dispatch]);
+  const { categories } = useSelector((state: IStateCategory) => state.category);
   //Size
   const [selectedSort, setSelectedSort] = useState<
     | 'asc'
@@ -42,6 +50,8 @@ const Filter = (props: FilterProps) => {
     | 'desc_sale'
     | 'asc_rate'
     | 'desc_rate'
+    | 'asc_createdAt'
+    | 'desc_createdAt'
     | undefined
   >();
   //Size
@@ -87,11 +97,23 @@ const Filter = (props: FilterProps) => {
   const handleGenderChange = (gender: string) => {
     setSelectedGender(gender);
   };
-
+  //Delete
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const onChange = (current: number) => {
+    setCurrentStep(current);
+    // Tại đây, bạn có thể thực hiện các hành động tương ứng với việc chuyển đổi bước
+    // Ví dụ: gọi hàm handleDeletedChange với giá trị tương ứng với bước
+    handleDeletedChange(current === 0 ? "" : current === 1 ? false : true);
+  };
   const [isDeleted, setIsDeleted] = useState<boolean | string>("");
   const handleDeletedChange = (deleted: boolean | string) => {
     setIsDeleted(deleted);
   };
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
 
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -115,8 +137,6 @@ const Filter = (props: FilterProps) => {
       | 'desc_rate'
     );
   };
-
-
   const handleResetFilter = () => {
     setSelectedSort(undefined);
     setSelectedSize(undefined);
@@ -126,6 +146,8 @@ const Filter = (props: FilterProps) => {
     setSelectedColor('');
     setSelectedGender(undefined);
     setIsDeleted("");
+    setSelectedCategory("")
+    setCurrentStep(0);
   };
 
   useEffect(() => {
@@ -135,6 +157,7 @@ const Filter = (props: FilterProps) => {
         pageSize: props.pageSize,
         searchKeyword: props.searchKeyword,
         sort: selectedSort,
+        categoryId: selectedCategory,
         size: selectedSize,
         minPrice: selectedMinPrice,
         maxPrice: selectedMaxPrice,
@@ -151,6 +174,7 @@ const Filter = (props: FilterProps) => {
   }, [
     dispatch,
     selectedSort,
+    selectedCategory,
     selectedSize,
     selectedMinPrice,
     selectedMaxPrice,
@@ -171,12 +195,18 @@ const Filter = (props: FilterProps) => {
     <>
       {showFloatButton && (
         <FloatButton
-          onClick={handleToggleFilter}
-          shape="square"
-          type="primary"
-          style={{ position: "fixed", top: 114, right: 44, zIndex: 9999, height: 25 }}
-          icon={<FilterOutlined />}
-        />
+        onClick={handleToggleFilter}
+        shape="square"
+        type="primary"
+        style={{
+          position: "fixed",
+          top: `calc(25vh - 25px)`, // 3/4 chiều cao bên dưới của trình duyệt
+          right: 44,
+          height: 25
+        }}
+        icon={<FilterOutlined />}
+      />
+      
       )}
       <Drawer
         title="Bộ lọc"
@@ -193,15 +223,21 @@ const Filter = (props: FilterProps) => {
             <Radio.Group options={sortOptions} onChange={handleSortChange} value={selectedSort} />
           </Panel>
           <Panel header="Kích thước" key="2">
-            <Radio.Group onChange={(e) => handleSizeChange(e.target.value)} value={selectedSize} style={{ display: "flex", flex: 1, justifyContent: "center" }}>
-              <Radio.Button key={1} value="36">36</Radio.Button>
-              <Radio.Button key={2} value="37">37</Radio.Button>
-              <Radio.Button key={3} value="38">38</Radio.Button>
-              <Radio.Button key={4} value="39">39</Radio.Button>
-              <Radio.Button key={5} value="40">40</Radio.Button>
-              <Radio.Button key={6} value="41">41</Radio.Button>
-              <Radio.Button key={7} value="42">42</Radio.Button>
-            </Radio.Group>
+            <Slider
+              min={36}
+              max={42}
+              onChange={(value) => handleSizeChange(value.toString())}
+              value={parseInt(selectedSize || '36')}
+              marks={{
+                36: '36',
+                37: '37',
+                38: '38',
+                39: '39',
+                40: '40',
+                41: '41',
+                42: '42',
+              }}
+            />
           </Panel>
           <Panel header="Khoảng giá" key="3">
             <Input.Group compact>
@@ -246,12 +282,27 @@ const Filter = (props: FilterProps) => {
               <Radio.Button value="nữ">Nữ</Radio.Button>
             </Radio.Group>
           </Panel>
-          <Panel header="Đã xóa" key="7">
-            <Radio.Group onChange={(e) => handleDeletedChange(e.target.value)} value={isDeleted}>
-              <Radio.Button value={true}>Đã xóa</Radio.Button>
-              <Radio.Button value={false}>Chưa xóa</Radio.Button>
-              <Radio.Button value={undefined}>Tất cả</Radio.Button>
-            </Radio.Group>
+
+          <Panel header="Danh mục" key="7">
+            <Select
+              placeholder="Chọn danh mục"
+              onChange={handleCategoryChange}
+              value={selectedCategory}
+              style={{ width: 200 }}
+            >
+              {categories.map((category) => (
+                <Option key={category._id} value={category._id}>
+                  {category.name}
+                </Option>
+              ))}
+            </Select>
+          </Panel>
+          <Panel header={<span style={{ color: 'red', fontWeight: 'bold' }}>Đã đánh dấu xóa</span>} key="8">
+            <Steps current={currentStep} onChange={onChange} size="small">
+              <Steps.Step title="Tất cả" />
+              <Steps.Step title="Chưa xóa" />
+              <Steps.Step title="Đã xóa" />
+            </Steps>
           </Panel>
 
         </Collapse>
