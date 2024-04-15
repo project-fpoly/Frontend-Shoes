@@ -22,6 +22,8 @@ interface Props {
 }
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props
+  console.log(shoe);
+
   const [size, setSize] = useState('')
   const [activeButton, setActiveButton] = useState(null)
   const dispatch = useDispatch<AppDispatch>()
@@ -125,6 +127,7 @@ const InfoShoe = (props: Props) => {
             {shoe?.sizes?.map((item: any, index: number) => {
               return (
                 <Button
+                  disabled={item.quantity <= 0}
                   onClick={() => {
                     handleClick(index)
                     setSize(item.name)
