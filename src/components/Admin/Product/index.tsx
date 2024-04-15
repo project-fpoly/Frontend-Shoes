@@ -208,9 +208,11 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     <Form.Item
                         label="Sales"
                         name="sale"
-                        rules={[{ required: true, message: "Please select a sale" }]}
                     >
                         <Select placeholder="Select a sale" value={sale}>
+                            {/* Thêm option rỗng */}
+                            <Select.Option value={null}>None</Select.Option>
+                            {/* Lặp qua danh sách sales */}
                             {sales.map((sale) => (
                                 <Select.Option key={sale._id} value={sale._id}>
                                     {sale.name}
@@ -386,7 +388,13 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     {/* các trường khác cho cột thứ hai */}
                 </Col>
             </Row>
-
+            <Form.Item
+                label="videoUrl"
+                name="video"
+                rules={[{ required: true, message: "Please enter the product video" }]}
+            >
+                <Input placeholder="Enter product video" />
+            </Form.Item>
             {/* Các trường còn lại */}
 
             <Form.Item style={{ textAlign: "right" }} wrapperCol={{ offset: 8, span: 16 }}>
