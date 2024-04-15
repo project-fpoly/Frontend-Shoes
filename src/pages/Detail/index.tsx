@@ -26,6 +26,7 @@ const DetailShoe = () => {
     dispatch(fetchProductById(id!))
     dispatch(fetchAllCommentByProduct(id!))
   }, [dispatch, id])
+  console.log(shoe);
 
   if (Loading === 'pending') {
     return (

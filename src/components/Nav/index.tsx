@@ -78,48 +78,43 @@ const NavBar = () => {
               </Link>
               <span>|</span>
               {user ? (
-                <Link to={'profile'}>
-                  <Popover
-                    className="flex gap-2 hover:opacity-70"
-                    content={
-                      <>
-                        <Link to="/profile">
-                          <h1 className="font-bold">Profile</h1>
+                <Popover
+                  className="flex gap-2 hover:opacity-70"
+                  content={
+                    <>
+                      <Link to="/profile">
+                        <h1 className="font-bold">Profile</h1>
+                      </Link>
+                      {user?.role === 'admin' && (
+                        <Link to="/admin">
+                          <h1 className="font-bold">Admin</h1>
                         </Link>
-                        {user?.role === 'admin' && (
-                          <Link to="/admin">
-                            <h1 className="font-bold">Admin</h1>
-                          </Link>
-                        )}
-                        <Link to="">
-                          <h1 className="font-bold" onClick={handleLogout}>
-                            Logout
-                          </h1>
-                        </Link>
-                      </>
-                    }
-                    title="Account"
-                  >
-                    Hi, {user.userName}
-                    <Avatar
-                      size={30}
-                      icon={<UserOutlined />}
-                      src={user?.avt?.url}
-                    />
-                    {/*<Button onClick={handleLogout}>Logout</Button>*/}
-                  </Popover>
-                </Link>
+                      )}
+                      <Link to="">
+                        <h1 className="font-bold" onClick={handleLogout}>
+                          Logout
+                        </h1>
+                      </Link>
+                    </>
+                  }
+                  title="Account"
+                >
+                  Hi, {user.userName}
+                  <Avatar
+                    size={30}
+                    icon={<UserOutlined />}
+                    src={user?.avt?.url}
+                  />
+                  {/*<Button onClick={handleLogout}>Logout</Button>*/}
+                </Popover>
               ) : (
-                <Link to={'profile'}>
-                  <Popover
-                    className="flex gap-2 hover:opacity-70"
-                    content={content}
-                    title="Account"
-                  >
-                    <Avatar size={30} icon={<UserOutlined />} />
-                  </Popover>
-                </Link>
-
+                <Popover
+                  className="flex gap-2 hover:opacity-70"
+                  content={content}
+                  title="Account"
+                >
+                  <Avatar size={30} icon={<UserOutlined />} />
+                </Popover>
               )}
             </div>
           </div>
