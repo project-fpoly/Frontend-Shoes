@@ -25,6 +25,15 @@ const ProducModal = (selectedProduct: IProduct) => {
       <Descriptions.Item>
         <Row gutter={16}>
           <Col span={8}>
+            <strong>Name</strong>
+          </Col>
+          <Col span={16}>{selectedProduct.name}</Col>
+        </Row>
+      </Descriptions.Item>
+
+      <Descriptions.Item>
+        <Row gutter={16}>
+          <Col span={8}>
             <strong>Category</strong>
           </Col>
           <Col span={16}>
