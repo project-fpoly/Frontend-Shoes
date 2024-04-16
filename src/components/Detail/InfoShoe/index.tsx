@@ -68,16 +68,6 @@ const InfoShoe = (props: Props) => {
   const [fav, setFav] = usesessionStorage<{ favItems: IProduct[] }>('fav', {
     favItems: [],
   })
-  const {
-    _id: product,
-    categoryId,
-    sizes,
-    color,
-    images,
-    price,
-    ...shoeCart
-  } = shoe
-
 
   const accessToken = localStorage.getItem('accessToken')
 
