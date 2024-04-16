@@ -51,6 +51,7 @@ import { fetchAllNotification } from '../features/notification/index.tsx'
 import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
+import { fetchList } from '../features/dashboard/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -69,7 +70,7 @@ const Router = (user: any) => {
     socket.on('new_user_login', () => { })
     socket.on('log_out', () => { })
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
     })
     if(user.user){
       socket.on('realtimeBill', () => {
@@ -78,6 +79,7 @@ const Router = (user: any) => {
     }
 
     if (user.user && user.user.role === 'admin') {
+      dispatch(fetchList());
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))

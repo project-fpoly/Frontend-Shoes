@@ -26,6 +26,11 @@ export interface initialVoucher {
   vouchers: IVoucher[] | [];
   voucher: IVoucher | "";
 }
+export interface initialChart {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  list: any[] | [];
+  data: any[] | [];
+}
 export interface initialSale {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   sales: ISale[] | [];
@@ -75,6 +80,13 @@ export interface IStateVoucher {
     voucher: IVoucher;
     loading: string;
     totalDocs: number;
+  };
+}
+export interface IStateChart {
+  chart: {
+    list: any[];
+    data: any[];
+    loading: string;
   };
 }
 export interface IStateSale {

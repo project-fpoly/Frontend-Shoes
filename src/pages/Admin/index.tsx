@@ -43,28 +43,49 @@ import {
   updateNotificationById,
 } from '../../features/notification'
 import styles from '../../App.module.scss'
-
+import { fetchData, fetchList } from '../../features/dashboard'
+import { useEffect, useState, useRef } from 'react'
+import axios from 'axios'
+import BarCompopent from './DashboardofLam/BarCompopent'
 const { Content } = Layout
 const { Title, Text } = Typography
 
 const AdminDashboard = () => {
+  const prevListRef = useRef<any>(null)
+
+  useEffect(() => {
+    prevListRef.current = list
+  })
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const notifications = useSelector((state:RootState) => state.notification.notifications)
-  const data = [
-    { name: 'Jan', profit: 2400 },
-    { name: 'Feb', profit: 1398 },
-    { name: 'Mar', profit: 9800 },
-    { name: 'Apr', profit: 3908 },
-    { name: 'May', profit: 4800 },
-    { name: 'Jun', profit: 3800 },
-    { name: 'Jul', profit: 4300 },
-    { name: 'Aug', profit: 5300 },
-    { name: 'Sep', profit: 3490 },
-    { name: 'Oct', profit: 2780 },
-    { name: 'Nov', profit: 1890 },
-    { name: 'Dec', profit: 2390 },
-  ]
+  const notifications = useSelector(
+    (state: RootState) => state.notification.notifications,
+  )
+  const list = useSelector((state: RootState) => state.chart.list)
+  const data4 = useSelector((state: RootState) => {
+    const chartData = state.chart.data
+    if (chartData && chartData.length > 0) {
+      return chartData[0].data?.data || []
+    }
+    return []
+  })
+  console.log(data4)
+  const data5 = data4.map((item: any) => ({
+    name: item.time,
+    orders: item.value,
+  }))
+  console.log(data5)
+
+  useEffect(() => {
+    list.map((item: any) => {
+      if (item.type === 'bar') {
+        <>
+        <BarCompopent id={item._id} key={item._id} />
+        </>
+      }
+    })
+  }, [dispatch, list])
+
   const data2 = [
     {
       name: 'Page A',
@@ -113,7 +134,7 @@ const AdminDashboard = () => {
   const handleItemClick = async (item: INotification) => {
     if (!item.isRead) {
       await dispatch(updateNotificationById(item._id))
-      dispatch(fetchAllNotification("admin"))
+      dispatch(fetchAllNotification('admin'))
     }
     navigate(`/admin/notification/${item._id}`)
   }
@@ -140,9 +161,9 @@ const AdminDashboard = () => {
           ></div>
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Card title="Sales Chart" extra={<BarChartOutlined />}>
-                <BarChart width={400} height={300} data={data}>
-                  <Bar dataKey="profit" fill="#8884d8" />
+              <Card title="Đơn hàng" extra={<BarChartOutlined />}>
+                <BarChart width={600} height={300} data={data5}>
+                  <Bar dataKey="orders" fill="#8884d8" />
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
@@ -228,12 +249,12 @@ const AdminDashboard = () => {
               <Card title="User Statistics" extra={<PieChartOutlined />}>
                 <PieChart width={400} height={300}>
                   <Pie
-                    data={data}
-                    dataKey="profit"
+                    data={data5}
+                    dataKey="orders"
                     nameKey="name"
                     fill="#8884d8"
                   >
-                    {data.map((entry, index) => (
+                    {data5.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={colors[index % colors.length]}

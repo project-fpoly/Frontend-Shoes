@@ -17,6 +17,7 @@ import voucherSlice from '../features/voucher'
 import vnPaySlice from '../features/vnPay/index'
 import saleSlice from '../features/sale'
 import adressSlice from '../features/address/index'
+import chartSlice  from '../features/dashboard'
 export const store = configureStore({
   reducer: {
     product: productSlice,
@@ -30,6 +31,7 @@ export const store = configureStore({
     voucher: voucherSlice,
     vnPay: vnPaySlice,
     address: adressSlice,
+    chart:chartSlice,
     [analyticApi.reducerPath]: analyticApi.reducer,
 
     sale: saleSlice
