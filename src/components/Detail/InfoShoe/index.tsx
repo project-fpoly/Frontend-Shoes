@@ -13,7 +13,7 @@ import { addToCart } from '../../../features/cart'
 import { addFavItems, getFavItems } from '../../../features/favourite'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
-import { formatCurrency } from '../../../hooks/utils'
+import { discountcurrency, formatCurrency } from '../../../hooks/utils'
 import ModalCmt from '../../Modal/ModalCmt'
 import { useEffect } from 'react'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
@@ -58,6 +58,13 @@ const InfoShoe = (props: Props) => {
   const [cart, setCart] = usesessionStorage<{ cartItems: IProduct[] }>('cart', {
     cartItems: [],
   })
+
+
+  const { _id: product, categoryId, sizes, color, images, price, ...shoeCart } = shoe
+  const { sale } = shoeCart
+
+  const priceFormat = sale?.discount ? discountcurrency(shoe.price, sale?.discount) : shoe.price
+
   const [fav, setFav] = usesessionStorage<{ favItems: IProduct[] }>('fav', {
     favItems: [],
   })
@@ -70,6 +77,7 @@ const InfoShoe = (props: Props) => {
     price,
     ...shoeCart
   } = shoe
+
 
   const accessToken = localStorage.getItem('accessToken')
 
@@ -155,7 +163,18 @@ const InfoShoe = (props: Props) => {
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{categoryId?.name}</p>
-            <h3 className="my-10 text-xl">{formatCurrency(shoe.price)}</h3>
+            <span className='flex gap-5'>
+              <h3 className="my-10  text-xl ">{sale?.discount ? formatCurrency(priceFormat) : ""}</h3>
+
+              {!sale?.discount
+                ?
+                <h3 className="my-10  text-xl ">{formatCurrency(shoe.price)}</h3>
+                :
+                <h3 className="my-10 text-gray-600 text-xl line-through	">{formatCurrency(shoe.price)}</h3>
+              }
+              <h3 className="my-10  text-xl text-red-600 ">{sale?.discount! > 0 ? `${sale?.discount}% off` : ''}</h3>
+
+            </span>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
             <p>Select size</p>

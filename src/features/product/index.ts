@@ -132,7 +132,8 @@ export const fetchProductById = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const respone = await getProductById(id)
-      thunkApi.dispatch(fetchProductsByCategory(respone?.data?.categoryId!))
+      const { categoryId } = respone.data
+      thunkApi.dispatch(fetchProductsByCategory(categoryId._id))
       return respone.data
     } catch (error) {
       return isRejected('Error fetching data')
@@ -350,6 +351,7 @@ export const featchProductByMaterial = createAsyncThunk(
     }
   }
 )
+
 
 
 /// đây là chỗ chọc vào kho để lấy db
