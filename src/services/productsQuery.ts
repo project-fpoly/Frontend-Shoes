@@ -56,7 +56,9 @@ export const getProductsWithFilter = async (
     if (size) {
       url += `&sizeFilter=${size}`;
     }
-    if (minPrice !== undefined && maxPrice !== undefined) {
+    if (minPrice === '' && maxPrice === '') {
+      url += '&priceFilter=';
+    } else if (minPrice !== undefined && maxPrice !== undefined) {
       // Kiểm tra điều kiện 0 < maxPrice < minPrice
       if (parseFloat(maxPrice) < parseFloat(minPrice)) {
         // Nếu điều kiện đúng, đặt maxPrice thành undefined
@@ -204,7 +206,7 @@ export const filterProducts = async (
 export const categoryFilterProducts = async (CategoryId: string) => {
   try {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
-      `api/product?categoryFilter=${CategoryId._id}`
+      `api/product?categoryFilter=${CategoryId}`
     );
     const data = response.data || [];
     return data;
