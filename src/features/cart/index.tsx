@@ -90,7 +90,7 @@ export const getCartItems = createAsyncThunk(
         },
       )
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }),
+        fetchAllProducts({ page: 1, pageSize: 40, searchKeyword: '' }),
       )
 
       return response.data
@@ -286,7 +286,7 @@ const cartSlice = createSlice({
       })
       .addCase(getCartItems.fulfilled, (state: any, action) => {
         state.loading = false
-        state.favItems = action.payload
+        state.cartItems = action.payload
       })
       .addCase(getCartItems.rejected, (state: any, action) => {
         state.loading = false

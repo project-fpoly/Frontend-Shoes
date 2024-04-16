@@ -26,7 +26,7 @@ const Favourite = () => {
   console.log(state)
   useEffect(() => {
     dispatch(getFavItems())
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    dispatch(fetchAllProducts({ page: 1, pageSize: 40, searchKeyword: '' }))
   }, [state?.user])
   return (
     <section className="bg-white">

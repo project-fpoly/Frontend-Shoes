@@ -34,7 +34,7 @@ export const fetchOrders = createAsyncThunk(
       )
       thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }),
+        fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
       )
       return response.data
     } catch (error: any) {
@@ -87,7 +87,7 @@ export const fetchOneOrder = createAsyncThunk(
           },
         },
       )
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+      dispatch(fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }))
 
       return response.data
     } catch (error: any) {
@@ -110,7 +110,7 @@ export const SearchOrder = createAsyncThunk(
           },
         },
       )
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+      dispatch(fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }))
 
       return response.data
     } catch (error: any) {
@@ -246,7 +246,7 @@ export const getOrderByUsers = createAsyncThunk(
         },
       )
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+      dispatch(fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }))
 
       return response.data
     } catch (error: any) {
