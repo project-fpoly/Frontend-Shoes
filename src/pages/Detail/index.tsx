@@ -8,9 +8,7 @@ import Slide from '../../components/Detail/Slide'
 import { IStateCmt, IStateProduct } from '../../common/redux/type'
 import LoadingProduct from '../../components/Loading/LoadingProduct'
 import SlideAlso from '../../components/Detail/SlideAlso'
-import {
-  fetchAllCommentByProduct,
-} from '../../features/comment'
+import { fetchAllCommentByProduct } from '../../features/comment'
 import LoadingBar from 'react-top-loading-bar'
 
 const DetailShoe = () => {

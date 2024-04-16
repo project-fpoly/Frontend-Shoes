@@ -15,46 +15,73 @@ export default function OrderPage() {
     dispatch(getOrderByUsers({}))
   }, [dispatch])
 
-  const { orders } = useSelector((state: RootState) => state.order)
+  const { ordersUser, pagination } = useSelector(
+    (state: RootState) => state.order,
+  )
   const dataGet = (data: string) =>
-    orders?.filter((item: any) => item.isDelivered === data)
+    ordersUser?.filter((item: any) => item.isDelivered === data)
 
   const data1 = dataGet('Chờ xác nhận')
+  const data1Pagination = {
+    limit: 10,
+    totalOrder: data1.length,
+    totalPages: Math.ceil(data1.length / 10),
+  }
   const data2 = dataGet('Chờ lấy hàng')
+  const data2Pagination = {
+    limit: 10,
+    totalOrder: data2.length,
+    totalPages: Math.ceil(data2.length / 10),
+  }
   const data3 = dataGet('Đang giao hàng')
+  const data3Pagination = {
+    limit: 10,
+    totalOrder: data3.length,
+    totalPages: Math.ceil(data3.length / 10),
+  }
   const data4 = dataGet('Đã giao hàng')
+  const data4Pagination = {
+    limit: 10,
+    totalOrder: data4.length,
+    totalPages: Math.ceil(data4.length / 10),
+  }
   const data5 = dataGet('Đã hủy')
+  const data5Pagination = {
+    limit: 10,
+    totalOrder: data5.length,
+    totalPages: Math.ceil(data5.length / 10),
+  }
 
-  const items: TabsProps['items'] = orders && [
+  const items: TabsProps['items'] = ordersUser && [
     {
       key: '0',
       label: 'Tất cả trạng thái',
-      children: <OrderItem data={orders} />,
+      children: <OrderItem data={ordersUser} pagination={pagination} />,
     },
     {
       key: 'Chờ xác nhận',
       label: 'Chờ xác nhận',
-      children: <OrderItem data={data1} />,
+      children: <OrderItem data={data1} pagination={data1Pagination} />,
     },
     {
       key: 'Chờ lấy hàng',
       label: 'Chờ lấy hàng',
-      children: <OrderItem data={data2} />,
+      children: <OrderItem data={data2} pagination={data2Pagination} />,
     },
     {
       key: 'Đang giao hàng',
       label: 'Đang giao hàng',
-      children: <OrderItem data={data3} />,
+      children: <OrderItem data={data3} pagination={data3Pagination} />,
     },
     {
       key: 'Đã giao hàng',
       label: 'Đã giao hàng',
-      children: <OrderItem data={data4} />,
+      children: <OrderItem data={data4} pagination={data4Pagination} />,
     },
     {
       key: 'Đã hủy',
       label: 'Đã hủy',
-      children: <OrderItem data={data5} />,
+      children: <OrderItem data={data5} pagination={data5Pagination} />,
     },
   ]
 
