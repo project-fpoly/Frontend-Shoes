@@ -34,7 +34,7 @@ const Card = (props: Props) => {
                   </Space>
 
                   {/* Hiển thị phần trăm giảm giá */}
-                  {discount && <p style={{ color: 'green', fontWeight: 500 }}>{discount}% off</p>}
+                  {discount && <p className='absolute right-1' style={{ color: 'red', fontWeight: 500 }}>{discount}% off</p>}
                 </Link>
               </div>
             );

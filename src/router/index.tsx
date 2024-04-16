@@ -58,6 +58,8 @@ import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
 
 import { PrivateCheckout } from './PrivateCheckout.tsx'
+import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
+
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -131,6 +133,7 @@ const Router = (user: any) => {
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/chat" element={<ChatsPage />} />
           <Route path="/favourite" element={<Favourite />} />
+          <Route path="/chatgpt" element={<ChatGPTDemo />} />
           <Route
             path="/cart/checkout"
             element={
