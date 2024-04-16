@@ -44,10 +44,21 @@ const ProductsManager: React.FC = () => {
 
     };
 
-    const handlePageChange = (page: number, pageSize: number) => {
-        setCurrentPage(page);
-        setPageSize(pageSize)
+    const handlePageSizeChange = (current: number, size: number) => {
+        setPageSize(size); // Cập nhật pageSize mới
+        // Kiểm tra nếu dữ liệu trên trang hiện tại đã vượt quá giới hạn của trang mới
+        const newCurrentPage = Math.ceil((current * pageSize) / size);
+        setCurrentPage(newCurrentPage); // Cập nhật trang hiện tại để đảm bảo không mất dữ liệu
     };
+
+    const handlePageChange = (page: number, pageSize?: number) => {
+        setCurrentPage(page); // Cập nhật trang hiện tại
+        // pageSize có thể không được truyền vào trong trường hợp sử dụng phân trang
+        if (pageSize) {
+            setPageSize(pageSize); // Cập nhật pageSize nếu có
+        }
+    };
+
 
     const [productsState, setProductsState] = useState<IProduct>();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,16 +69,24 @@ const ProductsManager: React.FC = () => {
         dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
         setIsModalOpen(false);
     };
-    const handleUpdateProduct = (newProduct: IProduct) => {
-        dispatch(update({ id: productsState?._id as string, newProduct }));
-        dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
-        setIsModalUpdateOpen(false);
-    };
     const toggleModal = (product: IProduct) => {
-        setIsModalUpdateOpen(!isModalUpdateOpen);
-        setProductsState(product);
+        if (!product.isDeleted) {
+            setIsModalUpdateOpen(!isModalUpdateOpen);
+            setProductsState(product);
+        } else {
+            message.warning("This product is marked as deleted and cannot be edited.");
+        }
     };
 
+    const handleUpdateProduct = (newProduct: IProduct) => {
+        if (!productsState?.isDeleted) {
+            dispatch(update({ id: productsState?._id as string, newProduct }));
+            dispatch(getProductsWithFilters({ page: currentPage, pageSize: pageSize, searchKeyword: Search }));
+            setIsModalUpdateOpen(false);
+        } else {
+            message.warning("This product is marked as deleted and cannot be edited.");
+        }
+    };
     const tryDeleteProduct = (record: IProduct) => {
         Modal.confirm({
             title: "Confirm Delete",
@@ -144,39 +163,61 @@ const ProductsManager: React.FC = () => {
         {
             title: "No.",
             dataIndex: "index",
-            render: (_, __, index) => index + 1,
+            render: (_, record, index) => (
+                <span style={{ opacity: record.isDeleted ? 0.5 : 1, pointerEvents: record.isDeleted ? 'none' : 'auto' }}>{index + 1}</span>
+            ),
             align: "right",
         },
+
         {
             title: "Product Name",
             dataIndex: "name",
+            render: (text, record) => (
+                <span style={{ opacity: record.isDeleted ? 0.5 : 1, textDecoration: record.isDeleted ? "line-through" : "none" }}>{text}</span>
+            ),
         },
         {
             title: "Images",
             dataIndex: "images",
             className: "action-cell",
             align: "center",
-            render: (images) => <Image src={images[0]} width={50} className="action-cell" />,
+            render: (images, record) => (
+                <Image src={images[0]} width={50} className="action-cell" style={{ opacity: record.isDeleted ? 0.2 : 1 }} />
+            ),
         },
         {
             title: "quantity",
             dataIndex: "quantity",
+            render: (quantity, record) => {
+                const textStyle = {
+                    opacity: record.isDeleted ? 0.5 : 1,
+                    textDecoration: record.isDeleted ? "line-through" : "none",
+                    color: quantity <= 0 ? "red" : "inherit", 
+                    fontWeight: quantity <= 0 ? "bold" : "normal", 
+                };
+        
+                return (
+                    <span style={textStyle}>{quantity}</span>
+                );
+            },
         },
+        
         {
             title: "Price",
             dataIndex: "price",
-            render: (price: number) => (
-                <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(price)}</span>
+            render: (price: number, record) => (
+                <span style={{ opacity: record.isDeleted ? 0.5 : 1, textDecoration: record.isDeleted ? "line-through" : "none" }}>
+                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(price)}
+                </span>
             ),
         },
-
         {
             title: "Is Deleted",
             key: "isDeleted",
             align: "center",
             fixed: 'right',
             render: (_, record) => (
-                <div style={{ textAlign: "center" }}>
+                <div style={{ textAlign: "center", opacity: record.isDeleted ? 0.5 : 1, textDecoration: record.isDeleted ? "line-through" : "none" }}>
                     {record.isDeleted ?
                         <Tag icon={<SyncOutlined spin />} color="processing">
                             processing
@@ -185,6 +226,7 @@ const ProductsManager: React.FC = () => {
                 </div>
             ),
         },
+
         {
             title: "Action",
             key: "action",
@@ -193,39 +235,38 @@ const ProductsManager: React.FC = () => {
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
                     <Tooltip title={"Views"}>
-                        <Button type="link">
-                            <EyeOutlined onClick={() => handleRowClick(record)} />
+                        <Button type="link" disabled={record.isDeleted} onClick={() => handleRowClick(record)}>
+                            <EyeOutlined />
                         </Button>
                     </Tooltip>
                     <Tooltip title={"Edit"}>
-                        <Button type="link">
-                            <EditOutlined onClick={() => toggleModal(record)} />
+                        <Button type="link" disabled={record.isDeleted} onClick={() => toggleModal(record)}>
+                            <EditOutlined />
                         </Button>
                     </Tooltip>
                     {record.isDeleted ? (
                         <>
                             <Tooltip title={"Restore"}>
-                                <Button type="link">
-                                    <UndoOutlined onClick={() => restoreProduct(record)} />
+                                <Button type="link" onClick={() => restoreProduct(record)}>
+                                    <UndoOutlined />
                                 </Button>
                             </Tooltip>
                             <Tooltip title={"Delete Permanently"}>
-                                <Button type="link">
-                                    <DeleteOutlined onClick={() => deleteProduct(record)} />
+                                <Button type="link" onClick={() => deleteProduct(record)}>
+                                    <DeleteOutlined />
                                 </Button>
                             </Tooltip>
                         </>
                     ) : (
                         <Tooltip title={"Make Delete"}>
-                            <Button type="link">
-                                <DeleteOutlined onClick={() => tryDeleteProduct(record)} />
+                            <Button type="link" onClick={() => tryDeleteProduct(record)}>
+                                <DeleteOutlined />
                             </Button>
                         </Tooltip>
                     )}
                 </div>
             ),
         },
-
 
     ];
 
@@ -329,8 +370,9 @@ const ProductsManager: React.FC = () => {
                             current: currentPage,
                             total: totalProducts,
                             pageSize: pageSize,
-                            showTotal: (total) => ` ${total} items`,
-                            onChange: handlePageChange,
+                            showTotal: (total) => `${total} items`,
+                            onChange: handlePageChange, // Xử lý thay đổi trang
+                            onShowSizeChange: handlePageSizeChange,
                             showSizeChanger: true,
                         }}
                     />

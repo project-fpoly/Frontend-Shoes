@@ -56,7 +56,9 @@ export const getProductsWithFilter = async (
     if (size) {
       url += `&sizeFilter=${size}`;
     }
-    if (minPrice !== undefined && maxPrice !== undefined) {
+    if (minPrice === '' && maxPrice === '') {
+      url += '&priceFilter=';
+    } else if (minPrice !== undefined && maxPrice !== undefined) {
       // Kiểm tra điều kiện 0 < maxPrice < minPrice
       if (parseFloat(maxPrice) < parseFloat(minPrice)) {
         // Nếu điều kiện đúng, đặt maxPrice thành undefined
