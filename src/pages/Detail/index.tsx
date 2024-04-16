@@ -25,7 +25,6 @@ const DetailShoe = () => {
     dispatch(fetchProductById(id!))
     dispatch(fetchAllCommentByProduct(id!))
   }, [dispatch, id])
-
   if (Loading === 'pending') {
     return (
       <div className="flex justify-center items-center mt-36">
@@ -44,7 +43,6 @@ const DetailShoe = () => {
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
       <LoadingBar color="black" progress={Loading === 'fullfiled' ? 0 : 100} />
-
     </>
   )
 }

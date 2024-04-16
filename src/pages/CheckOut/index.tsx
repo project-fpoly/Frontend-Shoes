@@ -229,13 +229,20 @@ const CheckOut = () => {
             window.open(redirectUrl.payload, '_blank')
           }
         }
-        // navigate('../../order/guest')
+        navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)
     }
   }
-
+  const validatePhone = (rule, value, callback) => {
+    const phoneRegex = /^[0-9]{10,}$/
+    if (value && !phoneRegex.test(value)) {
+      callback('Please enter a valid phone number!')
+    } else {
+      callback()
+    }
+  }
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
@@ -289,6 +296,10 @@ const CheckOut = () => {
                   name="firstName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
+                    {
+                      min: 10,
+                      message: 'First name must be at least 10 characters.',
+                    },
                   ]}
                 >
                   <Input
@@ -298,10 +309,15 @@ const CheckOut = () => {
                     placeholder="First name"
                   />
                 </Form.Item>
+
                 <Form.Item
                   name="lastName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
+                    {
+                      min: 4,
+                      message: 'First name must be at least 4 characters.',
+                    },
                   ]}
                 >
                   <Input
@@ -333,6 +349,7 @@ const CheckOut = () => {
                       required: true,
                       message: 'Please enter your phone number!',
                     },
+                    { validator: validatePhone },
                   ]}
                 >
                   <Input
@@ -434,6 +451,10 @@ const CheckOut = () => {
                     {
                       required: true,
                       message: 'Please enter your address details!',
+                    },
+                    {
+                      min: 4,
+                      message: 'details address must be at least 4 characters.',
                     },
                   ]}
                 >
