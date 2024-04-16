@@ -206,7 +206,7 @@ export const filterProducts = async (
 export const categoryFilterProducts = async (CategoryId: string) => {
   try {
     const response: AxiosResponse<{ data: IProduct[] }> = await instance.get(
-      `api/product?categoryFilter=${CategoryId._id}`
+      `api/product?categoryFilter=${CategoryId}`
     );
     const data = response.data || [];
     return data;

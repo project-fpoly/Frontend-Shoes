@@ -4,6 +4,7 @@ import cartSlice from '../features/cart'
 import categorySlice from '../features/category/index'
 import commentSlice from '../features/comment'
 import notificationSlice from '../features/notification'
+import favSlice from '../features/favourite'
 
 import orderReducer from '../features/order/index'
 import productSlice from '../features/product/index'
@@ -33,7 +34,8 @@ export const store = configureStore({
     address: adressSlice,
     [analyticApi.reducerPath]: analyticApi.reducer,
     chat: chatSlice,
-    sale: saleSlice
+    sale: saleSlice,
+    fav: favSlice,
 
   },
   middleware: (getDefaultMiddleware) =>

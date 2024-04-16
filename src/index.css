@@ -42,4 +42,16 @@
   color: black
 }
 
+.ant-menu-submenu-active {
+  color: black !important
+}
+
+.ant-menu-submenu-horizontal {
+  color: black !important
+}
+
+.ant-menu-submenu-active {
+  color: black !important
+}
+
 @tailwind utilities;
