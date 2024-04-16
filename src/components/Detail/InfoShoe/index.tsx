@@ -6,7 +6,7 @@ import ModalCustom from '../../Modal'
 import { useState } from 'react'
 import { Image, notification, Button, ConfigProvider } from 'antd'
 import Colspace from './Colspace'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CiHeart } from 'react-icons/ci'
 import usesessionStorage from '../../../hooks'
 import { addToCart } from '../../../features/cart'
@@ -26,11 +26,11 @@ const InfoShoe = (props: Props) => {
   const { shoe, category } = props
   const state = useSelector((state: any) => state.fav.favItems.fav)
   const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
-  console.log(favs)
   const [size, setSize] = useState('')
   const [activeButton, setActiveButton] = useState(null)
   const dispatch = useDispatch<AppDispatch>()
-  const favItem = favs?.some((item) => item.product === shoe._id)
+  const favItem = favs?.some((item: any) => item.product === shoe._id)
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(getFavItems())
@@ -129,7 +129,6 @@ const InfoShoe = (props: Props) => {
       }
 
       openNotification('success')
-      setFav({ favItems: updatedfav })
     }
   }
   const storedData = localStorage.getItem('fav')
@@ -202,7 +201,9 @@ const InfoShoe = (props: Props) => {
               </>
             ) : (
               <button
-                onClick={() => addToFavv()}
+                onClick={() =>
+                  state?.user ? addToFavv() : navigate('/signin')
+                }
                 className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >
                 Favourite
