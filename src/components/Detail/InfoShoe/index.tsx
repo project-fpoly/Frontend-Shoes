@@ -10,10 +10,12 @@ import { Link } from 'react-router-dom'
 import { CiHeart } from 'react-icons/ci'
 import usesessionStorage from '../../../hooks'
 import { addToCart } from '../../../features/cart'
-import { useDispatch } from 'react-redux'
+import { addFavItems, getFavItems } from '../../../features/favourite'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { formatCurrency } from '../../../hooks/utils'
 import ModalCmt from '../../Modal/ModalCmt'
+import { useEffect } from 'react'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -22,12 +24,17 @@ interface Props {
 }
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props
-  console.log(shoe);
-
+  const state = useSelector((state: any) => state.fav.favItems.fav)
+  const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
+  console.log(favs)
   const [size, setSize] = useState('')
   const [activeButton, setActiveButton] = useState(null)
   const dispatch = useDispatch<AppDispatch>()
+  const favItem = favs?.some((item) => item.product === shoe._id)
 
+  useEffect(() => {
+    dispatch(getFavItems())
+  }, [shoe])
   const handleClick = (index: any) => {
     setActiveButton(index === activeButton ? null : index)
   }
@@ -51,8 +58,18 @@ const InfoShoe = (props: Props) => {
   const [cart, setCart] = usesessionStorage<{ cartItems: IProduct[] }>('cart', {
     cartItems: [],
   })
-
-  const { _id: product, categoryId, sizes, color, images, price, ...shoeCart } = shoe
+  const [fav, setFav] = usesessionStorage<{ favItems: IProduct[] }>('fav', {
+    favItems: [],
+  })
+  const {
+    _id: product,
+    categoryId,
+    sizes,
+    color,
+    images,
+    price,
+    ...shoeCart
+  } = shoe
 
   const accessToken = localStorage.getItem('accessToken')
 
@@ -73,7 +90,7 @@ const InfoShoe = (props: Props) => {
       // If the product was not found in the cart, add it with quantity 1
       if (
         !updatedCart?.find(
-          (item) => item.product === product && item.size === size
+          (item) => item.product === product && item.size === size,
         )
       ) {
         updatedCart?.push({
@@ -90,8 +107,32 @@ const InfoShoe = (props: Props) => {
       setCart({ cartItems: updatedCart })
     }
   }
-  const storedData = localStorage.getItem('cart')
+  const addToFavv = () => {
+    const favItem = { product }
+    if (accessToken) {
+      dispatch(addFavItems(favItem as any))
+    } else {
+      const updatedfav = fav?.favItems.map((item: any) => {
+        if (item.product === shoe._id) {
+        }
+        return item
+      })
 
+      // If the product was not found in the cart, add it with quantity 1
+      if (!updatedfav?.find((item) => item.product === product)) {
+        updatedfav?.push({
+          product,
+          color,
+          images,
+          price,
+        })
+      }
+
+      openNotification('success')
+      setFav({ favItems: updatedfav })
+    }
+  }
+  const storedData = localStorage.getItem('fav')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => {
     setIsModalOpen(true)
@@ -135,7 +176,7 @@ const InfoShoe = (props: Props) => {
                   key={item.name}
                   className={clsx(
                     style.button,
-                    index === activeButton ? 'border-black' : ''
+                    index === activeButton ? 'border-black' : '',
                   )}
                 >
                   {item.name}
@@ -150,12 +191,26 @@ const InfoShoe = (props: Props) => {
             >
               Add to Bag
             </button>
-            <button className="w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 ">
-              Favourite
-              <p className="mt-1 px-3">
-                <CiHeart />
-              </p>
-            </button>
+            {favItem && state?.user ? (
+              <>
+                <Link to={'/favourite'} className="mt-1 px-3">
+                  <CiHeart
+                    title="your fav products list"
+                    className="text-5xl text-white bg-pink-500  border-black hover:bg-pink-300  rounded-full p-1"
+                  />
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={() => addToFavv()}
+                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+              >
+                Favourite
+                <p className="mt-1 px-3">
+                  <CiHeart />
+                </p>
+              </button>
+            )}
           </div>
           <p>{shoe.description}</p>
           <p

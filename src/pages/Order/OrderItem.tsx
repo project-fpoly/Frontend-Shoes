@@ -142,7 +142,7 @@ export default function OrderItem({ data }: Props) {
     {
       title: 'No.',
       dataIndex: 'index',
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => index + 1,  
       align: 'center',
     },
     {

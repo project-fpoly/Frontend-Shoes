@@ -54,8 +54,8 @@ import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
 
 import ChatsPage from '../pages/Chat/index.tsx'
+import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
-
 
 import { PrivateCheckout } from './PrivateCheckout.tsx'
 
@@ -74,21 +74,23 @@ const Router = (user: any) => {
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
         dispatch(getOrderByUsers({}))
       })
     }
-    socket.on("server_add_product", (data) => {
+    socket.on('server_add_product', (data) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
-    });
-    socket.on("server_update_product", (data) => {
+    })
+    socket.on('server_update_product', (data) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
-    });
+    })
     if (user.user && user.user.role === 'admin') {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
@@ -128,6 +130,7 @@ const Router = (user: any) => {
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/chat" element={<ChatsPage />} />
+          <Route path="/favourite" element={<Favourite />} />
           <Route
             path="/cart/checkout"
             element={

@@ -286,7 +286,7 @@ const cartSlice = createSlice({
       })
       .addCase(getCartItems.fulfilled, (state: any, action) => {
         state.loading = false
-        state.cartItems = action.payload
+        state.favItems = action.payload
       })
       .addCase(getCartItems.rejected, (state: any, action) => {
         state.loading = false
