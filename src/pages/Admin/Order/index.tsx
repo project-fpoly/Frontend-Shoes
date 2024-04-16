@@ -34,8 +34,6 @@ import DetailOrder from '../../../components/Admin/Order/DetailOrder'
 import FormUpdateMany from '../../../components/Admin/Order/FormUpdateMany'
 import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableAdminOrder'
 const OrderManager = (a) => {
-  console.log(a)
-
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -57,7 +55,6 @@ const OrderManager = (a) => {
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { users } = useSelector((state: IUsers) => state.user)
   useEffect(() => {
-    console.log(pagination.totalOrders)
     dispatch(
       fetchOrders({
         page: currentPage,

@@ -25,8 +25,8 @@ const DetailShoe = () => {
   useEffect(() => {
     dispatch(fetchProductById(id!))
     dispatch(fetchAllCommentByProduct(id!))
-  }, [dispatch])
-  console.log(shoe)
+  }, [dispatch, id])
+  console.log(shoe);
 
   if (Loading === 'pending') {
     return (
@@ -46,6 +46,7 @@ const DetailShoe = () => {
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
       <LoadingBar color="black" progress={Loading === 'fullfiled' ? 0 : 100} />
+
     </>
   )
 }

@@ -7,6 +7,7 @@ import { IBill } from '../../common/order'
 import { notification } from 'antd'
 import { fetchAllUsers } from '../user'
 import { fetchAllProducts } from '../product'
+import { AppDispatch, RootState } from '../../redux/store'
 
 export const fetchOrders = createAsyncThunk(
   'order/fetchOrders',
@@ -49,6 +50,9 @@ export const updateOrder = createAsyncThunk(
     thunkApi,
   ) => {
     try {
+      const state = thunkApi.getState() as RootState
+      const { orders, pagination, isLoading } = state.order
+      console.log(pagination)
       if (typeof id === 'string') {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
@@ -61,7 +65,12 @@ export const updateOrder = createAsyncThunk(
             },
           },
         )
-        thunkApi.dispatch(fetchOrders({}))
+        thunkApi.dispatch(
+          fetchOrders({
+            page: pagination.currentPage,
+            limit: pagination.limit,
+          }),
+        )
         notification.success({ message: response.data.message })
 
         return response.data
@@ -208,7 +217,7 @@ export const updateIsDeliveredOrder = createAsyncThunk(
         )
         notification.success({ message: 'Đã hủy đơn hàng' })
 
-        thunkApi.dispatch(getOrderByUsers({}))
+        thunkApi.dispatch(getOrderByUsers({ page: 1, limit: 10 }))
 
         return response.data
       } else {
