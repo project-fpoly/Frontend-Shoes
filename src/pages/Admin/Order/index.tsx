@@ -52,9 +52,11 @@ const OrderManager = (a) => {
   const { orders, pagination, isLoading } = useSelector(
     (state: RootState) => state.order,
   )
+  console.log(pagination)
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { users } = useSelector((state: IUsers) => state.user)
   useEffect(() => {
+    console.log(currentPage)
     dispatch(
       fetchOrders({
         page: currentPage,

@@ -21,10 +21,10 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface Props {
   data: any
+  pagination: any
 }
 
-export default function OrderItem({ data }: Props) {
-  console.log(data)
+export default function OrderItem({ data, pagination }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const dispatch = useDispatch<AppDispatch>()
@@ -78,7 +78,6 @@ export default function OrderItem({ data }: Props) {
       )
     }
   }, [])
-  console.log(data)
   useEffect(() => {
     dispatch(
       getOrderByUsers({
@@ -138,11 +137,24 @@ export default function OrderItem({ data }: Props) {
       onCancel() {},
     })
   }
+  const handlePageChange = (page: number, pageSize: number) => {
+    setCurrentPage(page)
+    setPageSize(pageSize)
+    dispatch(
+      getOrderByUsers({
+        page: page,
+        limit: pageSize,
+        search: Search,
+        start: dayStart,
+        end: dayEnd,
+      }),
+    )
+  }
   const columns: ColumnsType<IBill> = [
     {
       title: 'No.',
       dataIndex: 'index',
-      render: (_, __, index) => index + 1,  
+      render: (_, __, index) => index + 1,
       align: 'center',
     },
     {
@@ -282,6 +294,12 @@ export default function OrderItem({ data }: Props) {
             }
           },
         })}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: pagination.totalPages * pageSize,
+          onChange: handlePageChange,
+        }}
       />
       <Modal
         open={modalVisible}

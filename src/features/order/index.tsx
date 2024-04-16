@@ -22,6 +22,7 @@ export const fetchOrders = createAsyncThunk(
     thunkApi,
   ) => {
     try {
+      // Gửi yêu cầu API để lấy danh sách đơn hàng
       const response = await axios.get(
         'http://localhost:9000/api/order/admin/bills',
         {
@@ -33,16 +34,28 @@ export const fetchOrders = createAsyncThunk(
           },
         },
       )
+
+      // Dispatch các hành động khác nếu cần
       thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
       thunkApi.dispatch(
         fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
       )
-      return response.data
+
+      const currentPage = params.page // Lấy giá trị của currentPage từ params.page
+
+      // Tạo một đối tượng mới bằng cách sao chép các thuộc tính từ response.pagination và ghi đè currentPage
+      const updatedPagination = { ...response.data.pagination, currentPage }
+
+      // Tạo một đối tượng mới cho updatedResponse bằng cách sao chép orders từ response và cập nhật pagination
+      const updatedResponse = { ...response, pagination: updatedPagination }
+
+      return updatedResponse.data
     } catch (error: any) {
       throw error.response.data
     }
   },
 )
+
 export const updateOrder = createAsyncThunk(
   'order/updateOrder',
   async (
@@ -51,8 +64,9 @@ export const updateOrder = createAsyncThunk(
   ) => {
     try {
       const state = thunkApi.getState() as RootState
-      const { orders, pagination, isLoading } = state.order
-      console.log(pagination)
+      const { pagination } = state.order
+      const a = state
+      console.log(a)
       if (typeof id === 'string') {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
@@ -130,8 +144,10 @@ export const SearchOrder = createAsyncThunk(
 )
 export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
-  async (id: string, { dispatch }) => {
+  async (id: string, thunkApi) => {
     try {
+      const state = thunkApi.getState() as RootState
+      const { pagination } = state.order
       const response = await axios.delete(
         `http://localhost:9000/api/order/admin/bills/${id}`,
         {
@@ -143,7 +159,9 @@ export const deleteOrder = createAsyncThunk(
         },
       )
 
-      await dispatch(fetchOrders({ page: 1, limit: 10 }))
+      thunkApi.dispatch(
+        fetchOrders({ page: pagination.currentPage, limit: pagination.limit }),
+      )
       notification.success({ message: response.data.message })
       return response.data
     } catch (error: any) {
@@ -167,6 +185,8 @@ export const updateManyOrders = createAsyncThunk(
     thunkApi,
   ) => {
     try {
+      const state = thunkApi.getState() as RootState
+      const { pagination } = state.order
       const response = await axios.put(
         `http://localhost:9000/api/order/admin/bills`,
         {
@@ -182,7 +202,12 @@ export const updateManyOrders = createAsyncThunk(
           },
         },
       )
-      thunkApi.dispatch(fetchOrders({}))
+      thunkApi.dispatch(
+        fetchOrders({
+          page: pagination.currentPage,
+          limit: pagination.limit,
+        }),
+      )
       notification.success({ message: response.data.message })
       return response.data
     } catch (error: any) {
@@ -240,7 +265,7 @@ export const getOrderByUsers = createAsyncThunk(
       end?: string
       search?: string
     },
-    { dispatch },
+    thunkApi,
   ) => {
     try {
       const response = await axios.get(
@@ -254,9 +279,11 @@ export const getOrderByUsers = createAsyncThunk(
           },
         },
       )
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
-      dispatch(fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }))
-
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      thunkApi.dispatch(
+        fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
+      )
+      console.log(response)
       return response.data
     } catch (error: any) {
       throw error.response.data
@@ -267,6 +294,7 @@ const orderSlice = createSlice({
   name: 'order',
   initialState: {
     orders: [],
+    ordersUser: [],
     pagination: {
       totalOrders: 0,
       totalPages: 0,
@@ -299,27 +327,22 @@ const orderSlice = createSlice({
       })
       .addCase(getOrderByUsers.fulfilled, (state, action) => {
         state.isLoading = false
-        state.orders = action.payload.orders
+        state.ordersUser = action.payload.orders
+        console.log(action)
         state.pagination = action.payload.pagination
       })
       .addCase(getOrderByUsers.rejected, (state: any, action) => {
         state.isLoading = false
         state.error = action.error.message
       })
-    builder.addCase(updateOrder.pending, (state) => {
-      state.isLoading = true
-      state.error = null
-    })
     builder
+      .addCase(updateOrder.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
       .addCase(updateOrder.fulfilled, (state: any, action) => {
         state.isLoading = false
-        const updatedOrder = action.payload
-        const index = state.orders.findIndex(
-          (order: IBill) => order._id === updatedOrder._id,
-        )
-        if (index !== -1) {
-          state.orders[index] = updatedOrder
-        }
+        state.order = action.payload.updatedCart
       })
       .addCase(updateOrder.rejected, (state: any, action) => {
         state.isLoading = false
@@ -331,8 +354,6 @@ const orderSlice = createSlice({
         state.error = null
       })
       .addCase(fetchOneOrder.fulfilled, (state, action) => {
-        console.log(state)
-        console.log(action)
         state.isLoading = false
         state.orders = action.payload
       })
@@ -346,8 +367,6 @@ const orderSlice = createSlice({
         state.error = null
       })
       .addCase(SearchOrder.fulfilled, (state, action) => {
-        console.log(state)
-        console.log(action)
         state.isLoading = false
         state.orders = action.payload
       })
@@ -385,7 +404,6 @@ const orderSlice = createSlice({
           if (updates.ids.includes(order._id)) {
             return { ...order, ...updateManyOrders }
           }
-          console.log(order)
           return order
         })
       })
