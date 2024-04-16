@@ -10,6 +10,7 @@ import {
   featchProductByMaterial,
   featchProductByPrice,
   featchProductBySize,
+  fetchProductsByCategory,
 } from '../../../features/product'
 import { genderFilterProducts } from '../../../services/productsQuery'
 type MenuItem = Required<MenuProps>['items'][number]
@@ -37,8 +38,13 @@ const items: MenuProps['items'] = [
     getItem('Men', 'nam'),
     getItem('Women', 'nữ'),
   ]),
+  getItem('Category', 'Category', '', [
+    getItem('Jordan', '6584f32081f5022799afe79e'),
+    getItem('Nike', '65899c32bb48834579fde67e'),
+    getItem('Adidas', '65b32b3962fec2570781106c'),
+  ]), ,
   getItem('Shop by price', 'Price', '', [
-    getItem('0  to  1,000,000', '0  to  1,000,000'),
+    getItem('1  to  1,000,000', '1  to  1,000,000'),
     getItem('1,000,000đ  to  2,000,000đ', '1,000,000 to  2,000,000'),
     getItem('2,000,000đ  to  5,000,000đ', '2,000,000  to  5,000,000'),
     getItem('5,000,000đ  to  10,000,000đ', '5,000,000  to  10,000,000'),
@@ -69,7 +75,7 @@ const items: MenuProps['items'] = [
   // ]),
 
 ]
-
+fetchProductsByCategory
 
 interface Props {
   hideFilter: boolean
@@ -83,13 +89,17 @@ const Sidebar = (props: Props) => {
       case 'Gender':
         dispact(featchProductByGender(e.keyPath[0]))
         break
+      case 'Category':
+        dispact(fetchProductsByCategory(e.keyPath[0]))
+        break
       case 'Size':
         dispact(featchProductBySize(e.keyPath[0]))
         break
+
       case 'Price':
-        if (e.keyPath[0] === '0  to  1,000,000') {
+        if (e.keyPath[0] === '1  to  1,000,000') {
           console.log('hi');
-          dispact(featchProductByPrice({ minPrice: 0, maxPrice: 999999 }))
+          dispact(featchProductByPrice({ minPrice: 1, maxPrice: 999999 }))
         } if (e.keyPath[0] === '1,000,000 to  2,000,000') {
           dispact(featchProductByPrice({ minPrice: 1000000, maxPrice: 1999999 }))
         } if (e.keyPath[0] === '2,000,000  to  5,000,000') {
@@ -97,8 +107,6 @@ const Sidebar = (props: Props) => {
         } if (e.keyPath[0] === '5,000,000  to  10,000,000') {
           dispact(featchProductByPrice({ minPrice: 5000000, maxPrice: 9999999 }))
         }
-        // const valuePrice = e.keyPath[0] === 'Under' ? { minPrice: 0, maxPrice: 500000 } : { minPrice: 500000, maxPrice: 999999999999999 };
-        // dispact(featchProductByPrice(valuePrice))
         break
       case 'Color':
         dispact(featchProductByColor(e.keyPath[0]))

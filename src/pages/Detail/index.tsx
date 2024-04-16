@@ -9,7 +9,6 @@ import { IStateCmt, IStateProduct } from '../../common/redux/type'
 import LoadingProduct from '../../components/Loading/LoadingProduct'
 import SlideAlso from '../../components/Detail/SlideAlso'
 import {
-  fetchAllComment,
   fetchAllCommentByProduct,
 } from '../../features/comment'
 import LoadingBar from 'react-top-loading-bar'
@@ -26,7 +25,6 @@ const DetailShoe = () => {
     dispatch(fetchProductById(id!))
     dispatch(fetchAllCommentByProduct(id!))
   }, [dispatch, id])
-  console.log(shoe);
 
   if (Loading === 'pending') {
     return (
