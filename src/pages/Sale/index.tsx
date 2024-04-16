@@ -24,7 +24,7 @@ const Sale = () => {
   const [hideFilter, setHideFilter] = useState<boolean>(true);
 
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
+    dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }));
     document.title = 'Sale';
   }, []);
 
@@ -104,7 +104,7 @@ const Sale = () => {
           </>
         )}
       </div>
-      <LoadingBar color="#378CE7" progress={loading === 'fullfiled' ? 0 : 100} />
+      <LoadingBar color="black" progress={loading === 'fullfiled' ? 0 : 100} />
     </div>
   );
 };

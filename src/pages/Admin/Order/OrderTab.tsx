@@ -8,14 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../../redux/store'
 import { fetchOrders } from '../../../features/order'
 import OrderManager from './index'
-export default function OrderPage() {
+export default function OrderTab() {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     dispatch(fetchOrders({}))
   }, [dispatch])
   const orders = useSelector((state: RootState) => state.order.orders)
-
-  const dataGet = (data: string) =>
+  console.log(orders)
+  const dataGet = (data: any) =>
     orders?.filter((item: any) => item.isDelivered === data)
   const data1 = dataGet('Chờ xác nhận')
   const data2 = dataGet('Chờ lấy hàng')
@@ -26,6 +26,11 @@ export default function OrderPage() {
   const items: TabsProps['items'] = orders && [
     {
       key: '0',
+      label: 'Tất cả trạng thái',
+      children: <OrderManager data={orders} />,
+    },
+    {
+      key: 'Chờ xác nhận',
       label: 'Chờ xác nhận',
       children: <OrderManager data={data1} />,
     },

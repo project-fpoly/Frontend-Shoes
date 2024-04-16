@@ -18,7 +18,8 @@ const MenuNav = () => {
         <Link to="/greaup">
           <h1 className="font-bold">Products</h1>
         </Link>
-      ) 
+      ),
+      key: 'Products'
     },
     {
       label: (
@@ -45,16 +46,16 @@ const MenuNav = () => {
       key: 'Sale',
     },
     {
-      label: <h1 className="font-bold">Customise</h1>,
-      key: 'Customise',
-    },
-    {
-      label: <h1 className="font-bold">SNKRS</h1>,
-      key: 'SNKRS',
+      label: (
+        <Link to="/contact">
+          <h1 className="font-bold">Contact</h1>
+        </Link>
+      ),
+      key: 'Contact',
     },
   ]
   return (
-    <Menu className="flex w-[800px] pl-10 " mode="horizontal" items={items} />
+    <Menu className="flex w-[800px] pl-52 " mode="horizontal" items={items} />
   )
 }
 

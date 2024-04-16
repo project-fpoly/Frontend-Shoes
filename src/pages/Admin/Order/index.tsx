@@ -33,8 +33,9 @@ import { IUsers } from '../../../common/users'
 import DetailOrder from '../../../components/Admin/Order/DetailOrder'
 import FormUpdateMany from '../../../components/Admin/Order/FormUpdateMany'
 import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableAdminOrder'
+const OrderManager = (a) => {
+  console.log(a)
 
-const OrderManager = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)

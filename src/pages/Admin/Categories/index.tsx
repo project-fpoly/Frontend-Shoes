@@ -61,20 +61,17 @@ const CategoriesManager: React.FC = () => {
     name: 'Tên danh mục',
     description: 'Mô tả của danh mục',
     imageUrl:
-      'ahihi',
+      '',
     status: 'active',
     viewCount: 123,
   }
   const Value = {
-    name: categoriesState?.name ? categoriesState?.name : 'Tên danh mục',
-    description: categoriesState?.description ? categoriesState?.description : 'Mô tả của danh mục',
-    imageUrl:
-      categoriesState?.imageUrl ||
-      'ahihi',
-    status: categoriesState?.status || 'active',
-    viewCount: categoriesState?.viewCount || 123,
-  }
-
+    name: categoriesState?.name ? categoriesState?.name : '',
+    description: categoriesState?.description ? categoriesState?.description : '',
+    imageUrl: categoriesState?.imageUrl?.url ?categoriesState?.imageUrl?.url: '', 
+    status: categoriesState?.status ? categoriesState?.status : '',
+    viewCount: categoriesState?.viewCount ? categoriesState?.viewCount : 0,
+  };
   const removeCategory = (record: ICategory) => {
     Modal.confirm({
       title: 'Confirm Delete',
@@ -151,8 +148,6 @@ const CategoriesManager: React.FC = () => {
   ]
   const searchCategory = (value: string) => {
     setSearch(value)
-    // Gọi hàm searchCategory với giá trị tìm kiếm
-    console.log(value)
   }
   return (
     <div>

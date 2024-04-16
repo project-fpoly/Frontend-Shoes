@@ -2,7 +2,6 @@ import Popular from '../../components/Home/Popular'
 import Banner from '../../components/Home/Banner'
 import Featured from '../../components/Home/Featured'
 import Trending from '../../components/Home/Trending'
-import MerchMenu from '../../components/Home/MerchMenu'
 import Sale from '../../components/Home/Sale'
 import Sport from '../../components/Home/Sport'
 import { Link } from 'react-router-dom'
@@ -34,7 +33,6 @@ const Home = () => {
       <Trending />
       <Popular />
       <Sport />
-      <MerchMenu />
     </div>
   )
 }

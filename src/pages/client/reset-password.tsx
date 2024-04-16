@@ -1,63 +1,39 @@
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { SiNike } from 'react-icons/si'
-import { Button, Form, Input } from 'antd'
-import { useState } from 'react'
-import axios from 'axios'
+import { Button, Form, Input, notification } from 'antd';
+import axios from 'axios';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { SiNike } from 'react-icons/si';
+import { useState } from 'react';
 
 const ResetPassword = () => {
-  const navigate = useNavigate()
-  const [params] = useSearchParams()
-  const [passwordHelp, setPasswordHelp] = useState<string | undefined>(
-    undefined,
-  )
-  const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<
-    string | undefined
-  >(undefined)
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const [passwordHelp, setPasswordHelp] = useState<string | undefined>(undefined);
+  const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<string | undefined>(undefined);
 
   const validatePassword = (_: any, value: string) => {
-    if (value.length < 8) {
-      setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
+    if (value.length < 8 || !/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
+      setPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
+      return Promise.reject('');
     }
 
-    if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
-    }
+    setPasswordHelp(undefined);
+    return Promise.resolve();
+  };
 
-    setPasswordHelp(undefined)
-    return Promise.resolve()
-  }
   const validateConfirmPassword = (_: any, value: string) => {
-    if (value.length < 8) {
-      setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
+    if (value.trim() !== (document.getElementById('password') as HTMLInputElement)?.value?.trim()) {
+      setConfirmPasswordHelp('Confirm password does not match password.');
+      return Promise.reject('');
     }
 
-    if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
-    }
+    setConfirmPasswordHelp(undefined);
+    return Promise.resolve();
+  };
 
-    if (value.trim() !== document.getElementById('password')?.value?.trim()) {
-      setConfirmPasswordHelp('Confirm password does not match password.')
-      return Promise.reject('')
-    }
-
-    setConfirmPasswordHelp(undefined)
-    return Promise.resolve()
-  }
   const handleSubmit = async (values: any) => {
-    const email = params.get('email')
-    const token = params.get('token')
+    const email = params.get('email');
+    const token = params.get('token');
+
     if (email && token) {
       try {
         const response = await axios.post(
@@ -67,22 +43,33 @@ const ResetPassword = () => {
             token,
             newPassword: values.password,
           },
-        )
-        console.log('res', response)
+        );
+
         if (response && response.status === 200) {
-          response.data.message && alert(response.data.message)
-          navigate('/signin')
+          response.data.message && notification.success({
+            message: response.data.message,
+          });
+          navigate('/signin');
         } else {
-          response.data.error && alert(response.data.error)
+          response.data.error && notification.error({
+            message: 'Error',
+            description: response.data.error,
+          });
         }
       } catch (e: any) {
-        console.log('err', e)
-        e.response.data.message && alert(e.response.data.message)
+        console.log('err', e);
+        notification.error({
+          message: 'Error',
+          description: e.response ? e.response.data.message : 'An error occurred.',
+        });
       }
     } else {
-      alert('Missing email or token from URL!')
+      notification.error({
+        message: 'Error',
+        description: 'Missing email or token from URL!',
+      });
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -107,11 +94,7 @@ const ResetPassword = () => {
                 { required: true, message: 'Please input your password!' },
                 { validator: validatePassword },
               ]}
-              extra={
-                passwordHelp && (
-                  <div style={{ color: 'blue' }}>{passwordHelp}</div>
-                )
-              }
+              extra={passwordHelp && <div style={{ color: 'blue' }}>{passwordHelp}</div>}
             >
               <Input.Password
                 id="password"
@@ -124,17 +107,10 @@ const ResetPassword = () => {
             <Form.Item
               name="confirmPassword"
               rules={[
-                {
-                  required: true,
-                  message: 'Please input your confirm password!',
-                },
+                { required: true, message: 'Please input your confirm password!' },
                 { validator: validateConfirmPassword },
               ]}
-              extra={
-                confirmPasswordHelp && (
-                  <div style={{ color: 'blue' }}>{confirmPasswordHelp}</div>
-                )
-              }
+              extra={confirmPasswordHelp && <div style={{ color: 'blue' }}>{confirmPasswordHelp}</div>}
             >
               <Input.Password
                 className="border border-black"
@@ -165,7 +141,7 @@ const ResetPassword = () => {
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;

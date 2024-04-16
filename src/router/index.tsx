@@ -51,6 +51,13 @@ import { fetchAllNotification } from '../features/notification/index.tsx'
 import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
+import Profile from '../pages/Profile/index.tsx'
+
+import ChatsPage from '../pages/Chat/index.tsx'
+import { fetchAllProducts } from '../features/product/index.ts'
+
+
+import { PrivateCheckout } from './PrivateCheckout.tsx'
 import { fetchList } from '../features/dashboard/index.tsx'
 
 const Router = (user: any) => {
@@ -59,25 +66,30 @@ const Router = (user: any) => {
     const socket = io('http://localhost:9000', { transports: ['websocket'] })
 
     socket.on('connect', () => {
-      console.log('Connected to Socket io')
       if (localStorage.getItem('userID') == null) {
         return
       } else {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
-        console.log('chua thong bao', user)
       }
     })
-    socket.on('new_user_login', () => { })
-    socket.on('log_out', () => { })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
       dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
     })
-    if(user.user){
+    if (user.user) {
       socket.on('realtimeBill', () => {
         dispatch(getOrderByUsers({}))
       })
     }
-
+    socket.on("server_add_product", (data) => {
+      notification.success({ message: data.data.message })
+      dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
+    });
+    socket.on("server_update_product", (data) => {
+      notification.success({ message: data.data.message })
+      dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
+    });
     if (user.user && user.user.role === 'admin') {
       dispatch(fetchList());
       socket.on('newNotification', (data) => {
@@ -117,6 +129,17 @@ const Router = (user: any) => {
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/chat" element={<ChatsPage />} />
+          <Route
+            path="/cart/checkout"
+            element={
+              <PrivateCheckout>
+                <CheckOut />{' '}
+              </PrivateCheckout>
+            }
+          />
+          <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route
@@ -141,7 +164,10 @@ const Router = (user: any) => {
             element={<NotificationsAdmin />}
           />
           <Route path="/admin/voucher" element={<Voucher />} />
-          <Route path="/admin/setting/sendNotification" element={<SendNotification />} />
+          <Route
+            path="/admin/setting/sendNotification"
+            element={<SendNotification />}
+          />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

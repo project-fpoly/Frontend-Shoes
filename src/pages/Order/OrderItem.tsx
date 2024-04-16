@@ -24,6 +24,7 @@ interface Props {
 }
 
 export default function OrderItem({ data }: Props) {
+  console.log(data)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const dispatch = useDispatch<AppDispatch>()
@@ -145,6 +146,19 @@ export default function OrderItem({ data }: Props) {
       align: 'center',
     },
     {
+      title: 'Tracking order',
+      dataIndex: 'trackingNumber',
+      align: 'center',
+      className: 'action-cell',
+    },
+    {
+      title: 'Is Delivered',
+      align: 'center',
+      dataIndex: 'isDelivered',
+
+      className: 'action-cell',
+    },
+    {
       title: 'Items',
       dataIndex: 'cartItems',
       render: (cartItems) => (
@@ -157,30 +171,6 @@ export default function OrderItem({ data }: Props) {
         </span>
       ),
       align: 'center',
-    },
-
-    {
-      title: 'Shipping address',
-      dataIndex: 'shippingAddress',
-      render: (shippingAddress) => (
-        <span>
-          <>
-            <div>
-              <b>Full Name:</b> {shippingAddress.fullname}
-            </div>
-            <div>
-              <b>Address:</b> {shippingAddress.address}
-            </div>
-            <div>
-              <b>Email:</b> {shippingAddress.email}
-            </div>
-            <div>
-              <b>Phone Number:</b>
-              {shippingAddress.phone}
-            </div>
-          </>
-        </span>
-      ),
     },
     {
       title: 'Payment meothod',
@@ -216,22 +206,26 @@ export default function OrderItem({ data }: Props) {
       className: 'action-cell',
       render: (_, record) => {
         const isCancel = record.isDelivered === 'Chờ xác nhận'
-        return (
-          <div style={{ textAlign: 'center' }}>
-            <Button
-              onClick={() => handleCancelOrder(record)}
-              type="link"
-              disabled={!isCancel}
-              className={
-                record.isDelivered === 'Đã hủy'
-                  ? 'hidden'
-                  : 'block w-full mx-auto'
-              }
-            >
-              Hủy dơn
-            </Button>
-          </div>
-        )
+        if (record.isDelivered === 'Đã hủy') {
+          return 'đơn hàng đã hủy'
+        } else {
+          return (
+            <div style={{ textAlign: 'center' }}>
+              <Button
+                onClick={() => handleCancelOrder(record)}
+                type="link"
+                disabled={!isCancel}
+                className={
+                  record.isDelivered === 'Đã hủy'
+                    ? 'hidden'
+                    : 'block w-full mx-auto'
+                }
+              >
+                Hủy dơn
+              </Button>
+            </div>
+          )
+        }
       },
     },
   ]

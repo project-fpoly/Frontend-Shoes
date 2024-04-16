@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, message, notification } from 'antd'
 import { SiNike } from 'react-icons/si'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -21,14 +21,19 @@ const SignupPage = () => {
         data,
       )
       if (response && response.status === 200) {
-        message.success('Signup successfully')
+        notification.success({
+          message: 'Signup successfully'
+        }); 
         localStorage.setItem('accessToken', response.data.accessToken)
 
         //redirect to signup page
         navigate(`/verify-email?email=${values?.email}`)
       }
     } catch (e: any) {
-      e.response.data.message && alert(e.response.data.message)
+      notification.error({
+        message: 'Signup failed',
+        description: e.response?.data?.message || 'An error occurred',
+      });
       console.log(e)
     }
     console.log('Received values:', values)
@@ -67,10 +72,13 @@ const SignupPage = () => {
       return Promise.reject('')
     }
 
-    if (value.trim() !== document.getElementById('password')?.value?.trim()) {
-      setConfirmPasswordHelp('Confirm password does not match password.')
-      return Promise.reject('')
+    const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+    const passwordValue = passwordInput ? passwordInput.value : '';
+    if (value.trim() !== passwordValue.trim()) {
+      setConfirmPasswordHelp('Confirm password does not match password.');
+      return Promise.resolve({});
     }
+    
 
     setConfirmPasswordHelp(undefined)
     return Promise.resolve()

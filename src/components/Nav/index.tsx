@@ -4,7 +4,7 @@ import { Popover, Avatar, ConfigProvider, message, Button } from 'antd'
 import { UserOutlined, InboxOutlined } from '@ant-design/icons'
 import { SiNike } from 'react-icons/si'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import clsx from 'clsx'
 import MenuNav from './Menu'
 import NavRight from './NavRight'
@@ -21,36 +21,10 @@ const NavBar = () => {
       {/*<p>Logout</p>*/}
     </div>
   )
-
   const [showNav, setShowNav] = useState<boolean>(false)
   const [position, setPosition] = useState<boolean>(false)
   const user = useSelector((state: any) => state.auth.user)
   const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY >= 100) {
-  //       setPosition(true)
-  //     } else {
-  //       setPosition(false)
-  //     }
-  //   }
-  //   const handleScrollTop = (e: any) => {
-  //     if (e.deltaY === 100) {
-  //       setShowNav(true)
-  //     } else {
-  //       setShowNav(false)
-  //     }
-  //   }
-  //   window.addEventListener('wheel', handleScrollTop)
-  //   window.addEventListener('scroll', handleScroll)
-
-  //   return () => {
-  //     window.removeEventListener('wheel', handleScrollTop)
-  //     window.removeEventListener('scroll', handleScroll)
-  //   }
-  // }, [])
-
   const handleLogout = () => {
     localStorage.clear()
     dispatch(setUser(null))
@@ -108,6 +82,9 @@ const NavBar = () => {
                   className="flex gap-2 hover:opacity-70"
                   content={
                     <>
+                      <Link to="/profile">
+                        <h1 className="font-bold">Profile</h1>
+                      </Link>
                       {user?.role === 'admin' && (
                         <Link to="/admin">
                           <h1 className="font-bold">Admin</h1>

@@ -58,9 +58,9 @@ const items: MenuProps['items'] = [
     getItem('Green', 'green'),
   ]),
   getItem('Material', 'Material', '', [
-    getItem('Plastic', 'plastic'),
-    getItem('Eva', 'eva'),
-    getItem('Leather', 'leather'),
+    getItem('Plastic', 'Plastic'),
+    getItem('Eva', 'EVA'),
+    getItem('Leather', 'Leather'),
   ]),
   // getItem('Color', 'Color', '', [
   //   getItem('Black', 'black'),
@@ -89,7 +89,6 @@ const Sidebar = (props: Props) => {
       case 'Price':
         if (e.keyPath[0] === '0  to  1,000,000') {
           console.log('hi');
-
           dispact(featchProductByPrice({ minPrice: 0, maxPrice: 999999 }))
         } if (e.keyPath[0] === '1,000,000 to  2,000,000') {
           dispact(featchProductByPrice({ minPrice: 1000000, maxPrice: 1999999 }))
@@ -118,6 +117,8 @@ const Sidebar = (props: Props) => {
         components: {
           Menu: {
             dangerItemActiveBg: '#fff2f0',
+            itemSelectedColor: 'black',
+            itemHoverBg: 'gray'
           },
         },
       }}

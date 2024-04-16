@@ -70,7 +70,7 @@ const Popular = () => {
                           <img
                             alt="example"
                             src={item.images ? item.images[0] : ''}
-                            style={{ maxWidth: '100%', height: '350px' }}
+                            style={{ maxWidth: '100%', height: '350px', objectFit: 'cover' }}
                           />
                         }
                       >

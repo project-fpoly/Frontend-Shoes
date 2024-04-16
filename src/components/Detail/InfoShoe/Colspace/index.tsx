@@ -203,7 +203,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                       value={comment.rating}
                     />
                     <span className=" flex flex-col gap-2  ">
-                      <p className="text-3xl">{comment.content}</p>
+                      <p className="text-xl">{comment.content}</p>
                       <p className="text-gray-500">
                         {moment(comment.createdAt).calendar()}
                       </p>
@@ -220,9 +220,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
-    const commnetcr = { content, rating }
-    const commentId = idCmt?._id
     const shoeId = shoe._id
+    const commnetcr = { content, rating, shoeId }
+    const commentId = idCmt?._id
     const comentUpdate = { ...commnetcr, commentId, shoeId }
     if (typeCmt === 'CREATE') {
       dispatch(createCommnets(commnetcr as any))
@@ -346,7 +346,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               <div className="border-t-[1px] "></div>
               <p>Your Review *</p>
               <input
-                className="h-[100px] p-2 rounded-md border border-black text-3xl outline-none"
+                className="h-[100px] p-2 rounded-md border border-black text-xl outline-none"
                 type="text"
                 {...register('content', { required: true })}
               />
