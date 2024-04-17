@@ -133,7 +133,6 @@ const Router = (user: any) => {
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/chat" element={<ChatsPage />} />
           <Route path="/favourite" element={<Favourite />} />
-          <Route path="/chatgpt" element={<ChatGPTDemo />} />
           <Route
             path="/cart/checkout"
             element={
@@ -171,6 +170,10 @@ const Router = (user: any) => {
           <Route
             path="/admin/setting/sendNotification"
             element={<SendNotification />}
+          />
+          <Route
+            path="/admin/setting/chat"
+            element={<ChatsPage/>}
           />
         </Route>
 
