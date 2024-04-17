@@ -20,10 +20,10 @@ export const getLists = async () => {
     throw new Error("Error while fetching Sale.");
   }
 };
-export const getChart = async (id:string) => {
+export const getChart = async (id:string,start:any,end:any) => {
     try {
       const response: AxiosResponse = await instance.get(
-        `/api/dashboard/data/${id}?startTime=2024-04-03&endTime=2024-04-09`,
+        `/api/dashboard/data/${id}?startTime=${start}&endTime=${end}`,
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
