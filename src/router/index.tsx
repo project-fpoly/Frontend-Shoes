@@ -58,6 +58,7 @@ import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
 
 import { PrivateCheckout } from './PrivateCheckout.tsx'
+import { fetchList } from '../features/dashboard/index.tsx'
 import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 
 
@@ -76,9 +77,7 @@ const Router = (user: any) => {
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(
-        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
-      )
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
@@ -94,6 +93,7 @@ const Router = (user: any) => {
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     })
     if (user.user && user.user.role === 'admin') {
+      dispatch(fetchList());
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
