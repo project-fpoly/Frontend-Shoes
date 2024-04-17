@@ -14,6 +14,7 @@ import { IStateChat } from '../../common/redux/type';
 import ChatPage from '../../components/Chat';
 import PinForm from './PinForm';
 import ChatGPTDemo from './ChatGPTDemo';
+
 export interface UserLogin {
     id: number;
     is_authenticated: boolean;
@@ -37,6 +38,7 @@ export interface UserLogin {
 const useStyle = createStyles(({ token }) => ({
     'my-drawer-body': {
         backgroundColor: "black",
+        color: token.colorPrimary,
     },
     'my-drawer-mask': {
         boxShadow: `inset 0 0 15px #fff`,
@@ -60,7 +62,11 @@ const ChatsPage = () => {
     const dispatch = useDispatch();
     const { userChat } = useSelector((state: IStateChat) => state.chat);
     const [userLogin, setUserLogin] = useState<UserLogin | null>(null);
-    
+    const [showChatGPT, setShowChatGPT] = useState(false); // State để xác định khi nào hiển thị ChatGPTDemo
+    const [drawerTitle, setDrawerTitle] = useState("Chat Online");
+
+    // Hàm đóng Drawer
+
     useEffect(() => {
         const email = localStorage.getItem('email')?.toString();
         dispatch(fetchUserChatByEmail(email));
@@ -82,9 +88,19 @@ const ChatsPage = () => {
     const toggleDrawer = () => {
         setDrawerVisible(!drawerVisible);
     };
+
+    // Hàm mở Drawer và hiển thị ChatGPTDemo
+    const handleOpenChatGPTDemo = () => {
+        setDrawerVisible(true);
+        setShowChatGPT(true);
+        setDrawerTitle("ChatGPT Demo");
+    };
+
     const handleDrawerClose = () => {
-        toggleDrawer();
-        window.location.reload(); // Tải lại trang khi Drawer được đóng
+        setDrawerVisible(false);
+        setShowChatGPT(false);
+        setDrawerTitle("Chat Online");
+        // window.location.reload();
     };
 
     const classNames: DrawerClassNames = {
@@ -112,43 +128,45 @@ const ChatsPage = () => {
             borderTop: `1px solid ${token.colorBorder}`,
         },
     };
-    const handleOpenChatGPTDemo = () => {
-    setDrawerVisible(true);
-};
+
     // onFinish={handleRegisterFormSubmit}
     return (
         <>
-             <FloatButton.Group
+         
+            <FloatButton.Group
                 trigger="click"
                 type="primary"
                 style={{ right: 24, bottom: 200 }}
                 icon={<CustomerServiceOutlined />}
             >
-                  {/* Gọi hàm handleOpenChatGPTDemo khi icon OpenAIOutlined được click */}
-                  <FloatButton icon={<OpenAIOutlined />} onClick={handleOpenChatGPTDemo} />
+                <FloatButton icon={<OpenAIOutlined />} onClick={handleOpenChatGPTDemo} />
                 <FloatButton onClick={toggleDrawer} icon={<CommentOutlined />} />
             </FloatButton.Group>
             <Drawer
-                title="Chat Online"
+                title={drawerTitle}
                 placement="right"
                 footer="Kiên đẹp zai nè"
-                onClose={handleDrawerClose }
+                onClose={handleDrawerClose}
                 open={drawerVisible}
                 classNames={classNames}
                 styles={drawerStyles}
-                
                 width={1000}
             >
-                {userLogin && userLogin.username !== "" && (
-                    <ChatPage username={userLogin.username} secret={userLogin.secret} />
-                )}
-                {(!userLogin || userLogin.username === "") && (
-                   <PinForm/>
-                )}
+               
+                    {showChatGPT ? (
+                        <ChatGPTDemo onClose={handleDrawerClose} />
+                    ) : (
+                        <>
+                            {userLogin && userLogin.username !== "" && (
+                                <ChatPage username={userLogin.username} secret={userLogin.secret} />
+                            )}
+                            {(!userLogin || userLogin.username === "") && (
+                                <PinForm />
+                            )}
+                        </>
+                    )}
+              
             </Drawer>
-
-
-
         </>
     );
 };
