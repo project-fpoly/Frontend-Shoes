@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import BarCompopent from './DashboardofLam/BarCompopent'
 import { DashboardOutlined } from '@ant-design/icons'
+import AllCompopent from './DashboardofLam/AllCompopent'
 const { Content } = Layout
 const { Title } = Typography
 
@@ -31,6 +32,8 @@ const AdminDashboard = () => {
             {list.map((item: any) => {
               if (item.type === 'bar') {
                 return <BarCompopent id={item._id} />
+              }else if(item.type === 'all'){
+                return <AllCompopent id={item._id} />
               }
               return null
             })}
