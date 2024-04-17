@@ -297,7 +297,7 @@ const CheckOut = () => {
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
                     {
-                      min: 10,
+                      min: 7,
                       message: 'First name must be at least 10 characters.',
                     },
                   ]}
@@ -315,7 +315,7 @@ const CheckOut = () => {
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
                     {
-                      min: 4,
+                      min: 2,
                       message: 'First name must be at least 4 characters.',
                     },
                   ]}

@@ -6,7 +6,7 @@ import { CartItem, IBill } from '../../common/order'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { IStateProduct } from '../../common/redux/type'
-import HeaderTableAdminOrder from '../../components/Admin/Layout/HeaderTableAdminOrder'
+import HeaderTableUser from '../../components/Admin/Layout/HeaderTableUser'
 import {
   fetchOrders,
   getOrderByUsers,
@@ -244,7 +244,7 @@ export default function OrderItem({ data, pagination }: Props) {
   return (
     <>
       <div className="flex items-end">
-        <HeaderTableAdminOrder
+        <HeaderTableUser
           showModal={() => {}}
           onSubmitt={(value) => searchOrder(value)}
           name={'Orders '}
