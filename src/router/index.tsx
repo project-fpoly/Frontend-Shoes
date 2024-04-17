@@ -60,6 +60,8 @@ import { fetchAllProducts } from '../features/product/index.ts'
 import { PrivateCheckout } from './PrivateCheckout.tsx'
 import { fetchList } from '../features/dashboard/index.tsx'
 import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
+import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
+import Setting from '../components/Profile/Setting/indext.tsx'
 
 
 const Router = (user: any) => {
@@ -74,10 +76,10 @@ const Router = (user: any) => {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
       }
     })
-    socket.on('new_user_login', () => {})
-    socket.on('log_out', () => {})
+    socket.on('new_user_login', () => { })
+    socket.on('log_out', () => { })
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
+      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
@@ -143,7 +145,10 @@ const Router = (user: any) => {
             }
           />
           <Route path="/dashboard" element={<FeatureDashboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route index element={<ProfileContent></ProfileContent>} />
+            <Route path="setting" element={<Setting />} />
+          </Route>
         </Route>
 
         <Route
