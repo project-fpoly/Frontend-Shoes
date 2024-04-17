@@ -350,10 +350,6 @@ export const colorFilterProducts = async (color: string) => {
       `api/product?colorFilter=${color}`
     );
     const data = response.data || [];
-    notification.success({
-      message: "Success",
-      description: "Products have been filtered by color successfully.",
-    });
     return data;
   } catch (error) {
     console.log(error);
