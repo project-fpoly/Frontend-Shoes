@@ -66,7 +66,6 @@ const OrderManager = (a) => {
       }),
     )
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
-
   const toggleModal = (orders: IBill) => {
     setIsModalUpdateOpen(!isModalUpdateOpen)
     setOrder(orders)
@@ -222,7 +221,6 @@ const OrderManager = (a) => {
           <Select
             placeholder="is Delevered"
             onChange={(value) => searchOrder(value)}
-            value={selectedValue}
           >
             <Select.Option value="">Tất cả trạng thái</Select.Option>
             <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
@@ -371,6 +369,7 @@ const OrderManager = (a) => {
   }
   const searchOrder = (value: string) => {
     setSearch(value)
+
     setSelectedValue(value)
   }
 
@@ -380,10 +379,10 @@ const OrderManager = (a) => {
         <div className="flex items-end">
           <HeaderTableAdminOrder
             showModal={() => {}}
-            onSubmitt={(value) =>
-              value
-                ? dispatch(SearchOrder(value as any))
-                : dispatch(
+            onSubmitt={(value) => {
+              setSearch(value)
+              return value === ''
+                ? dispatch(
                     fetchOrders({
                       page: currentPage,
                       limit: pageSize,
@@ -392,7 +391,8 @@ const OrderManager = (a) => {
                       end: dayEnd,
                     }),
                   )
-            }
+                : searchOrder(value)
+            }}
             name={'Orders '}
           />
           <DatePicker

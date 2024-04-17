@@ -16,9 +16,9 @@ export default function OrderPage() {
   }, [dispatch])
 
   const { ordersUser, pagination } = useSelector(
-    (state: RootState) => state.order,
+    (state: RootState) => state.ordersUser,
   )
-  const a = useSelector((state: RootState) => state.order)
+  const a = useSelector((state: RootState) => state)
   console.log(a)
   const dataGet = (data: string) =>
     ordersUser?.filter((item: any) => item.isDelivered === data)

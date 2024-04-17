@@ -6,7 +6,7 @@ import commentSlice from '../features/comment'
 import notificationSlice from '../features/notification'
 import favSlice from '../features/favourite'
 
-import orderReducer from '../features/order/index'
+import { orderReducer, ordersUserReducer } from '../features/order/index'
 import productSlice from '../features/product/index'
 import userSlice from '../features/user/index'
 import { analyticApi } from '../services/analytic'
@@ -18,7 +18,7 @@ import voucherSlice from '../features/voucher'
 import vnPaySlice from '../features/vnPay/index'
 import saleSlice from '../features/sale'
 import adressSlice from '../features/address/index'
-import chartSlice  from '../features/dashboard'
+import chartSlice from '../features/dashboard'
 import chatSlice from '../features/chat/index'
 export const store = configureStore({
   reducer: {
@@ -33,12 +33,12 @@ export const store = configureStore({
     voucher: voucherSlice,
     vnPay: vnPaySlice,
     address: adressSlice,
-    chart:chartSlice,
+    chart: chartSlice,
     [analyticApi.reducerPath]: analyticApi.reducer,
     chat: chatSlice,
     sale: saleSlice,
     fav: favSlice,
-
+    ordersUser: ordersUserReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat(...middlewares),
