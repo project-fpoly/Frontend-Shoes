@@ -64,9 +64,9 @@ export const updateOrder = createAsyncThunk(
   ) => {
     try {
       const state = thunkApi.getState() as RootState
-      const { pagination } = state.order
-      const a = state
-      console.log(a)
+      console.log(state)
+      const { orders, pagination, params, searchApi } = state.order
+      console.log(orders)
       if (typeof id === 'string') {
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
@@ -83,6 +83,9 @@ export const updateOrder = createAsyncThunk(
           fetchOrders({
             page: pagination.currentPage,
             limit: pagination.limit,
+            search: searchApi ? searchApi : params.search || '',
+            start: params.start || '',
+            end: params.end || '',
           }),
         )
         notification.success({ message: response.data.message })
@@ -186,7 +189,7 @@ export const updateManyOrders = createAsyncThunk(
   ) => {
     try {
       const state = thunkApi.getState() as RootState
-      const { pagination } = state.order
+      const { pagination, params } = state.order
       const response = await axios.put(
         `http://localhost:9000/api/order/admin/bills`,
         {
@@ -206,6 +209,9 @@ export const updateManyOrders = createAsyncThunk(
         fetchOrders({
           page: pagination.currentPage,
           limit: pagination.limit,
+          search: params.search || '',
+          start: params.start || '',
+          end: params.end || '',
         }),
       )
       notification.success({ message: response.data.message })
@@ -256,7 +262,7 @@ export const updateIsDeliveredOrder = createAsyncThunk(
 )
 // get order by user
 export const getOrderByUsers = createAsyncThunk(
-  'order/getOrderByUsers',
+  'ordersUser/getOrderByUsers',
   async (
     params: {
       page?: number
@@ -283,7 +289,6 @@ export const getOrderByUsers = createAsyncThunk(
       thunkApi.dispatch(
         fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
       )
-      console.log(response)
       return response.data
     } catch (error: any) {
       throw error.response.data
@@ -301,6 +306,14 @@ const orderSlice = createSlice({
       currentPage: 1,
       limit: 10,
     },
+    params: {
+      end: '',
+      limit: 10,
+      page: 1,
+      search: '',
+      start: '',
+    },
+    searchApi: '',
     isLoading: false,
     error: null,
   },
@@ -315,23 +328,9 @@ const orderSlice = createSlice({
         state.isLoading = false
         state.orders = action.payload.orders
         state.pagination = action.payload.pagination
+        state.params = action.meta.arg
       })
       .addCase(fetchOrders.rejected, (state: any, action) => {
-        state.isLoading = false
-        state.error = action.error.message
-      })
-    builder
-      .addCase(getOrderByUsers.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(getOrderByUsers.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.ordersUser = action.payload.orders
-        console.log(action)
-        state.pagination = action.payload.pagination
-      })
-      .addCase(getOrderByUsers.rejected, (state: any, action) => {
         state.isLoading = false
         state.error = action.error.message
       })
@@ -342,7 +341,14 @@ const orderSlice = createSlice({
       })
       .addCase(updateOrder.fulfilled, (state: any, action) => {
         state.isLoading = false
-        state.order = action.payload.updatedCart
+        const updatedOrder = action.payload.updatedCart
+        const index = state.orders.findIndex(
+          (order: IBill) => order._id === updatedOrder._id,
+        )
+        if (index !== -1) {
+          console.log('a')
+          state.orders[index] = updatedOrder
+        }
       })
       .addCase(updateOrder.rejected, (state: any, action) => {
         state.isLoading = false
@@ -369,6 +375,7 @@ const orderSlice = createSlice({
       .addCase(SearchOrder.fulfilled, (state, action) => {
         state.isLoading = false
         state.orders = action.payload
+        state.searchApi = action.meta.arg
       })
       .addCase(SearchOrder.rejected, (state: any, action) => {
         state.isLoading = false
@@ -432,5 +439,45 @@ const orderSlice = createSlice({
       })
   },
 })
-
-export default orderSlice.reducer
+const ordersUserSlice = createSlice({
+  name: 'ordersUser',
+  initialState: {
+    orders: [],
+    ordersUser: [],
+    pagination: {
+      totalOrders: 0,
+      totalPages: 0,
+      currentPage: 1,
+      limit: 10,
+    },
+    params: {
+      end: '',
+      limit: 10,
+      page: 1,
+      search: '',
+      start: '',
+    },
+    searchApi: '',
+    isLoading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getOrderByUsers.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(getOrderByUsers.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.ordersUser = action.payload.ordersUser
+        state.pagination = action.payload.pagination
+      })
+      .addCase(getOrderByUsers.rejected, (state: any, action) => {
+        state.isLoading = false
+        state.error = action.error.message
+      })
+  },
+})
+export const orderReducer = orderSlice.reducer
+export const ordersUserReducer = ordersUserSlice.reducer

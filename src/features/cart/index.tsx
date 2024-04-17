@@ -40,6 +40,7 @@ export const addToCart = createAsyncThunk(
           {
             size: cartItem.size,
             product: cartItem.product,
+            price: cartItem.price,
           },
           {
             headers: {
@@ -57,6 +58,7 @@ export const addToCart = createAsyncThunk(
           {
             size: cartItem.size,
             product: cartItem.product,
+            price: cartItem.price,
           },
           {
             headers: {

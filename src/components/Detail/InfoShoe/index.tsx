@@ -59,21 +59,30 @@ const InfoShoe = (props: Props) => {
     cartItems: [],
   })
 
-
-  const { _id: product, categoryId, sizes, color, images, price, ...shoeCart } = shoe
+  const {
+    _id: product,
+    categoryId,
+    sizes,
+    color,
+    images,
+    price,
+    ...shoeCart
+  } = shoe
   const { sale } = shoeCart
 
-  const priceFormat = sale?.discount ? discountcurrency(shoe.price, sale?.discount) : shoe.price
+  const priceFormat = sale?.discount
+    ? discountcurrency(shoe.price, sale?.discount)
+    : shoe.price
 
   const [fav, setFav] = usesessionStorage<{ favItems: IProduct[] }>('fav', {
     favItems: [],
   })
-
+  console.log(priceFormat)
   const accessToken = localStorage.getItem('accessToken')
 
   const addToCartt = () => {
     if (!size) return openNotification('error')
-    const cartItem = { product, size: size }
+    const cartItem = { product, size: size, price: priceFormat }
     if (accessToken) {
       dispatch(addToCart(cartItem as any))
     } else {
@@ -96,7 +105,7 @@ const InfoShoe = (props: Props) => {
           size: size,
           color,
           images,
-          price,
+          price: priceFormat,
           quantity: 1,
         })
       }
@@ -153,17 +162,23 @@ const InfoShoe = (props: Props) => {
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
             <p>{categoryId?.name}</p>
-            <span className='flex gap-5'>
-              <h3 className="my-10  text-xl ">{sale?.discount ? formatCurrency(priceFormat) : ""}</h3>
+            <span className="flex gap-5">
+              <h3 className="my-10  text-xl ">
+                {sale?.discount ? formatCurrency(priceFormat) : ''}
+              </h3>
 
-              {!sale?.discount
-                ?
-                <h3 className="my-10  text-xl ">{formatCurrency(shoe.price)}</h3>
-                :
-                <h3 className="my-10 text-gray-600 text-xl line-through	">{formatCurrency(shoe.price)}</h3>
-              }
-              <h3 className="my-10  text-xl text-red-600 ">{sale?.discount! > 0 ? `${sale?.discount}% off` : ''}</h3>
-
+              {!sale?.discount ? (
+                <h3 className="my-10  text-xl ">
+                  {formatCurrency(shoe.price)}
+                </h3>
+              ) : (
+                <h3 className="my-10 text-gray-600 text-xl line-through	">
+                  {formatCurrency(shoe.price)}
+                </h3>
+              )}
+              <h3 className="my-10  text-xl text-red-600 ">
+                {sale?.discount! > 0 ? `${sale?.discount}% off` : ''}
+              </h3>
             </span>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
