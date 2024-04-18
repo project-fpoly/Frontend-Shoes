@@ -1,9 +1,6 @@
 
+import { Outlet } from "react-router-dom"
 import NavProfile from "../../components/Profile/Nav"
-import Infomation from "../../components/Profile/Infomation"
-import NikeApps from "../../components/Profile/Apps"
-import MemberBenefits from "../../components/Profile/MemberBenefits"
-
 
 const Profile = () => {
 
@@ -12,10 +9,8 @@ const Profile = () => {
       <div className="flex   justify-center items-center">
         <NavProfile></NavProfile>
       </div>
-      <div className="flex flex-col gap-10 px-16  mt-20">
-        <Infomation></Infomation>
-        <MemberBenefits></MemberBenefits>
-        <NikeApps></NikeApps>
+      <div className="flex flex-col gap-10 px-16  mt-10">
+        <Outlet></Outlet>
       </div>
 
 

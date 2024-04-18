@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import {
-  AppstoreOutlined,
-  HomeOutlined,
   SettingOutlined,
   UserOutlined,
-  DotChartOutlined,
   WechatOutlined,
   CodeSandboxOutlined,
   GiftOutlined,
   ShoppingCartOutlined,
-  SendOutlined
+  SendOutlined,
+  BarChartOutlined,
+  ReconciliationOutlined,
+  PartitionOutlined,
+  ShopFilled,
+  WechatWorkOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu, Space } from 'antd'
@@ -35,21 +37,22 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem(<Link to="/admin">Home</Link>, 'sub1', <HomeOutlined />),
+  getItem(<Link to="/admin">Dashboard</Link>, 'sub1', <BarChartOutlined />),
   getItem(<Link to="users">User</Link>, 'sub2', <UserOutlined />),
-  getItem(<Link to="orders">Order</Link>, 'sub3', <AppstoreOutlined />),
+  getItem(<Link to="orders">Order</Link>, 'sub3', <ReconciliationOutlined />),
 
-  getItem(<Link to="product">Products</Link>, 'sub4', <CodeSandboxOutlined />),
+  getItem(<Link to="product">Products</Link>, 'sub4', <ShopFilled />),
   getItem(
     <Link to="categories">Categories</Link>,
     'sub5',
-    <DotChartOutlined />,
+    <PartitionOutlined />,
   ),
   getItem(<Link to="sale">Sale</Link>, 'sub6', <ShoppingCartOutlined />),
   getItem(<Link to="comment">Comments</Link>, 'sub7', <WechatOutlined />),
   getItem(<Link to="voucher">Voucher</Link>, 'sub8', <GiftOutlined />),
   getItem("Setting", 'sub9', <SettingOutlined />,[
     getItem(<Link to="setting/sendNotification">Send Notification</Link>, '5',<SendOutlined />),
+    getItem(<Link to="setting/chat">Chat</Link>, '5',<WechatWorkOutlined />),
   ]),
 ]
 

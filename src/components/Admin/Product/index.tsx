@@ -358,8 +358,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     )}
                     {mode === "update" && (
                         <>
-                            <Form.Item rules={[{ required: true, message: 'Please input URL images' }]} style={{ maxHeight: 180, overflow: 'auto' }}>
-                                <Form.List name="images" >
+                            <Form.Item style={{ maxHeight: 180, overflow: 'auto', position: 'relative' }}>
+                                <Form.List name="images">
                                     {(fields, { add, remove }) => (
                                         <>
                                             {fields.map(({ key, name, ...restField }) => (
@@ -374,7 +374,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                                     <MinusCircleOutlined onClick={() => remove(name)} />
                                                 </Space>
                                             ))}
-                                            <Form.Item>
+                                            <Form.Item style={{ position: 'sticky', bottom: 0, zIndex: 1, backgroundColor: 'white' }}>
                                                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                                     Add Image
                                                 </Button>
@@ -383,6 +383,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                     )}
                                 </Form.List>
                             </Form.Item>
+
+
                         </>
                     )}
                     {/* các trường khác cho cột thứ hai */}
