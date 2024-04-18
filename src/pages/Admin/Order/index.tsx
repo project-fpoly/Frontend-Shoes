@@ -315,7 +315,7 @@ const OrderManager = (data: any) => {
       align: 'center',
       className: 'action-cell',
       render: (_, record) => {
-        if (record.isDelivered === 'Đã giao hàng') {
+        if (record.isDelivered !== 'Đã hủy') {
           return null
         } else {
           return (
