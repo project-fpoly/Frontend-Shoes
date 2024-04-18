@@ -6,7 +6,7 @@ export const PrivateCheckout = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate()
   const { cart } = useSelector((state: any) => state.cart.cartItems)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
-
+  console.log(cartSession)
   useEffect(() => {
     const checkToken = () => {
       console.log(cartSession)

@@ -11,7 +11,7 @@ import UserManager from '../pages/Admin/Users'
 import CommentManager from '../pages/Admin/Comment'
 import CategoriesManager from '../pages/Admin/Categories'
 import ProductsManager from '../pages/Admin/Products'
-import OrderManager from '../pages/Admin/Order'
+import OrderTab from '../pages/Admin/Order/OrderTab.tsx'
 import NotificationsAdmin from '../pages/Admin/Notification'
 import Help from '../pages/Help/index.tsx'
 import Password from '../pages/client/password'
@@ -64,7 +64,6 @@ import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 
-
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -77,10 +76,12 @@ const Router = (user: any) => {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
       }
     })
-    socket.on('new_user_login', () => { })
-    socket.on('log_out', () => { })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
@@ -96,7 +97,7 @@ const Router = (user: any) => {
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     })
     if (user.user && user.user.role === 'admin') {
-      dispatch(fetchList());
+      dispatch(fetchList())
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
@@ -140,16 +141,23 @@ const Router = (user: any) => {
             path="/cart/checkout"
             element={
               <PrivateCheckout>
-                <CheckOut />{' '}
+                <CheckOut />
               </PrivateCheckout>
             }
           />
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/profile" element={<Profile />}>
             <Route index element={<ProfileContent></ProfileContent>} />
-            <Route path="setting" element={<Setting />} >
+            <Route path="setting" element={<Setting />}>
               <Route index element={<AccoutDetails></AccoutDetails>} />
-              <Route path='/profile/setting/cc' element={<><h1>1</h1></>} />
+              <Route
+                path="/profile/setting/cc"
+                element={
+                  <>
+                    <h1>1</h1>
+                  </>
+                }
+              />
             </Route>
           </Route>
         </Route>
@@ -167,7 +175,7 @@ const Router = (user: any) => {
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
-          <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/orders" element={<OrderTab />} />
           <Route path="/admin/sale" element={<SaleManager />} />
           <Route path="/admin/dashboard" element={<FeatureDashboard />} />
 
@@ -180,10 +188,7 @@ const Router = (user: any) => {
             path="/admin/setting/sendNotification"
             element={<SendNotification />}
           />
-          <Route
-            path="/admin/setting/chat"
-            element={<ChatsPage />}
-          />
+          <Route path="/admin/setting/chat" element={<ChatsPage />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

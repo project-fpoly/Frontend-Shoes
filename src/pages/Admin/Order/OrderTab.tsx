@@ -13,46 +13,109 @@ export default function OrderTab() {
   useEffect(() => {
     dispatch(fetchOrders({}))
   }, [dispatch])
-  const orders = useSelector((state: RootState) => state.order.orders)
-  console.log(orders)
+  const { orders, pagination, params } = useSelector(
+    (state: RootState) => state.order,
+  )
+  const a = useSelector((state: RootState) => state.order)
+  console.log(a)
   const dataGet = (data: any) =>
     orders?.filter((item: any) => item.isDelivered === data)
   const data1 = dataGet('Chờ xác nhận')
+  const data1Pagination = {
+    limit: 10,
+
+    totalOrder: data1.length,
+    totalPages: Math.ceil(data1.length / 10),
+  }
   const data2 = dataGet('Chờ lấy hàng')
+  const data2Pagination = {
+    limit: 10,
+
+    totalOrder: data2.length,
+    totalPages: Math.ceil(data2.length / 10),
+  }
   const data3 = dataGet('Đang giao hàng')
+  const data3Pagination = {
+    limit: 10,
+    totalOrder: data3.length,
+    totalPages: Math.ceil(data3.length / 10),
+  }
+  console.log(data3Pagination)
   const data4 = dataGet('Đã giao hàng')
+  const data4Pagination = {
+    limit: 10,
+
+    totalOrder: data4.length,
+    totalPages: Math.ceil(data4.length / 10),
+  }
   const data5 = dataGet('Đã hủy')
+  const data5Pagination = {
+    limit: 10,
+
+    totalOrder: data5.length,
+    totalPages: Math.ceil(data5.length / 10),
+  }
 
   const items: TabsProps['items'] = orders && [
     {
       key: '0',
       label: 'Tất cả trạng thái',
-      children: <OrderManager data={orders} />,
+      children: <OrderManager data={orders} pagi={pagination} />,
     },
     {
       key: 'Chờ xác nhận',
       label: 'Chờ xác nhận',
-      children: <OrderManager data={data1} />,
+
+      children: (
+        <OrderManager
+          data={params.search ? orders : data1}
+          pagi={data1Pagination}
+        />
+      ),
     },
     {
       key: 'Chờ lấy hàng',
       label: 'Chờ lấy hàng',
-      children: <OrderManager data={data2} />,
+
+      children: (
+        <OrderManager
+          data={params.search ? orders : data2}
+          pagi={data2Pagination}
+        />
+      ),
     },
     {
       key: 'Đang giao hàng',
       label: 'Đang giao hàng',
-      children: <OrderManager data={data3} />,
+
+      children: (
+        <OrderManager
+          data={params.search ? orders : data3}
+          pagi={data3Pagination}
+        />
+      ),
     },
     {
       key: 'Đã giao hàng',
       label: 'Đã giao hàng',
-      children: <OrderManager data={data4} />,
+
+      children: (
+        <OrderManager
+          data={params.search ? orders : data4}
+          pagi={data4Pagination}
+        />
+      ),
     },
     {
       key: 'Đã hủy',
       label: 'Đã hủy',
-      children: <OrderManager data={data5} />,
+
+      children: (
+        <OrderManager
+          data={params.search ? orders : data5}
+          pagination={data5Pagination}
+        />
+      ),
     },
   ]
 

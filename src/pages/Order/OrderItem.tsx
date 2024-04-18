@@ -31,9 +31,9 @@ export default function OrderItem({ data, pagination }: Props) {
 
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
   const [modalVisible, setModalVisible] = useState(false)
-  const [dayStart, setDayStart] = useState('')
-  const [dayEnd, setDayEnd] = useState('')
-  const [Search, setSearch] = useState('')
+  const [dayStart, setDayStart] = useState(null)
+  const [dayEnd, setDayEnd] = useState(null)
+  const [Search, setSearch] = useState(null)
   const [_, setSelectedValue] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { users } = useSelector((state: IUsers) => state.user)
