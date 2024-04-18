@@ -15,8 +15,6 @@ export const getProductsWithFilter = async (
     | "desc_views"
     | "asc_sold"
     | "desc_sold"
-    | "asc_sale"
-    | "desc_sale"
     | "asc_rate"
     | "desc_rate"
     | "asc_createdAt"
@@ -30,7 +28,8 @@ export const getProductsWithFilter = async (
   endDate?: Date,
   color?: string,
   gender?: string,
-  isDeleted?: boolean | string
+  isDeleted?: boolean | string,
+  priceSale?: number | string,
 ) => {
   try {
     let url = `api/product?page=${page}&pageSize=${pageSize}&searchKeyword=${searchKeyword}`;
@@ -41,8 +40,6 @@ export const getProductsWithFilter = async (
       } else if (sort === "asc_views" || sort === "desc_views") {
         url += `&sortOrder=${sort}`;
       } else if (sort === "asc_sold" || sort === "desc_sold") {
-        url += `&sortOrder=${sort}`;
-      } else if (sort === "asc_sale" || sort === "desc_sale") {
         url += `&sortOrder=${sort}`;
       } else if (sort === "asc_rate" || sort === "desc_rate") {
         url += `&sortOrder=${sort}`;
@@ -85,6 +82,9 @@ export const getProductsWithFilter = async (
     }
     if (isDeleted !== undefined && isDeleted !== "") {
       url += `&deleteFilter=${isDeleted}`;
+    }
+    if (priceSale) {
+      url += `&filterByPriceSale=${priceSale}`;
     }
     const response: AxiosResponse = await instance.get(url);
     if (response.status === 404) {
@@ -132,8 +132,6 @@ export const filterProducts = async (
     | "desc_views"
     | "asc_sold"
     | "desc_sold"
-    | "asc_sale"
-    | "desc_sale"
     | "asc_rate"
     | "desc_rate",
   categoryId?: string,
@@ -155,8 +153,6 @@ export const filterProducts = async (
         url += `&viewsFilter=${sort}`;
       } else if (sort === "asc_sold" || sort === "desc_sold") {
         url += `&soldFilter=${sort}`;
-      } else if (sort === "asc_sale" || sort === "desc_sale") {
-        url += `&saleFilter=${sort}`;
       } else if (sort === "asc_rate" || sort === "desc_rate") {
         url += `&rateFilter=${sort}`;
       }

@@ -32,7 +32,7 @@ const PinForm = () => {
 
     const handleRegister = () => {
         if (pin.length >= 3) {
-            console.log('PIN:', pin);
+        
     
             const username = user.email;
             const secret = pin.toString();

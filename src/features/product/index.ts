@@ -52,7 +52,8 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate,
     color,
     gender,
-    isDeleted
+    isDeleted,
+    priceSale  
   }: {
     page: number
     pageSize: number
@@ -64,8 +65,6 @@ export const getProductsWithFilters = createAsyncThunk(
     | 'desc_views'
     | 'asc_sold'
     | 'desc_sold'
-    | 'asc_sale'
-    | 'desc_sale'
     | 'asc_rate'
     | 'desc_rate'
     | 'asc_createdAt'
@@ -79,7 +78,8 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate?: Date
     color?: string
     gender?: string
-    isDeleted?: boolean | string
+    isDeleted?: boolean | string,
+    priceSale?: number  |string,
   }) => {
     try {
       const response = await getProductsWithFilter(
@@ -96,7 +96,8 @@ export const getProductsWithFilters = createAsyncThunk(
         endDate,
         color,
         gender,
-        isDeleted
+        isDeleted,
+        priceSale  // Truyền priceSale vào hàm getProductsWithFilter
       )
       return response
     } catch (error) {
@@ -104,6 +105,7 @@ export const getProductsWithFilters = createAsyncThunk(
     }
   }
 );
+
 
 
 

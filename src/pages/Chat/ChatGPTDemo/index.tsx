@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Drawer, Input, Button, Spin, message } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Drawer, Input, Button, Spin, message, Avatar } from 'antd';
 import axios from 'axios';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { Tour, Divider, Space } from 'antd';
+import type { TourProps } from 'antd';
 
 const { TextArea } = Input;
 
@@ -20,8 +23,31 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [initialMessagesSent, setInitialMessagesSent] = useState(false);
+    const email = localStorage.getItem('email');
+    const tourRef1 = useRef(null);
+    const tourRef2 = useRef(null);
+    const tourRef3 = useRef(null);
+    const [openTour, setOpenTour] = useState(false);
+
+    function getEmailUsername(email: string | null): string {
+        if (email === null || !email.includes('@')) {
+            return '';
+        }
+        return email.substring(0, email.indexOf('@'));
+    }
+
+    const roleUser = `${getEmailUsername(email)}: `;
 
     useEffect(() => {
+        // Kiểm tra xem tour đã được hiển thị trước đó chưa
+        const hasShownTour = localStorage.getItem('hasShownTour');
+        if (!hasShownTour) {
+            // Nếu chưa, mở tour và đánh dấu rằng tour đã được hiển thị
+            setOpenTour(true);
+            localStorage.setItem('hasShownTour', 'true');
+        }
+
+        // Lấy dữ liệu từ API
         axios.get('https://660edb22356b87a55c504eef.mockapi.io/chatgpt')
             .then(response => {
                 const data = response.data[0];
@@ -46,13 +72,11 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
         setUserInput('');
 
         try {
-            // Prepare messages to send
             let messagesToSend = messages;
             if (!initialMessagesSent) {
                 messagesToSend = [
                     { role: 'system', content: "You're a helpful chat bot. Answer short and concise in 150 tokens only." },
                     { role: 'user', content: userInput },
-
                 ];
                 setInitialMessagesSent(true);
             } else {
@@ -63,10 +87,8 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
             }
 
             try {
-                // Kiểm tra tính hoạt động của API trước khi gửi yêu cầu POST
                 await axios.get(`${openAiEndpoint}/v1/status`);
 
-                // Nếu API hoạt động, gửi yêu cầu POST đến OpenAI endpoint
                 const response = await axios.post(`${openAiEndpoint}/v1/chat/completions`, {
                     model: 'gpt-4-1106-preview',
                     messages: messagesToSend,
@@ -78,11 +100,10 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
                         'Authorization': `Bearer ${chatGPTKey}`,
                     },
                 });
-                // Append ChatGPT response
+
                 const assistantMessage = {
                     role: 'assistant',
                     content: response.data.choices[0].message.content
-
                 };
                 const userMessage = {
                     role: 'user',
@@ -91,14 +112,10 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
 
                 setMessages([...messages, userMessage, assistantMessage]);
 
-                // Xử lý response và cập nhật state messages
             } catch (error) {
-            
                 message.error('Tính năng đã được bảo mật, hãy liên hệ với admin để mở khóa tính năng!!');
+                setOpenTour(true); // Bật tour khi xảy ra lỗi
             }
-
-
-            // Append user message
 
         } catch (error) {
             console.error('There was an error with the API request', error);
@@ -111,8 +128,33 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
         setUserInput(e.target.value);
     };
 
+    const steps: TourProps['steps'] = [
+        {
+            title: 'Upload File',
+            description: 'Put your files here.',
+            target: () => tourRef1.current,
+        },
+        {
+            title: 'Save',
+            description: 'Save your changes.',
+            target: () => tourRef2.current,
+        },
+        {
+            title: 'Other Actions',
+            description: 'Click to see other actions.',
+            target: () => tourRef3.current,
+        },
+    ];
+
     return (
         <>
+            <Tour
+                open={openTour}
+                onClose={() => setOpenTour(false)}
+                mask={false}
+                type="primary"
+                steps={steps}
+            />
             <ul>
                 {messages.map((message, index) => (
                     <li key={index} className="py-3 sm:py-4">
@@ -125,17 +167,29 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
                                         alt="ChatGPT Icon"
                                     />
                                 )}
+                                {message.role === 'user' && (
+                                    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" alt="User Avatar" />
+                                )}
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className={`text-sm break-normal whitespace-pre-line text-zinc-50 ${messageClasses(message.role)}`} style={{ fontWeight: 'bold', color: message.role === 'user' ? '#fff' : '#000', textShadow: message.role === 'user' ? '1px 1px 2px rgba(0, 0, 0, 0.5)' : 'none' }}>
-                                    <span>{message.role === 'user' ? 'User:' : 'Assistant:'}</span> {message.content}
-                                </p>
-
-                            </div>
+                            <p style={{
+                                fontWeight: 'bold',
+                                color: '#fff',
+                                textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+                                overflow: 'hidden',
+                                whiteSpace: 'normal' // Đảm bảo văn bản tự động xuống dòng khi cần thiết
+                            }}>
+                                <span style={{ color: "white" }}>{message.role === 'user' ? roleUser : 'Assistant:'}</span> {message.content}
+                            </p>
                         </div>
+                        {/* Kiểm tra xem tin nhắn hiện tại và tin nhắn tiếp theo có thuộc hai vai trò khác nhau không */}
+                        {index < messages.length - 1 && message.role !== messages[index + 1].role && (
+                            <hr className="my-2 border-t border-gray-400" />
+                        )}
                     </li>
                 ))}
             </ul>
+
+
             <div className="mt-6">
                 <TextArea
                     value={userInput}
@@ -148,10 +202,14 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
                     className="mt-3"
                     onClick={sendMessage}
                     loading={isLoading}
+                    ref={tourRef1}
                 >
                     {isLoading ? <Spin /> : 'Send'}
                 </Button>
-                <Button className="ml-3" onClick={onClose}>Close</Button>
+                <Button className="ml-3" onClick={onClose} ref={tourRef2}>Close</Button>
+                <Space>
+                    <Button ref={tourRef3}>Other Action</Button>
+                </Space>
             </div>
         </>
     );
