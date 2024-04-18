@@ -315,7 +315,10 @@ const OrderManager = (data: any) => {
       align: 'center',
       className: 'action-cell',
       render: (_, record) => {
-        if (record.isDelivered !== 'Đã hủy') {
+        if (
+          record.isDelivered !== 'Đã hủy' &&
+          record.isDelivered !== 'Chờ xác nhận'
+        ) {
           return null
         } else {
           return (
