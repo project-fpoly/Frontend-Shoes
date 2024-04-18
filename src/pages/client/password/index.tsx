@@ -11,6 +11,8 @@ const Password = () => {
   const dispatch = useDispatch()
   const email =
     useSelector((state: any) => state.auth.user)?.email || params.get('email')
+    const role =
+    useSelector((state: any) => state.auth.user)
 
   const getUserID = (token: string) => {
     const base64Url = token.split('.')[1]
@@ -56,9 +58,11 @@ const Password = () => {
               message: 'Login successfully',
               placement: 'top',
             });
-
-            //redirect to signup page
-            navigate('/')
+            if(res.data.user.role==="admin"){
+              navigate('/admin')
+            }else{
+              navigate('/')
+            }
           })
           .catch((err) => {
             console.log(err)

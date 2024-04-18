@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { BarChartOutlined } from '@ant-design/icons';
-import { Card, Col, DatePicker, Select } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { BarChartOutlined } from '@ant-design/icons'
+import { Card, Col, DatePicker, Select } from 'antd'
 import {
   BarChart,
   Bar,
@@ -9,63 +9,59 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import dayjs from 'dayjs';
-import { getChart } from '../../../services/dashboard';
+} from 'recharts'
+import dayjs from 'dayjs'
+import { getChart } from '../../../services/dashboard'
 
-const VI_DEFAULT_DF = 'YYYY-MM-DD';
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+const VI_DEFAULT_DF = 'YYYY-MM-DD'
+const { RangePicker } = DatePicker
+const { Option } = Select
 
-const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF'];
+const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF']
 
 const BarCompopent = ({ id }: { id: string }) => {
-  const [chart, setChart] = useState<any[]>([]);
-  const [config, setConfig] = useState<any>();
-  const [timeRangeState, setTimeRangeState] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
-    dayjs().add(-6, 'd'),
-    dayjs(),
-  ]);
-  const [timeType, setTimeType] = useState<string>('day');
+  const [chart, setChart] = useState<any[]>([])
+  const [config, setConfig] = useState<any>()
+  const [timeRangeState, setTimeRangeState] = useState<
+    [dayjs.Dayjs, dayjs.Dayjs]
+  >([dayjs().add(-6, 'd'), dayjs()])
+  const [timeType, setTimeType] = useState<string>('day')
 
   useEffect(() => {
     getChart(
       id,
       timeRangeState[0].format('YYYY-MM-DD'),
       timeRangeState[1].format('YYYY-MM-DD'),
-      timeType
+      timeType,
     ).then((resp) => {
-      const data = resp.data[0];
-      setConfig(data.config);
-      setChart(data.data.data);
-    });
-  }, [id, timeRangeState,timeType]);
+      const data = resp.data[0]
+      setConfig(data.config)
+      setChart(data.data.data)
+    })
+  }, [id, timeRangeState, timeType])
 
   const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+    return colors[Math.floor(Math.random() * colors.length)]
+  }
 
   const onTimeRangeChange = (values: any) => {
-    const startDate = dayjs(values[0]);
-    const endDate = dayjs(values[1]);
-    const daysDiff = endDate.diff(startDate, 'day');
-    const monthsDiff = endDate.diff(startDate, 'month');
-  
-    if (daysDiff > 10) {
-      setTimeType('month');
-    } else if (monthsDiff > 10) {
-      setTimeType('year');
+    const startDate = dayjs(values[0])
+    const endDate = dayjs(values[1])
+    const currentDate = dayjs()
+
+    if (endDate.isAfter(currentDate)) {
+      setTimeRangeState([currentDate.add(-6, 'days'), currentDate]);
     } else {
-      setTimeType('day');
+      setTimeRangeState([startDate, endDate])
     }
-    setTimeRangeState([values[0], values[1]]);
-  };
+  }
   const onTypeChange = (value: string) => {
-    setTimeType(value);
-    console.log(value);
-    console.log(timeRangeState);
-    
-  };
+    setTimeType(value)
+    if (value === 'month') {
+      const currentDate = dayjs()
+      setTimeRangeState([dayjs().startOf('year'), currentDate])
+    }
+  }
 
   return (
     <Col span={chart.length > 7 ? 24 : 12} key={id}>
@@ -104,7 +100,7 @@ const BarCompopent = ({ id }: { id: string }) => {
             }}
             barSize={40}
           >
-            <Bar dataKey="value" fill={getRandomColor()} />
+            <Bar dataKey="value" label={{ position: 'top' }} fill={getRandomColor()} />
             <XAxis dataKey="time" />
             <YAxis />
             <Tooltip />
@@ -113,7 +109,7 @@ const BarCompopent = ({ id }: { id: string }) => {
         </ResponsiveContainer>
       </Card>
     </Col>
-  );
-};
+  )
+}
 
-export default BarCompopent;
+export default BarCompopent

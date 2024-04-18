@@ -7,7 +7,6 @@ export const formatCurrency = (money: number) => {
   return new Intl.NumberFormat('vi-VN', config).format(money)
 }
 
-
 export const discountcurrency = (money: number, percent: number) => {
-  return ((money * percent) / 100)
+  return (money * (1 - percent / 100))
 }
