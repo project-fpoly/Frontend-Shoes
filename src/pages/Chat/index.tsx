@@ -37,7 +37,7 @@ export interface UserLogin {
 
 const useStyle = createStyles(({ token }) => ({
     'my-drawer-body': {
-        backgroundColor: "black",
+        backgroundColor: "rgb(40, 43, 54)",
         color: token.colorPrimary,
     },
     'my-drawer-mask': {

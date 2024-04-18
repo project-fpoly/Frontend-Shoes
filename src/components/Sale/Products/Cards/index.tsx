@@ -27,9 +27,17 @@ const Card = (props: Props) => {
                   {name && <div style={{ color: 'gray' }}>{name}</div>}
 
                   <Space>
-                    <h2 style={{ fontWeight: 700, marginRight: 10 }}>{formatCurrency(discountcurrency(item.price, discount))}</h2>
-                    <h2 style={{ textDecoration: 'line-through' }}>{formatCurrency(item.price)}</h2>
+                    {item.sale && item.sale.discount ? (
+                      <>
+                        <h2 style={{ fontWeight: 700, marginRight: 10 }}>{formatCurrency(discountcurrency(item.price, item.sale.discount))}</h2>
+                        <h2 style={{ textDecoration: 'line-through' }}>{formatCurrency(item.price)}</h2>
+                      </>
+                    ) : (
+                      <h2 style={{ fontWeight: 700, marginRight: 10 }}>{formatCurrency(item.price)}</h2>
+                    )}
                   </Space>
+
+
 
                   {/* Hiển thị phần trăm giảm giá */}
                   {discount && <p className='absolute right-2 top-2' style={{ color: 'red', fontWeight: 500 }}>{discount}% off</p>}

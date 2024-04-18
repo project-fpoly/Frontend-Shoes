@@ -280,7 +280,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     </Form.Item>
                     <Form.Item
                         name="sizes"
-                        style={{ maxHeight: 180, overflow: 'auto', height: '120px' }}
+                        style={{ maxHeight: 180, overflow: 'auto', height: '120px', position: 'relative' }}
                         rules={[{ required: true, message: 'Please add at least one size' }]}
                     >
                         <Form.List name="sizes">
@@ -323,7 +323,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                             </Space>
                                         );
                                     })}
-                                    <Form.Item>
+                                    <Form.Item style={{ position: 'sticky', bottom: 0, zIndex: 1, backgroundColor: 'white' }}>
                                         <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                             Add Size
                                         </Button>
