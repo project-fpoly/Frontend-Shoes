@@ -15,11 +15,11 @@ export default function OrderPage() {
     dispatch(getOrderByUsers({}))
   }, [dispatch])
 
-  const { ordersUser, pagination } = useSelector(
+  const { ordersUser, pagination, params } = useSelector(
     (state: RootState) => state.ordersUser,
   )
-  const a = useSelector((state: RootState) => state)
-  console.log(a)
+  console.log(params)
+  console.log(ordersUser)
   const dataGet = (data: string) =>
     ordersUser?.filter((item: any) => item.isDelivered === data)
 
@@ -63,27 +63,52 @@ export default function OrderPage() {
     {
       key: 'Chờ xác nhận',
       label: 'Chờ xác nhận',
-      children: <OrderItem data={data1} pagination={data1Pagination} />,
+      children: (
+        <OrderItem
+          data={params.search ? ordersUser : data1}
+          pagination={data1Pagination}
+        />
+      ),
     },
     {
       key: 'Chờ lấy hàng',
       label: 'Chờ lấy hàng',
-      children: <OrderItem data={data2} pagination={data2Pagination} />,
+      children: (
+        <OrderItem
+          data={params.search ? ordersUser : data2}
+          pagination={data2Pagination}
+        />
+      ),
     },
     {
       key: 'Đang giao hàng',
       label: 'Đang giao hàng',
-      children: <OrderItem data={data3} pagination={data3Pagination} />,
+      children: (
+        <OrderItem
+          data={params.search ? ordersUser : data3}
+          pagination={data3Pagination}
+        />
+      ),
     },
     {
       key: 'Đã giao hàng',
       label: 'Đã giao hàng',
-      children: <OrderItem data={data4} pagination={data4Pagination} />,
+      children: (
+        <OrderItem
+          data={params.search ? ordersUser : data4}
+          pagination={data4Pagination}
+        />
+      ),
     },
     {
       key: 'Đã hủy',
       label: 'Đã hủy',
-      children: <OrderItem data={data5} pagination={data5Pagination} />,
+      children: (
+        <OrderItem
+          data={params.search ? ordersUser : data5}
+          pagination={data5Pagination}
+        />
+      ),
     },
   ]
 

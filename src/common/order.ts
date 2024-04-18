@@ -22,6 +22,7 @@ export interface IBill {
   isPaid: boolean
   isDelivered: string
   trackingNumber: string
+  voucher: string
   createdAt: string
   updatedAt: string
 }

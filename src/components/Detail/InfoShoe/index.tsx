@@ -226,7 +226,7 @@ const InfoShoe = (props: Props) => {
             ) : (
               <button
                 onClick={() =>
-                  state?.user ? addToFavv() : navigate('/signin')
+                  state?.user && accessToken ? addToFavv() : navigate('/signin')
                 }
                 className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >

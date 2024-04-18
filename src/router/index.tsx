@@ -11,7 +11,7 @@ import UserManager from '../pages/Admin/Users'
 import CommentManager from '../pages/Admin/Comment'
 import CategoriesManager from '../pages/Admin/Categories'
 import ProductsManager from '../pages/Admin/Products'
-import OrderManager from '../pages/Admin/Order'
+import OrderTab from '../pages/Admin/Order/OrderTab.tsx'
 import NotificationsAdmin from '../pages/Admin/Notification'
 import Help from '../pages/Help/index.tsx'
 import Password from '../pages/client/password'
@@ -61,7 +61,6 @@ import { PrivateCheckout } from './PrivateCheckout.tsx'
 import { fetchList } from '../features/dashboard/index.tsx'
 import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 
-
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -77,7 +76,9 @@ const Router = (user: any) => {
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
+      dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
@@ -93,7 +94,7 @@ const Router = (user: any) => {
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     })
     if (user.user && user.user.role === 'admin') {
-      dispatch(fetchList());
+      dispatch(fetchList())
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
@@ -138,7 +139,7 @@ const Router = (user: any) => {
             path="/cart/checkout"
             element={
               <PrivateCheckout>
-                <CheckOut />{' '}
+                <CheckOut />
               </PrivateCheckout>
             }
           />
@@ -159,7 +160,7 @@ const Router = (user: any) => {
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
-          <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/orders" element={<OrderTab />} />
           <Route path="/admin/sale" element={<SaleManager />} />
           <Route path="/admin/dashboard" element={<FeatureDashboard />} />
 

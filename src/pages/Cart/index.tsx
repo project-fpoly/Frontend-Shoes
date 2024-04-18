@@ -28,7 +28,7 @@ import { formatCurrency } from '../../hooks/utils'
 const Cart = () => {
   const ref = useRef<any>({})
   const dispatch = useDispatch<AppDispatch>()
-  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const state = useSelector((state: any) => state.cart.cartItems)
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const [forceRender, setForceRender] = useState(0)
@@ -71,7 +71,7 @@ const Cart = () => {
   }
   const removeItemFromCart = (productId: string) => {
     dispatch(removeFromCart(productId))
-    if (cart) {
+    if (state.cart) {
       sessionStorage.removeItem('cart')
     }
   }
@@ -88,8 +88,12 @@ const Cart = () => {
       }
 
       sessionStorage.setItem('cart', JSON.stringify(updatedCartData))
+      console.log(updatedCartData)
 
       notification.success({ message: 'Sản phẩm đã được xóa khỏi giỏ hàng' })
+      if (updatedCartData.cartItems.length === 0) {
+        sessionStorage.removeItem('cart')
+      }
     }
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
   }
@@ -121,7 +125,7 @@ const Cart = () => {
         index,
         productId,
         quantity,
-        size: cart.cartItems[index].size,
+        size: state?.cart.cartItems[index].size,
       }),
     )
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
@@ -198,16 +202,18 @@ const Cart = () => {
             <div className="text-center mb-12 lg:hidden">
               <p>
                 <span className="text-[#707072] pr-2 mr-2 border-r-2 border-[#707072]">
-                  {cart
-                    ? cart?.cartItems.length
+                  {state?.cart
+                    ? state?.cart?.cartItems.length
                     : cartSession?.cartItems.length}{' '}
                   items
                 </span>
-                {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
+                {formatCurrency(
+                  state?.cart ? state?.cart?.totalPrice : totalPrice,
+                )}
               </p>
             </div>
-            {cart
-              ? cart?.cartItems?.map((cartItem: any, index: number) => {
+            {state?.cart
+              ? state?.cart?.cartItems?.map((cartItem: any, index: number) => {
                   const sizes = getProductSize(cartItem.product)
                   return (
                     <div
@@ -457,7 +463,9 @@ const Cart = () => {
                     <FaQuestionCircle className="ml-2" />
                   </div>
                   <div>
-                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
+                    {formatCurrency(
+                      state?.cart ? state?.cart?.totalPrice : totalPrice,
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
@@ -470,7 +478,9 @@ const Cart = () => {
                 <div className="flex justify-between items-center my-4 lg:my-5">
                   <div>Total</div>
                   <div>
-                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
+                    {formatCurrency(
+                      state?.cart ? state?.cart?.totalPrice : totalPrice,
+                    )}
                   </div>
                 </div>
                 <div className="hidden lg:block">
@@ -478,7 +488,7 @@ const Cart = () => {
                 </div>
               </div>
               <div className="mt-5 hidden lg:block">
-                {cart || cartSession?.cartItems.length ? (
+                {state?.cart || cartSession?.cartItems.length ? (
                   <>
                     <Button
                       onClick={() => navigate('./checkout')}

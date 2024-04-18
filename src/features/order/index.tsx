@@ -83,9 +83,9 @@ export const updateOrder = createAsyncThunk(
           fetchOrders({
             page: pagination.currentPage,
             limit: pagination.limit,
-            search: searchApi ? searchApi : params.search || '',
-            start: params.start || '',
-            end: params.end || '',
+            search: searchApi ? searchApi : params.search || null,
+            start: params.start || null,
+            end: params.end || null,
           }),
         )
         notification.success({ message: response.data.message })
@@ -209,9 +209,9 @@ export const updateManyOrders = createAsyncThunk(
         fetchOrders({
           page: pagination.currentPage,
           limit: pagination.limit,
-          search: params.search || '',
-          start: params.start || '',
-          end: params.end || '',
+          search: params.search || null,
+          start: params.start || null,
+          end: params.end || null,
         }),
       )
       notification.success({ message: response.data.message })
@@ -267,9 +267,9 @@ export const getOrderByUsers = createAsyncThunk(
     params: {
       page?: number
       limit?: number
-      start?: string
-      end?: string
-      search?: string
+      start?: any
+      end?: any
+      search?: any
     },
     thunkApi,
   ) => {
@@ -289,7 +289,15 @@ export const getOrderByUsers = createAsyncThunk(
       thunkApi.dispatch(
         fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
       )
-      return response.data
+      const currentPage = params.page // Lấy giá trị của currentPage từ params.page
+
+      // Tạo một đối tượng mới bằng cách sao chép các thuộc tính từ response.pagination và ghi đè currentPage
+      const updatedPagination = { ...response.data.pagination, currentPage }
+
+      // Tạo một đối tượng mới cho updatedResponse bằng cách sao chép orders từ response và cập nhật pagination
+      const updatedResponse = { ...response, pagination: updatedPagination }
+
+      return updatedResponse.data
     } catch (error: any) {
       throw error.response.data
     }
@@ -454,7 +462,7 @@ const ordersUserSlice = createSlice({
       end: '',
       limit: 10,
       page: 1,
-      search: '',
+      search: null,
       start: '',
     },
     searchApi: '',
@@ -471,7 +479,9 @@ const ordersUserSlice = createSlice({
       .addCase(getOrderByUsers.fulfilled, (state, action) => {
         state.isLoading = false
         state.ordersUser = action.payload.ordersUser
+        console.log(action)
         state.pagination = action.payload.pagination
+        state.params = action.meta.arg
       })
       .addCase(getOrderByUsers.rejected, (state: any, action) => {
         state.isLoading = false
