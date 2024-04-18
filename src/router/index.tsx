@@ -62,6 +62,7 @@ import { fetchList } from '../features/dashboard/index.tsx'
 import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
+import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 
 
 const Router = (user: any) => {
@@ -146,7 +147,10 @@ const Router = (user: any) => {
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/profile" element={<Profile />}>
             <Route index element={<ProfileContent></ProfileContent>} />
-            <Route path="setting" element={<Setting />} />
+            <Route path="setting" element={<Setting />} >
+              <Route index element={<AccoutDetails></AccoutDetails>} />
+              <Route path='/profile/setting/cc' element={<><h1>1</h1></>} />
+            </Route>
           </Route>
         </Route>
 
@@ -178,7 +182,7 @@ const Router = (user: any) => {
           />
           <Route
             path="/admin/setting/chat"
-            element={<ChatsPage/>}
+            element={<ChatsPage />}
           />
         </Route>
 

@@ -22,7 +22,7 @@ const NavProfile = () => {
     },
     {
       label: (
-        <Link to="/men">
+        <Link to="/favourite">
           <h1 className="font-bold text-sm">Favourites</h1>
         </Link>
       ),

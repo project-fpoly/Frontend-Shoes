@@ -32,7 +32,7 @@ const AdminDashboard = () => {
             {list.map((item: any) => {
               if (item.type === 'bar') {
                 return <BarCompopent id={item._id} />
-              }else if(item.type === 'all'){
+              } else if (item.type === 'all') {
                 return <AllCompopent id={item._id} />
               }
               return null
