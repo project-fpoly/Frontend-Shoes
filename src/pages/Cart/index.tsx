@@ -28,7 +28,7 @@ import { formatCurrency } from '../../hooks/utils'
 const Cart = () => {
   const ref = useRef<any>({})
   const dispatch = useDispatch<AppDispatch>()
-  const state = useSelector((state: any) => state.cart.cartItems)
+  const { cart } = useSelector((state: any) => state.cart.cartItems)
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const [forceRender, setForceRender] = useState(0)
@@ -38,9 +38,12 @@ const Cart = () => {
   const navigate = useNavigate()
 
   const accessToken = localStorage.getItem('accessToken')
-  let totalPrice = 0
+  let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity
+    totalCart += item.price * item.quantity
+  })
+  cart?.cartItems.forEach((item: any) => {
+    totalCart += item.price * item.quantity
   })
 
   const { products } = useSelector((state: any) => state.product)
@@ -71,7 +74,7 @@ const Cart = () => {
   }
   const removeItemFromCart = (productId: string) => {
     dispatch(removeFromCart(productId))
-    if (state.cart) {
+    if (cart) {
       sessionStorage.removeItem('cart')
     }
   }
@@ -88,12 +91,8 @@ const Cart = () => {
       }
 
       sessionStorage.setItem('cart', JSON.stringify(updatedCartData))
-      console.log(updatedCartData)
 
       notification.success({ message: 'Sản phẩm đã được xóa khỏi giỏ hàng' })
-      if (updatedCartData.cartItems.length === 0) {
-        sessionStorage.removeItem('cart')
-      }
     }
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
   }
@@ -125,7 +124,7 @@ const Cart = () => {
         index,
         productId,
         quantity,
-        size: state?.cart.cartItems[index].size,
+        size: cart.cartItems[index].size,
       }),
     )
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
@@ -202,18 +201,16 @@ const Cart = () => {
             <div className="text-center mb-12 lg:hidden">
               <p>
                 <span className="text-[#707072] pr-2 mr-2 border-r-2 border-[#707072]">
-                  {state?.cart
-                    ? state?.cart?.cartItems.length
+                  {cart
+                    ? cart?.cartItems.length
                     : cartSession?.cartItems.length}{' '}
                   items
                 </span>
-                {formatCurrency(
-                  state?.cart ? state?.cart?.totalPrice : totalPrice,
-                )}
+                {formatCurrency(totalCart)}
               </p>
             </div>
-            {state?.cart
-              ? state?.cart?.cartItems?.map((cartItem: any, index: number) => {
+            {cart
+              ? cart?.cartItems?.map((cartItem: any, index: number) => {
                   const sizes = getProductSize(cartItem.product)
                   return (
                     <div
@@ -462,11 +459,7 @@ const Cart = () => {
                     Subtotal
                     <FaQuestionCircle className="ml-2" />
                   </div>
-                  <div>
-                    {formatCurrency(
-                      state?.cart ? state?.cart?.totalPrice : totalPrice,
-                    )}
-                  </div>
+                  <div>{formatCurrency(totalCart)}</div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <div>Estimated Delivery & Handling</div>
@@ -477,18 +470,14 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between items-center my-4 lg:my-5">
                   <div>Total</div>
-                  <div>
-                    {formatCurrency(
-                      state?.cart ? state?.cart?.totalPrice : totalPrice,
-                    )}
-                  </div>
+                  <div>{formatCurrency(totalCart)}</div>
                 </div>
                 <div className="hidden lg:block">
                   <hr />
                 </div>
               </div>
               <div className="mt-5 hidden lg:block">
-                {state?.cart || cartSession?.cartItems.length ? (
+                {cart || cartSession?.cartItems.length ? (
                   <>
                     <Button
                       onClick={() => navigate('./checkout')}
