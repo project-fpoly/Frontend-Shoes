@@ -8,6 +8,7 @@ import {
   Avatar,
   Badge,
   List,
+  Spin,
 } from 'antd'
 import {
   UserOutlined,
@@ -43,6 +44,8 @@ import {
   updateNotificationById,
 } from '../../features/notification'
 import styles from '../../App.module.scss'
+import { useGetAnalystQuery, useGetAnalyticsQuery } from '../../services/analytic'
+import { BarChartSimple } from './Dashboard/components/bar-chart'
 
 const { Content } = Layout
 const { Title, Text } = Typography
@@ -50,7 +53,7 @@ const { Title, Text } = Typography
 const AdminDashboard = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const notifications = useSelector((state:RootState) => state.notification.notifications)
+  const notifications = useSelector((state: RootState) => state.notification.notifications)
   const data = [
     { name: 'Jan', profit: 2400 },
     { name: 'Feb', profit: 1398 },
@@ -117,6 +120,24 @@ const AdminDashboard = () => {
     }
     navigate(`/admin/notification/${item._id}`)
   }
+
+  const {
+    data: dataAnalytics,
+    isLoading: loadingTotalMoneys,
+    isError: errorAnalytics,
+  } = useGetAnalyticsQuery()
+  const {
+    data: dataAnalytics2,
+    isLoading: loadingTotalMoneys2,
+    isError: errorAnalytics2,
+  } = useGetAnalystQuery()
+
+  if (loadingTotalMoneys || loadingTotalMoneys2) return <Spin />
+
+  if (errorAnalytics || errorAnalytics2) return <div>error</div>
+
+  if (!dataAnalytics || !dataAnalytics2) return <Spin />
+
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
       <Content style={{ padding: '50px' }}>
@@ -130,9 +151,11 @@ const AdminDashboard = () => {
               />
             </Col>
             <Col span={20}>
-              <Title level={2} style={{ fontSize: '28px', color: '#1890ff' }}>
-                Admin Dashboard
-              </Title>
+              <Link to={'dashboard'} >
+                <Title level={2} style={{ fontSize: '28px', color: '#1890ff' }}>
+                  Admin Dashboard
+                </Title>
+              </Link>
             </Col>
           </Row>
           <div
@@ -173,9 +196,8 @@ const AdminDashboard = () => {
                   dataSource={notifications}
                   renderItem={(item: any) => (
                     <List.Item
-                      className={`${styles.notificationItem} ${
-                        item.isRead ? styles.readItem : styles.unreadItem
-                      }`}
+                      className={`${styles.notificationItem} ${item.isRead ? styles.readItem : styles.unreadItem
+                        }`}
                       onClick={() => handleItemClick(item)}
                     >
                       <List.Item.Meta
@@ -191,7 +213,7 @@ const AdminDashboard = () => {
                 />
               </Card>
             </Col>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Card title="New Users" extra={<UserOutlined />}>
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart
@@ -243,7 +265,8 @@ const AdminDashboard = () => {
                   <Tooltip />
                 </PieChart>
               </Card>
-            </Col>
+            </Col> */}
+            <BarChartSimple data={dataAnalytics} />
           </Row>
         </div>
       </Content>
