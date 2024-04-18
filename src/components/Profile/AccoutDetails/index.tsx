@@ -1,72 +1,64 @@
-import { ConfigProvider, FormProps } from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { useSelector } from 'react-redux';
-type FieldType = {
-  email?: string;
-  password?: string;
-  remember?: string;
-};
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
+import clsx from "clsx"
+import { useEffect } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { useSelector } from "react-redux"
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
-
+interface IFormInput {
+  userName: string
+  deliveryAddress: string
+  date: string
+  phoneNumbers: string
+}
 const AccoutDetails = () => {
   const user = useSelector((state: any) => state.auth.user)
-  console.log(user);
+  const { register, handleSubmit, setValue, watch } = useForm<IFormInput>()
+  const preUserName = watch('userName')
 
+
+  const predeliveryAddress = watch('deliveryAddress')
+
+  const prephoneNumbers = watch('phoneNumbers')
+  useEffect(() => {
+    setValue('userName', user.userName)
+    setValue('deliveryAddress', user.deliveryAddress)
+    setValue('date', user.dateOfBirth)
+    setValue('phoneNumbers', user.phoneNumbers)
+  }, [user])
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
 
   return (
     <>
-
-      <ConfigProvider
-        theme={{
-          token: {
-          },
-        }}
-      >
-        <p className="text-3xl">Account Details</p>
-        <Form
-          className='flex flex-col items-start mt-10'
-          name="basic"
-          wrapperCol={{ span: 16 }}
-          initialValues={user?.email}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item<FieldType>
-            name="email"
-          >
-            <div className='flex flex-col gap-2'>
-              <label className='mb-5 text-2xl' htmlFor="">Email</label>
-              <Input defaultValue={user?.email} className='w-[400px] h-9 hover:border-black focus:border-black ' />
-            </div>
-          </Form.Item>
-          <Form.Item<FieldType>
-            name="password"
-          >
-            <div className='flex flex-col gap-2'>
-              <label className='mb-5 text-2xl' htmlFor="">Password</label>
-              <Input className='w-[400px] h-9 hover:border-black focus:border-black ' />
-            </div>
-          </Form.Item>
-
-          <Form.Item >
-            <button className='border-gray hover:border-black border p-1 rounded-lg' type="submit">
-              Submit
-            </button>
-          </Form.Item>
-        </Form>
-      </ConfigProvider >
-
-
+      <h1 className="text-3xl mb-5">Account Details </h1>
+      <form className="" onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-3 gap-5 mb-5">
+          <div className="flex flex-col gap-3">
+            <label>UserName</label>
+            <input className="w-[300px] px-2 h-[50px] outline-none rounded-lg border border-black" {...register("userName")} />
+          </div>
+          <div className="flex flex-col gap-3">
+            <label>Date of birth</label>
+            <input disabled className="w-[300px] opacity-80 px-2 h-[50px] outline-none rounded-lg border border-gray-400" {...register("date")} />
+          </div>
+          <div className="flex flex-col gap-3">
+            <label>UserName</label>
+            <input className="w-[300px] px-2 h-[50px] outline-none rounded-lg border border-black" {...register("phoneNumbers")} />
+          </div>
+          <div className="flex flex-col gap-3">
+            <label>Shiping address</label>
+            <input className="w-[300px] px-2 h-[50px] outline-none rounded-lg border border-black" {...register("deliveryAddress")} />
+          </div>
+        </div>
+        {(preUserName === user.userName && predeliveryAddress === user.deliveryAddress && prephoneNumbers === user.phoneNumbers) ? (
+          <button disabled className={clsx('p-3 border flex opacity-30 items-end border-black rounded-lg ')}>Save a</button>
+        ) : (
+          <>
+            <button className={clsx('p-3 border flex items-end hover:bg-black hover:text-white border-black rounded-lg ')}>Save</button>
+          </>
+        )}
+      </form >
     </>
   )
-
 }
 
 export default AccoutDetails

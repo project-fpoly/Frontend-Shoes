@@ -24,6 +24,8 @@ interface Props {
 }
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props
+  console.log(shoe);
+
   const state = useSelector((state: any) => state.fav.favItems.fav)
   const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
   const [size, setSize] = useState('')
@@ -77,7 +79,6 @@ const InfoShoe = (props: Props) => {
   const [fav, setFav] = usesessionStorage<{ favItems: IProduct[] }>('fav', {
     favItems: [],
   })
-  console.log(priceFormat)
   const accessToken = localStorage.getItem('accessToken')
 
   const addToCartt = () => {
