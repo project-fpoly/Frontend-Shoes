@@ -50,8 +50,8 @@ const Featured = () => {
                 color: 'white',
               }}
             >
-              Women's <br />
-              Shoes
+              Women's Shoes <br />
+              Collection
             </Typography>
             <Link
               to={'/women'}
