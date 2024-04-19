@@ -53,16 +53,15 @@ import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
 
-import ChatsPage from '../pages/Chat/index.tsx'
 import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
 
 import { PrivateCheckout } from './PrivateCheckout.tsx'
 import { fetchList } from '../features/dashboard/index.tsx'
-import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
+import SettingsPage from '../pages/Admin/Chat/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -135,7 +134,6 @@ const Router = (user: any) => {
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
-          <Route path="/chat" element={<ChatsPage />} />
           <Route path="/favourite" element={<Favourite />} />
           <Route
             path="/cart/checkout"
@@ -188,7 +186,7 @@ const Router = (user: any) => {
             path="/admin/setting/sendNotification"
             element={<SendNotification />}
           />
-          <Route path="/admin/setting/chat" element={<ChatsPage />} />
+          <Route path="/admin/setting/chat" element={<SettingsPage />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

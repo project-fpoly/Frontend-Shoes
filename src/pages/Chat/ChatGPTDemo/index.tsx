@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Drawer, Input, Button, Spin, message, Avatar } from 'antd';
+import { Drawer, Input, Button, Spin, message, Avatar, notification } from 'antd';
 import axios from 'axios';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { Tour, Divider, Space } from 'antd';
 import type { TourProps } from 'antd';
+import emailjs from 'emailjs-com';
+
 
 const { TextArea } = Input;
 
@@ -28,6 +30,28 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
     const tourRef2 = useRef(null);
     const tourRef3 = useRef(null);
     const [openTour, setOpenTour] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
+
+    const sendEmail = () => {
+        // Thực hiện gửi email
+        emailjs.send('service_t8lv8u1', 'template_7b1b8yv', {
+            to_email: 'ntrkien001@gmail.com',
+        }, 'Mc4EzlCqkbu9supJL')
+            .then(() => {
+                notification.success({
+                    message: 'Email Sent',
+                    description: 'Your email has been sent successfully.',
+                });
+                setEmailSent(true);
+            })
+            .catch((error) => {
+                console.error('Error sending email:', error);
+                notification.error({
+                    message: 'Error',
+                    description: 'Failed to send email. Please try again later.',
+                });
+            });
+    };
 
     function getEmailUsername(email: string | null): string {
         if (email === null || !email.includes('@')) {
@@ -130,18 +154,18 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
 
     const steps: TourProps['steps'] = [
         {
-            title: 'Upload File',
-            description: 'Put your files here.',
+            title: 'Gửi tin nhắn',
+            description: 'Đây là tính năng bảo mật, bạn cần có xác nhận của admin để dùng tính năng này. Tính năng giúp tin nhắn của bạn đến AI, bạn có thể tra cứu thông tin về giày',
             target: () => tourRef1.current,
         },
         {
-            title: 'Save',
-            description: 'Save your changes.',
+            title: 'Đóng cửa sổ chat',
+            description: 'Đóng cửa sổ chat AI',
             target: () => tourRef2.current,
         },
         {
-            title: 'Other Actions',
-            description: 'Click to see other actions.',
+            title: 'Yêu cầu mở khóa',
+            description: 'Gửi thông báo đến admin để mở khóa tính năng',
             target: () => tourRef3.current,
         },
     ];
@@ -207,8 +231,13 @@ const ChatGPTDemo: React.FC<ChatGPTDemoProps> = ({ onClose }) => {
                     {isLoading ? <Spin /> : 'Send'}
                 </Button>
                 <Button className="ml-3" onClick={onClose} ref={tourRef2}>Close</Button>
-                <Space>
-                    <Button ref={tourRef3}>Other Action</Button>
+                <Space className="ml-3">
+                    <Button ref={tourRef3} onClick={sendEmail} disabled={emailSent}>
+                        {emailSent ? 'Email Sent' : 'Unlock required'}
+                    </Button>
+                </Space>
+                <Space className="ml-3">
+                    <Button onClick={() => { setOpenTour(true); }}>Hướng dẫn</Button>
                 </Space>
             </div>
         </>
