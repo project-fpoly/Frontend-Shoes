@@ -23,7 +23,7 @@ const Card = (props: Props) => {
 
             {shoes?.map((item, index) => {
               return (
-                <div key={index + 1} className="mb-0">
+                <div key={index + 1} className="mb-0 relative">
                   <Link className="flex flex-col gap-6" to={`/detail/${item._id}`}>
                     <img
                       className={style.image}
@@ -32,7 +32,11 @@ const Card = (props: Props) => {
                       alt="BigCo Inc. logo"
                     />
                     <p>{item.name}</p>
-                    <h2>{formatCurrency(item.price)}</h2>
+                    <div className='flex gap-5'>
+                      <p className='text-xl'>{item?.priceSale ? formatCurrency(item?.priceSale) : ""}</p>
+                      {item.priceSale ? <h2 className='text-xl line-through'>{formatCurrency(item.price)} </h2> : <h2 className='text-xl'>{formatCurrency(item.price)}</h2>}
+                    </div>
+                    <p className='text-xl absolute right-5 top-5 text-red-500' >{item.sale ? `${item?.sale?.discount} %`! : ""}</p>
                   </Link>
                 </div>
               )

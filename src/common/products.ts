@@ -22,6 +22,7 @@ export interface IProduct {
     name: string;
     discount: number;
   };
+  priceSale: number
   discount?: number;
   quantity: number;
   sold_count?: number;
