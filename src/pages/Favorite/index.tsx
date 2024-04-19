@@ -10,6 +10,7 @@ import './index.css'
 import { viewsFilterProducts } from '../../services/productsQuery'
 import { IProduct } from '../../common/products'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../hooks/utils'
 
 const Favorites = () => {
     // const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +41,7 @@ const Favorites = () => {
         <div className="px-10">
 
             <Space direction="vertical" style={{ width: '100%' }}>
-                <Typography className="home_title">Popular Right Now</Typography>
+                <Typography className="home_title">Find Your Next Favourite</Typography>
 
                 <Swiper
                     modules={[Navigation, Pagination, A11y]}
@@ -83,7 +84,7 @@ const Favorites = () => {
                                                         fontWeight: '400',
                                                     }}
                                                 >
-                                                    {item.price}
+                                                    {formatCurrency(item.price)}
                                                 </Typography>
                                             </Card>
                                         </Link>

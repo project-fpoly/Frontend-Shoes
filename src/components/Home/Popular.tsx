@@ -10,6 +10,7 @@ import './index.css'
 import { viewsFilterProducts } from '../../services/productsQuery'
 import { IProduct } from '../../common/products'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../hooks/utils'
 
 const Popular = () => {
   // const dispatch = useDispatch<AppDispatch>();
@@ -82,7 +83,7 @@ const Popular = () => {
                             fontWeight: '400',
                           }}
                         >
-                          {item.price}
+                          {formatCurrency(item.price)}
                         </Typography>
                       </Card>
                     </Link>
