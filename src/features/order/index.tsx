@@ -63,11 +63,34 @@ export const updateOrder = createAsyncThunk(
     thunkApi,
   ) => {
     try {
+      console.log('id:',id,'data:',updateOrderData)
       const state = thunkApi.getState() as RootState
-      console.log(state)
       const { orders, pagination, params, searchApi } = state.order
-      console.log(orders)
       if (typeof id === 'string') {
+        const res = await axios.get(
+          `http://localhost:9000/api/order/admin/bills/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          },
+        );
+        if (updateOrderData.isDelivered === 'Đã giao hàng') {
+          // Lấy danh sách sản phẩm từ đơn hàng
+          const cartItems = res.data.cartItems;
+      
+          // Lặp qua từng sản phẩm trong giỏ hàng
+          for (const cartItem of cartItems) {
+              const productId = cartItem.product;
+              const quantity = cartItem.quantity;
+              
+              // Tăng sold_count của sản phẩm lên số lượng tương ứng
+              for (let i = 0; i < quantity; i++) {
+                  await updateSoldCount(productId);
+              }
+          }
+      }
+      
         const response = await axios.put(
           `http://localhost:9000/api/order/admin/bills/${id}`,
           updateOrderData,
@@ -100,6 +123,16 @@ export const updateOrder = createAsyncThunk(
     }
   },
 )
+const updateSoldCount = async (productId:string) => {
+  try {
+    await axios.patch(
+      `http://localhost:9000/api/product/${productId}/sold_count`,
+      {}
+    );
+  } catch (error) {
+    console.error('Error updating sold_count:', error);
+  }
+};
 export const fetchOneOrder = createAsyncThunk(
   'order/fetchOneOrder',
   async (params: { search?: string }, { dispatch }) => {
@@ -117,7 +150,6 @@ export const fetchOneOrder = createAsyncThunk(
 
       return response.data
     } catch (error: any) {
-      console.log(error)
       throw error.response.data
     }
   },
@@ -140,7 +172,6 @@ export const SearchOrder = createAsyncThunk(
 
       return response.data
     } catch (error: any) {
-      console.log(error)
       throw error.response.data
     }
   },
@@ -354,7 +385,6 @@ const orderSlice = createSlice({
           (order: IBill) => order._id === updatedOrder._id,
         )
         if (index !== -1) {
-          console.log('a')
           state.orders[index] = updatedOrder
         }
       })
@@ -479,7 +509,6 @@ const ordersUserSlice = createSlice({
       .addCase(getOrderByUsers.fulfilled, (state, action) => {
         state.isLoading = false
         state.ordersUser = action.payload.ordersUser
-        console.log(action)
         state.pagination = action.payload.pagination
         state.params = action.meta.arg
       })
