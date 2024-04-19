@@ -11,8 +11,8 @@ const ResetPassword = () => {
   const [confirmPasswordHelp, setConfirmPasswordHelp] = useState<string | undefined>(undefined);
 
   const validatePassword = (_: any, value: string) => {
-    if (value.length < 8 || !/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setPasswordHelp('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
+    if (value.length < 6) {
+      setPasswordHelp('Password must be at least 6 characters.');
       return Promise.reject('');
     }
 
@@ -115,7 +115,7 @@ const ResetPassword = () => {
               <Input.Password
                 className="border border-black"
                 size="large"
-                placeholder="Confirm password"
+                placeholder="Confirm new password"
               />
             </Form.Item>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

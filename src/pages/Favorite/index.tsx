@@ -39,7 +39,7 @@ const Favorites = () => {
     return (
         <>
             <Space direction="vertical" style={{ width: '100%' }}>
-                <Typography className="home_title">Popular Right Now</Typography>
+                <Typography className="home_title">Favorites</Typography>
 
                 <Swiper
                     modules={[Navigation, Pagination, A11y]}

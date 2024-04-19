@@ -2,11 +2,12 @@ import { Button, Form, Input, notification } from 'antd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { SiNike } from 'react-icons/si';
+import { useState } from 'react';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values:any) => {
+  const handleSubmit = async (values: any) => {
     try {
       const response = await axios.post(
         'http://localhost:9000/api/auth/forgot-password',
@@ -21,7 +22,7 @@ const ForgotPassword = () => {
         });
         navigate('/signin');
       }
-    } catch (e:any) {
+    } catch (e: any) {
       console.log(e);
       notification.error({
         message: 'Error',
@@ -29,6 +30,15 @@ const ForgotPassword = () => {
         placement: 'top',
       });
     }
+  };
+
+  const [loading, setLoading] = useState(false);
+  const handleClick = () => {
+    setLoading(true);
+    // Giả sử bạn muốn đợi 2 giây trước khi chuyển trạng thái loading trở lại false
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   return (
@@ -65,6 +75,7 @@ const ForgotPassword = () => {
                 placeholder="Email"
               />
             </Form.Item>
+
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 className="rounded-full btn-primary-dark btn-md"
@@ -80,10 +91,13 @@ const ForgotPassword = () => {
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
                 }}
+                onClick={handleClick}
+                loading={loading}
               >
                 Continue
               </Button>
             </div>
+
           </Form>
         </section>
       </div>

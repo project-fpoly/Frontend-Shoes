@@ -49,7 +49,7 @@ const SaleManager: React.FC = () => {
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
     const toggleModal = (category: ISale) => {
         setIsModalUpdateOpen(!isModalUpdateOpen);
-        setSale(category);
+          setSale(category);
     };
 
     const removeSales = (sales: ISale) => {

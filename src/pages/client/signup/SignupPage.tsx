@@ -40,38 +40,34 @@ const SignupPage = () => {
   }
 
   const validatePassword = (_: any, value: string) => {
-    if (value.length < 8) {
-      setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
+    if (value.length < 6) {
+      setPasswordHelp('Password must be at least 6 characters.')
       return Promise.reject('')
     }
 
-    if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
-    }
+    // if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
+    //   setPasswordHelp(
+    //     'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
+    //   )
+    //   return Promise.reject('')
+    // }
 
     setPasswordHelp(undefined)
     return Promise.resolve()
   }
 
   const validateConfirmPassword = (_: any, value: string) => {
-    if (value.length < 8) {
-      setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
+    if (value.length < 6) {
+      setConfirmPasswordHelp('Password must be at least 6 characters.')
       return Promise.reject('')
     }
 
-    if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
-      setConfirmPasswordHelp(
-        'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
-      )
-      return Promise.reject('')
-    }
+    // if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value)) {
+    //   setConfirmPasswordHelp(
+    //     'Password must be at least 8 characters, include uppercase, lowercase, and a number.',
+    //   )
+    //   return Promise.reject('')
+    // }
 
     const passwordInput = document.getElementById('password') as HTMLInputElement | null;
     const passwordValue = passwordInput ? passwordInput.value : '';
