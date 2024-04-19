@@ -2,7 +2,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  LoadingOutlined,
+  RollbackOutlined,
   UnorderedListOutlined,
   UserOutlined,
 } from '@ant-design/icons'
@@ -17,6 +17,7 @@ import {
   deletee2User,
   deleteeUser,
   fetchAllUsers,
+  restoreUser,
   updateUser,
 } from '../../../features/user'
 import { IStateUser } from '../../../common/redux/type'
@@ -77,6 +78,20 @@ const UserManager: React.FC = () => {
         UserRemove
           ? dispact(deletee2User(user._id))
           : dispact(deleteeUser([user._id]))
+      },
+      onCancel() {},
+    })
+  }
+  const restoreUser1 = (user: string) => {
+    Modal.confirm({
+      title: 'Confirm Deletion',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to restore this user?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispact(restoreUser(user))
       },
       onCancel() {},
     })
@@ -161,14 +176,22 @@ const UserManager: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <div style={{ textAlign: 'center' }}>
+          {UserRemove? (
           <Tooltip title={'edit'}>
             <Button type="link" onClick={() => toggleModal(record)}>
               <EditOutlined />
             </Button>
           </Tooltip>
+          ):(
+          <Tooltip title={'restore'}>
+            <Button type="link" danger onClick={() => restoreUser1(record._id)}>
+              <RollbackOutlined />
+            </Button>
+          </Tooltip>
+          )}
           {record.role !== 'admin' && (
             <Tooltip title={'delete'}>
-              <Button type="link" onClick={() => deleteUsesr(record)}>
+              <Button type="link" danger onClick={() => deleteUsesr(record)}>
                 <DeleteOutlined />
               </Button>
             </Tooltip>
