@@ -53,7 +53,7 @@ const AllCompopent = ({ id }: { id: string }) => {
   return (
     <div>
       <Row gutter={24}>
-        <Col span={6}>
+        <Col span={8}>
           <Card
             title="Doanh thu trong ngày"
             headStyle={{
@@ -70,30 +70,21 @@ const AllCompopent = ({ id }: { id: string }) => {
             </b>
             {data.data?.percentageChange ? (
               data.data?.percentageChange > 0 ? (
-                <p style={{ color: 'green' }}>
-                  <RiseOutlined /> {data.data?.percentageChange}
-                </p>
+                <span style={{ color: 'green' }}>
+                  <RiseOutlined /> {data.data?.percentageChange}%
+                </span>
               ) : (
-                <p style={{ color: 'red' }}><FallOutlined /> {data.data?.percentageChange}</p>
+                <span style={{ color: 'red' }}>
+                  <FallOutlined /> {data.data?.percentageChange}%
+                </span>
               )
             ) : (
               <p>-</p>
             )}
           </Card>
         </Col>
-        <Col span={4}>
-          <Card
-            title="Hóa đơn"
-            headStyle={{
-              backgroundColor: '#f0f2f5',
-              color: 'blue',
-              fontWeight: 'bold',
-            }}
-          >
-            <p>{data.data?.totalAllBill}</p>
-          </Card>
-        </Col>
-        <Col span={6}>
+
+        <Col span={8}>
           <Card
             title="Tổng doanh thu"
             headStyle={{
@@ -110,7 +101,35 @@ const AllCompopent = ({ id }: { id: string }) => {
             </b>
           </Card>
         </Col>
-
+        <Col span={8}>
+          <Card
+            title="Doanh thu dự kiến"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+          >
+            <b>
+              {(data.data?.expectedRevenueTotal || 0).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </b>
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card
+            title="Hóa đơn"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+          >
+            <p>{data.data?.totalAllBill}</p>
+          </Card>
+        </Col>
         <Col span={4}>
           <Card
             title="Người dùng"
