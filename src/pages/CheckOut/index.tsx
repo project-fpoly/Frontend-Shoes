@@ -6,7 +6,7 @@ import { TbTruckDelivery } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 import { IStateProduct } from '../../common/redux/type'
-import { createOrder, getCartItems } from '../../features/cart'
+import { createOrder, getCartItems, deleteCart } from '../../features/cart'
 import {
   getProvinces,
   getDistricts,
@@ -23,7 +23,7 @@ import type { InputRef } from 'antd'
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const state = useSelector((state: any) => state.cart.cartItems)
   const order = useSelector((state: any) => state.cart.orderData)
   const provinces = useSelector((state: any) => state.address.province)
   const districts = useSelector((state: any) => state.address.district)
@@ -31,26 +31,28 @@ const CheckOut = () => {
   const shippingOrder = useSelector((state: any) => state.address.shipping)
   const data = useSelector((state: any) => state.voucher.vouchers)
   const voucher = useSelector((state: any) => state.voucher.voucher)
-  const message = useSelector((state: any) => state.voucher.voucher)
   const [province, setProvince] = useState(null)
   const [district, setDistrict] = useState(null)
   const [ward, setWard] = useState(null)
   const [voucherr, setVoucher] = useState('')
+  const [voucherName, setVoucherName] = useState('')
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
+  console.log(voucherName)
   const accessToken = localStorage.getItem('accessToken')
-  console.log(cart)
   let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
     totalCart += item.price * item.quantity
   })
-  cart?.cartItems.forEach((item: any) => {
+  state?.cart?.cartItems.forEach((item: any) => {
     totalCart += item.price * item.quantity
   })
+
   const totalPrice = district
     ? voucher?.data?.Code === voucherr
       ? shippingOrder?.service_fee + totalCart - voucher?.data?.reduced_amount
       : shippingOrder?.service_fee + totalCart
     : totalCart
+  console.log(totalPrice)
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -70,8 +72,8 @@ const CheckOut = () => {
   const hanlderChangeWard = (value: any, option: any) => {
     setWard(option.data_ward_id)
   }
-  const items = cart
-    ? cart.cartItems.map((cartItem: any) => {
+  const items = state?.cart
+    ? state.cart.cartItems.map((cartItem: any) => {
         return {
           name: getProductName(cartItem.product),
           quantity: cartItem.quantity,
@@ -114,7 +116,7 @@ const CheckOut = () => {
     )
     dispatch(fetchVoucher())
     dispatch(fetchOneVoucher(voucherr))
-  }, [province, district, ward, order?.cartItems.length > 0, voucherr])
+  }, [province, district, ward, order, voucherr, voucherName])
   const [form] = Form.useForm()
   const handleFormSubmit = async (formValues: {
     firstName: string
@@ -149,18 +151,19 @@ const CheckOut = () => {
 
     try {
       if (accessToken) {
-        if (cart) {
-          const { cartItems } = cart
+        if (state.cart) {
+          const { cartItems } = state?.cart
           const data = await dispatch(
             createOrder({
               cartItems,
               shippingAddress,
               payment_method,
               totalPrice,
-              voucherr,
+              voucherName,
             }),
           )
-          console.log(data)
+          dispatch(deleteCart(state?.cart._id))
+
           sessionStorage.removeItem('cart')
           if (payment_method === 'vnPay' && data) {
             redirectUrl = await dispatch(
@@ -180,7 +183,7 @@ const CheckOut = () => {
               shippingAddress,
               payment_method,
               totalPrice,
-              voucherr,
+              voucherName,
             }),
           )
           sessionStorage.removeItem('cart')
@@ -209,7 +212,6 @@ const CheckOut = () => {
             shippingAddress,
             payment_method,
             totalPrice,
-            voucherr,
           }),
         )
 
@@ -229,13 +231,23 @@ const CheckOut = () => {
             window.open(redirectUrl.payload, '_blank')
           }
         }
-        // navigate('../../order/guest')
+        navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)
     }
   }
-
+  const today = new Date()
+  console.log(today)
+  const formattedDate = today.toISOString()
+  const validatePhone = (rule: any, value: any, callback: any) => {
+    const phoneRegex = /^[0-9]{10,}$/
+    if (value && !phoneRegex.test(value)) {
+      callback('Please enter a valid phone number!')
+    } else {
+      callback()
+    }
+  }
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
@@ -248,8 +260,10 @@ const CheckOut = () => {
       phone,
     })
   }, [form, fullname])
-  const handleSubmitVoucher = (values: any) => {
-    setVoucher(values.Code)
+  const handleChangeVoucher = (value: any, option: any) => {
+    console.log(option)
+    setVoucherName(value)
+    setVoucher(option.data_voucher_code)
   }
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
@@ -289,6 +303,10 @@ const CheckOut = () => {
                   name="firstName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
+                    {
+                      min: 7,
+                      message: 'First name must be at least 10 characters.',
+                    },
                   ]}
                 >
                   <Input
@@ -298,10 +316,15 @@ const CheckOut = () => {
                     placeholder="First name"
                   />
                 </Form.Item>
+
                 <Form.Item
                   name="lastName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
+                    {
+                      min: 2,
+                      message: 'First name must be at least 4 characters.',
+                    },
                   ]}
                 >
                   <Input
@@ -333,6 +356,7 @@ const CheckOut = () => {
                       required: true,
                       message: 'Please enter your phone number!',
                     },
+                    { validator: validatePhone },
                   ]}
                 >
                   <Input
@@ -435,6 +459,10 @@ const CheckOut = () => {
                       required: true,
                       message: 'Please enter your address details!',
                     },
+                    {
+                      min: 4,
+                      message: 'details address must be at least 4 characters.',
+                    },
                   ]}
                 >
                   <Input
@@ -457,14 +485,17 @@ const CheckOut = () => {
                   <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
-              <Button
-                type="default"
-                htmlType="submit"
-                block
-                className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
-              >
-                <p className="text-lg ">Check out</p>
-              </Button>
+              {state?.cart?.cartItems.length > 0 ||
+              cartSession?.cartItems.length > 0 ? (
+                <Button
+                  type="default"
+                  htmlType="submit"
+                  block
+                  className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
+                >
+                  <p className="text-lg ">Check out</p>
+                </Button>
+              ) : null}
             </Form>
           </div>
         </div>
@@ -488,17 +519,25 @@ const CheckOut = () => {
               <div className="text-[#6b7280]">Voucher</div>
               <div>
                 {data.length > 0 ? (
-                  <Form onFinish={handleSubmitVoucher} className="pt-[26px]">
+                  <Form className="pt-[26px]">
                     <Form.Item name="Code">
                       <Select
                         defaultValue="hãy chọn mã giảm giá"
-                        onChange={(value: any) => setVoucher(value)}
+                        onChange={handleChangeVoucher}
                       >
                         {data?.map((voucher: any, index: number) => (
                           <Select.Option
                             key={index}
-                            value={voucher.Code}
-                            disabled={voucher.Quantity <= 0}
+                            value={voucher.Name}
+                            data_voucher_code={voucher.Code}
+                            disabled={
+                              !(
+                                voucher.start_date < formattedDate &&
+                                formattedDate < voucher.expiration_date
+                              ) ||
+                              totalPrice < voucher.price_order ||
+                              voucher.Quantity <= 0
+                            }
                           >
                             {voucher.Name}
                           </Select.Option>
@@ -524,9 +563,10 @@ const CheckOut = () => {
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
-            {cart?.cartItems.length > 0 || cartSession?.cartItems.length > 0 ? (
+            {state?.cart?.cartItems.length > 0 ||
+            cartSession?.cartItems.length > 0 ? (
               <>
-                {cart?.cartItems.map((cartItem: any, index: number) => (
+                {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">

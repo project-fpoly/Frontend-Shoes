@@ -6,7 +6,7 @@ import { CartItem, IBill } from '../../common/order'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { IStateProduct } from '../../common/redux/type'
-import HeaderTableAdminOrder from '../../components/Admin/Layout/HeaderTableAdminOrder'
+import HeaderTableUser from '../../components/Admin/Layout/HeaderTableUser'
 import {
   fetchOrders,
   getOrderByUsers,
@@ -21,19 +21,19 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface Props {
   data: any
+  pagination: any
 }
 
-export default function OrderItem({ data }: Props) {
-  console.log(data)
+export default function OrderItem({ data, pagination }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const dispatch = useDispatch<AppDispatch>()
 
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
   const [modalVisible, setModalVisible] = useState(false)
-  const [dayStart, setDayStart] = useState('')
-  const [dayEnd, setDayEnd] = useState('')
-  const [Search, setSearch] = useState('')
+  const [dayStart, setDayStart] = useState(null)
+  const [dayEnd, setDayEnd] = useState(null)
+  const [Search, setSearch] = useState(null)
   const [_, setSelectedValue] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { users } = useSelector((state: IUsers) => state.user)
@@ -78,7 +78,6 @@ export default function OrderItem({ data }: Props) {
       )
     }
   }, [])
-  console.log(data)
   useEffect(() => {
     dispatch(
       getOrderByUsers({
@@ -137,6 +136,19 @@ export default function OrderItem({ data }: Props) {
       },
       onCancel() {},
     })
+  }
+  const handlePageChange = (page: number, pageSize: number) => {
+    setCurrentPage(page)
+    setPageSize(pageSize)
+    dispatch(
+      getOrderByUsers({
+        page: page,
+        limit: pageSize,
+        search: Search,
+        start: dayStart,
+        end: dayEnd,
+      }),
+    )
   }
   const columns: ColumnsType<IBill> = [
     {
@@ -232,7 +244,7 @@ export default function OrderItem({ data }: Props) {
   return (
     <>
       <div className="flex items-end">
-        <HeaderTableAdminOrder
+        <HeaderTableUser
           showModal={() => {}}
           onSubmitt={(value) => searchOrder(value)}
           name={'Orders '}
@@ -282,6 +294,12 @@ export default function OrderItem({ data }: Props) {
             }
           },
         })}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: pagination.totalPages * pageSize,
+          onChange: handlePageChange,
+        }}
       />
       <Modal
         open={modalVisible}

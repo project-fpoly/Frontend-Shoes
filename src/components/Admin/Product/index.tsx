@@ -208,9 +208,11 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     <Form.Item
                         label="Sales"
                         name="sale"
-                        rules={[{ required: true, message: "Please select a sale" }]}
                     >
                         <Select placeholder="Select a sale" value={sale}>
+                            {/* Thêm option rỗng */}
+                            <Select.Option value={null}>None</Select.Option>
+                            {/* Lặp qua danh sách sales */}
                             {sales.map((sale) => (
                                 <Select.Option key={sale._id} value={sale._id}>
                                     {sale.name}
@@ -278,7 +280,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     </Form.Item>
                     <Form.Item
                         name="sizes"
-                        style={{ maxHeight: 180, overflow: 'auto', height: '120px' }}
+                        style={{ maxHeight: 180, overflow: 'auto', height: '120px', position: 'relative' }}
                         rules={[{ required: true, message: 'Please add at least one size' }]}
                     >
                         <Form.List name="sizes">
@@ -321,7 +323,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                             </Space>
                                         );
                                     })}
-                                    <Form.Item>
+                                    <Form.Item style={{ position: 'sticky', bottom: 0, zIndex: 1, backgroundColor: 'white' }}>
                                         <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                             Add Size
                                         </Button>
@@ -356,8 +358,8 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                     )}
                     {mode === "update" && (
                         <>
-                            <Form.Item rules={[{ required: true, message: 'Please input URL images' }]} style={{ maxHeight: 180, overflow: 'auto' }}>
-                                <Form.List name="images" >
+                            <Form.Item style={{ maxHeight: 180, overflow: 'auto', position: 'relative' }}>
+                                <Form.List name="images">
                                     {(fields, { add, remove }) => (
                                         <>
                                             {fields.map(({ key, name, ...restField }) => (
@@ -372,7 +374,7 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                                     <MinusCircleOutlined onClick={() => remove(name)} />
                                                 </Space>
                                             ))}
-                                            <Form.Item>
+                                            <Form.Item style={{ position: 'sticky', bottom: 0, zIndex: 1, backgroundColor: 'white' }}>
                                                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                                     Add Image
                                                 </Button>
@@ -381,12 +383,20 @@ const ProductForm: React.FC<IProduct & { onSubmit: (values: IProduct) => void; m
                                     )}
                                 </Form.List>
                             </Form.Item>
+
+
                         </>
                     )}
                     {/* các trường khác cho cột thứ hai */}
                 </Col>
             </Row>
-
+            <Form.Item
+                label="videoUrl"
+                name="video"
+                rules={[{ required: true, message: "Please enter the product video" }]}
+            >
+                <Input placeholder="Enter product video" />
+            </Form.Item>
             {/* Các trường còn lại */}
 
             <Form.Item style={{ textAlign: "right" }} wrapperCol={{ offset: 8, span: 16 }}>

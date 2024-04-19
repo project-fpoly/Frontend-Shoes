@@ -1,5 +1,6 @@
 import IUser from "../../types/user";
 import { ICategory } from "../category";
+import { UserChatByEmail } from "../chat";
 import { INotification } from "../notification";
 import { ICmt, IProduct } from "../products";
 import { ISale } from "../sale";
@@ -27,6 +28,11 @@ export interface initialVoucher {
   vouchers: IVoucher[] | [];
   voucher: IVoucher | "";
 }
+export interface initialChart {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  list: any[] | [];
+  data: any[] | [];
+}
 export interface initialSale {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   sales: ISale[] | [];
@@ -39,6 +45,10 @@ export interface initialCmt {
   comment: ICmt | "";
   totalDocs: number;
 }
+export interface initialChat {
+  loading: "idle" | "pending" | "fulfilled" | "failed";
+  userChat: UserChatByEmail;
+}
 export interface initialCategory {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   categories: ICategory[] | [];
@@ -49,7 +59,7 @@ export interface initialNotification {
   loading: "idle" | "pending" | "fulfilled" | "failed";
   notifications: INotification[] | [];
   notification: INotification | "";
-  listSend:INotification[]|[]
+  listSend: INotification[] | []
 }
 export interface IStateProduct {
   product: {
@@ -79,6 +89,13 @@ export interface IStateVoucher {
     totalDocs: number;
   };
 }
+export interface IStateChart {
+  chart: {
+    list: any[];
+    data: any[];
+    loading: string;
+  };
+}
 export interface IStateSale {
   sale: {
     sales: ISale[];
@@ -101,7 +118,13 @@ export interface IStateNotification {
     notification: INotification;
     loading: "idle" | "pending" | "fulfilled" | "failed";
     totalDocs: number;
-    listSend:INotification[]
+    listSend: INotification[]
+  };
+}
+export interface IStateChat {
+  chat: {
+    loading: "idle" | "pending" | "fulfilled" | "failed";
+    userChat: UserChatByEmail;
   };
 }
 export interface IStateCategory {

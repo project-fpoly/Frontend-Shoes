@@ -11,7 +11,7 @@ import UserManager from '../pages/Admin/Users'
 import CommentManager from '../pages/Admin/Comment'
 import CategoriesManager from '../pages/Admin/Categories'
 import ProductsManager from '../pages/Admin/Products'
-import OrderManager from '../pages/Admin/Order'
+import OrderTab from '../pages/Admin/Order/OrderTab.tsx'
 import NotificationsAdmin from '../pages/Admin/Notification'
 import Help from '../pages/Help/index.tsx'
 import Password from '../pages/client/password'
@@ -54,10 +54,15 @@ import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
 
 import ChatsPage from '../pages/Chat/index.tsx'
+import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
 
-
 import { PrivateCheckout } from './PrivateCheckout.tsx'
+import { fetchList } from '../features/dashboard/index.tsx'
+import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
+import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
+import Setting from '../components/Profile/Setting/indext.tsx'
+import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -74,22 +79,25 @@ const Router = (user: any) => {
     socket.on('new_user_login', () => {})
     socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
     })
     if (user.user) {
       socket.on('realtimeBill', () => {
         dispatch(getOrderByUsers({}))
       })
     }
-    socket.on("server_add_product", (data) => {
+    socket.on('server_add_product', (data) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
-    });
-    socket.on("server_update_product", (data) => {
+    })
+    socket.on('server_update_product', (data) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
-    });
+    })
     if (user.user && user.user.role === 'admin') {
+      dispatch(fetchList())
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
@@ -128,16 +136,30 @@ const Router = (user: any) => {
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
           <Route path="/chat" element={<ChatsPage />} />
+          <Route path="/favourite" element={<Favourite />} />
           <Route
             path="/cart/checkout"
             element={
               <PrivateCheckout>
-                <CheckOut />{' '}
+                <CheckOut />
               </PrivateCheckout>
             }
           />
           <Route path="/dashboard" element={<FeatureDashboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route index element={<ProfileContent></ProfileContent>} />
+            <Route path="setting" element={<Setting />}>
+              <Route index element={<AccoutDetails></AccoutDetails>} />
+              <Route
+                path="/profile/setting/cc"
+                element={
+                  <>
+                    <h1>1</h1>
+                  </>
+                }
+              />
+            </Route>
+          </Route>
         </Route>
 
         <Route
@@ -153,7 +175,7 @@ const Router = (user: any) => {
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
-          <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/orders" element={<OrderTab />} />
           <Route path="/admin/sale" element={<SaleManager />} />
           <Route path="/admin/dashboard" element={<FeatureDashboard />} />
 
@@ -166,6 +188,7 @@ const Router = (user: any) => {
             path="/admin/setting/sendNotification"
             element={<SendNotification />}
           />
+          <Route path="/admin/setting/chat" element={<ChatsPage />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

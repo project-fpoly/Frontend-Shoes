@@ -17,8 +17,6 @@ const sortOptions = [
   { label: 'Giảm dần theo lượt xem', value: 'desc_views' },
   { label: 'Tăng dần theo số lượng bán', value: 'asc_sold' },
   { label: 'Giảm dần theo số lượng bán', value: 'desc_sold' },
-  { label: 'Tăng dần theo giảm giá', value: 'asc_sale' },
-  { label: 'Giảm dần theo giảm giá', value: 'desc_sale' },
   { label: 'Tăng dần theo đánh giá', value: 'asc_rate' },
   { label: 'Giảm dần theo đánh giá', value: 'desc_rate' },
   { label: 'Tăng dần theo ngày tạo', value: 'asc_createdAt' },
@@ -97,24 +95,28 @@ const Filter = (props: FilterProps) => {
   const handleGenderChange = (gender: string) => {
     setSelectedGender(gender);
   };
+  //category
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
   //Delete
   const [currentStep, setCurrentStep] = useState<number>(0);
   const onChange = (current: number) => {
     setCurrentStep(current);
-    // Tại đây, bạn có thể thực hiện các hành động tương ứng với việc chuyển đổi bước
-    // Ví dụ: gọi hàm handleDeletedChange với giá trị tương ứng với bước
     handleDeletedChange(current === 0 ? "" : current === 1 ? false : true);
   };
   const [isDeleted, setIsDeleted] = useState<boolean | string>("");
   const handleDeletedChange = (deleted: boolean | string) => {
     setIsDeleted(deleted);
   };
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+//Sale
+  //Gender
+  const [selectedPriceSale, setSelectedPriceSale] = useState<number | string>("");
+  const handlePriceSaleChange = (priceSale: number | string) => {
+    setSelectedPriceSale(priceSale);
   };
-
-
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showFloatButton, setShowFloatButton] = useState<boolean>(true);
@@ -131,8 +133,6 @@ const Filter = (props: FilterProps) => {
       | 'desc_views'
       | 'asc_sold'
       | 'desc_sold'
-      | 'asc_sale'
-      | 'desc_sale'
       | 'asc_rate'
       | 'desc_rate'
     );
@@ -148,6 +148,8 @@ const Filter = (props: FilterProps) => {
     setIsDeleted("");
     setSelectedCategory("")
     setCurrentStep(0);
+    setSelectedPriceSale("")
+
   };
 
   useEffect(() => {
@@ -165,6 +167,7 @@ const Filter = (props: FilterProps) => {
         color: selectedColor,
         gender: selectedGender,
         isDeleted: isDeleted,
+        priceSale: selectedPriceSale,
       };
 
       dispatch(getProductsWithFilters(filters));
@@ -182,6 +185,7 @@ const Filter = (props: FilterProps) => {
     selectedColor,
     selectedGender,
     isDeleted,
+    selectedPriceSale,
     props.page,
     props.pageSize,
     props.searchKeyword,
@@ -195,18 +199,18 @@ const Filter = (props: FilterProps) => {
     <>
       {showFloatButton && (
         <FloatButton
-        onClick={handleToggleFilter}
-        shape="square"
-        type="primary"
-        style={{
-          position: "fixed",
-          top: `calc(25vh - 25px)`, // 3/4 chiều cao bên dưới của trình duyệt
-          right: 44,
-          height: 25
-        }}
-        icon={<FilterOutlined />}
-      />
-      
+          onClick={handleToggleFilter}
+          shape="square"
+          type="primary"
+          style={{
+            position: "fixed",
+            top: `calc(25vh - 25px)`, // 3/4 chiều cao bên dưới của trình duyệt
+            right: 44,
+            height: 25
+          }}
+          icon={<FilterOutlined />}
+        />
+
       )}
       <Drawer
         title="Bộ lọc"
@@ -304,6 +308,16 @@ const Filter = (props: FilterProps) => {
               <Steps.Step title="Đã xóa" />
             </Steps>
           </Panel>
+      
+          <Panel header="Giảm giá" key="9">
+            <Radio.Group onChange={(e) => handlePriceSaleChange(e.target.value)} value={selectedGender}>
+              <Radio.Button value="1">Có Sale</Radio.Button>
+              <Radio.Button value="0">Không có Sale</Radio.Button>
+              <Radio.Button value="">Tất cả</Radio.Button>
+            </Radio.Group>
+          </Panel>
+
+
 
         </Collapse>
       </Drawer>

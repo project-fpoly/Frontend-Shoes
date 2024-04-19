@@ -1,4 +1,4 @@
-import { Menu } from 'antd'
+import { ConfigProvider, Menu } from 'antd'
 
 import type { MenuProps } from 'antd'
 import { Link } from 'react-router-dom'
@@ -16,10 +16,23 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/greaup">
-          <h1 className="font-bold">Products</h1>
+          <h1 className="hover:text-black visited:text-black font-bold">Products</h1>
         </Link>
       ),
-      key: 'Products'
+      key: 'Products', children: [
+        {
+          type: 'group',
+          children: [
+            {
+              label: <><h1 className='sads'>hehe</h1></>,
+              key: 'setting:1',
+            },
+            {
+              label: 'Option 2',
+              key: 'setting:2',
+            },
+          ],
+        }]
     },
     {
       label: (
@@ -55,7 +68,19 @@ const MenuNav = () => {
     },
   ]
   return (
-    <Menu className="flex w-[800px] pl-52 " mode="horizontal" items={items} />
+    <ConfigProvider
+      theme={{
+        components: {
+          Menu: {
+            dangerItemActiveBg: '#fff2f0',
+            itemSelectedColor: 'black',
+            itemHoverBg: 'gray'
+          },
+        },
+      }}
+    >
+      <Menu className="flex w-[800px] pl-52 " mode="horizontal" items={items} />
+    </ConfigProvider>
   )
 }
 

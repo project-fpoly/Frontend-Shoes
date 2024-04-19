@@ -38,9 +38,12 @@ const Cart = () => {
   const navigate = useNavigate()
 
   const accessToken = localStorage.getItem('accessToken')
-  let totalPrice = 0
+  let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity
+    totalCart += item.price * item.quantity
+  })
+  cart?.cartItems.forEach((item: any) => {
+    totalCart += item.price * item.quantity
   })
 
   const { products } = useSelector((state: any) => state.product)
@@ -203,7 +206,7 @@ const Cart = () => {
                     : cartSession?.cartItems.length}{' '}
                   items
                 </span>
-                {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
+                {formatCurrency(totalCart)}
               </p>
             </div>
             {cart
@@ -456,9 +459,7 @@ const Cart = () => {
                     Subtotal
                     <FaQuestionCircle className="ml-2" />
                   </div>
-                  <div>
-                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
-                  </div>
+                  <div>{formatCurrency(totalCart)}</div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <div>Estimated Delivery & Handling</div>
@@ -469,9 +470,7 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between items-center my-4 lg:my-5">
                   <div>Total</div>
-                  <div>
-                    {formatCurrency(cart ? cart?.totalPrice : totalPrice)}
-                  </div>
+                  <div>{formatCurrency(totalCart)}</div>
                 </div>
                 <div className="hidden lg:block">
                   <hr />

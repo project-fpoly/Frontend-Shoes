@@ -40,6 +40,7 @@ export const addToCart = createAsyncThunk(
           {
             size: cartItem.size,
             product: cartItem.product,
+            price: cartItem.price,
           },
           {
             headers: {
@@ -57,6 +58,7 @@ export const addToCart = createAsyncThunk(
           {
             size: cartItem.size,
             product: cartItem.product,
+            price: cartItem.price,
           },
           {
             headers: {
@@ -90,7 +92,7 @@ export const getCartItems = createAsyncThunk(
         },
       )
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }),
+        fetchAllProducts({ page: 1, pageSize: 40, searchKeyword: '' }),
       )
 
       return response.data
@@ -108,6 +110,7 @@ export const createOrder = createAsyncThunk(
       totalPrice,
       payment_method,
       voucherr,
+      voucherName,
     }: {
       cartItems: Array<{
         product: string
@@ -125,6 +128,7 @@ export const createOrder = createAsyncThunk(
       totalPrice: number
       payment_method: string
       voucherr?: string
+      voucherName?: string
     },
     thunkApi,
   ) => {
@@ -133,7 +137,14 @@ export const createOrder = createAsyncThunk(
       if (accessToken) {
         const response = await axios.post(
           'http://localhost:9000/api/order/bills/',
-          { shippingAddress, cartItems, payment_method, totalPrice, voucherr },
+          {
+            shippingAddress,
+            cartItems,
+            payment_method,
+            totalPrice,
+            voucherr,
+            voucherName,
+          },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -148,7 +159,14 @@ export const createOrder = createAsyncThunk(
       } else {
         const response = await axios.post(
           'http://localhost:9000/api/order/bills/',
-          { cartItems, shippingAddress, payment_method, totalPrice, voucherr },
+          {
+            cartItems,
+            shippingAddress,
+            payment_method,
+            totalPrice,
+            voucherr,
+            voucherName,
+          },
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -198,6 +216,44 @@ export const removeFromCart = createAsyncThunk(
           },
         )
         notification.success({ message: response.data.message })
+        return response.data
+      }
+    } catch (error: any) {
+      notification.error({ message: error.message })
+
+      throw new Error(error.response.data.message)
+    }
+  },
+)
+export const deleteCart = createAsyncThunk(
+  'cart/deleteCart',
+  async (cartId: string, thunkApi) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken')
+      if (accessToken) {
+        const response = await axios.delete(
+          `http://localhost:9000/api/order/cart/${cartId}`,
+          {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+          },
+        )
+        thunkApi.dispatch(getCartItems())
+
+        return response.data
+      } else {
+        const response = await axios.delete(
+          `http://localhost:9000/api/order/carts/${cartId}`,
+          {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+          },
+        )
         return response.data
       }
     } catch (error: any) {
@@ -301,6 +357,8 @@ const cartSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false
         state.order = action.payload
+        console.log(action.payload)
+        console.log(state)
         state.error = null
       })
       .addCase(createOrder.rejected, (state, action) => {
@@ -318,6 +376,20 @@ const cartSlice = createSlice({
         state.error = null
       })
       .addCase(removeFromCart.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+    builder
+      .addCase(deleteCart.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(deleteCart.fulfilled, (state, action) => {
+        state.cartItems = null
+        state.loading = false
+        state.error = null
+      })
+      .addCase(deleteCart.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

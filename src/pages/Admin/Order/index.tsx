@@ -33,9 +33,9 @@ import { IUsers } from '../../../common/users'
 import DetailOrder from '../../../components/Admin/Order/DetailOrder'
 import FormUpdateMany from '../../../components/Admin/Order/FormUpdateMany'
 import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableAdminOrder'
-const OrderManager = (a) => {
-  console.log(a)
-
+const OrderManager = (data: any) => {
+  const orders = data.data
+  const pagination = data.pagi
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -44,20 +44,18 @@ const OrderManager = (a) => {
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [order, setOrder] = useState<IBill>()
-  const [dayStart, setDayStart] = useState('')
-  const [dayEnd, setDayEnd] = useState('')
-  const [Search, setSearch] = useState('')
+  const [dayStart, setDayStart] = useState(null)
+  const [dayEnd, setDayEnd] = useState(null)
+  const [Search, setSearch] = useState(null)
   const [selectedValue, setSelectedValue] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
   const [loading, setLoading] = useState(false)
-  const { orders, pagination, isLoading } = useSelector(
-    (state: RootState) => state.order,
-  )
+  const { isLoading } = useSelector((state: RootState) => state.order)
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { users } = useSelector((state: IUsers) => state.user)
   useEffect(() => {
-    console.log(pagination.totalOrders)
+    console.log(currentPage)
     dispatch(
       fetchOrders({
         page: currentPage,
@@ -68,7 +66,6 @@ const OrderManager = (a) => {
       }),
     )
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
-
   const toggleModal = (orders: IBill) => {
     setIsModalUpdateOpen(!isModalUpdateOpen)
     setOrder(orders)
@@ -219,22 +216,7 @@ const OrderManager = (a) => {
       ),
     },
     {
-      title: (
-        <span>
-          <Select
-            placeholder="is Delevered"
-            onChange={(value) => searchOrder(value)}
-            value={selectedValue}
-          >
-            <Select.Option value="">Tất cả trạng thái</Select.Option>
-            <Select.Option value="Chờ xác nhận">Chờ xác nhận</Select.Option>
-            <Select.Option value="Chờ lấy hàng">Chờ lấy hàng</Select.Option>
-            <Select.Option value="Đang giao hàng">Đang giao hàng</Select.Option>
-            <Select.Option value="Đã giao hàng">Đã giao hàng</Select.Option>
-            <Select.Option value="Đã hủy">Đã hủy</Select.Option>
-          </Select>
-        </span>
-      ),
+      title: 'Is Delivered',
       dataIndex: 'isDelivered',
       align: 'center',
       className: 'action-cell',
@@ -333,7 +315,10 @@ const OrderManager = (a) => {
       align: 'center',
       className: 'action-cell',
       render: (_, record) => {
-        if (record.isDelivered === 'Đã giao hàng') {
+        if (
+          record.isDelivered !== 'Đã hủy' &&
+          record.isDelivered !== 'Chờ xác nhận'
+        ) {
           return null
         } else {
           return (
@@ -367,6 +352,7 @@ const OrderManager = (a) => {
     totalPrice: order?.totalPrice || 0,
     isPaid: order?.isPaid || false,
     isDelivered: order?.isDelivered || '0000000000',
+    voucher: order?.voucher || 'không có',
     trackingNumber: order?.trackingNumber || 'Abcxyz',
     createdAt: order?.createdAt || '2003',
     updatedAt: order?.updatedAt || 'male',
@@ -382,19 +368,7 @@ const OrderManager = (a) => {
         <div className="flex items-end">
           <HeaderTableAdminOrder
             showModal={() => {}}
-            onSubmitt={(value) =>
-              value
-                ? dispatch(SearchOrder(value as any))
-                : dispatch(
-                    fetchOrders({
-                      page: currentPage,
-                      limit: pageSize,
-                      search: Search,
-                      start: dayStart,
-                      end: dayEnd,
-                    }),
-                  )
-            }
+            onSubmitt={(value) => searchOrder(value)}
             name={'Orders '}
           />
           <DatePicker
@@ -471,7 +445,7 @@ const OrderManager = (a) => {
               pagination={{
                 current: currentPage,
                 pageSize: pageSize,
-                total: pagination.totalPages * pageSize,
+                total: pagination?.totalPages * pageSize,
                 onChange: handlePageChange,
               }}
               onRow={(record) => ({

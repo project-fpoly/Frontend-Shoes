@@ -52,7 +52,8 @@
     "socket.io-client": "^4.7.4",
     "swiper": "^11.0.5",
     "swiper-react": "^1.0.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
