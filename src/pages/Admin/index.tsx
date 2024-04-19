@@ -33,7 +33,9 @@ const AdminDashboard = () => {
               if (item.type === 'bar') {
                 return <BarCompopent id={item._id} />
               } else if (item.type === 'all') {
-                return <AllCompopent id={item._id} />
+                return <Col span={24}>
+                <AllCompopent id={item._id} />
+                </Col>
               }
               return null
             })}

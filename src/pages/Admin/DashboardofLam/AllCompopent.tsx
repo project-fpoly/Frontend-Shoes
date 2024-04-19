@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Row, Col, Table } from 'antd'
+import { Card, Row, Col, Table, Button, Drawer } from 'antd'
 import { getChart } from '../../../services/dashboard'
 import { FallOutlined, RiseOutlined } from '@ant-design/icons'
 
 const AllCompopent = ({ id }: { id: string }) => {
   const [data, setData] = useState<any>({})
+  const [open, setOpen] = useState(false)
 
+  const showDrawer = () => {
+    setOpen(true)
+  }
+
+  const onClose = () => {
+    setOpen(false)
+  }
   useEffect(() => {
     getChart(id, '2003-03-26', '2024-03-26', 'day').then((resp) => {
       const data = resp.data[0]
@@ -52,7 +60,7 @@ const AllCompopent = ({ id }: { id: string }) => {
   ]
   return (
     <div>
-      <Row gutter={24}>
+      <Row gutter={[16, 16]}>
         <Col span={8}>
           <Card
             title="Doanh thu trong ngày"
@@ -61,6 +69,11 @@ const AllCompopent = ({ id }: { id: string }) => {
               color: 'blue',
               fontWeight: 'bold',
             }}
+            extra={
+              <Button type="link" onClick={showDrawer}>
+                More
+              </Button>
+            }
           >
             <b>
               {(data.data?.billstoday || 0).toLocaleString('vi-VN', {
@@ -118,7 +131,11 @@ const AllCompopent = ({ id }: { id: string }) => {
             </b>
           </Card>
         </Col>
-        <Col span={4}>
+        
+      </Row>
+      <Drawer title="Basic Drawer" onClose={onClose} open={open} width={"40%"}>
+      <Row gutter={[10,10]}>
+      <Col span={8}>
           <Card
             title="Hóa đơn"
             headStyle={{
@@ -130,7 +147,7 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalAllBill}</p>
           </Card>
         </Col>
-        <Col span={4}>
+        <Col span={8}>
           <Card
             title="Người dùng"
             headStyle={{
@@ -142,7 +159,7 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalUser}</p>
           </Card>
         </Col>
-        <Col span={4}>
+        <Col span={8}>
           <Card
             title="Số sản phẩm"
             headStyle={{
@@ -154,7 +171,6 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalProduct}</p>
           </Card>
         </Col>
-
         <Col span={24}>
           <Card>
             <Table
@@ -166,6 +182,7 @@ const AllCompopent = ({ id }: { id: string }) => {
           </Card>
         </Col>
       </Row>
+      </Drawer>
     </div>
   )
 }
