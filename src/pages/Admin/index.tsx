@@ -4,6 +4,7 @@ import { RootState } from '../../redux/store'
 import BarCompopent from './DashboardofLam/BarCompopent'
 import { DashboardOutlined } from '@ant-design/icons'
 import AllCompopent from './DashboardofLam/AllCompopent'
+import TopProduct from './DashboardofLam/TopProduct'
 const { Content } = Layout
 const { Title } = Typography
 
@@ -33,7 +34,13 @@ const AdminDashboard = () => {
               if (item.type === 'bar') {
                 return <BarCompopent id={item._id} />
               } else if (item.type === 'all') {
-                return <AllCompopent id={item._id} />
+                return <Col span={24}>
+                <AllCompopent id={item._id} />
+                </Col>
+              }else if (item.type === 'top') {
+                return <Col span={12}>
+                <TopProduct id={item._id}/>
+                </Col>
               }
               return null
             })}

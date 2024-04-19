@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Row, Col, Table } from 'antd'
+import { Card, Row, Col, Table, Button, Drawer } from 'antd'
 import { getChart } from '../../../services/dashboard'
+import { FallOutlined, RiseOutlined } from '@ant-design/icons'
 
 const AllCompopent = ({ id }: { id: string }) => {
   const [data, setData] = useState<any>({})
+  const [open, setOpen] = useState(false)
 
+  const showDrawer = () => {
+    setOpen(true)
+  }
+
+  const onClose = () => {
+    setOpen(false)
+  }
   useEffect(() => {
     getChart(id, '2003-03-26', '2024-03-26', 'day').then((resp) => {
       const data = resp.data[0]
@@ -51,10 +60,84 @@ const AllCompopent = ({ id }: { id: string }) => {
   ]
   return (
     <div>
-      <Row gutter={24}>
-        <Col span={6}>
+      <Row gutter={[16, 16]}>
+        <Col span={8}>
           <Card
-            title="Tổng số hóa đơn"
+            title="Doanh thu trong ngày"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+            extra={
+              <Button type="link" onClick={showDrawer}>
+                More
+              </Button>
+            }
+          >
+            <b>
+              {(data.data?.billstoday || 0).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </b>
+            {data.data?.percentageChange ? (
+              data.data?.percentageChange > 0 ? (
+                <span style={{ color: 'green' }}>
+                  <RiseOutlined /> {data.data?.percentageChange}%
+                </span>
+              ) : (
+                <span style={{ color: 'red' }}>
+                  <FallOutlined /> {data.data?.percentageChange}%
+                </span>
+              )
+            ) : (
+              <p>-</p>
+            )}
+          </Card>
+        </Col>
+
+        <Col span={8}>
+          <Card
+            title="Tổng doanh thu"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+          >
+            <b>
+              {(data.data?.totalRevenue || 0).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </b>
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card
+            title="Doanh thu dự kiến"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+          >
+            <b>
+              {(data.data?.expectedRevenueTotal || 0).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </b>
+          </Card>
+        </Col>
+        
+      </Row>
+      <Drawer title="Basic Drawer" onClose={onClose} open={open} width={"40%"}>
+      <Row gutter={[10,10]}>
+      <Col span={8}>
+          <Card
+            title="Hóa đơn"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
@@ -64,27 +147,9 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalAllBill}</p>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Card
-            title="Tổng doanh thu"
-            headStyle={{
-              backgroundColor: '#f0f2f5',
-              color: 'blue',
-              fontWeight: 'bold',
-            }}
-          >
-            <p>
-              {(data.data?.totalRevenue || 0).toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </p>
-          </Card>
-        </Col>
-
-        <Col span={6}>
-          <Card
-            title="Tổng số người dùng"
+            title="Người dùng"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
@@ -94,9 +159,9 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalUser}</p>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Card
-            title="Tổng số sản phẩm"
+            title="Số sản phẩm"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
@@ -106,7 +171,6 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalProduct}</p>
           </Card>
         </Col>
-
         <Col span={24}>
           <Card>
             <Table
@@ -118,6 +182,7 @@ const AllCompopent = ({ id }: { id: string }) => {
           </Card>
         </Col>
       </Row>
+      </Drawer>
     </div>
   )
 }
