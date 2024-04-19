@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Row, Col, Table } from 'antd'
 import { getChart } from '../../../services/dashboard'
+import { FallOutlined, RiseOutlined } from '@ant-design/icons'
 
 const AllCompopent = ({ id }: { id: string }) => {
   const [data, setData] = useState<any>({})
@@ -54,7 +55,35 @@ const AllCompopent = ({ id }: { id: string }) => {
       <Row gutter={24}>
         <Col span={6}>
           <Card
-            title="Tổng số hóa đơn"
+            title="Doanh thu trong ngày"
+            headStyle={{
+              backgroundColor: '#f0f2f5',
+              color: 'blue',
+              fontWeight: 'bold',
+            }}
+          >
+            <b>
+              {(data.data?.billstoday || 0).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </b>
+            {data.data?.percentageChange ? (
+              data.data?.percentageChange > 0 ? (
+                <p style={{ color: 'green' }}>
+                  <RiseOutlined /> {data.data?.percentageChange}
+                </p>
+              ) : (
+                <p style={{ color: 'red' }}><FallOutlined /> {data.data?.percentageChange}</p>
+              )
+            ) : (
+              <p>-</p>
+            )}
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card
+            title="Hóa đơn"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
@@ -73,18 +102,18 @@ const AllCompopent = ({ id }: { id: string }) => {
               fontWeight: 'bold',
             }}
           >
-            <p>
+            <b>
               {(data.data?.totalRevenue || 0).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND',
               })}
-            </p>
+            </b>
           </Card>
         </Col>
 
-        <Col span={6}>
+        <Col span={4}>
           <Card
-            title="Tổng số người dùng"
+            title="Người dùng"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
@@ -94,9 +123,9 @@ const AllCompopent = ({ id }: { id: string }) => {
             <p>{data.data?.totalUser}</p>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card
-            title="Tổng số sản phẩm"
+            title="Số sản phẩm"
             headStyle={{
               backgroundColor: '#f0f2f5',
               color: 'blue',
