@@ -7,6 +7,7 @@ import {
   deleteUsers,
   getOneUsers,
   getUsers,
+  restoreUsers,
   updateUsers,
 } from '../../services/auth'
 import { IUsers } from '../../common/users'
@@ -107,6 +108,19 @@ export const deletee2User = createAsyncThunk(
     }
   },
 )
+export const restoreUser = createAsyncThunk(
+  '/user/restoreUsers',
+  async (id: string, thunkApi) => {
+    try {
+      const response = await restoreUsers(id)
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:true}))
+      thunkApi.dispatch(fetchAllNotification(""))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
 /// đây là chỗ chọc vào kho để lấy db
 export const userSlice = createSlice({
   name: 'user',
@@ -196,6 +210,20 @@ export const userSlice = createSlice({
       })
     })
     builder.addCase(deletee2User.fulfilled, (state) => {
+      state.loading = 'fulfilled'
+    })
+    builder.addCase(restoreUser.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(restoreUser.rejected, (state, action) => {
+      state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to delete user.',
+      })
+    })
+    builder.addCase(restoreUser.fulfilled, (state) => {
       state.loading = 'fulfilled'
     })
   },

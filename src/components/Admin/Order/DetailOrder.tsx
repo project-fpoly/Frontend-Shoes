@@ -5,7 +5,7 @@ import moment from 'moment'
 import {} from '../../../common/redux/type'
 import { IUsers } from '../../../common/users'
 import { ColumnsType } from 'antd/es/table'
-
+import { formatCurrency } from '../../../hooks/utils'
 const DetailOrder = (order: IBill, products: any, users: IUsers) => {
   // const { users } = useSelector((state: IUsers) => state.user);
   const getProductName = (shoeId: string) => {
@@ -19,7 +19,6 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
   }
   console.log(order)
   const { cartItems } = order
-  console.log(cartItems)
   const quantity = order.cartItems.map((item) => item.quantity)
   const { fullname, address, email, phone } = order.shippingAddress
   const columns: ColumnsType<CartItem> = [
@@ -36,6 +35,7 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
     {
       title: 'Price',
       dataIndex: 'price',
+      render: (price: any) => <span>{formatCurrency(price)}</span>,
       align: 'center',
     },
     {
@@ -80,7 +80,7 @@ const DetailOrder = (order: IBill, products: any, users: IUsers) => {
             </Row>
           </Descriptions.Item>
           <Descriptions.Item label="Total">
-            {order.totalPrice}
+            {formatCurrency(order.totalPrice)}
           </Descriptions.Item>
           <Descriptions.Item label="Paid">
             {!order.isPaid ? 'Chưa thanh toán' : 'Đã thanh toán'}

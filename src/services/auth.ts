@@ -146,3 +146,21 @@ export const delete2Users = async (userIds: string) => {
     throw error
   }
 }
+export const restoreUsers = async (userIds: string) => {
+  try {
+    const response: AxiosResponse = await instance.delete(
+      (`/api/auth/user/restore/${userIds}`),
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    )
+    notification.success(response.data)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}

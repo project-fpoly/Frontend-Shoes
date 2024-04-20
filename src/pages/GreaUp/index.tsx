@@ -22,6 +22,8 @@ const GreaUp = () => {
 
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
+  console.table(shoes);
+
   const loading = useSelector((state: IStateProduct) => state.product.loading)
   useEffect(() => {
     dispact(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))

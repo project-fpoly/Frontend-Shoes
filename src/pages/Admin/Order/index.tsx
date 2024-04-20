@@ -33,9 +33,11 @@ import { IUsers } from '../../../common/users'
 import DetailOrder from '../../../components/Admin/Order/DetailOrder'
 import FormUpdateMany from '../../../components/Admin/Order/FormUpdateMany'
 import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableAdminOrder'
+import { formatCurrency } from '../../../hooks/utils'
 const OrderManager = (data: any) => {
   const orders = data.data
   const pagination = data.pagi
+  const key = data.tabKey
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -63,6 +65,7 @@ const OrderManager = (data: any) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
+        key: key,
       }),
     )
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
@@ -80,6 +83,7 @@ const OrderManager = (data: any) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
+        key: key,
       }),
     )
   }
@@ -197,6 +201,7 @@ const OrderManager = (data: any) => {
     {
       title: 'Total',
       dataIndex: 'totalPrice',
+      render: (totalPrice: any) => <span>{formatCurrency(totalPrice)}</span>,
       align: 'center',
     },
     {

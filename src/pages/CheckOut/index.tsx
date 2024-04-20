@@ -19,7 +19,7 @@ import { fetchVoucher, fetchOneVoucher } from '../../features/voucher'
 
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
-import type { InputRef } from 'antd'
+import { formatCurrency } from '../../hooks/utils'
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
@@ -37,7 +37,6 @@ const CheckOut = () => {
   const [voucherr, setVoucher] = useState('')
   const [voucherName, setVoucherName] = useState('')
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
-  console.log(voucherName)
   const accessToken = localStorage.getItem('accessToken')
   let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
@@ -159,6 +158,7 @@ const CheckOut = () => {
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
               voucherName,
             }),
           )
@@ -183,6 +183,7 @@ const CheckOut = () => {
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
               voucherName,
             }),
           )
@@ -198,6 +199,7 @@ const CheckOut = () => {
             )
           }
         }
+        console.log(redirectUrl)
 
         if (redirectUrl) {
           window.open(redirectUrl.payload, '_blank')
@@ -302,10 +304,13 @@ const CheckOut = () => {
                 <Form.Item
                   name="firstName"
                   rules={[
-                    { required: true, message: 'Please enter your last name!' },
                     {
-                      min: 7,
-                      message: 'First name must be at least 10 characters.',
+                      required: true,
+                      message: 'Please enter your first name!',
+                    },
+                    {
+                      min: 2,
+                      message: 'First name must be at least 2 characters.',
                     },
                   ]}
                 >
@@ -323,7 +328,7 @@ const CheckOut = () => {
                     { required: true, message: 'Please enter your last name!' },
                     {
                       min: 2,
-                      message: 'First name must be at least 4 characters.',
+                      message: 'First name must be at least 2 characters.',
                     },
                   ]}
                 >
@@ -338,7 +343,11 @@ const CheckOut = () => {
                 <Form.Item
                   name="email"
                   rules={[
-                    { required: true, message: 'Please enter your Email!' },
+                    {
+                      required: true,
+                      message: 'Please enter your Email!',
+                      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Thêm pattern vào rules để kiểm tra
+                    },
                   ]}
                 >
                   <Input
@@ -504,14 +513,12 @@ const CheckOut = () => {
           <div className="text-lg font-normal">
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Subtotal</div>
-              <div className="text-[#6b7280]">
-                {totalCart} <span>đ</span>
-              </div>
+              <div className="text-[#6b7280]">{formatCurrency(totalCart)}</div>
             </div>
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Delivery/Shipping</div>
               <div className="text-[#6b7280]">
-                {district ? shippingOrder?.service_fee + 'đ' : 'Free'}
+                {district ? formatCurrency(shippingOrder?.service_fee) : 'Free'}
               </div>
             </div>
             <hr />
@@ -555,10 +562,7 @@ const CheckOut = () => {
             <hr />
             <div className="flex justify-between items-center my-5">
               <div>Total</div>
-              <div>
-                {totalPrice}
-                <span className="font-light">đ</span>
-              </div>
+              <div>{formatCurrency(totalPrice)}</div>
             </div>
             <hr />
           </div>
@@ -580,11 +584,16 @@ const CheckOut = () => {
                         {getProductName(cartItem.product)}
                       </h2>
                       <p className="text-[#6b7280]">
-                        {getCateName(cartItem.product)}
+                        Category: {getCateName(cartItem.product)}
                       </p>
-                      <p className="text-[#6b7280]">{cartItem.size}</p>
-                      <p className="text-[#6b7280]">{cartItem.quantity}</p>
-                      <p className="text-[#6b7280]">{cartItem.price}</p>
+                      <p className="text-[#6b7280]">Size: {cartItem.size}</p>
+                      <p className="text-[#6b7280]">Color: {cartItem.color}</p>
+                      <p className="text-[#6b7280]">
+                        Quantity: {cartItem.quantity}
+                      </p>
+                      <p className="text-[#6b7280]">
+                        Price: {formatCurrency(cartItem.price)}
+                      </p>
                     </div>
                   </>
                 ))}
@@ -602,12 +611,15 @@ const CheckOut = () => {
                         {getProductName(item.product)}
                       </h2>
                       <p className="text-[#6b7280]">
-                        {getCateName(item.product)}
+                        Category: {getCateName(item.product)}
                       </p>
-                      <p className="text-[#6b7280]">{item.size}</p>
-                      <p className="text-[#6b7280]">{item.quantity}</p>
+                      <p className="text-[#6b7280]">Size: {item.size}</p>
+                      <p className="text-[#6b7280]">Color: {item.color}</p>
                       <p className="text-[#6b7280]">
-                        {item.price * item.quantity}
+                        Quantity: {item.quantity}
+                      </p>
+                      <p className="text-[#6b7280]">
+                        Price: {formatCurrency(item.price * item.quantity)}
                       </p>
                     </div>
                   </>
