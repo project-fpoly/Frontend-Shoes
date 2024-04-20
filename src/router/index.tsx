@@ -63,6 +63,8 @@ import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
+import Communication from '../components/Profile/Communication/index.tsx'
+import Privacy from '../components/Profile/Privacy/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -76,8 +78,8 @@ const Router = (user: any) => {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
       }
     })
-    socket.on('new_user_login', () => {})
-    socket.on('log_out', () => {})
+    socket.on('new_user_login', () => { })
+    socket.on('log_out', () => { })
     socket.on('update_user_status', () => {
       dispatch(
         fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
@@ -150,13 +152,10 @@ const Router = (user: any) => {
             <Route index element={<ProfileContent></ProfileContent>} />
             <Route path="setting" element={<Setting />}>
               <Route index element={<AccoutDetails></AccoutDetails>} />
+              <Route path="/profile/setting/communication-preferences" element={<Communication></Communication>} />
               <Route
-                path="/profile/setting/cc"
-                element={
-                  <>
-                    <h1>1</h1>
-                  </>
-                }
+                path="/profile/setting/privacy"
+                element={<Privacy></Privacy>}
               />
             </Route>
           </Route>

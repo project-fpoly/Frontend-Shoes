@@ -33,10 +33,10 @@ export const fetchAllUsers = createAsyncThunk(
     page: number
     pageSize: number
     search: string
-    isDelete:boolean
+    isDelete: boolean
   }) => {
     try {
-      const respone = await getUsers(page, pageSize, search,isDelete)
+      const respone = await getUsers(page, pageSize, search, isDelete)
       return respone
     } catch (error) {
       console.log('error')
@@ -49,8 +49,6 @@ export const fetchOneUsers = createAsyncThunk(
   async () => {
     try {
       const respone = await getOneUsers()
-      console.log(respone)
-
       return respone
     } catch (error) {
       console.log('error')
@@ -75,7 +73,19 @@ export const updateUser = createAsyncThunk(
   async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
     try {
       const response = await updateUsers(newUser, id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
+export const updateUserClient = createAsyncThunk(
+  '/user/updateUserClient',
+  async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
+    try {
+      const response = await updateUsers(newUser, id)
+      thunkApi.dispatch(fetchOneUsers())
       return response
     } catch (error) {
       return isRejected('Error updating user')
@@ -87,7 +97,7 @@ export const deleteeUser = createAsyncThunk(
   async (id: string[], thunkApi) => {
     try {
       const response = await deleteUsers(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
       thunkApi.dispatch(fetchAllNotification(""))
       return response
     } catch (error) {
@@ -100,7 +110,7 @@ export const deletee2User = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await delete2Users(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:false}))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
       thunkApi.dispatch(fetchAllNotification(""))
       return response
     } catch (error) {
@@ -113,7 +123,7 @@ export const restoreUser = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await restoreUsers(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' ,isDelete:true}))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: true }))
       thunkApi.dispatch(fetchAllNotification(""))
       return response
     } catch (error) {
