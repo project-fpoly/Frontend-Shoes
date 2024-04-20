@@ -19,20 +19,7 @@ const MenuNav = () => {
           <h1 className="hover:text-black visited:text-black font-bold">Products</h1>
         </Link>
       ),
-      key: 'Products', children: [
-        {
-          type: 'group',
-          children: [
-            {
-              label: <><h1 className='sads'>hehe</h1></>,
-              key: 'setting:1',
-            },
-            {
-              label: 'Option 2',
-              key: 'setting:2',
-            },
-          ],
-        }]
+      key: 'Products',
     },
     {
       label: (
