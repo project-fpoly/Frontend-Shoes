@@ -24,7 +24,7 @@ interface Props {
 }
 const InfoShoe = (props: Props) => {
   const { shoe, category } = props
-  console.log(shoe);
+  console.log(shoe)
 
   const state = useSelector((state: any) => state.fav.favItems.fav)
   const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
@@ -227,7 +227,7 @@ const InfoShoe = (props: Props) => {
             ) : (
               <button
                 onClick={() =>
-                  state?.user && accessToken ? addToFavv() : navigate('/signin')
+                  accessToken ? addToFavv() : navigate('/signin')
                 }
                 className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >

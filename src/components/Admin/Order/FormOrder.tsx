@@ -92,7 +92,7 @@ const FormOrder: React.FC<
         name="user"
         rules={[{ required: true, message: 'Vui lòng nhập người dùng' }]}
       >
-        <Input />
+        <Input disabled />
       </Form.Item>
       <Form.Item
         label="Full Name"
@@ -127,7 +127,7 @@ const FormOrder: React.FC<
         name="totalPrice"
         rules={[{ required: true, message: 'Vui lòng nhập tổng giá' }]}
       >
-        <Input />
+        <Input disabled />
       </Form.Item>
       <Form.Item
         label="Is Paid"
