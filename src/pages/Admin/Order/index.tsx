@@ -36,6 +36,7 @@ import HeaderTableAdminOrder from '../../../components/Admin/Layout/HeaderTableA
 const OrderManager = (data: any) => {
   const orders = data.data
   const pagination = data.pagi
+  const key = data.tabKey
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -63,6 +64,7 @@ const OrderManager = (data: any) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
+        key: key,
       }),
     )
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
@@ -80,6 +82,7 @@ const OrderManager = (data: any) => {
         search: Search,
         start: dayStart,
         end: dayEnd,
+        key: key,
       }),
     )
   }

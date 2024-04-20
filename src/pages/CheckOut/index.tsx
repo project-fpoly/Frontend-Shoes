@@ -37,7 +37,6 @@ const CheckOut = () => {
   const [voucherr, setVoucher] = useState('')
   const [voucherName, setVoucherName] = useState('')
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
-  console.log(voucherName)
   const accessToken = localStorage.getItem('accessToken')
   let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
@@ -159,6 +158,7 @@ const CheckOut = () => {
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
               voucherName,
             }),
           )
@@ -183,6 +183,7 @@ const CheckOut = () => {
               shippingAddress,
               payment_method,
               totalPrice,
+              voucherr,
               voucherName,
             }),
           )
@@ -198,6 +199,7 @@ const CheckOut = () => {
             )
           }
         }
+        console.log(redirectUrl)
 
         if (redirectUrl) {
           window.open(redirectUrl.payload, '_blank')
@@ -302,10 +304,13 @@ const CheckOut = () => {
                 <Form.Item
                   name="firstName"
                   rules={[
-                    { required: true, message: 'Please enter your last name!' },
                     {
-                      min: 7,
-                      message: 'First name must be at least 10 characters.',
+                      required: true,
+                      message: 'Please enter your first name!',
+                    },
+                    {
+                      min: 2,
+                      message: 'First name must be at least 2 characters.',
                     },
                   ]}
                 >
@@ -323,7 +328,7 @@ const CheckOut = () => {
                     { required: true, message: 'Please enter your last name!' },
                     {
                       min: 2,
-                      message: 'First name must be at least 4 characters.',
+                      message: 'First name must be at least 2 characters.',
                     },
                   ]}
                 >
@@ -338,7 +343,11 @@ const CheckOut = () => {
                 <Form.Item
                   name="email"
                   rules={[
-                    { required: true, message: 'Please enter your Email!' },
+                    {
+                      required: true,
+                      message: 'Please enter your Email!',
+                      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Thêm pattern vào rules để kiểm tra
+                    },
                   ]}
                 >
                   <Input

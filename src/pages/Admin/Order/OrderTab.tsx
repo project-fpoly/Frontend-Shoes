@@ -7,17 +7,28 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../../redux/store'
 import { fetchOrders } from '../../../features/order'
+import { useState } from 'react'
 import OrderManager from './index'
 export default function OrderTab() {
   const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    dispatch(fetchOrders({}))
-  }, [dispatch])
+  const [selectedKey, setSelectedKey] = useState('0')
   const { orders, pagination, params } = useSelector(
     (state: RootState) => state.order,
   )
-  const a = useSelector((state: RootState) => state.order)
-  console.log(a)
+  const handleTabChange = (key: string) => {
+    console.log('Tab được chọn:', key)
+    setSelectedKey(key)
+  }
+  console.log(selectedKey)
+  useEffect(() => {
+    dispatch(
+      fetchOrders({
+        page: params.page,
+        limit: params.search ? pagination.totalOrders : params.limit,
+        key: selectedKey,
+      }),
+    )
+  }, [dispatch])
   const dataGet = (data: any) =>
     orders?.filter((item: any) => item.isDelivered === data)
   const data1 = dataGet('Chờ xác nhận')
@@ -40,7 +51,6 @@ export default function OrderTab() {
     totalOrder: data3.length,
     totalPages: Math.ceil(data3.length / 10),
   }
-  console.log(data3Pagination)
   const data4 = dataGet('Đã giao hàng')
   const data4Pagination = {
     limit: 10,
@@ -60,7 +70,9 @@ export default function OrderTab() {
     {
       key: '0',
       label: 'Tất cả trạng thái',
-      children: <OrderManager data={orders} pagi={pagination} />,
+      children: (
+        <OrderManager data={orders} pagi={pagination} tabKey={selectedKey} />
+      ),
     },
     {
       key: 'Chờ xác nhận',
@@ -70,6 +82,7 @@ export default function OrderTab() {
         <OrderManager
           data={params.search ? orders : data1}
           pagi={data1Pagination}
+          tabKey={selectedKey}
         />
       ),
     },
@@ -81,6 +94,7 @@ export default function OrderTab() {
         <OrderManager
           data={params.search ? orders : data2}
           pagi={data2Pagination}
+          tabKey={selectedKey}
         />
       ),
     },
@@ -92,6 +106,7 @@ export default function OrderTab() {
         <OrderManager
           data={params.search ? orders : data3}
           pagi={data3Pagination}
+          tabKey={selectedKey}
         />
       ),
     },
@@ -103,6 +118,7 @@ export default function OrderTab() {
         <OrderManager
           data={params.search ? orders : data4}
           pagi={data4Pagination}
+          tabKey={selectedKey}
         />
       ),
     },
@@ -114,6 +130,7 @@ export default function OrderTab() {
         <OrderManager
           data={params.search ? orders : data5}
           pagination={data5Pagination}
+          tabKey={selectedKey}
         />
       ),
     },
@@ -121,7 +138,7 @@ export default function OrderTab() {
 
   return (
     <div className="mt-20 px-10">
-      <Tabs items={items} />
+      <Tabs items={items} onChange={handleTabChange} />
     </div>
   )
 }
