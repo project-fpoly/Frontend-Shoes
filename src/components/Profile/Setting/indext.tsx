@@ -9,14 +9,8 @@ const Setting = () => {
       label: <Link to={'/profile/setting'}><p className='text-[20px] '>Account Detail</p></Link>,
       key: 'Account Detail',
       icon: <FaRegUser size='20' />
-      ,
-    }, {
-      label: <Link to={'cc'}><p className='text-[20px]'>Account Detail</p></Link>,
-      key: 'mail',
-      icon: <FaRegUser size='20' />
-      ,
+      
     }
-
 
   ];
   const [current, setCurrent] = useState('Account Detail');
