@@ -33,7 +33,7 @@ const DetailShoe = () => {
 
   return (
     <>
-      <div className="lg:flex justify-center mt-20 lg:mx-[200px] mx-4 gap-20">
+      <div className="flex flex-col items-center lg:items-start lg:flex-row justify-center mt-0 lg:mt-20 lg:mx-[200px] mx-4 gap-5 lg:gap-20">
         <Slide shoe={shoe}></Slide>
         <InfoShoe shoe={shoe} category={category}></InfoShoe>
       </div>

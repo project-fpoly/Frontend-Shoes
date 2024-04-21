@@ -4,6 +4,7 @@ import { FaRegUser } from "react-icons/fa";
 import { Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom'; import { MdOutlineMailOutline } from "react-icons/md";
 import { MdOutlineVerifiedUser } from "react-icons/md";
+import { MdOutlineSettingsSuggest } from "react-icons/md";
 
 const Setting = () => {
   const items: MenuProps['items'] = [
@@ -16,11 +17,15 @@ const Setting = () => {
       key: 'Communication',
       icon: <MdOutlineMailOutline size='20' />
     }, {
-      label: <Link to={'/profile/settingy/privacy'}><p className='text-[20px] '>Privacy</p></Link>,
+      label: <Link to={'/profile/setting/privacy'}><p className='text-[20px] '>Privacy</p></Link>,
       key: 'Privacy',
       icon: <MdOutlineVerifiedUser size='20' />
+    },
+    {
+      label: <Link to={'/profile/setting/profile-visibility'}><p className='text-[20px]'>Profile Visibility</p></Link>,
+      key: 'profile-visibility',
+      icon: <MdOutlineSettingsSuggest size='20' />
     }
-
   ];
   const [current, setCurrent] = useState('Account Detail');
 
@@ -41,8 +46,8 @@ const Setting = () => {
     >
       <div>
         <h1 className="text-3xl mb-8">Setting</h1>
-        <div className='flex gap-20 min-h-[500px]'>
-          <Menu className='flex flex-col gap-5 w-[20%] ' onClick={onClick} selectedKeys={[current]} mode="inline" items={items} />
+        <div className='flex gap-24 min-h-[500px]'>
+          <Menu className='flex flex-col gap-10 w-[25%] ' onClick={onClick} selectedKeys={[current]} mode="inline" items={items} />
           <div className='w-[70%]'>
             <Outlet></Outlet>
           </div>

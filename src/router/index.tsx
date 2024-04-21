@@ -65,6 +65,7 @@ import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 import Communication from '../components/Profile/Communication/index.tsx'
 import Privacy from '../components/Profile/Privacy/index.tsx'
+import ProfileVisibility from '../components/Profile/ProfileVisibility/index.tsx'
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -154,8 +155,10 @@ const Router = (user: any) => {
               <Route index element={<AccoutDetails></AccoutDetails>} />
               <Route path="/profile/setting/communication-preferences" element={<Communication></Communication>} />
               <Route
-                path="/profile/setting/privacy"
-                element={<Privacy></Privacy>}
+                path="/profile/setting/privacy" element={<Privacy></Privacy>}
+              />
+              <Route
+                path="/profile/setting/profile-visibility" element={<ProfileVisibility></ProfileVisibility>}
               />
             </Route>
           </Route>
