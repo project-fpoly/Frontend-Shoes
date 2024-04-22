@@ -73,25 +73,25 @@ const CheckOut = () => {
   }
   const items = state?.cart
     ? state.cart.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
     : cartSession?.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -269,13 +269,12 @@ const CheckOut = () => {
   }
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols lg:grid-cols-2">
         <div className="checkout_body col-span-1">
           <div>
-            <h2 className="text-xl mb-4">
+            <h2 className="text-xl  mb-4">
               How would you like to get your order?
             </h2>
-
             <Button
               block
               className="h-20 rounded-xl mb-12 border-black hover:!border-black hover:!text-black"
@@ -495,7 +494,7 @@ const CheckOut = () => {
                 </Radio.Group>
               </Form.Item>
               {state?.cart?.cartItems.length > 0 ||
-              cartSession?.cartItems.length > 0 ? (
+                cartSession?.cartItems.length > 0 ? (
                 <Button
                   type="default"
                   htmlType="submit"
@@ -568,7 +567,7 @@ const CheckOut = () => {
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {state?.cart?.cartItems.length > 0 ||
-            cartSession?.cartItems.length > 0 ? (
+              cartSession?.cartItems.length > 0 ? (
               <>
                 {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>

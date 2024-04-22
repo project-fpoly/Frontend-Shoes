@@ -53,7 +53,7 @@ const AccoutDetails = () => {
     <>
       <h1 className="text-3xl mb-5">Account Details </h1>
       <form onSubmit={handleSubmit(onSubmit)} action="">
-        <div className="grid grid-cols-3 gap-5 ">
+        <div className="grid grid-cols lg:grid-cols-2 xl:grid-cols-3 gap-5 ">
           <div  >
             {openUserName ? (
               <>

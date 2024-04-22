@@ -66,7 +66,7 @@ const MenuNav = () => {
         },
       }}
     >
-      <Menu className="flex w-[800px] pl-52 " mode="horizontal" items={items} />
+      <Menu className="hidden xl:flex  w-[800px] pl-52 " mode="horizontal" items={items} />
     </ConfigProvider>
   )
 }

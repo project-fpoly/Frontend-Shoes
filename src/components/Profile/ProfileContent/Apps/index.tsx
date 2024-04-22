@@ -5,7 +5,7 @@ const NikeApps = () => {
   return (
     <div>
       <p className=" text-4xl">Nike Apps</p>
-      <div className='flex gap-10'>
+      <div className='flex gap-10 flex-col items-center md:items-stretch md:flex-row'>
         <div className='max-w-[350px] flex flex-col gap-5'>
           <Image
             width={300}

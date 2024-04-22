@@ -62,8 +62,7 @@ const Help = () => {
       <hr />
       <Space
         direction="vertical"
-        className="mt-10 mb-5"
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-7 lg:grid-cols-3"
       >
         <Space direction="vertical">
           <Title level={4}>Dispatch & delivery</Title>
@@ -93,12 +92,8 @@ const Help = () => {
       <hr />
       <Space
         direction="vertical"
-        className="mt-10 mb-5"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          textAlign: 'center',
-        }}
+        className="mt-10 mb-5 grid grid-cols-2 gap-7 lg:grid-cols-3"
+
       >
         <Space direction="vertical">
           <MobileOutlined style={{ fontSize: '40px' }} />
@@ -115,7 +110,7 @@ const Help = () => {
           <a href="">24 hours a day</a>
           <a href="">7 days a week</a>
         </Space>
-        <Space direction="vertical" style={{ textAlign: 'center' }}>
+        <Space direction="vertical" >
           <EnvironmentOutlined style={{ fontSize: '40px' }} />
           <Title level={5} className='mt-3'>Store locator</Title>
           <a href="">FPT Polytechnic Building, 13 Trinh Van Bo Ward, <br />Xuan Phuong, Nam Tu Liem, Hanoi</a>

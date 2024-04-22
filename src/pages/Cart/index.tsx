@@ -192,10 +192,10 @@ const Cart = () => {
 
   return (
     <>
-      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] xl:w-[1100px] lg:mx-auto">
-        <div className="lg:flex lg:gap-6">
+      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] px-10 xl:w-[1100px] lg:mx-auto">
+        <div className="flex flex-col gap-10 lg:flex-row">
           <div className="shopping-cart-bag lg:w-[65%]">
-            <h2 className="text-3xl font-semibold text-center lg:text-left lg:my-4">
+            <h2 className="text-3xl font-semibold  lg:text-left lg:my-4">
               Bag
             </h2>
             <div className="text-center mb-12 lg:hidden">
@@ -211,243 +211,243 @@ const Cart = () => {
             </div>
             {cart
               ? cart?.cartItems?.map((cartItem: any, index: number) => {
-                  const sizes = getProductSize(cartItem.product)
-                  return (
-                    <div
-                      key={`${cartItem.product}-${cartItem.size}`}
-                      className="cart-item flex mb-8"
-                    >
-                      <figure className="w-[220px]">
-                        <Link to={'/'}>
-                          <img src={cartItem.images[0]} alt="" />
-                        </Link>
-                      </figure>
-                      <div className="cart-item-content flex w-full ml-4">
-                        <div className="flex flex-1 flex-col justify-between">
-                          <div className="">
-                            <div className="flex justify-between">
-                              <h2 className="font-semibold sm:text-xl text-sm">
-                                {getProductName(cartItem.product)}
-                              </h2>
-                              <p className="text-sm font-semibold sm:text-xl">
-                                {formatCurrency(
-                                  cartItem.price * cartItem.quantity,
-                                )}
-                              </p>
-                            </div>
-                            <p className="text-sm sm:text-xl text-[#565656] my-2">
-                              {getCateName(cartItem.product)}
+                const sizes = getProductSize(cartItem.product)
+                return (
+                  <div
+                    key={`${cartItem.product}-${cartItem.size}`}
+                    className="cart-item flex mb-8"
+                  >
+                    <figure className="w-[220px]">
+                      <Link to={'/'}>
+                        <img src={cartItem.images[0]} alt="" />
+                      </Link>
+                    </figure>
+                    <div className="cart-item-content flex w-full ml-4">
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div className="">
+                          <div className="flex justify-between">
+                            <h2 className="font-semibold sm:text-xl text-sm">
+                              {getProductName(cartItem.product)}
+                            </h2>
+                            <p className="text-sm font-semibold sm:text-xl">
+                              {formatCurrency(
+                                cartItem.price * cartItem.quantity,
+                              )}
                             </p>
+                          </div>
+                          <p className="text-sm sm:text-xl text-[#565656] my-2">
+                            {getCateName(cartItem.product)}
+                          </p>
 
-                            <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
-                              <div>
-                                <div className="flex text-lg text-[#6b7280]">
-                                  <div>
-                                    <label htmlFor="">Size</label>
-                                    <select
-                                      value={cartItem.size}
-                                      name="size"
-                                      id=""
-                                      className="px-2 ml-1"
-                                      onChange={(
-                                        event: React.ChangeEvent<HTMLSelectElement>,
-                                      ) =>
-                                        handleSizeChange(
-                                          index,
-                                          cartItem.product,
-                                          event,
-                                        )
-                                      }
-                                    >
-                                      {sizes && Array.isArray(sizes) ? (
-                                        sizes.map(
-                                          (size: any, index: number) => (
-                                            <option
-                                              key={index}
-                                              value={size.name}
-                                            >
-                                              {size.name}
-                                            </option>
-                                          ),
-                                        )
-                                      ) : (
-                                        <option value="">
-                                          No sizes available
-                                        </option>
-                                      )}
-                                    </select>
-                                  </div>
-                                  <div className="ml-2">
-                                    <label htmlFor="">Quanlity</label>
-                                    <select
-                                      value={cartItem.quantity}
-                                      name="quanlity"
-                                      id=""
-                                      className="px-2 ml-1"
-                                      onChange={(
-                                        event: React.ChangeEvent<HTMLSelectElement>,
-                                      ) =>
-                                        handleQuantityChange(
-                                          index,
-                                          cartItem.product,
-                                          event,
-                                        )
-                                      }
-                                    >
-                                      <option value={1}>1</option>
-                                      <option value={2}>2</option>
-                                      <option value={3}>3</option>
-                                      <option value={4}>4</option>
-                                      <option value={5}>5</option>
-                                      <option value={6}>6</option>
-                                      <option value={7}>7</option>
-                                      <option value={8}>8</option>
-                                      <option value={9}>9</option>
-                                      <option value={10}>10</option>
-                                    </select>
-                                  </div>
+                          <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
+                            <div>
+                              <div className="flex text-lg text-[#6b7280]">
+                                <div>
+                                  <label htmlFor="">Size</label>
+                                  <select
+                                    value={cartItem.size}
+                                    name="size"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLSelectElement>,
+                                    ) =>
+                                      handleSizeChange(
+                                        index,
+                                        cartItem.product,
+                                        event,
+                                      )
+                                    }
+                                  >
+                                    {sizes && Array.isArray(sizes) ? (
+                                      sizes.map(
+                                        (size: any, index: number) => (
+                                          <option
+                                            key={index}
+                                            value={size.name}
+                                          >
+                                            {size.name}
+                                          </option>
+                                        ),
+                                      )
+                                    ) : (
+                                      <option value="">
+                                        No sizes available
+                                      </option>
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="ml-2">
+                                  <label htmlFor="">Quanlity</label>
+                                  <select
+                                    value={cartItem.quantity}
+                                    name="quanlity"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLSelectElement>,
+                                    ) =>
+                                      handleQuantityChange(
+                                        index,
+                                        cartItem.product,
+                                        event,
+                                      )
+                                    }
+                                  >
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
+                                    <option value={6}>6</option>
+                                    <option value={7}>7</option>
+                                    <option value={8}>8</option>
+                                    <option value={9}>9</option>
+                                    <option value={10}>10</option>
+                                  </select>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className="cart-item-content-action">
-                            <ul className="flex">
-                              <li>
-                                <GrFavorite
-                                  style={{
-                                    fontSize: '24px',
-                                    marginRight: '12px',
-                                  }}
-                                />
-                              </li>
-                              <li>
-                                <RiDeleteBin6Line
-                                  className="hover:cursor-pointer"
-                                  onClick={() =>
-                                    removeItemFromCart(cartItem.product)
-                                  }
-                                  style={{ fontSize: '24px' }}
-                                />
-                              </li>
-                            </ul>
-                          </div>
+                        </div>
+                        <div className="cart-item-content-action">
+                          <ul className="flex">
+                            <li>
+                              <GrFavorite
+                                style={{
+                                  fontSize: '24px',
+                                  marginRight: '12px',
+                                }}
+                              />
+                            </li>
+                            <li>
+                              <RiDeleteBin6Line
+                                className="hover:cursor-pointer"
+                                onClick={() =>
+                                  removeItemFromCart(cartItem.product)
+                                }
+                                style={{ fontSize: '24px' }}
+                              />
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>
-                  )
-                })
+                  </div>
+                )
+              })
               : cartSession?.cartItems.map((item: any, index: any) => {
-                  const sizes = getProductSize(item.product)
-                  return (
-                    <div
-                      key={`${item.product}-${item.size}`}
-                      className="cart-item flex mb-8"
-                    >
-                      <figure className="w-[220px]">
-                        <Link to={'/'}>
-                          <img src={item.images[0]} alt="" />
-                        </Link>
-                      </figure>
-                      <div className="cart-item-content flex w-full ml-4">
-                        <div className="flex flex-1 flex-col justify-between">
-                          <div className="">
-                            <div className="flex justify-between">
-                              <h2 className="font-semibold text-xl">
-                                {getProductName(item.product)}
-                              </h2>
-                              <p className="text-xl font-semibold">
-                                {formatCurrency(item.price * item.quantity)}
-                              </p>
-                            </div>
-                            <p className="text-lg text-[#565656]">
-                              {getCateName(item.product)}
+                const sizes = getProductSize(item.product)
+                return (
+                  <div
+                    key={`${item.product}-${item.size}`}
+                    className="cart-item flex mb-8"
+                  >
+                    <figure className="w-[220px]">
+                      <Link to={'/'}>
+                        <img src={item.images[0]} alt="" />
+                      </Link>
+                    </figure>
+                    <div className="cart-item-content flex w-full ml-4">
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div className="">
+                          <div className="flex justify-between">
+                            <h2 className="font-semibold text-xl">
+                              {getProductName(item.product)}
+                            </h2>
+                            <p className="text-xl font-semibold">
+                              {formatCurrency(item.price * item.quantity)}
                             </p>
+                          </div>
+                          <p className="text-lg text-[#565656]">
+                            {getCateName(item.product)}
+                          </p>
 
-                            <div className="flex text-lg text-[#6b7280]">
-                              <div>
-                                <label htmlFor="">Size</label>
-                                <select
-                                  value={item.size}
-                                  name="size"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(e) =>
-                                    updateCartItem(
-                                      index,
-                                      'size',
-                                      e.target.value as any,
-                                    )
-                                  }
-                                >
-                                  {sizes && Array.isArray(sizes) ? (
-                                    sizes.map((size: any, index: number) => (
-                                      <option key={index} value={size.name}>
-                                        {size.name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="">No sizes available</option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="ml-2">
-                                <label htmlFor="">Quanlity</label>
-                                <select
-                                  value={item.quantity}
-                                  name="quantity"
-                                  id=""
-                                  className="px-2 ml-1"
-                                  onChange={(e) =>
-                                    updateCartItem(
-                                      index,
-                                      'quantity',
-                                      e.target.value as any,
-                                    )
-                                  }
-                                >
-                                  <option value={1}>1</option>
-                                  <option value={2}>2</option>
-                                  <option value={3}>3</option>
-                                  <option value={4}>4</option>
-                                  <option value={5}>5</option>
-                                  <option value={6}>6</option>
-                                  <option value={7}>7</option>
-                                  <option value={8}>8</option>
-                                  <option value={9}>9</option>
-                                  <option value={10}>10</option>
-                                </select>
-                              </div>
+                          <div className="flex text-lg text-[#6b7280]">
+                            <div>
+                              <label htmlFor="">Size</label>
+                              <select
+                                value={item.size}
+                                name="size"
+                                id=""
+                                className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    'size',
+                                    e.target.value as any,
+                                  )
+                                }
+                              >
+                                {sizes && Array.isArray(sizes) ? (
+                                  sizes.map((size: any, index: number) => (
+                                    <option key={index} value={size.name}>
+                                      {size.name}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option value="">No sizes available</option>
+                                )}
+                              </select>
+                            </div>
+                            <div className="ml-2">
+                              <label htmlFor="">Quanlity</label>
+                              <select
+                                value={item.quantity}
+                                name="quantity"
+                                id=""
+                                className="px-2 ml-1"
+                                onChange={(e) =>
+                                  updateCartItem(
+                                    index,
+                                    'quantity',
+                                    e.target.value as any,
+                                  )
+                                }
+                              >
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                                <option value={6}>6</option>
+                                <option value={7}>7</option>
+                                <option value={8}>8</option>
+                                <option value={9}>9</option>
+                                <option value={10}>10</option>
+                              </select>
                             </div>
                           </div>
-                          <div className="cart-item-content-action">
-                            <ul className="flex">
-                              <li>
-                                <GrFavorite
-                                  style={{
-                                    fontSize: '24px',
-                                    marginRight: '12px',
-                                  }}
-                                />
-                              </li>
-                              <li>
-                                <RiDeleteBin6Line
-                                  className="hover:cursor-pointer"
-                                  onClick={() =>
-                                    removeItemFromCartSession(
-                                      item.product,
-                                      item.size,
-                                    )
-                                  }
-                                  style={{ fontSize: '24px' }}
-                                />
-                              </li>
-                            </ul>
-                          </div>
+                        </div>
+                        <div className="cart-item-content-action">
+                          <ul className="flex">
+                            <li>
+                              <GrFavorite
+                                style={{
+                                  fontSize: '24px',
+                                  marginRight: '12px',
+                                }}
+                              />
+                            </li>
+                            <li>
+                              <RiDeleteBin6Line
+                                className="hover:cursor-pointer"
+                                onClick={() =>
+                                  removeItemFromCartSession(
+                                    item.product,
+                                    item.size,
+                                  )
+                                }
+                                style={{ fontSize: '24px' }}
+                              />
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>
-                  )
-                })}
+                  </div>
+                )
+              })}
             <hr />
           </div>
           <div className="shopping-cart-summary lg:w-[35%]">
@@ -529,115 +529,6 @@ const Cart = () => {
       </div>
 
       <div className="favourites my-8 sm:px-4 lg:px-8">
-        {/* <h2 className="text-3xl font-semibold mx-4">You Might Also Like</h2>
-        <div className="flex flex-row-reverse mr-4 my-4 text-[#CACACB]">
-          <div>
-            <button
-              className=" border rounded-full px-4 py-4 bg-[#f5f5f5]"
-              onClick={next}
-            >
-              <SlArrowRight />
-            </button>
-          </div>
-          <div>
-            <button
-              className="mr-3 border rounded-full px-4 py-4 bg-[#f5f5f5]"
-              onClick={previous}
-            >
-              <SlArrowLeft />
-            </button>
-          </div>
-        </div>
-        <div className="">
-          <Slider ref={ref} {...settings}>
-            <div>
-              <Link to={'1'}>
-                <div>
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'2'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'3'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'4'}>
-                <div>
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'5'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'6'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-          </Slider>
-        </div> */}
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
     </>

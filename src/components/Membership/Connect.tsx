@@ -9,7 +9,7 @@ const Connect = () => {
         <Space direction="vertical" style={{ width: '100%' }}>
             <Typography className="home_title">Connect Through Membership</Typography>
 
-            <Space className="mt-20" style={{ flexBasis: '36%', width: '100%', gridTemplateColumns: '1fr 1fr 1fr', display: 'grid', textAlign: 'center' }}>
+            <Space className="mt-20 grid grid-col items-center justify-center gap-14 md:grid-cols-2 lg:grid-cols-3" >
                 <Space direction="vertical">
                     <Link to="">
                         <Space direction="vertical" style={{ alignItems: 'center' }}>
