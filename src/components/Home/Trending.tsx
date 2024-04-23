@@ -9,8 +9,9 @@ const Trending = () => {
       <img
         src="../../../giay.gif"
         alt=""
-        className="w-auto object-cover lg:w-full"
+        className="rounded-lg w-auto object-cover lg:w-full"
         style={{ height: 600 }}
+
       />
 
       <Space
