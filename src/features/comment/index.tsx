@@ -88,7 +88,7 @@ export const updateCommentById = createAsyncThunk(
       thunkApi.dispatch(fetchAllCommentByProduct(shoeId as any))
       notification.success({
         message: "Success",
-        description: `Delete comment successfully}`,
+        description: `Update comment successfully}`,
       });
       return respone
     } catch (error) {

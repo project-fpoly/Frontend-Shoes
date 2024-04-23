@@ -56,6 +56,8 @@ const OrderManager = (data: any) => {
   const { isLoading } = useSelector((state: RootState) => state.order)
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { users } = useSelector((state: IUsers) => state.user)
+  const vnp_Params = localStorage.getItem('vnp_Params')
+  console.log(vnp_Params)
   useEffect(() => {
     console.log(currentPage)
     dispatch(
