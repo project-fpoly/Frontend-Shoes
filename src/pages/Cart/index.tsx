@@ -190,12 +190,16 @@ const Cart = () => {
     ],
   }
 
+  function getCustomQuantity(quantity: number) {
+    return Math.min(quantity, 10)
+  }
+
   return (
     <>
-      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] xl:w-[1100px] lg:mx-auto">
-        <div className="lg:flex lg:gap-6">
+      <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] px-10 xl:w-[1100px] lg:mx-auto">
+        <div className="flex flex-col gap-10 lg:flex-row">
           <div className="shopping-cart-bag lg:w-[65%]">
-            <h2 className="text-3xl font-semibold text-center lg:text-left lg:my-4">
+            <h2 className="text-3xl font-semibold  lg:text-left lg:my-4">
               Bag
             </h2>
             <div className="text-center mb-12 lg:hidden">
@@ -212,6 +216,24 @@ const Cart = () => {
             {cart
               ? cart?.cartItems?.map((cartItem: any, index: number) => {
                   const sizes = getProductSize(cartItem.product)
+                  const renderOptions = (sizeName: string): JSX.Element[] => {
+                    const selectedSize =
+                      sizes &&
+                      Array.isArray(sizes) &&
+                      sizes.find((size: any) => size.name === sizeName)
+                    const options: JSX.Element[] = []
+                    if (selectedSize) {
+                      const customQuantity = Math.min(selectedSize.quantity, 10)
+                      for (let i = 1; i <= customQuantity; i++) {
+                        options.push(
+                          <option key={`${sizeName}-${i}`} value={i}>
+                            {i}
+                          </option>,
+                        )
+                      }
+                    }
+                    return options
+                  }
                   return (
                     <div
                       key={`${cartItem.product}-${cartItem.size}`}
@@ -263,6 +285,12 @@ const Cart = () => {
                                         sizes.map(
                                           (size: any, index: number) => (
                                             <option
+                                              disabled={size.quantity <= 0}
+                                              className={
+                                                size.quantity <= 0
+                                                  ? 'text-[#ccc]'
+                                                  : ''
+                                              }
                                               key={index}
                                               value={size.name}
                                             >
@@ -278,10 +306,10 @@ const Cart = () => {
                                     </select>
                                   </div>
                                   <div className="ml-2">
-                                    <label htmlFor="">Quanlity</label>
+                                    <label htmlFor="">Quantity</label>
                                     <select
                                       value={cartItem.quantity}
-                                      name="quanlity"
+                                      name="quantity"
                                       id=""
                                       className="px-2 ml-1"
                                       onChange={(
@@ -294,16 +322,7 @@ const Cart = () => {
                                         )
                                       }
                                     >
-                                      <option value={1}>1</option>
-                                      <option value={2}>2</option>
-                                      <option value={3}>3</option>
-                                      <option value={4}>4</option>
-                                      <option value={5}>5</option>
-                                      <option value={6}>6</option>
-                                      <option value={7}>7</option>
-                                      <option value={8}>8</option>
-                                      <option value={9}>9</option>
-                                      <option value={10}>10</option>
+                                      {renderOptions(cartItem.size)}
                                     </select>
                                   </div>
                                 </div>
@@ -338,6 +357,24 @@ const Cart = () => {
                 })
               : cartSession?.cartItems.map((item: any, index: any) => {
                   const sizes = getProductSize(item.product)
+                  const renderOptions = (sizeName: string): JSX.Element[] => {
+                    const selectedSize =
+                      sizes &&
+                      Array.isArray(sizes) &&
+                      sizes.find((size: any) => size.name === sizeName)
+                    const options: JSX.Element[] = []
+                    if (selectedSize) {
+                      const customQuantity = Math.min(selectedSize.quantity, 10)
+                      for (let i = 1; i <= customQuantity; i++) {
+                        options.push(
+                          <option key={`${sizeName}-${i}`} value={i}>
+                            {i}
+                          </option>,
+                        )
+                      }
+                    }
+                    return options
+                  }
                   return (
                     <div
                       key={`${item.product}-${item.size}`}
@@ -381,7 +418,16 @@ const Cart = () => {
                                 >
                                   {sizes && Array.isArray(sizes) ? (
                                     sizes.map((size: any, index: number) => (
-                                      <option key={index} value={size.name}>
+                                      <option
+                                        disabled={size.quantity <= 0}
+                                        className={
+                                          size.quantity <= 0
+                                            ? 'text-[#ccc]'
+                                            : ''
+                                        }
+                                        key={index}
+                                        value={size.name}
+                                      >
                                         {size.name}
                                       </option>
                                     ))
@@ -391,7 +437,7 @@ const Cart = () => {
                                 </select>
                               </div>
                               <div className="ml-2">
-                                <label htmlFor="">Quanlity</label>
+                                <label htmlFor="">Quantity</label>
                                 <select
                                   value={item.quantity}
                                   name="quantity"
@@ -405,16 +451,7 @@ const Cart = () => {
                                     )
                                   }
                                 >
-                                  <option value={1}>1</option>
-                                  <option value={2}>2</option>
-                                  <option value={3}>3</option>
-                                  <option value={4}>4</option>
-                                  <option value={5}>5</option>
-                                  <option value={6}>6</option>
-                                  <option value={7}>7</option>
-                                  <option value={8}>8</option>
-                                  <option value={9}>9</option>
-                                  <option value={10}>10</option>
+                                  {renderOptions(item.size)}
                                 </select>
                               </div>
                             </div>
@@ -476,7 +513,7 @@ const Cart = () => {
                   <hr />
                 </div>
               </div>
-              <div className="mt-5 hidden lg:block">
+              <div className="mt-5 ">
                 {cart || cartSession?.cartItems.length ? (
                   <>
                     <Button
@@ -516,128 +553,8 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <div className="fixed z-10 bottom-0 h-[120px] w-full bg-white px-4 leading-[120px] lg:hidden">
-        <Button
-          style={{ background: 'rgb(17, 17, 17)' }}
-          block
-          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 my-auto"
-        >
-          <Link to={'./guest_checkout'}>
-            <p>Guest Checkout</p>
-          </Link>
-        </Button>
-      </div>
 
       <div className="favourites my-8 sm:px-4 lg:px-8">
-        {/* <h2 className="text-3xl font-semibold mx-4">You Might Also Like</h2>
-        <div className="flex flex-row-reverse mr-4 my-4 text-[#CACACB]">
-          <div>
-            <button
-              className=" border rounded-full px-4 py-4 bg-[#f5f5f5]"
-              onClick={next}
-            >
-              <SlArrowRight />
-            </button>
-          </div>
-          <div>
-            <button
-              className="mr-3 border rounded-full px-4 py-4 bg-[#f5f5f5]"
-              onClick={previous}
-            >
-              <SlArrowLeft />
-            </button>
-          </div>
-        </div>
-        <div className="">
-          <Slider ref={ref} {...settings}>
-            <div>
-              <Link to={'1'}>
-                <div>
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'2'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'3'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'4'}>
-                <div>
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'5'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to={'6'}>
-                <div className="overflow-hidden w-full">
-                  <img src="https://picsum.photos/200" alt="" width="100%" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-xl">Product 1</h2>
-                  <p className="text-lg text-[#707072]">Lorem ipsum.</p>
-                  <p className="text-xl font-semibold mt-2 lg:mt-4">
-                    <span className="text-[#111111]">đ</span>3.000.000
-                  </p>
-                </div>
-              </Link>
-            </div>
-          </Slider>
-        </div> */}
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
     </>

@@ -79,8 +79,8 @@ const Router = (user: any) => {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
       }
     })
-    socket.on('new_user_login', () => { })
-    socket.on('log_out', () => { })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
       dispatch(
         fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
@@ -133,7 +133,7 @@ const Router = (user: any) => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/order/guest" element={<GuestOrder />} />
-          <Route path="/order/thank-you" element={<ThankYou />} />
+          <Route path="/order/thank-you/ReturnUrl" element={<ThankYou />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
@@ -153,12 +153,17 @@ const Router = (user: any) => {
             <Route index element={<ProfileContent></ProfileContent>} />
             <Route path="setting" element={<Setting />}>
               <Route index element={<AccoutDetails></AccoutDetails>} />
-              <Route path="/profile/setting/communication-preferences" element={<Communication></Communication>} />
               <Route
-                path="/profile/setting/privacy" element={<Privacy></Privacy>}
+                path="/profile/setting/communication-preferences"
+                element={<Communication></Communication>}
               />
               <Route
-                path="/profile/setting/profile-visibility" element={<ProfileVisibility></ProfileVisibility>}
+                path="/profile/setting/privacy"
+                element={<Privacy></Privacy>}
+              />
+              <Route
+                path="/profile/setting/profile-visibility"
+                element={<ProfileVisibility></ProfileVisibility>}
               />
             </Route>
           </Route>

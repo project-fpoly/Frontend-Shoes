@@ -328,16 +328,20 @@ const OrderManager = (data: any) => {
         } else {
           return (
             <div style={{ textAlign: 'center' }}>
-              <Tooltip title={'edit'}>
-                <Button type="link" onClick={() => toggleModal(record)}>
-                  <EditOutlined />
-                </Button>
-              </Tooltip>
-              <Tooltip title={'delete'}>
-                <Button type="link" onClick={() => deleteOneOrder(record)}>
-                  <DeleteOutlined className="text-red-600" />
-                </Button>
-              </Tooltip>
+              {record.isDelivered === 'Đã hủy' && (
+                <Tooltip title={'delete'}>
+                  <Button type="link" onClick={() => deleteOneOrder(record)}>
+                    <DeleteOutlined className="text-red-600" />
+                  </Button>
+                </Tooltip>
+              )}
+              {record.isDelivered === 'Chờ xác nhận' && (
+                <Tooltip title={'edit'}>
+                  <Button type="link" onClick={() => toggleModal(record)}>
+                    <EditOutlined />
+                  </Button>
+                </Tooltip>
+              )}
             </div>
           )
         }

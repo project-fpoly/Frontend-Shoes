@@ -9,20 +9,20 @@ import { MdOutlineSettingsSuggest } from "react-icons/md";
 const Setting = () => {
   const items: MenuProps['items'] = [
     {
-      label: <Link to={'/profile/setting'}><p className='text-[20px] '>Account Detail</p></Link>,
+      label: <Link to={'/profile/setting'}><p className='text-[20px] '><p className=' hidden lg:block'>Account Detail</p></p></Link>,
       key: 'Account Detail',
       icon: <FaRegUser size='20' />
     }, {
-      label: <Link to={'/profile/setting/communication-preferences'}><p className='text-[20px] '>Communication Preferences</p></Link>,
+      label: <Link to={'/profile/setting/communication-preferences'}><p className='text-[20px] hidden lg:block '>Communication Preferences</p></Link>,
       key: 'Communication',
       icon: <MdOutlineMailOutline size='20' />
     }, {
-      label: <Link to={'/profile/setting/privacy'}><p className='text-[20px] '>Privacy</p></Link>,
+      label: <Link to={'/profile/setting/privacy'}><p className='text-[20px] hidden lg:block '>Privacy</p></Link>,
       key: 'Privacy',
       icon: <MdOutlineVerifiedUser size='20' />
     },
     {
-      label: <Link to={'/profile/setting/profile-visibility'}><p className='text-[20px]'>Profile Visibility</p></Link>,
+      label: <Link to={'/profile/setting/profile-visibility'}><p className='text-[20px] hidden lg:block'>Profile Visibility</p></Link>,
       key: 'profile-visibility',
       icon: <MdOutlineSettingsSuggest size='20' />
     }

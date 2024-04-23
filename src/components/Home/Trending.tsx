@@ -9,7 +9,7 @@ const Trending = () => {
       <img
         src="../../../giay.gif"
         alt=""
-        className="w-full"
+        className="w-auto object-cover lg:w-full"
         style={{ height: 600 }}
       />
 
