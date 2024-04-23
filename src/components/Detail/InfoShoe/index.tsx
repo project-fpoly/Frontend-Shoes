@@ -160,7 +160,7 @@ const InfoShoe = (props: Props) => {
         }}
       >
         <div
-          className={clsx('flex flex-col gap-6 w-[500px]', style.containerInfo)}
+          className={clsx('flex flex-col gap-6 w-[500px] ml-10 lg:ml-0', style.containerInfo)}
         >
           <div>
             <h2 className="text-black text-2xl">{shoe.name}</h2>
@@ -184,7 +184,7 @@ const InfoShoe = (props: Props) => {
               </h3>
             </span>
           </div>
-          <span className="flex justify-between cursor-pointer text-xl text-gray-400">
+          <span className="flex justify-between cursor-pointer px-12 text-xl text-gray-400">
             <p>Select size</p>
             <Link to={'/sizeguide'}>
               <p>Size guide</p>
@@ -213,21 +213,21 @@ const InfoShoe = (props: Props) => {
           <div className="flex flex-col gap-5 justify-center items-center">
             <button
               onClick={() => addToCartt()}
-              className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
+              className="w-[400px] lg:w-full p py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
               Add to Bag
             </button>
             {favItem && state?.user ? (
               <>
                 <button
-               
-                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
-              >
-                Favourite
-               <p className="mt-1 px-3">
-                  <FaHeart />
-                </p>
-              </button>
+
+                  className={`w-[400px]   lg:w-full py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+                >
+                  Favourite
+                  <p className="mt-1 px-3">
+                    <FaHeart />
+                  </p>
+                </button>
               </>
             ) : (
               <button
@@ -243,7 +243,7 @@ const InfoShoe = (props: Props) => {
               </button>
             )}
           </div>
-          <p>{shoe.description}</p>
+          <p className='text-center mx-5 lg:text-ellipsis'>{shoe.description}</p>
           <p
             className=" border-b-2 border-b-black w-[170px] font-bold text-lg cursor-pointer hover:opacity-70"
             onClick={() => showModal()}
