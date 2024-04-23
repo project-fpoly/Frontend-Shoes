@@ -97,22 +97,24 @@ const CheckOut = () => {
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
     dispatch(getProvinces('a'))
     dispatch(getDistricts(province))
-    dispatch(getWards(district))
-    dispatch(
-      getShippingOrders({
-        service_type_id: 2,
-        from_district_id: 1915,
-        to_district_id: district,
-        to_ward_code: ward,
-        height: 20,
-        length: 30,
-        weight: 3000,
-        width: 40,
-        insurance_value: 0,
-        coupon: null,
-        items: items,
-      }),
-    )
+    if (province) {
+      dispatch(getWards(district))
+      dispatch(
+        getShippingOrders({
+          service_type_id: 2,
+          from_district_id: 1915,
+          to_district_id: district,
+          to_ward_code: ward,
+          height: 20,
+          length: 30,
+          weight: 3000,
+          width: 40,
+          insurance_value: 0,
+          coupon: null,
+          items: items,
+        }),
+      )
+    }
     dispatch(fetchVoucher())
     dispatch(fetchOneVoucher(voucherr))
   }, [province, district, ward, order, voucherr, voucherName])

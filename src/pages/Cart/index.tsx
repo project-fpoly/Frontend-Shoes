@@ -285,6 +285,7 @@ const Cart = () => {
                                         sizes.map(
                                           (size: any, index: number) => (
                                             <option
+                                              disabled={size.quantity <= 0}
                                               key={index}
                                               value={size.name}
                                             >
@@ -412,7 +413,16 @@ const Cart = () => {
                                 >
                                   {sizes && Array.isArray(sizes) ? (
                                     sizes.map((size: any, index: number) => (
-                                      <option key={index} value={size.name}>
+                                      <option
+                                        disabled={size.quantity <= 0}
+                                        className={
+                                          size.quantity <= 0
+                                            ? 'text-[#ccc]'
+                                            : ''
+                                        }
+                                        key={index}
+                                        value={size.name}
+                                      >
                                         {size.name}
                                       </option>
                                     ))
