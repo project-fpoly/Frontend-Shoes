@@ -88,7 +88,7 @@ export default function OrderItem({ data, pagination }: Props) {
         end: dayEnd,
       }),
     )
-    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 

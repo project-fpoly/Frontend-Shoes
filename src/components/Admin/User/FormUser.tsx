@@ -205,7 +205,7 @@ const FormUser: React.FC<
           style={{ textAlign: 'right' }}
           wrapperCol={{ offset: 8, span: 16 }}
         >
-          <Button>cancel</Button>
+          {/* <Button>cancel</Button> */}
           <Button style={{ marginLeft: '5px' }} type="primary" htmlType="submit">
             Save
           </Button>
