@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { discountcurrency, formatCurrency } from '../../../hooks/utils'
 import ModalCmt from '../../Modal/ModalCmt'
+import { FaHeart } from "react-icons/fa";
+
 import { useEffect } from 'react'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
@@ -217,12 +219,15 @@ const InfoShoe = (props: Props) => {
             </button>
             {favItem && state?.user ? (
               <>
-                <Link to={'/favourite'} className="mt-1 px-3">
-                  <CiHeart
-                    title="your fav products list"
-                    className="text-5xl text-white bg-pink-500  border-black hover:bg-pink-300  rounded-full p-1"
-                  />
-                </Link>
+                <button
+               
+                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+              >
+                Favourite
+               <p className="mt-1 px-3">
+                  <FaHeart />
+                </p>
+              </button>
               </>
             ) : (
               <button
