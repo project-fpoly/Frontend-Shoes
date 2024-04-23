@@ -222,12 +222,7 @@ const InfoShoe = (props: Props) => {
             {favItem && state?.user ? (
               <>
                 <button
-<<<<<<< HEAD
                   className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
-=======
-
-                  className={`w-[400px]   lg:w-full py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
->>>>>>> bb5fe7739b2a7de16100cd5f47bb556f9290ba81
                 >
                   Favourite
                   <p className="mt-1 px-3">
