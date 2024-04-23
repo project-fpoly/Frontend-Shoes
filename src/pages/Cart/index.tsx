@@ -286,6 +286,11 @@ const Cart = () => {
                                           (size: any, index: number) => (
                                             <option
                                               disabled={size.quantity <= 0}
+                                              className={
+                                                size.quantity <= 0
+                                                  ? 'text-[#ccc]'
+                                                  : ''
+                                              }
                                               key={index}
                                               value={size.name}
                                             >
