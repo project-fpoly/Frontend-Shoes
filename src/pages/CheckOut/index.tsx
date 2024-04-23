@@ -51,7 +51,7 @@ const CheckOut = () => {
       ? shippingOrder?.service_fee + totalCart - voucher?.data?.reduced_amount
       : shippingOrder?.service_fee + totalCart
     : totalCart
-  console.log(totalPrice)
+
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -73,25 +73,25 @@ const CheckOut = () => {
   }
   const items = state?.cart
     ? state.cart.cartItems.map((cartItem: any) => {
-      return {
-        name: getProductName(cartItem.product),
-        quantity: cartItem.quantity,
-        height: 200,
-        weight: 1000,
-        length: 200,
-        width: 200,
-      }
-    })
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
     : cartSession?.cartItems.map((cartItem: any) => {
-      return {
-        name: getProductName(cartItem.product),
-        quantity: cartItem.quantity,
-        height: 200,
-        weight: 1000,
-        length: 200,
-        width: 200,
-      }
-    })
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -445,7 +445,7 @@ const CheckOut = () => {
                       className=""
                       size="large"
                       onChange={hanlderChangeWard}
-                      placeholder="Ward"
+                      placeholder="Ward/Commune"
                     >
                       {wards &&
                         wards.map((ward: any) => (
@@ -494,12 +494,12 @@ const CheckOut = () => {
                 </Radio.Group>
               </Form.Item>
               {state?.cart?.cartItems.length > 0 ||
-                cartSession?.cartItems.length > 0 ? (
+              cartSession?.cartItems.length > 0 ? (
                 <Button
                   type="default"
                   htmlType="submit"
                   block
-                  className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
+                  className="bg-black text-[#fff] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-[#333] hover:!text-white hover:!border-black"
                 >
                   <p className="text-lg ">Check out</p>
                 </Button>
@@ -567,7 +567,7 @@ const CheckOut = () => {
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {state?.cart?.cartItems.length > 0 ||
-              cartSession?.cartItems.length > 0 ? (
+            cartSession?.cartItems.length > 0 ? (
               <>
                 {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
