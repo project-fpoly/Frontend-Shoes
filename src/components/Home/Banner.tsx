@@ -13,9 +13,9 @@ const Banner = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
       <Carousel autoplay autoplaySpeed={3000} style={{ width: '100%' }}>
-        <div>
+        <div >
           <img
-            className="img_banner"
+            className="rounded-lg img_banner w-full object-cover"
             src="../../../banner.jpg"
             alt="Banner 1"
             style={{ ...contentStyle }}
@@ -23,7 +23,7 @@ const Banner = () => {
         </div>
         <div>
           <img
-            className="img_banner"
+            className="img_banner w-full rounded-lg object-cover"
             src="../../../banner2.jpg"
             alt="Banner 3"
             style={{ ...contentStyle, objectFit: 'cover' }}
@@ -31,7 +31,7 @@ const Banner = () => {
         </div>
         <div>
           <img
-            className="img_banner"
+            className="img_banner w-full rounded-lg object-cover"
             src="../../../banner3.jpg"
             alt="Banner 3"
             style={{ ...contentStyle, objectFit: 'cover' }}
