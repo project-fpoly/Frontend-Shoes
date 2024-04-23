@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { discountcurrency, formatCurrency } from '../../../hooks/utils'
 import ModalCmt from '../../Modal/ModalCmt'
-import { FaHeart } from "react-icons/fa";
+import { FaHeart } from 'react-icons/fa'
 
 import { useEffect } from 'react'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
@@ -29,16 +29,17 @@ const InfoShoe = (props: Props) => {
   console.log(shoe)
 
   const state = useSelector((state: any) => state.fav.favItems.fav)
+  console.log(state)
   const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
   const [size, setSize] = useState('')
   const [activeButton, setActiveButton] = useState(null)
   const dispatch = useDispatch<AppDispatch>()
   const favItem = favs?.some((item: any) => item.product === shoe._id)
   const navigate = useNavigate()
-
+  console.log(favItem)
   useEffect(() => {
     dispatch(getFavItems())
-  }, [shoe])
+  }, [shoe, favItem])
   const handleClick = (index: any) => {
     setActiveButton(index === activeButton ? null : index)
   }
@@ -121,6 +122,7 @@ const InfoShoe = (props: Props) => {
     const favItem = { product }
     if (accessToken) {
       dispatch(addFavItems(favItem as any))
+      console.log('a')
     } else {
       const updatedfav = fav?.favItems.map((item: any) => {
         if (item.product === shoe._id) {
@@ -220,21 +222,20 @@ const InfoShoe = (props: Props) => {
             {favItem && state?.user ? (
               <>
                 <button
-               
-                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
-              >
-                Favourite
-               <p className="mt-1 px-3">
-                  <FaHeart />
-                </p>
-              </button>
+                  className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+                >
+                  Favourite
+                  <p className="mt-1 px-3">
+                    <FaHeart />
+                  </p>
+                </button>
               </>
             ) : (
               <button
                 onClick={() =>
                   accessToken ? addToFavv() : navigate('/signin')
                 }
-                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+                className={`w-[100%] py-4 border flex items-center ${favItem && state?.user ? 'bg-pink-500' : ''} justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >
                 Favourite
                 <p className="mt-1 px-3">

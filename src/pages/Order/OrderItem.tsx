@@ -217,6 +217,7 @@ export default function OrderItem({ data, pagination }: Props) {
       align: 'center',
       className: 'action-cell',
       render: (_, record) => {
+        console.log(record)
         const isCancel = record.isDelivered === 'Chờ xác nhận'
         if (record.isDelivered === 'Đã hủy') {
           return 'đơn hàng đã hủy'
