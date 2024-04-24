@@ -236,7 +236,7 @@ const InfoShoe = (props: Props) => {
                 onClick={() =>
                   accessToken ? addToFavv() : navigate('/signin')
                 }
-                className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+                className={`w-[400px] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >
                 Favourite
                 <p className="mt-1 px-3">
