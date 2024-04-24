@@ -13,17 +13,27 @@ import {
   List,
   message,
   Select,
+  Drawer,
 } from 'antd'
 import {
   AlertOutlined,
   AppstoreOutlined,
+  BarChartOutlined,
   BellOutlined,
   ContainerOutlined,
+  GiftOutlined,
   OrderedListOutlined,
+  PartitionOutlined,
+  ReconciliationOutlined,
   SearchOutlined,
+  SendOutlined,
+  ShopFilled,
+  ShoppingCartOutlined,
   ShoppingOutlined,
   SolutionOutlined,
   UserOutlined,
+  WechatOutlined,
+  WechatWorkOutlined,
 } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
@@ -33,17 +43,27 @@ import {
   updateNotificationById,
 } from '../../../features/notification'
 import { differenceInMilliseconds, format, formatDistanceToNow } from 'date-fns'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { INotification } from '../../../common/notification'
 import { getUserByID, setUser } from '../../../features/auth'
 import user from '../../../features/user'
 import io from 'socket.io-client'
+import { HiMiniBars3CenterLeft } from 'react-icons/hi2'
 const { Search } = Input
 
 const AdminHeader: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState('left');
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
   const navigate = useNavigate()
   const { Option } = Select
-  const user = useSelector((state:any) => state.auth.user)
+  const user = useSelector((state: any) => state.auth.user)
   const [visible, setVisible] = useState(false)
   const [selectedValue, setSelectedValue] = useState('');
 
@@ -85,9 +105,9 @@ const AdminHeader: React.FC = () => {
   const unreadNotificationsCount = notification.filter(
     (item) => !item.isRead,
   ).length
-  const handleSelectChange = async (value:string) => {
+  const handleSelectChange = async (value: string) => {
     await dispatch(fetchAllNotification(value))
-    setSelectedValue(value); 
+    setSelectedValue(value);
   };
   const notificationContent = (
     <>
@@ -102,7 +122,7 @@ const AdminHeader: React.FC = () => {
             right: '40px',
           }}
           onChange={handleSelectChange} // Thêm sự kiện onChange và gọi hàm xử lý handleSelectChange
-      value={selectedValue} // Gán giá trị được chọn từ state vào Select
+          value={selectedValue} // Gán giá trị được chọn từ state vào Select
         >
           <Option value="">Tất cả</Option>
           <Option value="user">user</Option>
@@ -136,9 +156,8 @@ const AdminHeader: React.FC = () => {
 
             return (
               <List.Item
-                className={`${styles.notificationItem} ${
-                  item.isRead ? styles.readItem : styles.unreadItem
-                }`}
+                className={`${styles.notificationItem} ${item.isRead ? styles.readItem : styles.unreadItem
+                  }`}
                 onClick={() => handleItemClick(item)}
               >
                 <div style={{ marginBottom: '16px', padding: 5 }}>
@@ -182,6 +201,9 @@ const AdminHeader: React.FC = () => {
       className="items-center justify-between p-4 bg-white border-b"
       style={{ backgroundColor: 'ghostwhite' }}
     >
+      <Col span={4} className="text-center lg:hidden">
+        <HiMiniBars3CenterLeft onClick={showDrawer} className='text-2xl mt-1 lg:hidden' />
+      </Col>
       <Col span={12}>
         <Search
           placeholder="Search..."
@@ -189,8 +211,7 @@ const AdminHeader: React.FC = () => {
           style={{ width: '100%' }}
         />
       </Col>
-      <Col span={8} className="text-center"></Col>
-      <Col span={4} className="text-right">
+      <Col span={6} className="text-right">
         <Row>
           <Col span={12} className="text-center">
             <Popover
@@ -219,6 +240,31 @@ const AdminHeader: React.FC = () => {
           </Col>
         </Row>
       </Col>
+
+      <Drawer
+        title="Nike Shop"
+        placement={placement}
+        closable={false}
+        onClose={onClose}
+        open={open}
+        key={placement}
+      >
+        <div className='flex flex-col gap-16'>
+          <div className='flex flex-col gap-6 ml-3 justify-start'>
+            <Link onClick={onClose} to="/admin" className='text-[16px]'><BarChartOutlined className='mr-4' />Dashboard</Link>
+            <Link onClick={onClose} to="users" className='text-[16px]'><UserOutlined className='mr-4' />User</Link>
+            <Link onClick={onClose} to="orders" className='text-[16px]'><ReconciliationOutlined className='mr-4' />Order</Link>
+            <Link onClick={onClose} to="product" className='text-[16px]'><ShopFilled className='mr-4' />Products</Link>
+            <Link onClick={onClose} to="categories" className='text-[16px]'><PartitionOutlined className='mr-4' />Categories</Link>
+            <Link onClick={onClose} to="sale" className='text-[16px]'><ShoppingCartOutlined className='mr-4' />Sale</Link>
+            <Link onClick={onClose} to="comment" className='text-[16px]'><WechatOutlined className='mr-4' />Comments</Link>
+            <Link onClick={onClose} to="voucher" className='text-[16px]'><GiftOutlined className='mr-4' />Voucher</Link>
+            {/* <Link onClick={onClose} to="setting" className='text-[16px]'><SettingOutlined className='mr-4' />Setting</Link> */}
+            <Link onClick={onClose} to="setting/sendNotification"><SendOutlined className='mr-4' />Send Notification</Link>
+            <Link onClick={onClose} to="setting/chat"><WechatWorkOutlined className='mr-4' />Chat</Link>
+          </div>
+        </div>
+      </Drawer>
     </Row>
   )
 }

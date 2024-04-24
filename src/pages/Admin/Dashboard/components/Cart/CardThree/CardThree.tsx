@@ -58,7 +58,6 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
 
   const { data: dataAnalytics3, isError: errorAnalytics3 } =
     useGetAnalystMonthQuery()
-
   const dataAhihih = [
     {
       name: dataAnalytics3?.orders[0].analytics[0].name,
@@ -103,6 +102,17 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
         dataAnalytics3?.orders[0].analytics[3].analytics[2].totalRevenue,
       'tuần 4':
         dataAnalytics3?.orders[0].analytics[3].analytics[3].totalRevenue,
+    },
+    {
+      name: dataAnalytics3?.orders[0].analytics[4].name,
+      'tuần 1':
+        dataAnalytics3?.orders[0].analytics[4].analytics[index].totalRevenue,
+      'tuần 2':
+        dataAnalytics3?.orders[0].analytics[4].analytics[1].totalRevenue,
+      'tuần 3':
+        dataAnalytics3?.orders[0].analytics[4].analytics[2].totalRevenue,
+      'tuần 4':
+        dataAnalytics3?.orders[0].analytics[4].analytics[3].totalRevenue,
     },
   ]
 
@@ -240,9 +250,9 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
         <div className="mt-4">
           <div>
             <h4 className="text-title-md font-bold text-black">
-              {data.countOrderStatus[0].value}
+              {data.countOrderStatus[3].value}
             </h4>
-            <span className="text-sm font-medium">Đơn hàng chờ xác nhận</span>
+            <span className="text-sm font-medium">Đơn hàng đã hoàn thành</span>
           </div>
 
           <span className="hidden grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium text-meta-3">
@@ -285,7 +295,7 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
                 <div className="mt-4 flex items-end justify-between">
                   <div className="">
                     <h4 className="text-title-md font-bold text-black  ">
-                      {data.moneyOrderStatus[index].value.toLocaleString()} VND
+                      {data?.moneyOrderStatus[index]?.value?.toLocaleString()} VND
                     </h4>
                     <span className="text-base font-medium">
                       {orderStatus.value} đơn{' '}
@@ -402,8 +412,9 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
               onChange={handleChangeAnalyticMonth}
               options={[
                 { value: 'pending', label: 'Chờ xác nhận' },
-                { value: 'confirmed', label: 'Xác nhận đơn hàng' },
-                { value: 'done', label: 'Hoàn thành đơn hàng' },
+                { value: 'confirmed', label: 'Chờ lấy hàng' },
+                { value: 'delivered', label: 'Đang giao hàng' },
+                { value: 'done', label: 'Đã giao hàng' },
                 { value: 'canceled', label: 'Hủy đơn hàng' },
               ]}
             />

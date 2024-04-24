@@ -8,7 +8,7 @@ const { Sider, Content } = Layout
 function AdminLayout() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={255} theme="light">
+      <Sider width={255} theme="light" className="hidden lg:flex">
         <div style={{ background: '#fff' }}>
           <NavAdmin />
         </div>

@@ -1,15 +1,13 @@
 export const renderOrderStatus = (status: string) => {
   switch (status) {
     case 'pending':
-      return 'Đang chờ xử lý'
+      return 'Đang chờ xác nhận'
     case 'confirmed':
-      return 'Đã xác nhận'
-    case 'shipping':
-      return 'Đang giao hàng'
+      return 'Đang chờ lấy hàng'
     case 'delivered':
-      return 'Đã giao hàng'
+      return 'Đang giao hàng'
     case 'done':
-      return 'Đã hoàn thành'
+      return 'Đã giao hàng'
     case 'canceled':
       return 'Đã hủy'
     default:
