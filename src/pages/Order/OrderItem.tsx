@@ -18,7 +18,7 @@ import { IUsers } from '../../common/users'
 import { fetchAllUsers } from '../../features/user'
 import { fetchAllProducts } from '../../features/product'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-
+import { formatCurrency } from '../../hooks/utils'
 interface Props {
   data: any
   pagination: any
@@ -192,6 +192,7 @@ export default function OrderItem({ data, pagination }: Props) {
     {
       title: 'Total',
       dataIndex: 'totalPrice',
+      render: (totalPrice: any) => <span>{formatCurrency(totalPrice)}</span>,
       align: 'center',
     },
     {
@@ -217,7 +218,6 @@ export default function OrderItem({ data, pagination }: Props) {
       align: 'center',
       className: 'action-cell',
       render: (_, record) => {
-        console.log(record)
         const isCancel = record.isDelivered === 'Chờ xác nhận'
         if (record.isDelivered === 'Đã hủy') {
           return 'đơn hàng đã hủy'

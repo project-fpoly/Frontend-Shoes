@@ -2,7 +2,7 @@ import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AppDispatch } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateOrder } from '../../features/order'
+import { updateIsPaid } from '../../features/order'
 const ThankYou = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -10,19 +10,18 @@ const ThankYou = () => {
 
   const accessToken = localStorage.getItem('accessToken')
   const searchParams = new URLSearchParams(location.search)
-  console.log(searchParams)
   const vnp_Amount = searchParams.get('vnp_Amount')
   const vnp_BankCode = searchParams.get('vnp_BankCode')
   const vnp_CardType = searchParams.get('vnp_CardType')
   const vnp_PayDate = searchParams.get('vnp_PayDate')
   const vnp_TransactionStatus = searchParams.get('vnp_TransactionStatus')
   const vnp_TxnRef = searchParams.get('vnp_TxnRef')
-  if (vnp_TransactionStatus && vnp_TransactionStatus !== '00') {
-    const _id = localStorage.getItem('idOrder')
+  if (vnp_TransactionStatus === '00') {
+    console.log('a')
     dispatch(
-      updateOrder({
-        id: _id,
-        updateOrderData: { isPaid: false },
+      updateIsPaid({
+        id: vnp_TxnRef,
+        updateOrderData: { isPaid: true },
       }),
     )
   }
