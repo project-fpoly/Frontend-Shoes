@@ -38,7 +38,7 @@ const AdminDashboard = () => {
                 <AllCompopent id={item._id} />
                 </Col>
               }else if (item.type === 'top') {
-                return <Col span={12}>
+                return <Col span={24}>
                 <TopProduct id={item._id}/>
                 </Col>
               }

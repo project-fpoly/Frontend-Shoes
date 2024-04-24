@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   const accessToken = localStorage.getItem('accessToken')
   return (
-    <div className="px-10">
+    <div className="px-3 lg:px-10">
       {!accessToken && (
         <>
           <div className="flex justify-center mt-10 mb-1 items-center flex-col">

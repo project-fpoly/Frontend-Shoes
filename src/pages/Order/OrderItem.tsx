@@ -18,7 +18,7 @@ import { IUsers } from '../../common/users'
 import { fetchAllUsers } from '../../features/user'
 import { fetchAllProducts } from '../../features/product'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-
+import { formatCurrency } from '../../hooks/utils'
 interface Props {
   data: any
   pagination: any
@@ -88,7 +88,7 @@ export default function OrderItem({ data, pagination }: Props) {
         end: dayEnd,
       }),
     )
-    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
@@ -192,6 +192,7 @@ export default function OrderItem({ data, pagination }: Props) {
     {
       title: 'Total',
       dataIndex: 'totalPrice',
+      render: (totalPrice: any) => <span>{formatCurrency(totalPrice)}</span>,
       align: 'center',
     },
     {

@@ -10,6 +10,7 @@ const Featured = () => {
           <img
             src="../../../public/nam.jpg"
             style={{ height: '650px', width: '100%' }}
+            className='rounded-lg'
           />
           <Typography
             className="text-3xl font-bold"
@@ -36,6 +37,7 @@ const Featured = () => {
           <img
             src="../../../public/women.jpg"
             style={{ height: '650px', width: '100%' }}
+            className='rounded-lg'
           />
           <Typography
             className="text-3xl font-bold"

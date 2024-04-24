@@ -61,7 +61,7 @@ const NavBar = () => {
             <div className="flex gap-3 cursor-pointer ">
               {user?.role === 'member' && (
                 <Popover
-                  className="hover:opacity-70 hidden lg:block"
+                  className="hover:opacity-70 hidden mt-[6px] lg:block"
                   content={<AllNotification />}
                   trigger="click"
                   title="Hộp thư của bạn"
@@ -69,12 +69,6 @@ const NavBar = () => {
                   <InboxOutlined />
                 </Popover>
               )}
-              <span className='hidden lg:block'>|</span>
-              <Popover
-                className="hover:opacity-70 hidden lg:block"
-              >
-                Find a store
-              </Popover>
               <span className='hidden lg:block'>|</span>
               <Link to={'/help'}>
                 <Popover className="hover:opacity-70 hidden lg:block" title="">

@@ -30,7 +30,7 @@ const FeatureDashboard = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 mt-40">
+      <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         {/* <CardTwo data={dataAnalytics2?.['doanh thu tháng này']} /> */}
         <ProductAnalytic
           dataAnalytics2={dataAnalytics2}
@@ -43,7 +43,7 @@ const FeatureDashboard = () => {
 
       <MonthlyRevenue data={dataAnalytics2} />
 
-      <BarChartSimple data={dataAnalytics} />
+      {/* <BarChartSimple data={dataAnalytics} /> */}
     </>
   )
 }

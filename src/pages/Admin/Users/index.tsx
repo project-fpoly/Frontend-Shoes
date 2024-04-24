@@ -177,11 +177,12 @@ const UserManager: React.FC = () => {
       render: (_, record) => (
         <div style={{ textAlign: 'center' }}>
           {UserRemove ? (
-            <Tooltip title={'edit'}>
-              <Button type="link" onClick={() => toggleModal(record)}>
-                <EditOutlined />
-              </Button>
-            </Tooltip>
+            // <Tooltip title={'edit'}>
+            //   <Button type="link" onClick={() => toggleModal(record)}>
+            //     <EditOutlined />
+            //   </Button>
+            // </Tooltip>
+            <></>
           ) : (
             <Tooltip title={'restore'}>
               <Button type="link" danger onClick={() => restoreUser1(record._id)}>

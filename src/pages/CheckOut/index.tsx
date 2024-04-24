@@ -204,10 +204,10 @@ const CheckOut = () => {
         console.log(redirectUrl)
 
         if (redirectUrl) {
-          window.open(redirectUrl.payload, '_blank')
+          window.location.href = redirectUrl.payload
+        } else {
+          navigate('../../order')
         }
-
-        navigate('../../order')
       } else {
         const { cartItems } = cartSession
         const data = await dispatch(
@@ -221,8 +221,6 @@ const CheckOut = () => {
 
         sessionStorage.removeItem('cart')
         if (payment_method === 'vnPay' && data) {
-          console.log(totalPrice)
-          console.log(data)
           redirectUrl = await dispatch(
             createPaymentUrl({
               amount: totalPrice,
@@ -232,10 +230,12 @@ const CheckOut = () => {
             }),
           )
           if (redirectUrl) {
-            window.open(redirectUrl.payload, '_blank')
+            window.location.href = redirectUrl.payload
+            localStorage.setItem('idOrder', data.payload?._id)
+          } else {
+            navigate('../../order/guest')
           }
         }
-        navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)

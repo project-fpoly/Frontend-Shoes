@@ -124,6 +124,44 @@ export const updateOrder = createAsyncThunk(
     }
   },
 )
+export const updateIsPaid = createAsyncThunk(
+  'order/updateIsPaid',
+  async (
+    { id, updateOrderData }: { id?: string; updateOrderData: any },
+    thunkApi,
+  ) => {
+    try {
+      console.log('id:', id, 'data:', updateOrderData)
+      const state = thunkApi.getState() as RootState
+      const { orders, pagination, params, searchApi } = state.order
+      const response = await axios.put(
+        `http://localhost:9000/api/order/bills/paid/${id}`,
+        updateOrderData,
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        },
+      )
+      thunkApi.dispatch(
+        fetchOrders({
+          page: pagination.currentPage,
+          limit: pagination.limit,
+          search: searchApi ? searchApi : params.search || null,
+          start: params.start || null,
+          end: params.end || null,
+        }),
+      )
+      notification.success({ message: response.data.message })
+
+      return response.data
+    } catch (error: any) {
+      notification.error({ message: error.message })
+      throw error.response.data
+    }
+  },
+)
 const updateSoldCount = async (productId: string) => {
   try {
     await axios.patch(
@@ -391,6 +429,25 @@ const orderSlice = createSlice({
         }
       })
       .addCase(updateOrder.rejected, (state: any, action) => {
+        state.isLoading = false
+        state.error = action.error.message
+      })
+    builder
+      .addCase(updateIsPaid.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(updateIsPaid.fulfilled, (state: any, action) => {
+        state.isLoading = false
+        const updateIsPaid = action.payload.updatedCart
+        const index = state.orders.findIndex(
+          (order: IBill) => order._id === updateIsPaid._id,
+        )
+        if (index !== -1) {
+          state.orders[index] = updateIsPaid
+        }
+      })
+      .addCase(updateIsPaid.rejected, (state: any, action) => {
         state.isLoading = false
         state.error = action.error.message
       })
