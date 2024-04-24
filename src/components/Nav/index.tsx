@@ -1,10 +1,9 @@
 import { SiJordan } from 'react-icons/si'
-
+import { HiMiniBars3CenterLeft } from "react-icons/hi2";
 import { Popover, Avatar, ConfigProvider, message, Button } from 'antd'
 import { UserOutlined, InboxOutlined } from '@ant-design/icons'
 import { SiNike } from 'react-icons/si'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
 import clsx from 'clsx'
 import MenuNav from './Menu'
 import NavRight from './NavRight'
@@ -12,7 +11,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserByID, setUser } from '../../features/auth'
 import io from 'socket.io-client'
 import AllNotification from '../Admin/Notification/AllNotification'
+import React, { useState } from 'react';
+import { Drawer } from 'antd';
 const NavBar = () => {
+  const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
   const content = (
     <div>
       <Link to="/signin">
@@ -44,17 +53,15 @@ const NavBar = () => {
           },
         }}
       >
-        <div className={clsx('fixed z-50 w-full',
-          showNav ? 'hidden' : '',
-        )} >
-          <div className="flex  justify-between px-16  py-4 bg-[#f5f5f5]">
+        <div className={clsx('fixed z-50 w-full')} >
+          <div className="flex  justify-between px-6 sm:px-16  py-4 bg-[#f5f5f5]">
             <Link to={'/'}>
               <SiJordan size={28} className="hover:opacity-70" />
             </Link>
             <div className="flex gap-3 cursor-pointer ">
               {user?.role === 'member' && (
                 <Popover
-                  className="hover:opacity-70"
+                  className="hover:opacity-70 hidden mt-[6px] lg:block"
                   content={<AllNotification />}
                   trigger="click"
                   title="Hộp thư của bạn"
@@ -62,24 +69,16 @@ const NavBar = () => {
                   <InboxOutlined />
                 </Popover>
               )}
-              <span>|</span>
-              <Popover
-                className="hover:opacity-70"
-                content={content}
-                title="Title"
-              >
-                Find a store
-              </Popover>
-              <span>|</span>
+              <span className='hidden lg:block'>|</span>
               <Link to={'/help'}>
-                <Popover className="hover:opacity-70" content={content} title="">
+                <Popover className="hover:opacity-70 hidden lg:block" title="">
                   Help
                 </Popover>
               </Link>
-              <span>|</span>
+              <span className='hidden lg:block'>|</span>
               {user ? (
                 <Popover
-                  className="flex gap-2 hover:opacity-70"
+                  className="flex gap-2 hover:opacity-70  "
                   content={
                     <>
                       <Link to="/profile">
@@ -99,8 +98,11 @@ const NavBar = () => {
                   }
                   title="Account"
                 >
-                  Hi, {user.userName}
+                  <p className='hidden lg:block'>
+                    Hi, {user.userName}
+                  </p>
                   <Avatar
+                    className=''
                     size={30}
                     icon={<UserOutlined />}
                     src={user?.avt?.url}
@@ -116,21 +118,34 @@ const NavBar = () => {
                   <Avatar size={30} icon={<UserOutlined />} />
                 </Popover>
               )}
+              <HiMiniBars3CenterLeft onClick={showDrawer} className='text-2xl mt-1 lg:hidden' />
             </div>
           </div>
 
           <div
             className={clsx(
-              'flex  bg-white w-full justify-evenly z-50')}
+              'flex  bg-white w-full justify-around z-50')}
           >
-            <div className="flex justify-evenly mx-24 gap-[100px] z-10">
-              <Link to={'/'}>
-                <SiNike className="hover:opacity-75" size={50} />
-              </Link>
-              <MenuNav></MenuNav>
-              <NavRight></NavRight>
-            </div>
+            <Link to={'/'}>
+              <SiNike className="hover:opacity-75" size={50} />
+            </Link>
+            <MenuNav ></MenuNav>
+            <NavRight></NavRight>
           </div>
+          <Drawer title={`Hi  ${user?.userName} `} onClose={onClose} open={open}>
+            <div className='flex flex-col gap-16'>
+              <div className='flex flex-col gap-6 mt-5 ml-10 justify-start'>
+                <Link onClick={onClose} className='text-3xl' to={'/'}>New & Featured</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/greaup'}>Product</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/men'}>Men</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/women'}>Women</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/sale'}>Sale</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/contact'}>Contact</Link>
+                <Link onClick={onClose} className='text-3xl' to={'/help'}>Help</Link>
+              </div>
+
+            </div>
+          </Drawer>
         </div>
 
         {/* <div className="flex justify-center mt-20 items-center flex-col bg-[#f5f5f5]">

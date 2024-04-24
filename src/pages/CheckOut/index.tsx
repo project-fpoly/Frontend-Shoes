@@ -51,7 +51,7 @@ const CheckOut = () => {
       ? shippingOrder?.service_fee + totalCart - voucher?.data?.reduced_amount
       : shippingOrder?.service_fee + totalCart
     : totalCart
-  console.log(totalPrice)
+
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -97,22 +97,24 @@ const CheckOut = () => {
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
     dispatch(getProvinces('a'))
     dispatch(getDistricts(province))
-    dispatch(getWards(district))
-    dispatch(
-      getShippingOrders({
-        service_type_id: 2,
-        from_district_id: 1915,
-        to_district_id: district,
-        to_ward_code: ward,
-        height: 20,
-        length: 30,
-        weight: 3000,
-        width: 40,
-        insurance_value: 0,
-        coupon: null,
-        items: items,
-      }),
-    )
+    if (province) {
+      dispatch(getWards(district))
+      dispatch(
+        getShippingOrders({
+          service_type_id: 2,
+          from_district_id: 1915,
+          to_district_id: district,
+          to_ward_code: ward,
+          height: 20,
+          length: 30,
+          weight: 3000,
+          width: 40,
+          insurance_value: 0,
+          coupon: null,
+          items: items,
+        }),
+      )
+    }
     dispatch(fetchVoucher())
     dispatch(fetchOneVoucher(voucherr))
   }, [province, district, ward, order, voucherr, voucherName])
@@ -202,10 +204,10 @@ const CheckOut = () => {
         console.log(redirectUrl)
 
         if (redirectUrl) {
-          window.open(redirectUrl.payload, '_blank')
+          window.location.href = redirectUrl.payload
+        } else {
+          navigate('../../order')
         }
-
-        navigate('../../order')
       } else {
         const { cartItems } = cartSession
         const data = await dispatch(
@@ -219,8 +221,6 @@ const CheckOut = () => {
 
         sessionStorage.removeItem('cart')
         if (payment_method === 'vnPay' && data) {
-          console.log(totalPrice)
-          console.log(data)
           redirectUrl = await dispatch(
             createPaymentUrl({
               amount: totalPrice,
@@ -230,10 +230,12 @@ const CheckOut = () => {
             }),
           )
           if (redirectUrl) {
-            window.open(redirectUrl.payload, '_blank')
+            window.location.href = redirectUrl.payload
+            localStorage.setItem('idOrder', data.payload?._id)
+          } else {
+            navigate('../../order/guest')
           }
         }
-        navigate('../../order/guest')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -269,13 +271,12 @@ const CheckOut = () => {
   }
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols lg:grid-cols-2">
         <div className="checkout_body col-span-1">
           <div>
-            <h2 className="text-xl mb-4">
+            <h2 className="text-xl  mb-4">
               How would you like to get your order?
             </h2>
-
             <Button
               block
               className="h-20 rounded-xl mb-12 border-black hover:!border-black hover:!text-black"
@@ -446,7 +447,7 @@ const CheckOut = () => {
                       className=""
                       size="large"
                       onChange={hanlderChangeWard}
-                      placeholder="Ward"
+                      placeholder="Ward/Commune"
                     >
                       {wards &&
                         wards.map((ward: any) => (
@@ -500,7 +501,7 @@ const CheckOut = () => {
                   type="default"
                   htmlType="submit"
                   block
-                  className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
+                  className="bg-black text-[#fff] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-[#333] hover:!text-white hover:!border-black"
                 >
                   <p className="text-lg ">Check out</p>
                 </Button>

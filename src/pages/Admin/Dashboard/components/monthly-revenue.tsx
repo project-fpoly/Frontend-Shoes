@@ -24,7 +24,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 1' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 1'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 1']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -35,7 +35,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 2' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 2'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 2']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -46,7 +46,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 3' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 3'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 3']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -57,7 +57,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 4' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 4'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 4']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -68,7 +68,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 5' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 5'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 5']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -79,7 +79,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 6' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 6'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 6']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -90,7 +90,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 7' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 7'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 7']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -101,7 +101,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 8' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 8'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 8']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -112,7 +112,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 9' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 9'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 9']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -123,7 +123,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 10' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 10'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 10']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -134,7 +134,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 11' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 11'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 11']?.money?.toLocaleString()} VND`
           : 0,
     },
     {
@@ -145,7 +145,7 @@ export const MonthlyRevenue = ({ data }: MonthlyRevenueProps) => {
           : 0,
       'Số tiền':
         'tháng 12' in data['doanh thu tháng này']['số đơn']
-          ? `${data['doanh thu tháng này']['số đơn']['tháng 12'].money.toLocaleString()} VND`
+          ? `${data['doanh thu tháng này']['số đơn']['tháng 12']?.money?.toLocaleString()} VND`
           : 0,
     },
   ]

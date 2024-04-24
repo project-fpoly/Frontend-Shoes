@@ -122,24 +122,22 @@ const SaleManager: React.FC = () => {
             title: "Actions",
             key: "actions",
             render: (_, record) => (
-                <span>
+                <span style={{textAlign: 'center'}}>
                     <Tooltip title={"Edit"}>
                         <Button
-                            type="primary"
+                            type="link"
                             shape="circle"
-                            icon={<EditOutlined />}
+                            icon={<EditOutlined/>}
                             onClick={() => toggleModal(record)}
                         />
                     </Tooltip>
-
-                    {record && record.role !== 'admin' && (
+                    {record.role !== 'admin' && (
                         <Tooltip title={'Delete'}>
                             <Button type="link" onClick={() => removeSales(record)}>
-                                <DeleteOutlined />
+                                <DeleteOutlined/>
                             </Button>
                         </Tooltip>
                     )}
-
                 </span>
             ),
         },
@@ -160,7 +158,7 @@ const SaleManager: React.FC = () => {
     };
 
     return (
-        <div >
+        <div>
             <HeaderTable
                 showModal={() => setIsModalOpen(true)}
                 onSubmitt={(value) => searchSale(value)}
@@ -199,6 +197,7 @@ const SaleManager: React.FC = () => {
                     mode={'create'}
                     onSubmit={handleCreateSale} {...defaultValue} />
             </Modal>
+
             <Modal
                 title="Update Sale"
                 open={isModalUpdateOpen}
@@ -209,7 +208,7 @@ const SaleManager: React.FC = () => {
                 footer={null}
             >
                 <FormSale
-                    mode={'create'}
+                    mode={'update'}
                     onSubmit={handleUpdateSale} {...defaultValue} />
             </Modal>
         </div>

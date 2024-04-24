@@ -28,7 +28,7 @@ const CardOne = ({ data }: CardOneProps) => {
       <div className=" items-end justify-between mt-4">
         <div>
           <h4 className="text-title-md font-bold text-black">
-            {data['doanh thu khách vãng lai ']} VND
+            {data['doanh thu khách vãng lai '].toLocaleString()} đ
           </h4>
           <span className="text-sm font-medium">Doanh thu khách vãng lai</span>
         </div>

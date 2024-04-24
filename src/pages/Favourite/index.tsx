@@ -54,7 +54,7 @@ const Favourite = () => {
                     alt="Bonnie Avatar"
                   />
                 </Link>
-                <div className="p-5">
+                <div className="p-5 sm:w-1/3 md:w-1/2 lg:w-full ">
                   <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                     <Link to={`/detail/${item.product}`}>
                       {getProductName(item.product)}
@@ -63,7 +63,7 @@ const Favourite = () => {
                   <span className="text-gray-500 dark:text-gray-400">
                     {getCateName(item.product)}
                   </span>
-                  <p className="mt-3 mb-4 font-light w-80 h-44 text-gray-500 dark:text-gray-400 overflow-ellipsis overflow-hidden">
+                  <p className="mt-3 mb-4 font-light sm:w-1/3 md:w-48 lg:w-80 h-44 text-gray-500 dark:text-gray-400 overflow-ellipsis overflow-hidden">
                     {getDesName(item.product)}
                   </p>
                 </div>

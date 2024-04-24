@@ -79,7 +79,7 @@ const UserManager: React.FC = () => {
           ? dispact(deletee2User(user._id))
           : dispact(deleteeUser([user._id]))
       },
-      onCancel() {},
+      onCancel() { },
     })
   }
   const restoreUser1 = (user: string) => {
@@ -93,7 +93,7 @@ const UserManager: React.FC = () => {
       onOk() {
         dispact(restoreUser(user))
       },
-      onCancel() {},
+      onCancel() { },
     })
   }
   const columns: ColumnsType<IUsers> = [
@@ -176,18 +176,19 @@ const UserManager: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <div style={{ textAlign: 'center' }}>
-          {UserRemove? (
-          <Tooltip title={'edit'}>
-            <Button type="link" onClick={() => toggleModal(record)}>
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-          ):(
-          <Tooltip title={'restore'}>
-            <Button type="link" danger onClick={() => restoreUser1(record._id)}>
-              <RollbackOutlined />
-            </Button>
-          </Tooltip>
+          {UserRemove ? (
+            // <Tooltip title={'edit'}>
+            //   <Button type="link" onClick={() => toggleModal(record)}>
+            //     <EditOutlined />
+            //   </Button>
+            // </Tooltip>
+            <></>
+          ) : (
+            <Tooltip title={'restore'}>
+              <Button type="link" danger onClick={() => restoreUser1(record._id)}>
+                <RollbackOutlined />
+              </Button>
+            </Tooltip>
           )}
           {record.role !== 'admin' && (
             <Tooltip title={'delete'}>
@@ -244,13 +245,13 @@ const UserManager: React.FC = () => {
         onSubmitt={(value) => searchUser(value)}
         name={'User'}
       />
-       <Button
-      style={{ float: 'inline-end' }}
-      icon={UserRemove ? <DeleteOutlined /> : <UnorderedListOutlined />}
-      onClick={userRemoveHandle}
-    >
-      {UserRemove ? 'Xóa người dùng' : 'Danh sách người dùng'}
-    </Button>
+      <Button
+        style={{ float: 'inline-end' }}
+        icon={UserRemove ? <DeleteOutlined /> : <UnorderedListOutlined />}
+        onClick={userRemoveHandle}
+      >
+        {UserRemove ? 'Xóa người dùng' : 'Danh sách người dùng'}
+      </Button>
       {/* {loading === "pending" ? (
         <>
           <div className="flex justify-center items-center mt-16">

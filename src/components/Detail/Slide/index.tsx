@@ -9,7 +9,7 @@ const Slide = (props: Props) => {
   const { shoe } = props
   return (
     <>
-      <div className='lg:w-[60%] w-full'>
+      <div className='w-[300px] lg:w-[60%] '>
         <img src={shoe.images ? shoe.images[0] : ''} />
       </div>
     </>

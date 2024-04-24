@@ -62,6 +62,11 @@ import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 import SettingsPage from '../pages/Admin/Chat/index.tsx'
+import Communication from '../components/Profile/Communication/index.tsx'
+import Privacy from '../components/Profile/Privacy/index.tsx'
+import ProfileVisibility from '../components/Profile/ProfileVisibility/index.tsx'
+import notificationSound from '../../public/notification.mp3';
+const sound = new Audio(notificationSound);
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -100,6 +105,7 @@ const Router = (user: any) => {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
+        sound.play();
         console.log('co thong bao', user)
       })
       socket.on('realtimeBillforAdmin', () => {
@@ -129,7 +135,7 @@ const Router = (user: any) => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/order/guest" element={<GuestOrder />} />
-          <Route path="/order/thank-you" element={<ThankYou />} />
+          <Route path="/order/thank-you/ReturnUrl" element={<ThankYou />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
@@ -149,12 +155,16 @@ const Router = (user: any) => {
             <Route path="setting" element={<Setting />}>
               <Route index element={<AccoutDetails></AccoutDetails>} />
               <Route
-                path="/profile/setting/cc"
-                element={
-                  <>
-                    <h1>1</h1>
-                  </>
-                }
+                path="/profile/setting/communication-preferences"
+                element={<Communication></Communication>}
+              />
+              <Route
+                path="/profile/setting/privacy"
+                element={<Privacy></Privacy>}
+              />
+              <Route
+                path="/profile/setting/profile-visibility"
+                element={<ProfileVisibility></ProfileVisibility>}
               />
             </Route>
           </Route>

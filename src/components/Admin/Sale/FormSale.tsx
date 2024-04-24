@@ -17,7 +17,7 @@ type FormSaleProps = {
 const { Option } = Select;
 
 const FormSale: React.FC<
-  ISale & { onSubmit: (values: ISale) => void; mode: string }
+  ISale & { onSubmit: (values: ISale) => void;mode :string  }
 > = ({
   name,
   description,
@@ -26,43 +26,49 @@ const FormSale: React.FC<
   start_date,
   expiration_date,
   onSubmit,
-  mode,
+ mode
 }) => {
+    if (mode === 'create') {
+
+    }
     const [form] = Form.useForm();
     const { products } = useSelector((state: RootState) => state.product);
     const dispatch = useDispatch<AppDispatch>();
-
-    useEffect(() => {
-      dispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
-      dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
-
-      // Đặt lại các trường của form về giá trị mặc định khi mode chuyển sang 'create'
-      if (mode === 'create') {
-        form.resetFields();
-      }
-    }, [dispatch, form, mode]);
-
+    // const mode :"create"|"edit"="create";
+    
+    
     const handleFormSubmitCreate = (values: ISale) => {
-      onSubmit(values);
+        if (mode === 'create') {
+            onSubmit({...values});
+        }else{
+            onSubmit(values)
+        }
+    
     };
-
+    useEffect(() => {
+        dispatch(fetchAllSales({ page: 1, limit: 10, keyword: '' }));
+        dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }));
+  
+        // Đặt lại các trường của form về giá trị mặc định khi mode chuyển sang 'create'
+       
+      }, [dispatch, form, mode]);
+      
     return (
-      <Form
+        <Form
         form={form}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         autoComplete="off"
-        initialValues={{
+        onFinish={handleFormSubmitCreate}
+        initialValues={mode === 'update' ? {
           name,
           discount,
           description,
           start_date: dayjs(start_date),
           expiration_date: dayjs(expiration_date),
-          product: product || [], // Sử dụng product hoặc một mảng rỗng nếu product không tồn tại
-
-        }}
-        onFinish={handleFormSubmitCreate}
+          product: product || [],
+        } : {}}
       >
         <Form.Item
           label={'Campaign Name'}
@@ -71,57 +77,58 @@ const FormSale: React.FC<
         >
           <Input />
         </Form.Item>
-
+      
         {mode === 'create' && (
-          <>
-            <Form.Item
-              label={'Description'}
-              name="description"
-              rules={[{ required: true, message: 'Please input Description' }]}
-            >
-              <Input.TextArea />
-            </Form.Item>
-
-            <Form.Item
-              label={'Discount'}
-              name="discount"
-              rules={[{ required: true, message: 'Please input Discount' }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-
-            <Form.Item
-              label={'Product'}
-              name="product"
-              rules={[{ required: true, message: 'Please input Product' }]}
-
-            >
-              <Select mode="multiple" placeholder="Please select products">
-                {products.map((product: IProduct) => (
-                  <Option key={product._id} value={product._id}>
-                    {product.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-
-            <Form.Item
-              label={'Start date'}
-              name="start_date"
-              rules={[{ required: true, message: 'Please input Start date' }]}
-            >
-              <DatePicker />
-            </Form.Item>
-            <Form.Item
-              label={'Expiration date'}
-              name="expiration_date"
-              rules={[{ required: true, message: 'Please input Expiration date' }]}
-            >
-              <DatePicker />
-            </Form.Item>
-          </>
+         <>
+         <Form.Item
+           label={'Description'}
+           name="description"
+           rules={[{ required: true, message: 'Please input Description' }]}
+         >
+           <Input.TextArea />
+         </Form.Item>
+         
+         <Form.Item
+           label={'Discount'}
+           name="discount"
+           rules={[{ required: true, message: 'Please input Discount' }]}
+         >
+           <Input type="number" />
+         </Form.Item>
+         
+         <Form.Item
+           label={'Product'}
+           name="product"
+           rules={[{ required: true, message: 'Please input Product' }]}
+         
+         >
+           <Select mode="multiple" placeholder="Please select products">
+             {products.map((product: IProduct) => (
+               <Option key={product._id} value={product._id}>
+                 {product.name}
+               </Option>
+             ))}
+           </Select>
+         </Form.Item>
+         
+         
+         <Form.Item
+           label={'Start date'}
+           name="start_date"
+           rules={[{ required: true, message: 'Please input Start date' }]}
+         >
+           <DatePicker />
+         </Form.Item>
+         <Form.Item
+           label={'Expiration date'}
+           name="expiration_date"
+           rules={[{ required: true, message: 'Please input Expiration date' }]}
+         >
+           <DatePicker />
+         </Form.Item>
+         </>
         )}
+      
         {mode === 'update' && (
           <>
             <Form.Item
@@ -131,7 +138,7 @@ const FormSale: React.FC<
             >
               <Input.TextArea />
             </Form.Item>
-
+      
             <Form.Item
               label={'Discount'}
               name="discount"
@@ -139,21 +146,21 @@ const FormSale: React.FC<
             >
               <Input type="number" />
             </Form.Item>
-
+      
             <Form.Item
               label={'Product'}
               name="product"
               rules={[{ required: true, message: 'Please input Product' }]}
             >
-              <Select mode="multiple" placeholder="Please select products" defaultValue={[]}>
-                {products.map((product: any) => (
+              <Select mode="multiple" placeholder="Please select products">
+                {products.map((product: IProduct) => (
                   <Option key={product._id} value={product._id}>
                     {product.name}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
-
+      
             <Form.Item
               label={'Start date'}
               name="start_date"
@@ -170,7 +177,7 @@ const FormSale: React.FC<
             </Form.Item>
           </>
         )}
-
+      
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Save

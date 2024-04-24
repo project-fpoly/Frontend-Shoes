@@ -3,8 +3,7 @@ import { Avatar, Space } from 'antd'
 import moment from 'moment'
 
 const Infomation = () => {
-  const user = useSelector((state: any) => state.auth.user)
-  console.log(user);
+  const user = useSelector((state: any) => state.user.user)
 
   return (
     <div className="">
