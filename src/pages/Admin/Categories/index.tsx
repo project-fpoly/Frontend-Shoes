@@ -61,21 +61,17 @@ const CategoriesManager: React.FC = () => {
     name: 'Tên danh mục',
     description: 'Mô tả của danh mục',
     imageUrl:
-      'https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg',
+      '',
     status: 'active',
     viewCount: 123,
   }
   const Value = {
-    _id: categoriesState?._id || '',
-    name: categoriesState?.name || 'Tên danh mục',
-    description: categoriesState?.description || 'Mô tả của danh mục',
-    imageUrl:
-      categoriesState?.imageUrl ||
-      'https://res.cloudinary.com/dxspp5ba5/image/upload/v1708917683/cld-sample-5.jpg',
-    status: categoriesState?.status || 'active',
-    viewCount: categoriesState?.viewCount || 123,
-  }
-
+    name: categoriesState?.name ? categoriesState?.name : '',
+    description: categoriesState?.description ? categoriesState?.description : '',
+    imageUrl: categoriesState?.imageUrl?.url ?categoriesState?.imageUrl?.url: '', 
+    status: categoriesState?.status ? categoriesState?.status : '',
+    viewCount: categoriesState?.viewCount ? categoriesState?.viewCount : 0,
+  };
   const removeCategory = (record: ICategory) => {
     Modal.confirm({
       title: 'Confirm Delete',
@@ -106,7 +102,9 @@ const CategoriesManager: React.FC = () => {
     {
       title: 'Image',
       dataIndex: 'imageUrl',
-      render: (imageUrl) => <Image src={imageUrl} width={50} />,
+      render: (imageUrlData) => (
+        <Image src={imageUrlData?.url} width={50} /> // Truy cập vào thuộc tính 'url'
+      ),
     },
     {
       title: 'Description',
@@ -119,6 +117,14 @@ const CategoriesManager: React.FC = () => {
     {
       title: 'ViewCount',
       dataIndex: 'viewCount',
+    },
+    {
+      title: ' Products',
+      dataIndex: 'products',
+      key: 'product',
+      render: (products) => (
+        <div>{products.length}</div>
+      ),
     },
     {
       title: 'Action',
@@ -142,8 +148,6 @@ const CategoriesManager: React.FC = () => {
   ]
   const searchCategory = (value: string) => {
     setSearch(value)
-    // Gọi hàm searchCategory với giá trị tìm kiếm
-    console.log(value)
   }
   return (
     <div>

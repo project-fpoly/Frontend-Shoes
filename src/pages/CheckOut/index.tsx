@@ -1,50 +1,57 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form, Input, Radio } from 'antd'
+import React, { useEffect, useState, useRef } from 'react'
+import { Button, Checkbox, Form, Input, Radio, Select, Switch } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import { TbTruckDelivery } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 import { IStateProduct } from '../../common/redux/type'
-import { createOrder, getCartItems } from '../../features/cart'
+import { createOrder, getCartItems, deleteCart } from '../../features/cart'
+import {
+  getProvinces,
+  getDistricts,
+  getWards,
+  getShippingOrders,
+} from '../../features/address'
+
 import { fetchAllProducts } from '../../features/product'
+import { fetchVoucher, fetchOneVoucher } from '../../features/voucher'
+
 import { IUsers } from '../../common/users'
 import { createPaymentUrl } from '../../features/vnPay'
-
+import { formatCurrency } from '../../hooks/utils'
 const CheckOut = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const { cart } = useSelector((state: any) => state.cart.cartItems)
+  const state = useSelector((state: any) => state.cart.cartItems)
+  const order = useSelector((state: any) => state.cart.orderData)
+  const provinces = useSelector((state: any) => state.address.province)
+  const districts = useSelector((state: any) => state.address.district)
+  const wards = useSelector((state: any) => state.address.ward)
+  const shippingOrder = useSelector((state: any) => state.address.shipping)
+  const data = useSelector((state: any) => state.voucher.vouchers)
+  const voucher = useSelector((state: any) => state.voucher.voucher)
+  const [province, setProvince] = useState(null)
+  const [district, setDistrict] = useState(null)
+  const [ward, setWard] = useState(null)
+  const [voucherr, setVoucher] = useState('')
+  const [voucherName, setVoucherName] = useState('')
   const cartSession = JSON.parse(sessionStorage.getItem('cart'))
   const accessToken = localStorage.getItem('accessToken')
-  const redirectUrl= useSelector((state: any) => state.vnPay.redirectUrl)
-  const [paymentMethod, setPaymentMethod] = useState('Thanh toán tiền mặt');
-  let totalPrice = 0
+  let totalCart = 0
   cartSession?.cartItems.forEach((item: any) => {
-    totalPrice += item.price * item.quantity
+    totalCart += item.price * item.quantity
   })
-  useEffect(() => {
-    if (paymentMethod === "vnPay") {
-      if (redirectUrl){
-        window.open(redirectUrl, '_blank');
-    }
-    dispatch(createPaymentUrl({ amount: totalPrice ?totalPrice:cart?.totalPrice,
-      bankCode: "VNBANK",
-      language: "vn",})) 
-    }
-  }, [paymentMethod, dispatch,redirectUrl ]);
-  const handlePaymentMethodChange = (e:any) => {
-    console.log(e.target.value)
-    setPaymentMethod(e.target.value);
-    if (e.target.value === 'vnpay') {
-      if (redirectUrl) {
-        window.open(redirectUrl, '_blank');
-        
-      } else {
-        // Xử lý trường hợp redirectUrl không có giá trị
-      }
-    }
-  };
+  state?.cart?.cartItems.forEach((item: any) => {
+    totalCart += item.price * item.quantity
+  })
+
+  const totalPrice = district
+    ? voucher?.data?.Code === voucherr
+      ? shippingOrder?.service_fee + totalCart - voucher?.data?.reduced_amount
+      : shippingOrder?.service_fee + totalCart
+    : totalCart
+
   const { products } = useSelector((state: IStateProduct) => state.product)
   const { user } = useSelector((state: IUsers) => state.auth)
   const getProductName = (shoeId: string) => {
@@ -55,58 +62,200 @@ const CheckOut = () => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.categoryId.name : 'N/A'
   }
-
+  const hanlderChangeProvince = (value: any, option: any) => {
+    setProvince(option.data_province_id)
+  }
+  const hanlderChangeDistrict = (value: any, option: any) => {
+    setDistrict(option.data_district_id)
+  }
+  const hanlderChangeWard = (value: any, option: any) => {
+    setWard(option.data_ward_id)
+  }
+  const items = state?.cart
+    ? state.cart.cartItems.map((cartItem: any) => {
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
+    : cartSession?.cartItems.map((cartItem: any) => {
+        return {
+          name: getProductName(cartItem.product),
+          quantity: cartItem.quantity,
+          height: 200,
+          weight: 1000,
+          length: 200,
+          width: 200,
+        }
+      })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
-  }, [])
+    dispatch(getProvinces('a'))
+    dispatch(getDistricts(province))
+    if (province) {
+      dispatch(getWards(district))
+      dispatch(
+        getShippingOrders({
+          service_type_id: 2,
+          from_district_id: 1915,
+          to_district_id: district,
+          to_ward_code: ward,
+          height: 20,
+          length: 30,
+          weight: 3000,
+          width: 40,
+          insurance_value: 0,
+          coupon: null,
+          items: items,
+        }),
+      )
+    }
+    dispatch(fetchVoucher())
+    dispatch(fetchOneVoucher(voucherr))
+  }, [province, district, ward, order, voucherr, voucherName])
   const [form] = Form.useForm()
-  const handleFormSubmit = (formValues: {
+  const handleFormSubmit = async (formValues: {
+    firstName: string
+    lastName: string
     fullname: string
     email: string
     phone: string
     address: string
+    province: string
+    district: string
+    ward: string
+    payment_method: string
   }) => {
-
     const request = {
       shippingAddress: {
-        fullname: formValues.fullname,
-        address: formValues.address,
+        fullname: formValues.firstName + ' ' + formValues.lastName,
+        address:
+          formValues.address +
+          ' ' +
+          formValues.ward +
+          ' ' +
+          formValues.district +
+          ' ' +
+          formValues.province,
         email: formValues.email,
         phone: formValues.phone,
       },
       payment_method: formValues.payment_method,
     }
     const { shippingAddress, payment_method } = request
-    if (accessToken) {
-      if (cart) {
-        const { cartItems } = cart
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
-        sessionStorage.removeItem('cart')
-        navigate('../../order')
+    let redirectUrl = '' as any
+
+    try {
+      if (accessToken) {
+        if (state.cart) {
+          const { cartItems } = state?.cart
+          const data = await dispatch(
+            createOrder({
+              cartItems,
+              shippingAddress,
+              payment_method,
+              totalPrice,
+              voucherr,
+              voucherName,
+            }),
+          )
+          dispatch(deleteCart(state?.cart._id))
+
+          sessionStorage.removeItem('cart')
+          if (payment_method === 'vnPay' && data) {
+            redirectUrl = await dispatch(
+              createPaymentUrl({
+                amount: totalPrice,
+                bankCode: 'VNBANK',
+                language: 'vn',
+                orderId: data?.payload.trackingNumber,
+              }),
+            )
+          }
+        } else if (cartSession && cartSession.cartItems) {
+          const { cartItems } = cartSession
+          const data = await dispatch(
+            createOrder({
+              cartItems,
+              shippingAddress,
+              payment_method,
+              totalPrice,
+              voucherr,
+              voucherName,
+            }),
+          )
+          sessionStorage.removeItem('cart')
+          if (payment_method === 'vnPay' && data) {
+            redirectUrl = await dispatch(
+              createPaymentUrl({
+                amount: totalPrice,
+                bankCode: 'VNBANK',
+                language: 'vn',
+                orderId: data?.payload.trackingNumber,
+              }),
+            )
+          }
+        }
+        console.log(redirectUrl)
+
+        if (redirectUrl) {
+          window.location.href = redirectUrl.payload
+        } else {
+          navigate('../../order')
+        }
       } else {
         const { cartItems } = cartSession
-        dispatch(createOrder({ cartItems, shippingAddress, payment_method }))
+        const data = await dispatch(
+          createOrder({
+            cartItems,
+            shippingAddress,
+            payment_method,
+            totalPrice,
+          }),
+        )
+
         sessionStorage.removeItem('cart')
-        navigate('../../order')
-
+        if (payment_method === 'vnPay' && data) {
+          redirectUrl = await dispatch(
+            createPaymentUrl({
+              amount: totalPrice,
+              bankCode: 'VNBANK',
+              language: 'vn',
+              orderId: data.payload?.trackingNumber,
+            }),
+          )
+          if (redirectUrl) {
+            window.location.href = redirectUrl.payload
+            localStorage.setItem('idOrder', data.payload?._id)
+          } else {
+            navigate('../../order/guest')
+          }
+        }
       }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+  const today = new Date()
+  console.log(today)
+  const formattedDate = today.toISOString()
+  const validatePhone = (rule: any, value: any, callback: any) => {
+    const phoneRegex = /^[0-9]{10,}$/
+    if (value && !phoneRegex.test(value)) {
+      callback('Please enter a valid phone number!')
     } else {
-      const { cartItems } = cartSession
-
-      dispatch(
-        createOrder({ cartItems, shippingAddress, payment_method, totalPrice }),
-      )
-      sessionStorage.removeItem('cart')
-      navigate('../../order')
-
+      callback()
     }
   }
   const fullname = user?.userName
   const address = user?.deliveryAddress
   const email = user?.email
   const phone = user?.phoneNumbers
-
   React.useEffect(() => {
     form.setFieldsValue({
       fullname,
@@ -115,15 +264,19 @@ const CheckOut = () => {
       phone,
     })
   }, [form, fullname])
+  const handleChangeVoucher = (value: any, option: any) => {
+    console.log(option)
+    setVoucherName(value)
+    setVoucher(option.data_voucher_code)
+  }
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols lg:grid-cols-2">
         <div className="checkout_body col-span-1">
           <div>
-            <h2 className="text-xl mb-4">
+            <h2 className="text-xl  mb-4">
               How would you like to get your order?
             </h2>
-
             <Button
               block
               className="h-20 rounded-xl mb-12 border-black hover:!border-black hover:!text-black"
@@ -150,39 +303,52 @@ const CheckOut = () => {
                 <h2 className="text-2xl mb-4">Your delivery information</h2>
 
                 <Form.Item
-                  name="fullname"
-                  rules={[
-                    { required: true, message: 'Please enter your last name!' },
-                  ]}
-                >
-                  <Input
-                    name="fullname"
-                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
-                    size="large"
-                    placeholder="Fullname"
-                  />
-                </Form.Item>
-
-                <Form.Item
-                  name="address"
+                  name="firstName"
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter your address details!',
+                      message: 'Please enter your first name!',
+                    },
+                    {
+                      min: 2,
+                      message: 'First name must be at least 2 characters.',
                     },
                   ]}
                 >
                   <Input
+                    name="firstName"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Address Line 1"
+                    placeholder="First name"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="lastName"
+                  rules={[
+                    { required: true, message: 'Please enter your last name!' },
+                    {
+                      min: 2,
+                      message: 'First name must be at least 2 characters.',
+                    },
+                  ]}
+                >
+                  <Input
+                    name="lastName"
+                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
+                    size="large"
+                    placeholder="Last name"
                   />
                 </Form.Item>
 
                 <Form.Item
                   name="email"
                   rules={[
-                    { required: true, message: 'Please enter your Email!' },
+                    {
+                      required: true,
+                      message: 'Please enter your Email!',
+                      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Thêm pattern vào rules để kiểm tra
+                    },
                   ]}
                 >
                   <Input
@@ -200,6 +366,7 @@ const CheckOut = () => {
                       required: true,
                       message: 'Please enter your phone number!',
                     },
+                    { validator: validatePhone },
                   ]}
                 >
                   <Input
@@ -209,30 +376,113 @@ const CheckOut = () => {
                     placeholder="Phone Number"
                   />
                 </Form.Item>
+
+                <Form.Item
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your Province/Municipality!',
+                    },
+                  ]}
+                >
+                  <Select
+                    className=""
+                    size="large"
+                    placeholder="Province/Municipality"
+                    onChange={hanlderChangeProvince}
+                  >
+                    {provinces &&
+                      provinces?.map((province: any) => (
+                        <Select.Option
+                          key={province.ProvinceID}
+                          value={province.ProvinceName}
+                          data_province_id={province.ProvinceID}
+                        >
+                          {province.ProvinceName}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+                {province && (
+                  <Form.Item
+                    name="district"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your District!',
+                      },
+                    ]}
+                  >
+                    <Select
+                      className=""
+                      size="large"
+                      placeholder="District"
+                      onChange={hanlderChangeDistrict}
+                    >
+                      {districts &&
+                        districts?.map((district: any) => (
+                          <Select.Option
+                            key={district.DistrictID}
+                            value={district.DistrictName}
+                            data_district_id={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                )}
+                {district && (
+                  <Form.Item
+                    name="ward"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your Ward!',
+                      },
+                    ]}
+                  >
+                    <Select
+                      className=""
+                      size="large"
+                      onChange={hanlderChangeWard}
+                      placeholder="Ward/Commune"
+                    >
+                      {wards &&
+                        wards.map((ward: any) => (
+                          <Select.Option
+                            key={ward.WardCode}
+                            value={ward.WardName}
+                            data_ward_id={ward.WardCode}
+                          >
+                            {ward.WardName}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                )}
+                <Form.Item
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your address details!',
+                    },
+                    {
+                      min: 4,
+                      message: 'details address must be at least 4 characters.',
+                    },
+                  ]}
+                >
+                  <Input
+                    className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
+                    size="large"
+                    placeholder="detailed address, house number or easy-to-find place"
+                  />
+                </Form.Item>
               </div>
 
-              {/* <Checkbox onChange={onChange} className="my-12">
-                I have read and consent to eShopWorld processing my information
-                in accordance with the{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Privacy Statement
-                </a>{" "}
-                and{" "}
-                <a
-                  href="#"
-                  className="underline hover:underline text-[#757575] hover:text-[#ccc]"
-                >
-                  Cookie Policy
-                </a>{" "}
-                . eShopWorld is a trusted Nike partner.
-              </Checkbox> */}
-
-              {/* <Form.Item name="fieldA" valuePropName="checked">
-                                <Checkbox />
-                            </Form.Item> */}
               <Form.Item
                 name="payment_method"
                 rules={[
@@ -240,19 +490,22 @@ const CheckOut = () => {
                 ]}
                 initialValue="Thanh toán tiền mặt"
               >
-                <Radio.Group value={paymentMethod} onChange={handlePaymentMethodChange} >
+                <Radio.Group>
                   <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
                   <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
-              <Button
-                type="default"
-                htmlType="submit"
-                block
-                className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
-              >
-                <p className="text-lg ">Check out</p>
-              </Button>
+              {state?.cart?.cartItems.length > 0 ||
+              cartSession?.cartItems.length > 0 ? (
+                <Button
+                  type="default"
+                  htmlType="submit"
+                  block
+                  className="bg-black text-[#fff] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-[#333] hover:!text-white hover:!border-black"
+                >
+                  <p className="text-lg ">Check out</p>
+                </Button>
+              ) : null}
             </Form>
           </div>
         </div>
@@ -261,72 +514,119 @@ const CheckOut = () => {
           <div className="text-lg font-normal">
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Subtotal</div>
-              <div className="text-[#6b7280]">
-                {cart ? cart?.totalPrice : totalPrice} <span>đ</span>
-              </div>
+              <div className="text-[#6b7280]">{formatCurrency(totalCart)}</div>
             </div>
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Delivery/Shipping</div>
-              <div className="text-[#6b7280]">Free</div>
+              <div className="text-[#6b7280]">
+                {district ? formatCurrency(shippingOrder?.service_fee) : 'Free'}
+              </div>
+            </div>
+            <hr />
+            <div className="flex justify-between items-center my-5">
+              <div className="text-[#6b7280]">Voucher</div>
+              <div>
+                {data.length > 0 ? (
+                  <Form className="pt-[26px]">
+                    <Form.Item name="Code">
+                      <Select
+                        defaultValue="hãy chọn mã giảm giá"
+                        onChange={handleChangeVoucher}
+                      >
+                        {data?.map((voucher: any, index: number) => (
+                          <Select.Option
+                            key={index}
+                            value={voucher.Name}
+                            data_voucher_code={voucher.Code}
+                            disabled={
+                              !(
+                                voucher.start_date < formattedDate &&
+                                formattedDate < voucher.expiration_date
+                              ) ||
+                              totalPrice < voucher.price_order ||
+                              voucher.Quantity <= 0
+                            }
+                          >
+                            {voucher.Name}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Form>
+                ) : (
+                  <p className="text-[#6b7280] text-xs">
+                    Hãy trở thành thành viên để nhận được những ưu đãi hấp dẫn
+                  </p>
+                )}
+              </div>
             </div>
             <hr />
             <div className="flex justify-between items-center my-5">
               <div>Total</div>
-              <div>
-                {cart ? cart?.totalPrice : totalPrice}{' '}
-                <span className="font-light">đ</span>
-              </div>
+              <div>{formatCurrency(totalPrice)}</div>
             </div>
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
-            {cart
-              ? cart?.cartItems.map((cartItem: any, index: number) => (
-                <>
-                  <div key={index} className="col-span-1">
-                    <figure className="col-span-1">
-                      <Link to={'/'}>
-                        <img src={cartItem.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                  </div>
-                  <div className="col-span-1">
-                    <h2 className="text-xl">
-                      {getProductName(cartItem.product)}
-                    </h2>
-                    <p className="text-[#6b7280]">
-                      {getCateName(cartItem.product)}
-                    </p>
-                    <p className="text-[#6b7280]">{cartItem.size}</p>
-                    <p className="text-[#6b7280]">{cartItem.quantity}</p>
-                    <p className="text-[#6b7280]">{cartItem.price}</p>
-                  </div>
-                </>
-              ))
-              : cartSession?.cartItems.map((item: any, index: number) => (
-                <>
-                  <div key={index} className="col-span-1">
-                    <figure className="col-span-1">
-                      <Link to={'/'}>
-                        <img src={item.images[0]} alt="" />
-                      </Link>
-                    </figure>
-                  </div>
-                  <div className="col-span-1">
-                    <h2 className="text-xl">
-                      {getProductName(item.product)}
-                    </h2>
-                    <p className="text-[#6b7280]">
-                      {getCateName(item.product)}
-                    </p>
-                    <p className="text-[#6b7280]">{item.size}</p>
-                    <p className="text-[#6b7280]">{item.quantity}</p>
-                    <p className="text-[#6b7280]">
-                      {item.price * item.quantity}
-                    </p>
-                  </div>
-                </>
-              ))}
+            {state?.cart?.cartItems.length > 0 ||
+            cartSession?.cartItems.length > 0 ? (
+              <>
+                {state?.cart?.cartItems.map((cartItem: any, index: number) => (
+                  <>
+                    <div key={index} className="col-span-1">
+                      <figure className="col-span-1">
+                        <Link to={'/'}>
+                          <img src={cartItem.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                    </div>
+                    <div className="col-span-1">
+                      <h2 className="text-xl">
+                        {getProductName(cartItem.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        Category: {getCateName(cartItem.product)}
+                      </p>
+                      <p className="text-[#6b7280]">Size: {cartItem.size}</p>
+                      <p className="text-[#6b7280]">Color: {cartItem.color}</p>
+                      <p className="text-[#6b7280]">
+                        Quantity: {cartItem.quantity}
+                      </p>
+                      <p className="text-[#6b7280]">
+                        Price: {formatCurrency(cartItem.price)}
+                      </p>
+                    </div>
+                  </>
+                ))}
+                {cartSession?.cartItems.map((item: any, index: number) => (
+                  <>
+                    <div key={index} className="col-span-1">
+                      <figure className="col-span-1">
+                        <Link to={'/'}>
+                          <img src={item.images[0]} alt="" />
+                        </Link>
+                      </figure>
+                    </div>
+                    <div className="col-span-1">
+                      <h2 className="text-xl">
+                        {getProductName(item.product)}
+                      </h2>
+                      <p className="text-[#6b7280]">
+                        Category: {getCateName(item.product)}
+                      </p>
+                      <p className="text-[#6b7280]">Size: {item.size}</p>
+                      <p className="text-[#6b7280]">Color: {item.color}</p>
+                      <p className="text-[#6b7280]">
+                        Quantity: {item.quantity}
+                      </p>
+                      <p className="text-[#6b7280]">
+                        Price: {formatCurrency(item.price * item.quantity)}
+                      </p>
+                    </div>
+                  </>
+                ))}
+              </>
+            ) : null}
           </div>
         </div>
       </div>

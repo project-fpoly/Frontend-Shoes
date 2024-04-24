@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Form, Input, message } from 'antd'
+import { Button, Form, Input, message, notification } from 'antd'
 import axios from 'axios'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { SiNike } from 'react-icons/si'
@@ -10,7 +10,9 @@ const Password = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const email =
-    useSelector((state) => state.auth.user)?.email || params.get('email')
+    useSelector((state: any) => state.auth.user)?.email || params.get('email')
+    const role =
+    useSelector((state: any) => state.auth.user)
 
   const getUserID = (token: string) => {
     const base64Url = token.split('.')[1]
@@ -52,24 +54,32 @@ const Password = () => {
           .then((res) => {
             dispatch(setUser(res.data.user))
             // alert('Login successfully');
-            message.success('Login successfully')
-
-            //redirect to signup page
-            navigate('/')
+            notification.success({
+              message: 'Login successfully',
+              placement: 'top',
+            });
+            if(res.data.user.role==="admin"){
+              navigate('/admin')
+            }else{
+              navigate('/')
+            }
           })
           .catch((err) => {
             console.log(err)
           })
       }
     } catch (e: any) {
-      e.response.data.message && alert(e.response.data.message)
+      e.response.data.message && notification.error({
+        message: 'Login failed',
+        description: e.response.data.message,
+        placement: 'top'
+      });
       if (e.response.data.code === 404) {
         navigate('/signup')
       }
       // console.log(e);
     }
   }
-
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -95,16 +105,10 @@ const Password = () => {
                 {
                   message: 'Mandatory!',
                   required: true,
-                  type: 'password',
+
                 },
               ]}
             >
-              {/*<Input*/}
-              {/*    type="password" name="password"*/}
-              {/*    className="font-medium border h-10 hover:border-blue-500 focus:border-blue-500"*/}
-              {/*    style={{ borderColor: 'gray' }}*/}
-              {/*    placeholder="Password"*/}
-              {/*/>*/}
               <Input.Password
                 className="border border-black"
                 size="large"
@@ -141,8 +145,8 @@ const Password = () => {
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
                 }}
-                // onMouseEnter={handleMouseEnter}
-                // onMouseLeave={handleMouseLeave}
+              // onMouseEnter={handleMouseEnter}
+              // onMouseLeave={handleMouseLeave}
               >
                 Continue
               </Button>

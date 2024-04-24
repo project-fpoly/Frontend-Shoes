@@ -8,10 +8,8 @@ import Slide from '../../components/Detail/Slide'
 import { IStateCmt, IStateProduct } from '../../common/redux/type'
 import LoadingProduct from '../../components/Loading/LoadingProduct'
 import SlideAlso from '../../components/Detail/SlideAlso'
-import {
-  fetchAllComment,
-  fetchAllCommentByProduct,
-} from '../../features/comment'
+import { fetchAllCommentByProduct } from '../../features/comment'
+import LoadingBar from 'react-top-loading-bar'
 
 const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -25,7 +23,6 @@ const DetailShoe = () => {
     dispatch(fetchProductById(id!))
     dispatch(fetchAllCommentByProduct(id!))
   }, [dispatch, id])
-
   if (Loading === 'pending') {
     return (
       <div className="flex justify-center items-center mt-36">
@@ -36,13 +33,14 @@ const DetailShoe = () => {
 
   return (
     <>
-      <div className="lg:flex justify-center mt-28 lg:mx-[200px] mx-4 gap-20">
+      <div className="flex flex-col items-center lg:items-start lg:flex-row justify-center mt-0 lg:mt-20 lg:mx-[200px] mx-4 gap-5 lg:gap-20">
         <Slide shoe={shoe}></Slide>
         <InfoShoe shoe={shoe} category={category}></InfoShoe>
       </div>
       <div className="mt-10 px-10">
         <SlideAlso shoes={shoes}></SlideAlso>
       </div>
+      <LoadingBar color="black" progress={Loading === 'fullfiled' ? 0 : 100} />
     </>
   )
 }

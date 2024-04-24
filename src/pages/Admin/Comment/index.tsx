@@ -14,10 +14,14 @@ import { fetchAllProducts } from '../../../features/product'
 const CommentManager = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [currentPage, setCurrentPage] = useState(1)
+  const [size, setsize] = useState(10)
   const [Search, setSearch] = useState('')
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number,size:number) => {
     setCurrentPage(page)
+    setsize(size)
+    console.log("page",page,"size",size);
+    
   }
   const {
     comments: comment,
@@ -27,10 +31,10 @@ const CommentManager = () => {
   const { products } = useSelector((state: IStateProduct) => state.product)
   useEffect(() => {
     dispatch(
-      fetchAllComment({ page: currentPage, pageSize: 10, search: Search }),
+      fetchAllComment({ page: currentPage, pageSize: size, search: Search }),
     )
     dispatch(fetchAllProducts({ page: 0, pageSize: 0, searchKeyword: '' }))
-  }, [dispatch, currentPage, Search])
+  }, [dispatch, currentPage, Search,size])
   const getProductName = (shoeId: string) => {
     const product = products.find((product) => product._id === shoeId)
     return product ? product.name : 'N/A'
@@ -147,21 +151,20 @@ const CommentManager = () => {
   //   console.log(record);
   // };
   const searchCmt = (value: string) => {
-    console.log(value)
     setSearch(value)
   }
   return (
     <>
       <HeaderTable
-        showModal={() => setIsModalOpen(true)}
+        showModal={null}
         onSubmitt={(value) => searchCmt(value)}
         name={'Comment'}
       />
-      {loading === 'pending' ? (
+      {/* {loading === 'pending' ? (
         <div className="flex justify-center items-center mt-16">
           <LoadingOutlined style={{ fontSize: 24 }} spin />
         </div>
-      ) : (
+      ) : ( */}
         <>
           <Table
             style={{ marginTop: '15px' }}
@@ -174,13 +177,14 @@ const CommentManager = () => {
               total: totalDocs,
               showTotal: (total) => ` ${total} items`,
               onChange: handlePageChange,
+              showSizeChanger: true,
             }}
           />
         </>
-      )}
+      {/* )} */}
       <Modal
         title="Create new comment"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         footer={null}

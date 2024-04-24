@@ -35,7 +35,7 @@ const Trending = () => {
           Shop
         </Link>
       </Space>
-    </Space>
+    </Space >
   )
 }
 

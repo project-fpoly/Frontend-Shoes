@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import type { CollapseProps } from 'antd'
 import {
@@ -16,20 +16,23 @@ import './index.scss'
 import ModalCustom from '../../../Modal'
 import { ICmt, IProduct } from '../../../../common/products'
 import { useDispatch, useSelector } from 'react-redux'
-import { IStateCmt, IStateProduct } from '../../../../common/redux/type'
+import { IStateCmt } from '../../../../common/redux/type'
 import { Link } from 'react-router-dom'
 import user from '../../../../features/user'
 import moment from 'moment'
 import { AppDispatch } from '../../../../redux/store'
-import { createCommnets, deleteCommentById } from '../../../../features/comment'
+import { createCommnets, deleteCommentById, updateCommentById } from '../../../../features/comment'
+import ModalCmt from '../../../Modal/ModalCmt'
 const Colspace = ({ shoe }: { shoe: IProduct }) => {
-  const [inputUpdate, setInputUpdate] = useState<boolean>(false)
+
+  const [typeCmt, setTypeCmt] = useState<string>('')
   const userIdStorage = localStorage.getItem('userID')
   const commnets = useSelector((state: IStateCmt) => state.comment.comments)
   const dispatch = useDispatch<AppDispatch>()
   const Loading = useSelector((state: IStateCmt) => state.comment.loading)
   const accessToken = localStorage.getItem('accessToken')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpenCmt, setIsModalOpenCmt] = useState(false)
   const [idCmt, setIdCmt] = useState<ICmt>()
   const filteredReviews = commnets.filter(
     (review) => typeof review.rating === 'number',
@@ -40,55 +43,58 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   )
   const averageRating = totalStars / commnets.length
   const onChange = (key: string | string[]) => {
-    console.log(key)
   }
+
   const handleShowModal = () => {
     setIsModalOpen(true)
   }
+
   type FormValues = {
     content: string
   }
   const {
     register,
     reset,
+    setValue,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm<FormValues>()
+  } = useForm<FormValues>({
+    defaultValues: {
+      content: '',
+    },
+  })
+
+  const previousContent = watch('content')
 
   const { _id: shoeId } = shoe
   const [rating, setRating] = useState<any>(0)
   const handleRateChange = (value: number) => {
     setRating(value)
   }
-  const confirm = (e: React.MouseEvent<HTMLElement>) => {
+  const confirm = () => {
     dispatch(deleteCommentById(idCmt as ICmt))
-    success()
-  }
-  const [messageApi, contextHolder] = message.useMessage()
-
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Delete successfully',
-      duration: 3000,
-    })
   }
 
   const contentCommnet = () => {
     return (
       <>
-        {contextHolder}
         <div className="flex flex-col w-32">
           <button
-            onClick={() => setInputUpdate(true)}
+            onClick={() => {
+              setIsModalOpenCmt(true)
+              setRating(idCmt?.rating)
+              setValue('content', idCmt?.content!)
+            }}
             className="flex flex-start py-2 hover:bg-gray-100 rounded-sm"
           >
             Update
           </button>
           <Popconfirm
+            className='z-10'
             title="Delete "
             description="Are you sure to delete this commnet?"
-            onConfirm={confirm }
+            onConfirm={confirm}
             okText={<button className='text-white'> Yes</button>}
             cancelText="No"
           >
@@ -137,7 +143,10 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             ></Rate>
           </p>
           <p
-            onClick={() => handleShowModal()}
+            onClick={() => {
+              handleShowModal()
+              setTypeCmt('CREATE')
+            }}
             className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
           >
             Write a review
@@ -162,44 +171,28 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                     )}
 
                     <div className="flex  gap-5">
-                      {inputUpdate && comment._id === idCmt?._id ? (
-                        <>
-                          {' '}
-                          <form className="flex gap-5" action="">
-                            <input
-                              className="border outline-none p-1 rounded-md"
-                              type="text"
-                            />{' '}
-                            <button
-                              children
-                              onClick={() => setInputUpdate(!inputUpdate)}
+                      <>
+                        <p className="text-xl">
+                          {comment?.userId['userName']}
+                        </p>
+                        {userId?._id! === userIdStorage && (
+                          <>
+                            <Popover
+                              className="mt-1"
+                              placement="bottomLeft"
+                              content={contentCommnet}
+                              trigger="click"
                             >
-                              Update
-                            </button>
-                          </form>{' '}
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-xl">
-                            {' '}
-                            {comment?.userId['userName']}
-                          </p>
-                          {userId?._id! === userIdStorage && (
-                            <>
-                              <Popover
-                                className="mt-1"
-                                placement="bottomLeft"
-                                content={contentCommnet}
-                                trigger="click"
-                              >
-                                <button onClick={() => setIdCmt(comment)}>
-                                  ...
-                                </button>
-                              </Popover>
-                            </>
-                          )}
-                        </>
-                      )}
+                              <button className='font-bold' onClick={() => {
+                                setIdCmt(comment)
+                              }}>
+                                ...
+                              </button>
+                            </Popover>
+                          </>
+                        )}
+                      </>
+
                     </div>
                   </div>
 
@@ -207,10 +200,10 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                     <Rate
                       disabled
                       className="text-black"
-                      defaultValue={comment.rating}
+                      value={comment.rating}
                     />
                     <span className=" flex flex-col gap-2  ">
-                      <p className="text-3xl">{comment.content}</p>
+                      <p className="text-xl">{comment.content}</p>
                       <p className="text-gray-500">
                         {moment(comment.createdAt).calendar()}
                       </p>
@@ -227,10 +220,22 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { content } = data
-    const commnet = { content, shoeId, rating }
-    dispatch(createCommnets(commnet as any))
-    if (Loading === 'fulfilled') {
-      setIsModalOpen(false)
+    const shoeId = shoe._id
+    const commnetcr = { content, rating, shoeId }
+    const commentId = idCmt?._id
+    const comentUpdate = { ...commnetcr, commentId, shoeId }
+    if (typeCmt === 'CREATE') {
+      dispatch(createCommnets(commnetcr as any))
+      if (Loading === 'fulfilled') {
+        setIsModalOpen(false)
+        setTypeCmt('')
+        reset()
+        setRating(null)
+      }
+    } if (typeCmt === 'UPDATE') {
+      setIsModalOpenCmt(false)
+      setTypeCmt('')
+      dispatch(updateCommentById(comentUpdate as any))
       reset()
       setRating(null)
     }
@@ -241,7 +246,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
       <Collapse
         className="w-[380px]"
         items={items}
-        defaultActiveKey={['1']}
+        defaultActiveKey={['1', '2']}
         onChange={onChange}
       />
 
@@ -311,6 +316,79 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           )}
         </div>
       </ModalCustom>
+      <ModalCmt isModalOpenCmt={isModalOpenCmt} setIsModalOpenCmt={setIsModalOpenCmt} >
+        <div className="flex flex-col gap-10 ">
+          <span className="text-center">
+            <h1 className="text-xl">Write a Review</h1>
+            <p className="text-gray-400">
+              Share your thoughts with the community.
+            </p>
+          </span>
+          <>
+            <div className="flex gap-5">
+              <Image width={80} src={shoe.images ? shoe.images[0] : ''} />
+              <p>{shoe.name}</p>
+            </div>
+            <form
+
+              className="flex flex-col gap-5"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <span>
+                <h2 className="mb-3">Overall rating *</h2>
+                <Rate
+                  value={rating}
+                  allowClear
+                  onChange={handleRateChange}
+                  className="text-black text-3xl"
+                />
+              </span>
+              <div className="border-t-[1px] "></div>
+              <p>Your Review *</p>
+              <input
+                className="h-[100px] p-2 rounded-md border border-black text-xl outline-none"
+                type="text"
+                {...register('content', { required: true })}
+              />
+              {errors.content && (
+                <span className="text-red-500 font-bold ">
+                  This field is required
+                </span>
+              )}
+
+              {previousContent === idCmt?.content && rating === idCmt?.rating ? (
+                <button
+                  disabled
+                  onClick={() => setTypeCmt('UPDATE')}
+                  type="submit"
+                  className="bg-blue-500  text-white  py-2 px-4 rounded w-[100px]"
+                >
+                  {Loading === 'pending' ? 'Loading...' : 'Send'}
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setTypeCmt('UPDATE')}
+                    type="submit"
+                    className="bg-blue-700 hover:bg-blue-800 font-bold text-white  py-2 px-4 rounded w-[100px]"
+                  >
+                    {Loading === 'pending' ? 'Loading...' : 'Send'}
+                  </button>
+                </>
+
+              )}
+
+
+            </form>
+            <p>
+              Describe what you liked, what you didn't like and other key
+              things shoppers should know. Minimum 30 characters.
+            </p>
+          </>
+
+        </div>
+      </ModalCmt>
+
     </>
   )
 }

@@ -1,4 +1,57 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;  
 
+@layer utilities {
+
+  /* button,
+  [type='submit'],
+  .ant-btn-primary {
+    -webkit-appearance: button;
+    background-color: black;
+    background-image: none;
+  }
+
+  button:hover,
+  [type='submit']:hover,
+  .ant-btn-primary:hover {
+    background-color: rgb(51, 49, 90);
+  } */
+}
+
+/* .ant-menu-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.ant-menu-overflow-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-tabs-nav-list {
+  gap: 60px;
+}
+
+.ant-tabs-tab-active {
+  color: black !important
+}
+
+.ant-tabs-tab {
+  color: black
+}
+
+.ant-menu-submenu-active {
+  color: black !important
+}
+
+.ant-menu-submenu-horizontal {
+  color: black !important
+}
+
+.ant-menu-submenu-active {
+  color: black !important
+}
+
+@tailwind utilities;

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { IProduct } from '../../common/products'
-import { saleFilterProducts } from '../../services/productsQuery'
+import { genderFilterProducts } from '../../services/productsQuery'
 import { Link } from 'react-router-dom'
 
 const ShopIcon = () => {
@@ -33,7 +33,7 @@ const ShopIcon = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const data = await saleFilterProducts(10, 'desc_sale')
+        const data = await genderFilterProducts("nam")
         setProducts(data.data)
         setLoading(false)
       } catch (error) {
@@ -63,7 +63,7 @@ const ShopIcon = () => {
                 key={index}
                 alt="Product"
                 src={item.images ? item.images[0] : ''}
-                style={{ height: 250, width: 260 }}
+                style={{ height: 250, width: 260, objectFit: 'cover' }}
               />
             </Link>
           ))

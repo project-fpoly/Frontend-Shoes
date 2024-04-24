@@ -32,6 +32,8 @@ const initialState: initialProduct = {
   product: {},
   category: '',
   totalProducts: 0,
+  loadingSearch: 'idle',
+  isDeleted: false,
 }
 
 export const getProductsWithFilters = createAsyncThunk(
@@ -50,7 +52,8 @@ export const getProductsWithFilters = createAsyncThunk(
     endDate,
     color,
     gender,
-    isDeleted
+    isDeleted,
+    priceSale  
   }: {
     page: number
     pageSize: number
@@ -62,20 +65,21 @@ export const getProductsWithFilters = createAsyncThunk(
     | 'desc_views'
     | 'asc_sold'
     | 'desc_sold'
-    | 'asc_sale'
-    | 'desc_sale'
     | 'asc_rate'
     | 'desc_rate'
+    | 'asc_createdAt'
+    | 'desc_createdAt'
     categoryId?: string
     size?: string
-    minPrice?: number
-    maxPrice?: number
+    minPrice?: string
+    maxPrice?: string
     material?: string
     startDate?: Date
     endDate?: Date
     color?: string
     gender?: string
-    isDeleted?: boolean
+    isDeleted?: boolean | string,
+    priceSale?: number  |string,
   }) => {
     try {
       const response = await getProductsWithFilter(
@@ -92,15 +96,16 @@ export const getProductsWithFilters = createAsyncThunk(
         endDate,
         color,
         gender,
-        isDeleted
+        isDeleted,
+        priceSale  // Truyền priceSale vào hàm getProductsWithFilter
       )
-      console.log('hi', response)
       return response
     } catch (error) {
       throw new Error('Lỗi khi lấy dữ liệu')
     }
   }
 );
+
 
 
 
@@ -129,7 +134,8 @@ export const fetchProductById = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const respone = await getProductById(id)
-      thunkApi.dispatch(fetchProductsByCategory(respone?.data?.categoryId!))
+      const { categoryId } = respone.data
+      thunkApi.dispatch(fetchProductsByCategory(categoryId._id))
       return respone.data
     } catch (error) {
       return isRejected('Error fetching data')
@@ -142,9 +148,11 @@ export const removeProduct = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await deleteProduct(id)
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
+      );
+
       return response
     } catch (error) {
       throw new Error('Lỗi khi xóa sản phẩm')
@@ -155,16 +163,18 @@ export const createProduct = createAsyncThunk(
   'product/createProduct',
   async (newProduct: IProduct, thunkApi) => {
     try {
-      const response = await addProduct(newProduct)
+      const response = await addProduct(newProduct);
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
-      return response
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
+      );
+      return response;
     } catch (error) {
-      throw new Error('Error create Product')
+      throw new Error('Error creating Product');
     }
   }
-)
+);
+
 export const update = createAsyncThunk(
   'product/updateProduct',
   async (
@@ -172,17 +182,19 @@ export const update = createAsyncThunk(
     thunkApi
   ) => {
     try {
-      const response = await updatePrroduct(id, newProduct)
+      const response = await updatePrroduct(id, newProduct);
+      const { page, pageSize } = (thunkApi.getState() as { product: { pagination: { page: number, pageSize: number } } }).product.pagination;
       thunkApi.dispatch(
-        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: '' })
-      )
-      return response
+        getProductsWithFilters({ page, pageSize, searchKeyword: '' })
+      );
+
+      return response;
     } catch (error) {
-      throw new Error('Error updating Product')
+      throw new Error('Error updating Product');
     }
   }
-
 );
+
 
 export const tryDelete = createAsyncThunk(
   "product/tryDeleteProduct",
@@ -190,7 +202,7 @@ export const tryDelete = createAsyncThunk(
     try {
       const response = await tryDeleteProduct(id);
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: "" })
       );
       return response;
     } catch (error) {
@@ -199,13 +211,13 @@ export const tryDelete = createAsyncThunk(
   }
 );
 
-export const tryRestore = createAsyncThunk(
-  "product/tryRestoreProduct",
+export const Restore = createAsyncThunk(
+  "product/RestoreProduct",
   async (id: string, thunkApi) => {
     try {
       const response = await tryRestoreProduct(id);
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: "" })
+        getProductsWithFilters({ page: 1, pageSize: 10, searchKeyword: "" })
       );
       return response;
     } catch (error) {
@@ -343,6 +355,7 @@ export const featchProductByMaterial = createAsyncThunk(
 )
 
 
+
 /// đây là chỗ chọc vào kho để lấy db
 export const productSlice = createSlice({
   name: 'product',
@@ -421,9 +434,28 @@ export const productSlice = createSlice({
     });
     builder.addCase(tryDelete.fulfilled, (state, action) => {
       state.loading = "fulfilled";
-      state.products = Array.isArray(action.payload) ? action.payload : [];
+      const deletedProductId = action.payload?._id;
+      if (deletedProductId) {
+        state.products = state.products.map(product =>
+          product._id === deletedProductId ? { ...product, isDeleted: true } : product
+        );
+        state.totalProducts = state.products.length;
+      }
+    });
+
+    // Restore product
+    builder.addCase(Restore.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(Restore.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(Restore.fulfilled, (state, action) => {
+      state.loading = "fulfilled";
+      state.products = Array.isArray(action.payload) ? action.payload.map(product => ({ ...product, isDeleted: false })) : [];
       state.totalProducts = state.products.length;
     });
+
 
     // remove product
     builder.addCase(removeProduct.pending, (state) => {
@@ -461,13 +493,13 @@ export const productSlice = createSlice({
     })
     // search product by keyword
     builder.addCase(searchProductsByKeyword.pending, (state) => {
-      state.loading = 'pending'
+      state.loadingSearch = 'pending'
     })
     builder.addCase(searchProductsByKeyword.rejected, (state) => {
-      state.loading = 'failed'
+      state.loadingSearch = 'failed'
     })
     builder.addCase(searchProductsByKeyword.fulfilled, (state, action) => {
-      state.loading = 'fulfilled'
+      state.loadingSearch = 'fulfilled'
       state.products = Array.isArray(action.payload) ? action.payload : []
     })
     ///Filter products by price

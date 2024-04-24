@@ -3,9 +3,27 @@
   grid-template-columns: 1fr 1fr 1fr;
   height: 600px;
   gap: 20px;
-
   overflow-y: scroll;
   margin: 0 20px;
+
+  .image {
+    border-radius: 5px;
+    object-fit: cover;
+    height: 300px;
+    width: 100%;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+
+    .image {
+      height: 330px;
+    }
+  }
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -24,10 +42,5 @@
     /* WebKit */
   }
 
-  .image {
-    border-radius: 5px;
-    object-fit: cover;
-    height: 300px;
-    width: 100%;
-  }
+
 }

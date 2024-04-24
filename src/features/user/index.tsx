@@ -3,9 +3,11 @@ import { initialUser } from '../../common/redux/type'
 import { isRejected } from '@reduxjs/toolkit/react'
 import {
   createUsers,
+  delete2Users,
   deleteUsers,
   getOneUsers,
   getUsers,
+  restoreUsers,
   updateUsers,
 } from '../../services/auth'
 import { IUsers } from '../../common/users'
@@ -26,13 +28,15 @@ export const fetchAllUsers = createAsyncThunk(
     page,
     pageSize,
     search,
+    isDelete
   }: {
     page: number
     pageSize: number
     search: string
+    isDelete: boolean
   }) => {
     try {
-      const respone = await getUsers(page, pageSize, search)
+      const respone = await getUsers(page, pageSize, search, isDelete)
       return respone
     } catch (error) {
       console.log('error')
@@ -45,8 +49,6 @@ export const fetchOneUsers = createAsyncThunk(
   async () => {
     try {
       const respone = await getOneUsers()
-      console.log(respone)
-
       return respone
     } catch (error) {
       console.log('error')
@@ -71,7 +73,19 @@ export const updateUser = createAsyncThunk(
   async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
     try {
       const response = await updateUsers(newUser, id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
+export const updateUserClient = createAsyncThunk(
+  '/user/updateUserClient',
+  async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
+    try {
+      const response = await updateUsers(newUser, id)
+      thunkApi.dispatch(fetchOneUsers())
       return response
     } catch (error) {
       return isRejected('Error updating user')
@@ -83,7 +97,33 @@ export const deleteeUser = createAsyncThunk(
   async (id: string[], thunkApi) => {
     try {
       const response = await deleteUsers(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      thunkApi.dispatch(fetchAllNotification(""))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
+export const deletee2User = createAsyncThunk(
+  '/user/delete2User',
+  async (id: string, thunkApi) => {
+    try {
+      const response = await delete2Users(id)
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      thunkApi.dispatch(fetchAllNotification(""))
+      return response
+    } catch (error) {
+      return isRejected('Error updating user')
+    }
+  },
+)
+export const restoreUser = createAsyncThunk(
+  '/user/restoreUsers',
+  async (id: string, thunkApi) => {
+    try {
+      const response = await restoreUsers(id)
+      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: true }))
       thunkApi.dispatch(fetchAllNotification(""))
       return response
     } catch (error) {
@@ -167,6 +207,34 @@ export const userSlice = createSlice({
     builder.addCase(deleteeUser.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
       state.users = Array.isArray(action.payload) ? action.payload : []
+    })
+    builder.addCase(deletee2User.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(deletee2User.rejected, (state, action) => {
+      state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to delete user.',
+      })
+    })
+    builder.addCase(deletee2User.fulfilled, (state) => {
+      state.loading = 'fulfilled'
+    })
+    builder.addCase(restoreUser.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(restoreUser.rejected, (state, action) => {
+      state.loading = 'failed'
+      const error = action.error.message as string
+      notification.error({
+        message: 'Error',
+        description: error || 'Failed to delete user.',
+      })
+    })
+    builder.addCase(restoreUser.fulfilled, (state) => {
+      state.loading = 'fulfilled'
     })
   },
 })

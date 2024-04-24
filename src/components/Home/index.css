@@ -1,7 +1,8 @@
-.img_banner {
+/* .img_banner {
   width: 100%;
   height: 700px;
-}
+} */
+
 .ant-carousel {
   width: 100% !important;
   max-width: 100% !important;
@@ -12,14 +13,14 @@
   max-width: 100% !important;
 }
 
-.ant-carousel .slick-slide > div {
+.ant-carousel .slick-slide>div {
   width: 100% !important;
 }
 
 .home_title {
   font-size: 24px;
   font-weight: 500;
-  margin: 80px 0 20px 0;
+  margin: 50px 0 20px 0;
 }
 
 .App {
@@ -49,41 +50,33 @@
 }
 
 .res-slide:nth-child(1) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444282/samples/landscapes/nature-mountains.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444282/samples/landscapes/nature-mountains.jpg');
 }
 
 .res-slide:nth-child(2) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444278/samples/landscapes/beach-boat.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444278/samples/landscapes/beach-boat.jpg');
 }
 
 .res-slide:nth-child(3) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444275/samples/landscapes/girl-urban-view.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444275/samples/landscapes/girl-urban-view.jpg');
 }
 
 .res-slide:nth-child(4) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444277/samples/animals/three-dogs.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444277/samples/animals/three-dogs.jpg');
 }
 
 .res-slide:nth-child(5) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444273/samples/animals/reindeer.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444273/samples/animals/reindeer.jpg');
 }
 
 .res-slide:nth-child(6) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444278/samples/people/bicycle.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444278/samples/people/bicycle.jpg');
 }
 
 .res-slide:nth-child(7) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444279/samples/ecommerce/leather-bag-gray.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444279/samples/ecommerce/leather-bag-gray.jpg');
 }
 
 .res-slide:nth-child(8) {
-  background: center / cover no-repeat
-    url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444271/samples/ecommerce/analog-classic.jpg');
+  background: center / cover no-repeat url('https://res.cloudinary.com/mister-shadrack/image/upload/v1618444271/samples/ecommerce/analog-classic.jpg');
 }

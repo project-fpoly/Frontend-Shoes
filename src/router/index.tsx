@@ -11,9 +11,9 @@ import UserManager from '../pages/Admin/Users'
 import CommentManager from '../pages/Admin/Comment'
 import CategoriesManager from '../pages/Admin/Categories'
 import ProductsManager from '../pages/Admin/Products'
-import OrderManager from '../pages/Admin/Order'
+import OrderTab from '../pages/Admin/Order/OrderTab.tsx'
 import NotificationsAdmin from '../pages/Admin/Notification'
-import Help from '../pages/Help/Help'
+import Help from '../pages/Help/index.tsx'
 import Password from '../pages/client/password'
 import GreaUp from '../pages/GreaUp'
 import DetailShoe from '../pages/Detail'
@@ -38,6 +38,7 @@ import FeatureDashboard from '../pages/Admin/Dashboard/Dashboard.tsx'
 import Membership from '../pages/Membership/index.tsx'
 import NotFound from '../pages/NotFound/index.tsx'
 import GuestOrder from '../pages/GuestOrder/index.tsx'
+import ThankYou from '../pages/ThankYou/index.tsx'
 import '../App.module.scss'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -49,6 +50,24 @@ import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
 import Contact from '../pages/Contact/index.tsx'
 import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
+import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
+import Profile from '../pages/Profile/index.tsx'
+
+import ChatsPage from '../pages/Chat/index.tsx'
+import Favourite from '../pages/Favourite/index.tsx'
+import { fetchAllProducts } from '../features/product/index.ts'
+
+import { PrivateCheckout } from './PrivateCheckout.tsx'
+import { fetchList } from '../features/dashboard/index.tsx'
+import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
+import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
+import Setting from '../components/Profile/Setting/indext.tsx'
+import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
+import Communication from '../components/Profile/Communication/index.tsx'
+import Privacy from '../components/Profile/Privacy/index.tsx'
+import ProfileVisibility from '../components/Profile/ProfileVisibility/index.tsx'
+import notificationSound from '../../public/notification.mp3';
+const sound = new Audio(notificationSound);
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -56,25 +75,42 @@ const Router = (user: any) => {
     const socket = io('http://localhost:9000', { transports: ['websocket'] })
 
     socket.on('connect', () => {
-      console.log('Connected to Socket io')
       if (localStorage.getItem('userID') == null) {
         return
       } else {
         socket.emit('check_active', { _id: localStorage.getItem('userID') })
-        console.log('chua thong bao', user)
       }
     })
-    socket.on('new_user_login', () => { })
-    socket.on('log_out', () => { })
+    socket.on('new_user_login', () => {})
+    socket.on('log_out', () => {})
     socket.on('update_user_status', () => {
-      dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+      dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
     })
-
+    if (user.user) {
+      socket.on('realtimeBill', () => {
+        dispatch(getOrderByUsers({}))
+      })
+    }
+    socket.on('server_add_product', (data) => {
+      notification.success({ message: data.data.message })
+      dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
+    })
+    socket.on('server_update_product', (data) => {
+      notification.success({ message: data.data.message })
+      dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
+    })
     if (user.user && user.user.role === 'admin') {
+      dispatch(fetchList())
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
+        sound.play();
         console.log('co thong bao', user)
+      })
+      socket.on('realtimeBillforAdmin', () => {
+        dispatch(fetchOrders({}))
       })
     }
 
@@ -100,10 +136,40 @@ const Router = (user: any) => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/order/guest" element={<GuestOrder />} />
+          <Route path="/order/thank-you/ReturnUrl" element={<ThankYou />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/chat" element={<ChatsPage />} />
+          <Route path="/favourite" element={<Favourite />} />
+          <Route
+            path="/cart/checkout"
+            element={
+              <PrivateCheckout>
+                <CheckOut />
+              </PrivateCheckout>
+            }
+          />
+          <Route path="/dashboard" element={<FeatureDashboard />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route index element={<ProfileContent></ProfileContent>} />
+            <Route path="setting" element={<Setting />}>
+              <Route index element={<AccoutDetails></AccoutDetails>} />
+              <Route
+                path="/profile/setting/communication-preferences"
+                element={<Communication></Communication>}
+              />
+              <Route
+                path="/profile/setting/privacy"
+                element={<Privacy></Privacy>}
+              />
+              <Route
+                path="/profile/setting/profile-visibility"
+                element={<ProfileVisibility></ProfileVisibility>}
+              />
+            </Route>
+          </Route>
         </Route>
 
         <Route
@@ -119,7 +185,7 @@ const Router = (user: any) => {
           <Route path="/admin/product" element={<ProductsManager />} />
           <Route path="/admin/categories" element={<CategoriesManager />} />
           <Route path="/admin/comment" element={<CommentManager />} />
-          <Route path="/admin/orders" element={<OrderManager />} />
+          <Route path="/admin/orders" element={<OrderTab />} />
           <Route path="/admin/sale" element={<SaleManager />} />
           <Route path="/admin/dashboard" element={<FeatureDashboard />} />
 
@@ -128,7 +194,11 @@ const Router = (user: any) => {
             element={<NotificationsAdmin />}
           />
           <Route path="/admin/voucher" element={<Voucher />} />
-          <Route path="/admin/setting/sendNotification" element={<SendNotification />} />
+          <Route
+            path="/admin/setting/sendNotification"
+            element={<SendNotification />}
+          />
+          <Route path="/admin/setting/chat" element={<ChatsPage />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

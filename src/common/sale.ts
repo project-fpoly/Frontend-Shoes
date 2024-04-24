@@ -13,3 +13,6 @@ export interface ISale {
   expiration_date?: string;
   isDelete?: boolean;
 }
+ export default class Sale {
+
+ }

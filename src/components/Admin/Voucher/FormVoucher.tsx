@@ -1,11 +1,13 @@
-import React from "react";
-import { Form, Input, Button, DatePicker } from "antd";
-import { IVoucher } from "../../../common/voucher";
-import dayjs from "dayjs";
+import React, { useState } from 'react'
+import { Form, Input, Button, DatePicker } from 'antd'
+import { IVoucher } from '../../../common/voucher'
+import dayjs from 'dayjs'
 
 type FormVoucherProps = {
-  onSubmit: (values: IVoucher) => void;
-};
+  onSubmit: (values: IVoucher) => void
+}
+
+const { RangePicker } = DatePicker
 
 const FormVoucher: React.FC<IVoucher & FormVoucherProps> = ({
   onSubmit,
@@ -15,12 +17,32 @@ const FormVoucher: React.FC<IVoucher & FormVoucherProps> = ({
   price_order,
   description,
   expiration_date,
+  start_date,
+  create_by,
+  _id,
 }) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
+  const [dateValues, setDateValues] = useState<
+    [dayjs.Dayjs | null, dayjs.Dayjs | null]
+  >([expiration_date, start_date])
+  const dateFormat = 'YYYY/MM/DD'
 
   const onFinish = (values: any) => {
-    onSubmit(values as IVoucher);
-  };
+    const { dateValues, ...restValues } = values
+    const setValues = {
+      ...restValues,
+      start_date: dateValues[0]
+        ? dayjs(dateValues[0]).format(dateFormat)
+        : null,
+      expiration_date: dateValues[1]
+        ? dayjs(dateValues[1]).format(dateFormat)
+        : null,
+    }
+    onSubmit(setValues as IVoucher)
+  }
+  const handleDateChange = (dates: any) => {
+    setDateValues(dates)
+  }
 
   return (
     <Form
@@ -30,64 +52,83 @@ const FormVoucher: React.FC<IVoucher & FormVoucherProps> = ({
       wrapperCol={{ span: 16 }}
       autoComplete="off"
       initialValues={{
+        _id,
         Name,
         Quantity,
         reduced_amount,
         price_order,
         description,
-        expiration_date,
+        dateValues,
       }}
       onFinish={onFinish}
     >
+      {_id && (
+        <>
+        <Form.Item
+        label={'_id'}
+        name="_id"
+        initialValue={_id}
+        style={{display:"none"}}
+      >
+        <Input disabled />
+      </Form.Item>
+        <Form.Item
+          label={'Create By'}
+          name="create_by"
+          initialValue={create_by?.email}
+        >
+          <Input disabled />
+        </Form.Item>
+        </>
+      )}
+
       <Form.Item
-        label={"Name"}
+        label={'Name'}
         name="Name"
-        rules={[{ required: true, message: "Please input Name" }]}
+        rules={[{ required: true, message: 'Please input Name' }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label={"Quantity"}
+        label={'Quantity'}
         name="Quantity"
-        rules={[{ required: true, message: "Please input Quantity" }]}
+        rules={[{ required: true, message: 'Please input Quantity' }]}
       >
         <Input type="number" />
       </Form.Item>
       <Form.Item
-        label={"Reduced amount"}
+        label={'Reduced amount'}
         name="reduced_amount"
-        rules={[{ required: true, message: "Please input Reduced amount" }]}
+        rules={[{ required: true, message: 'Please input Reduced amount' }]}
       >
         <Input type="number" />
       </Form.Item>
       <Form.Item
-        label={"Price order"}
+        label={'Price order'}
         name="price_order"
-        rules={[{ required: true, message: "Please input Price order" }]}
+        rules={[{ required: true, message: 'Please input Price order' }]}
       >
         <Input type="number" />
       </Form.Item>
       <Form.Item
-        label={"Description"}
+        label={'Description'}
         name="description"
-        rules={[{ required: true, message: "Please input Description" }]}
+        rules={[{ required: true, message: 'Please input Description' }]}
       >
         <Input.TextArea />
       </Form.Item>
 
-      <Form.Item
-        label={"Expiration date"}
-        rules={[{ required: true, message: "Please input Expiration date" }]}
-      >
-        <DatePicker defaultValue={dayjs(expiration_date, "YYYY-MM-DD")} />
+      <Form.Item label={'Date'} name="dateValues">
+        <RangePicker value={dateValues} onChange={handleDateChange} />
       </Form.Item>
+
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Save
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormVoucher;
+export default FormVoucher

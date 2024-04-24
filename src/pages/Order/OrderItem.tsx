@@ -6,7 +6,7 @@ import { CartItem, IBill } from '../../common/order'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { IStateProduct } from '../../common/redux/type'
-import HeaderTableAdminOrder from '../../components/Admin/Layout/HeaderTableAdminOrder'
+import HeaderTableUser from '../../components/Admin/Layout/HeaderTableUser'
 import {
   fetchOrders,
   getOrderByUsers,
@@ -18,21 +18,22 @@ import { IUsers } from '../../common/users'
 import { fetchAllUsers } from '../../features/user'
 import { fetchAllProducts } from '../../features/product'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-
+import { formatCurrency } from '../../hooks/utils'
 interface Props {
   data: any
+  pagination: any
 }
 
-export default function OrderItem({ data }: Props) {
+export default function OrderItem({ data, pagination }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const dispatch = useDispatch<AppDispatch>()
 
   const [selectedOrder, setSelectedOrder] = useState<IBill | null>(null)
   const [modalVisible, setModalVisible] = useState(false)
-  const [dayStart, setDayStart] = useState('')
-  const [dayEnd, setDayEnd] = useState('')
-  const [Search, setSearch] = useState('')
+  const [dayStart, setDayStart] = useState(null)
+  const [dayEnd, setDayEnd] = useState(null)
+  const [Search, setSearch] = useState(null)
   const [_, setSelectedValue] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { users } = useSelector((state: IUsers) => state.user)
@@ -77,7 +78,6 @@ export default function OrderItem({ data }: Props) {
       )
     }
   }, [])
-  console.log(data)
   useEffect(() => {
     dispatch(
       getOrderByUsers({
@@ -88,7 +88,7 @@ export default function OrderItem({ data }: Props) {
         end: dayEnd,
       }),
     )
-    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '' }))
+    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
@@ -137,12 +137,38 @@ export default function OrderItem({ data }: Props) {
       onCancel() {},
     })
   }
+  const handlePageChange = (page: number, pageSize: number) => {
+    setCurrentPage(page)
+    setPageSize(pageSize)
+    dispatch(
+      getOrderByUsers({
+        page: page,
+        limit: pageSize,
+        search: Search,
+        start: dayStart,
+        end: dayEnd,
+      }),
+    )
+  }
   const columns: ColumnsType<IBill> = [
     {
       title: 'No.',
       dataIndex: 'index',
       render: (_, __, index) => index + 1,
       align: 'center',
+    },
+    {
+      title: 'Tracking order',
+      dataIndex: 'trackingNumber',
+      align: 'center',
+      className: 'action-cell',
+    },
+    {
+      title: 'Is Delivered',
+      align: 'center',
+      dataIndex: 'isDelivered',
+
+      className: 'action-cell',
     },
     {
       title: 'Items',
@@ -158,30 +184,6 @@ export default function OrderItem({ data }: Props) {
       ),
       align: 'center',
     },
-
-    {
-      title: 'Shipping address',
-      dataIndex: 'shippingAddress',
-      render: (shippingAddress) => (
-        <span>
-          <>
-            <div>
-              <b>Full Name:</b> {shippingAddress.fullname}
-            </div>
-            <div>
-              <b>Address:</b> {shippingAddress.address}
-            </div>
-            <div>
-              <b>Email:</b> {shippingAddress.email}
-            </div>
-            <div>
-              <b>Phone Number:</b>
-              {shippingAddress.phone}
-            </div>
-          </>
-        </span>
-      ),
-    },
     {
       title: 'Payment meothod',
       dataIndex: 'payment_method',
@@ -190,6 +192,7 @@ export default function OrderItem({ data }: Props) {
     {
       title: 'Total',
       dataIndex: 'totalPrice',
+      render: (totalPrice: any) => <span>{formatCurrency(totalPrice)}</span>,
       align: 'center',
     },
     {
@@ -216,29 +219,33 @@ export default function OrderItem({ data }: Props) {
       className: 'action-cell',
       render: (_, record) => {
         const isCancel = record.isDelivered === 'Chờ xác nhận'
-        return (
-          <div style={{ textAlign: 'center' }}>
-            <Button
-              onClick={() => handleCancelOrder(record)}
-              type="link"
-              disabled={!isCancel}
-              className={
-                record.isDelivered === 'Đã hủy'
-                  ? 'hidden'
-                  : 'block w-full mx-auto'
-              }
-            >
-              Hủy dơn
-            </Button>
-          </div>
-        )
+        if (record.isDelivered === 'Đã hủy') {
+          return 'đơn hàng đã hủy'
+        } else {
+          return (
+            <div style={{ textAlign: 'center' }}>
+              <Button
+                onClick={() => handleCancelOrder(record)}
+                type="link"
+                disabled={!isCancel}
+                className={
+                  record.isDelivered === 'Đã hủy'
+                    ? 'hidden'
+                    : 'block w-full mx-auto'
+                }
+              >
+                Hủy dơn
+              </Button>
+            </div>
+          )
+        }
       },
     },
   ]
   return (
     <>
       <div className="flex items-end">
-        <HeaderTableAdminOrder
+        <HeaderTableUser
           showModal={() => {}}
           onSubmitt={(value) => searchOrder(value)}
           name={'Orders '}
@@ -288,6 +295,12 @@ export default function OrderItem({ data }: Props) {
             }
           },
         })}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: pagination.totalPages * pageSize,
+          onChange: handlePageChange,
+        }}
       />
       <Modal
         open={modalVisible}

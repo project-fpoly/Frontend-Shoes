@@ -59,17 +59,17 @@ const Sale = () => {
           <div>Loading...</div>
         ) : (
           products.map((item, index) => (
-            <Link to={`/detail/${item._id}`}>
+            <Link key={index + 1} to={`/detail/${item._id}`}>
               <Card
+                className='w-auto'
                 onDragStart={(event) => event.preventDefault()}
                 key={index}
                 hoverable
-                style={{ width: 260 }}
                 cover={
                   <img
                     alt="Product"
                     src={item.images ? item.images[0] : ''}
-                    style={{ height: 250 }}
+                    style={{ height: 250, objectFit: 'cover' }}
                     onClick={(e) => e.stopPropagation()}
                   />
                 }

@@ -1,8 +1,27 @@
 .cardContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  height: 600px;
+  height: 700px;
   gap: 20px;
+
+  .image {
+    border-radius: 5px;
+    object-fit: cover;
+    height: 250px;
+    width: 100%;
+  }
+
+  @media (max-width:700px) {
+    grid-template-columns: 1fr;
+
+    .image {
+      height: 300px;
+    }
+  }
+
+  @media (max-width:1000px) and (min-width:701px) {
+    grid-template-columns: 1fr 1fr;
+  }
 
   overflow-y: scroll;
   margin: 0 20px;
@@ -24,10 +43,5 @@
   //   /* WebKit */
   // }
 
-  .image {
-    border-radius: 5px;
-    object-fit: cover;
-    height: 250px;
-    width: 100%;
-  }
+
 }
