@@ -50,6 +50,7 @@ export const addToCart = createAsyncThunk(
             },
           },
         )
+        thunkApi.dispatch(getCartItems())
         notification.success({ message: response.data.message })
         return response.data.cart
       } else {

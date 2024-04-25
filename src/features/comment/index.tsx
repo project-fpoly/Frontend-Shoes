@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { initialCmt } from '../../common/redux/type'
 import { isRejected } from '@reduxjs/toolkit/react'
 import {
+  checkIsBuy,
   createComment,
   deleteComment,
   getComment,
@@ -16,6 +17,7 @@ const initialState: initialCmt = {
   comments: [],
   comment: '',
   totalDocs: 0,
+  checked: [],
 }
 
 ///// Đây là actions
@@ -98,6 +100,19 @@ export const updateCommentById = createAsyncThunk(
   },
 )
 
+export const checkIsBuyProduct = createAsyncThunk(
+  '/comment/isBuy',
+
+  async (commnet: ICmt) => {
+    try {
+      const respone = await checkIsBuy(commnet._id)
+      return respone
+
+    } catch (error) {
+      return isRejected('Error fetching data')
+    }
+  },
+)
 
 /// đây là chỗ chọc vào kho để lấy db
 export const commentSlice = createSlice({
@@ -156,8 +171,16 @@ export const commentSlice = createSlice({
       state.loading = 'failed'
     })
     builder.addCase(updateCommentById.fulfilled, (state) => {
-      console.log('ok  chua vạy');
       state.loading = 'fulfilled'
+    })
+    builder.addCase(checkIsBuyProduct.pending, (state) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(checkIsBuyProduct.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(checkIsBuyProduct.fulfilled, (state, action) => {
+      state.checked = action.payload
     })
   },
 })
@@ -166,3 +189,4 @@ export default commentSlice.reducer
 
 
 
+checkIsBuyProduct

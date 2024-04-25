@@ -44,6 +44,7 @@ export interface initialCmt {
   comments: ICmt[] | [];
   comment: ICmt | "";
   totalDocs: number;
+  checked?: []
 }
 export interface initialChat {
   loading: "idle" | "pending" | "fulfilled" | "failed";

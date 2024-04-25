@@ -77,3 +77,21 @@ export const updateComment = async (commnets: ICmt) => {
     console.error(error)
   }
 }
+
+export const checkIsBuy = async (id: string) => {
+  try {
+    const response: AxiosResponse = await instance.get(
+      `/api/comments/check/${id}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}

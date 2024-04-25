@@ -21,10 +21,11 @@ import { Link } from 'react-router-dom'
 import user from '../../../../features/user'
 import moment from 'moment'
 import { AppDispatch } from '../../../../redux/store'
-import { createCommnets, deleteCommentById, updateCommentById } from '../../../../features/comment'
+import { checkIsBuyProduct, createCommnets, deleteCommentById, updateCommentById } from '../../../../features/comment'
 import ModalCmt from '../../../Modal/ModalCmt'
 const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
+  const checkBuy = useSelector((state: any) => state.comment.checked)
   const [typeCmt, setTypeCmt] = useState<string>('')
   const userIdStorage = localStorage.getItem('userID')
   const commnets = useSelector((state: IStateCmt) => state.comment.comments)
@@ -34,6 +35,12 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalOpenCmt, setIsModalOpenCmt] = useState(false)
   const [idCmt, setIdCmt] = useState<ICmt>()
+
+
+  useEffect(() => {
+    dispatch(checkIsBuyProduct(shoe))
+  }, [shoe])
+
   const filteredReviews = commnets.filter(
     (review) => typeof review.rating === 'number',
   )
@@ -65,7 +72,11 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     },
   })
 
+
+
+
   const previousContent = watch('content')
+
 
   const { _id: shoeId } = shoe
   const [rating, setRating] = useState<any>(0)
@@ -75,6 +86,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const confirm = () => {
     dispatch(deleteCommentById(idCmt as ICmt))
   }
+
+
 
   const contentCommnet = () => {
     return (
@@ -142,15 +155,24 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               allowHalf
             ></Rate>
           </p>
-          <p
-            onClick={() => {
-              handleShowModal()
-              setTypeCmt('CREATE')
-            }}
-            className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
-          >
-            Write a review
-          </p>
+
+          {checkBuy?.message === 'Chưa mua hàng' ? <>
+            <p
+              className="text-black  text-xl pb-2 font-bold cursor-pointer  hover:opacity-70"
+            >
+              Bạn phải mua hàng để có thể đánh giá
+            </p>
+          </> : <>
+            <p
+              onClick={() => {
+                handleShowModal()
+                setTypeCmt('CREATE')
+              }}
+              className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
+            >
+              Write a review
+            </p>
+          </>}
           <div className="flex flex-col gap-8  ">
             {commnets.map((comment, index) => {
               const { content, userId } = comment
