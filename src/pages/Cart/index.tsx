@@ -62,7 +62,7 @@ const Cart = () => {
   }
   useEffect(() => {
     dispatch(getCartItems())
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
   }, [dispatch])
 
   const next = () => {
@@ -89,10 +89,11 @@ const Cart = () => {
       const updatedCartData = {
         cartItems: updatedCartItems,
       }
-
       sessionStorage.setItem('cart', JSON.stringify(updatedCartData))
-
       notification.success({ message: 'Sản phẩm đã được xóa khỏi giỏ hàng' })
+      if (updatedCartData.cartItems.length === 0) {
+        sessionStorage.removeItem('cart')
+      }
     }
     setForceRender(forceRender + 1) // Gọi setState để force render lại component
   }
@@ -194,19 +195,18 @@ const Cart = () => {
     return Math.min(quantity, 10)
   }
 
-  
   return (
     <>
       <div className="shopping-cart mx-4 lg:mt-[100px] lg:w-[1024px] px-10 xl:w-[1100px] lg:mx-auto">
         {!cart && !cartSession ? (
           <>
-          <div className='grid place-items-center'>
-            <p className='text-2xl'>Giỏ hàng đang trống</p>
-          <img
-            className="img_banner h-auto w-[200px] rounded-lg "
-            src='/src/assets/empty-cart.png'
-          />
-          </div>
+            <div className="grid place-items-center">
+              <p className="text-2xl">Giỏ hàng đang trống</p>
+              <img
+                className="img_banner h-auto w-[200px] rounded-lg "
+                src="/src/assets/empty-cart.png"
+              />
+            </div>
           </>
         ) : (
           <>

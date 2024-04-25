@@ -15,6 +15,8 @@ export default function OrderTab() {
   const { orders, pagination, params } = useSelector(
     (state: RootState) => state.order,
   )
+  const a = useSelector((state: RootState) => state.notification)
+  console.log(a)
   const handleTabChange = (key: string) => {
     console.log('Tab được chọn:', key)
     setSelectedKey(key)

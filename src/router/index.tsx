@@ -66,8 +66,8 @@ import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
 import Communication from '../components/Profile/Communication/index.tsx'
 import Privacy from '../components/Profile/Privacy/index.tsx'
 import ProfileVisibility from '../components/Profile/ProfileVisibility/index.tsx'
-import notificationSound from '../../public/notification.mp3';
-const sound = new Audio(notificationSound);
+import notificationSound from '../../public/notification.mp3'
+const sound = new Audio(notificationSound)
 
 const Router = (user: any) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -106,10 +106,12 @@ const Router = (user: any) => {
       socket.on('newNotification', (data) => {
         notification.success({ message: data.message })
         dispatch(fetchAllNotification(''))
-        sound.play();
+        sound.play()
         console.log('co thong bao', user)
+        dispatch(fetchOrders({}))
       })
       socket.on('realtimeBillforAdmin', () => {
+        console.log('thử')
         dispatch(fetchOrders({}))
       })
     }

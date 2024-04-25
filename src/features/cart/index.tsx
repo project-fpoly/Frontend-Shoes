@@ -7,7 +7,7 @@ import { notification } from 'antd'
 import { fetchAllProducts } from '../product'
 import { RootState } from '../../redux/store'
 import { fetchAllUsers } from '../user'
-
+import { fetchOrders } from '../order/index'
 const initialState: any = {
   cartItems: [] as CartItem[],
   loading: false,
@@ -92,7 +92,7 @@ export const getCartItems = createAsyncThunk(
         },
       )
       thunkApi.dispatch(
-        fetchAllProducts({ page: 1, pageSize: 40, searchKeyword: '' }),
+        fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }),
       )
 
       return response.data
@@ -155,6 +155,7 @@ export const createOrder = createAsyncThunk(
         )
         notification.success({ message: response.data.message })
         thunkApi.dispatch(getCartItems())
+        thunkApi.dispatch(fetchOrders({}))
         return response.data.data
       } else {
         const response = await axios.post(
@@ -175,6 +176,7 @@ export const createOrder = createAsyncThunk(
           },
         )
         notification.success({ message: response.data.message })
+        thunkApi.dispatch(fetchOrders({}))
 
         return response.data.data
       }

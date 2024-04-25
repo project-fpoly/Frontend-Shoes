@@ -173,6 +173,7 @@ const OrderManager = (data: any) => {
     {
       title: 'Shipping address',
       dataIndex: 'shippingAddress',
+      className: 'hidden lg:block',
       render: (shippingAddress) => (
         <span>
           <>
