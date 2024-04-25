@@ -44,7 +44,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { useEffect } from 'react'
 import io from 'socket.io-client'
-import { notification } from 'antd'
+import { message, notification } from 'antd'
 import { AppDispatch } from '../redux/store.ts'
 import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
@@ -100,6 +100,23 @@ const Router = (user: any) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     })
+    socket.on('server_delete_product', (data) => {
+      if (data && data.data && data.data.data) {
+          const productData = data.data.data;
+          if (productData.data.name) {
+              const productName = productData.data.name;
+              const message = `Sản phẩm ${productName} đã được xóa thành công!`;
+              notification.success({ message: message });
+              dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }));
+          } else {
+              console.log('Trường name không tồn tại trong dữ liệu sản phẩm');
+          }
+      } else {
+          console.log('Dữ liệu không hợp lệ: data không tồn tại');
+      }
+  });
+  ;
+  
     if (user.user && user.user.role === 'admin') {
       dispatch(fetchList())
       socket.on('newNotification', (data) => {

@@ -26,9 +26,9 @@ export const getProducts = async (
     const customError = error as CustomError
     const errorMessage =
       customError.response?.data?.message ||
-      'Error Product while fetching products '
+      ''
     notification.error({ message: errorMessage })
-    throw new Error('Error Product while fetching products ')
+    throw new Error('Lỗi sản phẩm khi tìm nạp sản phẩm')
   }
 }
 
@@ -49,9 +49,9 @@ export const getProductById = async (id: string) => {
     const customError = error as CustomError
     const errorMessage =
       customError.response?.data?.message ||
-      'Error while fetching product by ID.'
+      'Lỗi khi tìm nạp sản phẩm theo ID.'
     notification.error({ message: errorMessage })
-    throw new Error('Error while fetching product by ID.')
+    throw new Error('Lỗi khi tìm nạp sản phẩm theo ID.')
   }
 }
 export const addProduct = async (
@@ -69,15 +69,15 @@ export const addProduct = async (
       }
     )
     // notification.success({ message: 'Product added successfully' })
-    socket.emit("client_add_product", { message: `Product ${product.name} added successfully`, status: true });
+    socket.emit("client_add_product", { message: `Sản phẩm "${product.name}" đã được thêm thành công!`, status: true });
     return response.data || response
   } catch (error) {
     console.log(error)
     const customError = error as CustomError
     const errorMessage =
-      customError.response?.data?.message || 'Error while adding product.'
+      customError.response?.data?.message || 'Lỗi khi thêm sản phẩm.'
     notification.error({ message: errorMessage })
-    throw new Error('Error while adding product.')
+    throw new Error('Lỗi khi thêm sản phẩm.')
   }
 }
 
@@ -97,7 +97,7 @@ export const updatePrroduct = async (
       }
     )
     // notification.success({ message: 'Product updated successfully' })
-    socket.emit("client_update_product", { message: `Product ${product.name} updated successfully`, status: true });
+    socket.emit("client_update_product", { message: `Sản phẩm "${product.name}" đã được cập nhật thành công!`, status: true });
     return response.data || response
   } catch (error) {
     console.log(error)
@@ -119,15 +119,15 @@ export const tryDeleteProduct = async (id: string): Promise<IProduct | null> => 
       `/api/product/${id}/delete`,
       product
     );
-    notification.success({ message: "Product marked for deletion successfully" });
+    notification.success({ message: "Sản phẩm được đánh dấu để xóa thành công" });
     return response.data || response;
   } catch (error) {
     console.log(error);
     const customError = error as CustomError;
     const errorMessage =
-      customError.response?.data?.message || "Error while marking product for deletion.";
+      customError.response?.data?.message || "Lỗi khi đánh dấu sản phẩm để xóa.";
     notification.error({ message: errorMessage });
-    throw new Error("Error while marking product for deletion.");
+    throw new Error("Lỗi khi đánh dấu sản phẩm để xóa.");
   }
 };
 
@@ -142,7 +142,7 @@ export const tryRestoreProduct = async (id: string): Promise<IProduct | null> =>
       product
     );
 
-    notification.success({ message: "Product restored successfully" });
+    notification.success({ message: "Sản phẩm được khôi phục thành công" });
 
     return response.data || response;
   } catch (error) {
@@ -150,7 +150,7 @@ export const tryRestoreProduct = async (id: string): Promise<IProduct | null> =>
 
     const customError = error as CustomError;
     const errorMessage =
-      customError.response?.data?.message || "Error while restoring product.";
+      customError.response?.data?.message || "Lỗi khi khôi phục sản phẩm.";
 
     notification.error({ message: errorMessage });
 
@@ -168,18 +168,18 @@ export const deleteProduct = async (id: string): Promise<IProduct | null> => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }
-    )
-    notification.success({ message: 'Product deleted successfully.' })
-    return response.data || response
+    );
+    socket.emit("client_delete_product", { data: response.data});
+    return response.data || response;
   } catch (error) {
-    console.log(error)
-    const customError = error as CustomError
+    console.log(error);
+    const customError = error as CustomError;
     const errorMessage =
-      customError.response?.data?.message || 'Error while deleting product.'
-    notification.error({ message: errorMessage })
-    throw new Error('Error while deleting product.')
+      customError.response?.data?.message || 'Lỗi khi xóa sản phẩm.';
+    notification.error({ message: errorMessage });
+    throw new Error('Lỗi khi xóa sản phẩm.');
   }
-}
+};
 
 export const getCategories = async () => {
   try {
@@ -190,9 +190,9 @@ export const getCategories = async () => {
     console.log(error)
     const customError = error as CustomError
     const errorMessage =
-      customError.response?.data?.message || 'Error while fetching categories.'
+      customError.response?.data?.message || 'Lỗi khi tìm nạp danh mục.'
     notification.error({ message: errorMessage })
-    throw new Error('Error while fetching categories.')
+    throw new Error('Lỗi khi tìm nạp danh mục.')
   }
 }
 
@@ -205,8 +205,8 @@ export const getCategoryById = async (id: string) => {
     const customError = error as CustomError
     const errorMessage =
       customError.response?.data?.message ||
-      'Error while fetching category by ID.'
+      'Lỗi khi tìm nạp danh mục theo ID.'
     notification.error({ message: errorMessage })
-    throw new Error('Error while fetching category by ID.')
+    throw new Error('Lỗi khi tìm nạp danh mục theo ID.')
   }
 }
