@@ -94,7 +94,7 @@ const CheckOut = () => {
       })
   useEffect(() => {
     dispatch(getCartItems())
-    dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
+    dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     dispatch(getProvinces('a'))
     dispatch(getDistricts(province))
     if (province) {
@@ -218,9 +218,8 @@ const CheckOut = () => {
             totalPrice,
           }),
         )
-
         sessionStorage.removeItem('cart')
-        if (payment_method === 'vnPay' && data) {
+        if (payment_method === 'vnPay') {
           redirectUrl = await dispatch(
             createPaymentUrl({
               amount: totalPrice,
@@ -232,9 +231,9 @@ const CheckOut = () => {
           if (redirectUrl) {
             window.location.href = redirectUrl.payload
             localStorage.setItem('idOrder', data.payload?._id)
-          } else {
-            navigate('../../order/guest')
           }
+        } else {
+          navigate('../../order/guest')
         }
       }
     } catch (error) {

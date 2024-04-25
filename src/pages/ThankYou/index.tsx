@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AppDispatch } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIsPaid } from '../../features/order'
+import { notification } from 'antd'
 const ThankYou = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -17,13 +18,19 @@ const ThankYou = () => {
   const vnp_TransactionStatus = searchParams.get('vnp_TransactionStatus')
   const vnp_TxnRef = searchParams.get('vnp_TxnRef')
   if (vnp_TransactionStatus === '00') {
-    console.log('a')
     dispatch(
       updateIsPaid({
         id: vnp_TxnRef,
         updateOrderData: { isPaid: true },
       }),
     )
+    notification.success({
+      message: `Đơn hàng ${vnp_TxnRef} đã được thanh toán`,
+    })
+  } else {
+    notification.error({
+      message: `Đơn hàng ${vnp_TxnRef} chưa được thanh toán`,
+    })
   }
   return (
     <div className="flex items-center mx-auto justify-center h-screen">

@@ -41,7 +41,7 @@ export const fetchOrders = createAsyncThunk(
       thunkApi.dispatch(
         fetchAllProducts({ page: 1, pageSize: 50, searchKeyword: '' }),
       )
-
+      console.log('2')
       const currentPage = params.page // Lấy giá trị của currentPage từ params.page
 
       // Tạo một đối tượng mới bằng cách sao chép các thuộc tính từ response.pagination và ghi đè currentPage
@@ -153,7 +153,6 @@ export const updateIsPaid = createAsyncThunk(
           end: params.end || null,
         }),
       )
-      notification.success({ message: response.data.message })
 
       return response.data
     } catch (error: any) {
