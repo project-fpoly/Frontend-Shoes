@@ -136,7 +136,7 @@ const ChatsPage = () => {
             <FloatButton.Group
                 trigger="click"
                 type="primary"
-                style={{ right: 24, bottom: 200 }}
+                style={{ right: 34, bottom: '70vh' }}
                 icon={<CustomerServiceOutlined />}
             >
                 <FloatButton icon={<OpenAIOutlined />} onClick={handleOpenChatGPTDemo} />

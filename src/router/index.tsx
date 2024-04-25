@@ -44,7 +44,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { useEffect } from 'react'
 import io from 'socket.io-client'
-import { notification } from 'antd'
+import { message, notification } from 'antd'
 import { AppDispatch } from '../redux/store.ts'
 import { fetchAllUsers } from '../features/user/index.tsx'
 import { fetchAllNotification } from '../features/notification/index.tsx'
@@ -53,16 +53,15 @@ import SendNotification from '../pages/Admin/Setting/sendNotification.tsx'
 import { fetchOrders, getOrderByUsers } from '../features/order/index.tsx'
 import Profile from '../pages/Profile/index.tsx'
 
-import ChatsPage from '../pages/Chat/index.tsx'
 import Favourite from '../pages/Favourite/index.tsx'
 import { fetchAllProducts } from '../features/product/index.ts'
 
 import { PrivateCheckout } from './PrivateCheckout.tsx'
 import { fetchList } from '../features/dashboard/index.tsx'
-import ChatGPTDemo from '../pages/Chat/ChatGPTDemo/index.tsx'
 import ProfileContent from '../components/Profile/ProfileContent/index.tsx'
 import Setting from '../components/Profile/Setting/indext.tsx'
 import AccoutDetails from '../components/Profile/AccoutDetails/index.tsx'
+import SettingsPage from '../pages/Admin/Chat/index.tsx'
 import Communication from '../components/Profile/Communication/index.tsx'
 import Privacy from '../components/Profile/Privacy/index.tsx'
 import ProfileVisibility from '../components/Profile/ProfileVisibility/index.tsx'
@@ -101,6 +100,23 @@ const Router = (user: any) => {
       notification.success({ message: data.data.message })
       dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     })
+    socket.on('server_delete_product', (data) => {
+      if (data && data.data && data.data.data) {
+          const productData = data.data.data;
+          if (productData.data.name) {
+              const productName = productData.data.name;
+              const message = `Sản phẩm ${productName} đã được xóa thành công!`;
+              notification.success({ message: message });
+              dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }));
+          } else {
+              console.log('Trường name không tồn tại trong dữ liệu sản phẩm');
+          }
+      } else {
+          console.log('Dữ liệu không hợp lệ: data không tồn tại');
+      }
+  });
+  ;
+  
     if (user.user && user.user.role === 'admin') {
       dispatch(fetchList())
       socket.on('newNotification', (data) => {
@@ -143,7 +159,6 @@ const Router = (user: any) => {
           <Route path="/membership" element={<Membership />} />
           <Route path="/cart/checkout" element={<CheckOut />} />
           <Route path="/dashboard" element={<FeatureDashboard />} />
-          <Route path="/chat" element={<ChatsPage />} />
           <Route path="/favourite" element={<Favourite />} />
           <Route
             path="/cart/checkout"
@@ -200,7 +215,7 @@ const Router = (user: any) => {
             path="/admin/setting/sendNotification"
             element={<SendNotification />}
           />
-          <Route path="/admin/setting/chat" element={<ChatsPage />} />
+          <Route path="/admin/setting/chat" element={<SettingsPage />} />
         </Route>
 
         <Route path="signin" element={<SigninPage />}></Route>

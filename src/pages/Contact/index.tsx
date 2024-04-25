@@ -1,7 +1,8 @@
-import { Button, Col, Form, Input, Row, Space, Typography } from 'antd';
+import { Button, Col, Flex, Form, Input, Row, Space, Typography } from 'antd';
 import './index.css'
 import Title from 'antd/es/typography/Title';
 import { EnvironmentOutlined, MessageOutlined, MobileOutlined } from '@ant-design/icons';
+import ChatsPage from '../Chat';
 
 const Contact = () => {
     return (
@@ -16,6 +17,7 @@ const Contact = () => {
                     ></iframe>
                 </Col>
                 <Col span={12}>
+                 <ChatsPage></ChatsPage>
                     <Typography className='font-bold text-4xl text-center'>Contact Us</Typography>
                     <Typography className='text-base mt-5 text-center'>“We're Here to Help! Reach out to us anytime and we'll happily answer your questions”</Typography>
 
