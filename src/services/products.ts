@@ -210,3 +210,6 @@ export const getCategoryById = async (id: string) => {
     throw new Error('Error while fetching category by ID.')
   }
 }
+
+
+

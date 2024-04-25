@@ -11,9 +11,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserByID, setUser } from '../../features/auth'
 import io from 'socket.io-client'
 import AllNotification from '../Admin/Notification/AllNotification'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Drawer } from 'antd';
+import { AppDispatch } from '../../redux/store';
+import { getCartItems } from '../../features/cart';
 const NavBar = () => {
+
+
+
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
     setOpen(true);
@@ -132,7 +137,7 @@ const NavBar = () => {
             <MenuNav ></MenuNav>
             <NavRight></NavRight>
           </div>
-          <Drawer title={`Hi  ${user?.userName} `} onClose={onClose} open={open}>
+          <Drawer title={` ${user?.userName ? `Hi ${user?.userName}` : ""} `} onClose={onClose} open={open}>
             <div className='flex flex-col gap-16'>
               <div className='flex flex-col gap-6 mt-5 ml-10 justify-start'>
                 <Link onClick={onClose} className='text-3xl' to={'/'}>New & Featured</Link>

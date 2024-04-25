@@ -73,25 +73,25 @@ const CheckOut = () => {
   }
   const items = state?.cart
     ? state.cart.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
     : cartSession?.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
@@ -495,7 +495,7 @@ const CheckOut = () => {
                 </Radio.Group>
               </Form.Item>
               {state?.cart?.cartItems.length > 0 ||
-              cartSession?.cartItems.length > 0 ? (
+                cartSession?.cartItems.length > 0 ? (
                 <Button
                   type="default"
                   htmlType="submit"
@@ -522,7 +522,7 @@ const CheckOut = () => {
               </div>
             </div>
             <hr />
-            <div className="flex justify-between items-center my-5">
+            <div className="flex justify-between gap-20 items-center my-5">
               <div className="text-[#6b7280]">Voucher</div>
               <div>
                 {data.length > 0 ? (
@@ -568,7 +568,7 @@ const CheckOut = () => {
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {state?.cart?.cartItems.length > 0 ||
-            cartSession?.cartItems.length > 0 ? (
+              cartSession?.cartItems.length > 0 ? (
               <>
                 {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
