@@ -8,7 +8,7 @@ interface propChatPage {
 const ChatPage = ({ username, secret }:propChatPage) => {
     return (
         <PrettyChatWindow
-            projectId={"f2650ca0-3e46-47c5-a198-6e04fa81d3dc"}
+            projectId={"086d50c6-5443-438c-8766-cfd20e37e71e"}
             username={username}
             secret={secret}
             height='100%'
