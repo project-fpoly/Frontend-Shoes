@@ -18,12 +18,11 @@ export default function OrderPage() {
   const { ordersUser, pagination, params } = useSelector(
     (state: RootState) => state.ordersUser,
   )
-  console.log(params)
-  console.log(ordersUser)
   const dataGet = (data: string) =>
     ordersUser?.filter((item: any) => item.isDelivered === data)
 
   const data1 = dataGet('Chờ xác nhận')
+  console.log(data1)
   const data1Pagination = {
     limit: 10,
     totalOrder: data1.length,

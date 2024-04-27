@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Card, Image, Descriptions, Row, Col, Table } from 'antd'
+import { Card, Image, Descriptions, Row, Col, Table, Tag } from 'antd'
 import moment from 'moment'
 import Search from 'antd/es/input/Search'
 import Title from 'antd/es/typography/Title'
@@ -8,7 +8,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { fetchOneOrder } from '../../features/order/index'
 import { IStateProduct } from '../../common/redux/type'
-
+import {
+  ExclamationCircleOutlined,
+  SyncOutlined,
+  CarOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons'
 const GuestOrder = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [value, setValue] = useState<string>('')
@@ -24,7 +30,7 @@ const GuestOrder = () => {
   const handleSearch = (value: string) => {
     setValue(value)
   }
-  const a = orders.map((order: any)=>order.trackingNumber) 
+  const a = orders.map((order: any) => order.trackingNumber)
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
       <Title level={3}> Search for orders</Title>
@@ -39,7 +45,7 @@ const GuestOrder = () => {
         }
         size="large"
       />
-      {orders?.length > 0 && value ===a[0]? (
+      {orders?.length > 0 && value === a[0] ? (
         orders.map((order: any) => (
           <Card title="Order" style={{ width: '100%' }} className="mt-10">
             <Descriptions column={1} bordered>
@@ -47,7 +53,31 @@ const GuestOrder = () => {
                 {order.trackingNumber}
               </Descriptions.Item>
               <Descriptions.Item label="Delivered">
-                {order.isDelivered}
+                {order.isDelivered === 'Chờ xác nhận' && (
+                  <Tag icon={<ExclamationCircleOutlined />} color="purple">
+                    Chờ xác nhận
+                  </Tag>
+                )}
+                {order.isDelivered === 'Chờ lấy hàng' && (
+                  <Tag icon={<SyncOutlined spin />} color="processing">
+                    Chờ lấy hàng
+                  </Tag>
+                )}
+                {order.isDelivered === 'Đang giao hàng' && (
+                  <Tag icon={<CheckCircleOutlined />} color="success">
+                    Đang giao hàng
+                  </Tag>
+                )}
+                {order.isDelivered === 'Đã giao hàng' && (
+                  <Tag icon={<CheckCircleOutlined />} color="success">
+                    Đã giao hàng
+                  </Tag>
+                )}
+                {order.isDelivered === 'Đã hủy' && (
+                  <Tag icon={<CloseCircleOutlined />} color="error">
+                    Đã hủy
+                  </Tag>
+                )}
               </Descriptions.Item>
               <Descriptions.Item label="Product">
                 {order.cartItems?.map((cartItem: any) => (

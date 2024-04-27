@@ -1,4 +1,4 @@
-import { Button, DatePicker, Modal, Table } from 'antd'
+import { Button, DatePicker, Modal, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
@@ -17,8 +17,15 @@ import DetailOrder from '../../components/Admin/Order/DetailOrder'
 import { IUsers } from '../../common/users'
 import { fetchAllUsers } from '../../features/user'
 import { fetchAllProducts } from '../../features/product'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import {
+  ExclamationCircleOutlined,
+  SyncOutlined,
+  CarOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons'
 import { formatCurrency } from '../../hooks/utils'
+
 interface Props {
   data: any
   pagination: any
@@ -88,7 +95,9 @@ export default function OrderItem({ data, pagination }: Props) {
         end: dayEnd,
       }),
     )
-    dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '',isDelete:false }))
+    dispatch(
+      fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+    )
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
   }, [dispatch, currentPage, pageSize, Search, dayStart, dayEnd])
 
@@ -117,7 +126,7 @@ export default function OrderItem({ data, pagination }: Props) {
     onChange: onSelectChange,
   }
 
-  const searchOrder = (value: string) => {
+  const searchOrder = (value: any) => {
     setSearch(value)
     setSelectedValue(value)
   }
@@ -167,7 +176,37 @@ export default function OrderItem({ data, pagination }: Props) {
       title: 'Is Delivered',
       align: 'center',
       dataIndex: 'isDelivered',
-
+      render: (isDelivered) => {
+        return (
+          <>
+            {isDelivered === 'Chờ xác nhận' && (
+              <Tag icon={<ExclamationCircleOutlined />} color="purple">
+                Chờ xác nhận
+              </Tag>
+            )}
+            {isDelivered === 'Chờ lấy hàng' && (
+              <Tag icon={<SyncOutlined spin />} color="processing">
+                Chờ lấy hàng
+              </Tag>
+            )}
+            {isDelivered === 'Đang giao hàng' && (
+              <Tag icon={<CheckCircleOutlined />} color="success">
+                Đang giao hàng
+              </Tag>
+            )}
+            {isDelivered === 'Đã giao hàng' && (
+              <Tag icon={<CheckCircleOutlined />} color="success">
+                Đã giao hàng
+              </Tag>
+            )}
+            {isDelivered === 'Đã hủy' && (
+              <Tag icon={<CloseCircleOutlined />} color="error">
+                Đã hủy
+              </Tag>
+            )}
+          </>
+        )
+      },
       className: 'action-cell',
     },
     {

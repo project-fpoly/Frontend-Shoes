@@ -574,7 +574,7 @@ const CheckOut = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={'/'}>
+                        <Link to={`/detail/${cartItem.product}`}>
                           <img src={cartItem.images[0]} alt="" />
                         </Link>
                       </figure>
@@ -601,7 +601,7 @@ const CheckOut = () => {
                   <>
                     <div key={index} className="col-span-1">
                       <figure className="col-span-1">
-                        <Link to={'/'}>
+                        <Link to={`/detail/${item.product}`}>
                           <img src={item.images[0]} alt="" />
                         </Link>
                       </figure>

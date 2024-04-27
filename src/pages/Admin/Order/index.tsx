@@ -154,13 +154,35 @@ const OrderManager = (data: any) => {
       title: 'Items',
       dataIndex: 'cartItems',
       render: (cartItems) => (
-        <span key={cartItems._id}>
+        <div
+          key={cartItems._id}
+          className=" text-center relative max-h-32 overflow-hidden"
+        >
           {cartItems.map((cartItem: CartItem, index: number) => (
             <div className="my-2" key={index}>
-              {getProductName(cartItem.product)} - {cartItem.quantity}
+              <div>
+                {getProductName(cartItem.product)} - {cartItem.quantity} -{' '}
+                {cartItem.size}
+              </div>
+              <div>
+                <img
+                  className="w-16 h-16 lg:w-20 lg:h-20 mx-auto"
+                  src={cartItem.images[0]}
+                  alt=""
+                />
+              </div>
             </div>
           ))}
-        </span>
+          <span
+            className={
+              cartItems.length > 1
+                ? 'absolute  -bottom-1 lg: lg:right-0 text-[#ccc]'
+                : 'opacity-0'
+            }
+          >
+            ... more
+          </span>
+        </div>
       ),
       align: 'center',
     },
@@ -220,6 +242,7 @@ const OrderManager = (data: any) => {
       render: (createdAt) => (
         <span>{moment(createdAt).format('DD/MM/YYYY')}</span>
       ),
+      className: 'hidden lg:block',
     },
     {
       title: 'Is Delivered',
@@ -232,7 +255,7 @@ const OrderManager = (data: any) => {
           <span>
             {
               <Select
-                className="min-w-52 text-center border-none focus:ring-0 outline-none"
+                className=" min-w-36 lg:min-w-52 text-center border-none focus:ring-0 outline-none"
                 onChange={(value) =>
                   dispatch(
                     updateOrder({
@@ -398,7 +421,7 @@ const OrderManager = (data: any) => {
             }
             placeholder="End Date"
           />
-          <div className="flex itmes-center ml-2">
+          <div className="flex items-center ml-2">
             <Button
               type="default"
               onClick={() => setIsModalOpen(true)}
@@ -408,7 +431,10 @@ const OrderManager = (data: any) => {
             >
               <RocketOutlined /> Update
             </Button>
-            <span style={{ marginLeft: 8 }} className="flex items-center">
+            <span
+              style={{ marginLeft: 8 }}
+              className="flex items-end lg:items-center "
+            >
               {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
             </span>
           </div>
