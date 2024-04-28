@@ -37,17 +37,15 @@ const FormUpdateMany = ({
     onSelectChange([])
     setIsModalOpen(false)
   }
-  const isPaid = false
   const isDelivered = getIsDelivered(selectedRowKeys[0])
   const ids = selectedRowKeys
 
   React.useEffect(() => {
     form.setFieldsValue({
       ids,
-      isPaid,
       isDelivered,
     })
-  }, [form, ids, isPaid, isDelivered])
+  }, [form, ids, isDelivered])
 
   return (
     <Form
@@ -68,18 +66,6 @@ const FormUpdateMany = ({
         className="hidden"
       >
         <Input />
-      </Form.Item>
-      <Form.Item
-        label="Is Paid"
-        name="isPaid"
-        rules={[
-          { required: true, message: 'Vui lòng nhập trạng thái thanh toán' },
-        ]}
-      >
-        <Select placeholder="is Paid">
-          <Select.Option value={false}>Chưa thanh toán</Select.Option>
-          <Select.Option value={true}>Đã thanh toán</Select.Option>
-        </Select>
       </Form.Item>
       <Form.Item
         label="Is Delivered"
