@@ -5,12 +5,14 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../redux/store"
 import { fetchOneUsers } from "../../features/user"
+import { scrollToTop } from "../../hooks/utils"
 
 const Profile = () => {
   const dispact = useDispatch<AppDispatch>()
 
   useEffect(() => {
     dispact(fetchOneUsers())
+    scrollToTop()
   }, [])
   return (
     <>

@@ -53,7 +53,7 @@ export const getProductsWithFilters = createAsyncThunk(
     color,
     gender,
     isDeleted,
-    priceSale  
+    priceSale
   }: {
     page: number
     pageSize: number
@@ -79,7 +79,7 @@ export const getProductsWithFilters = createAsyncThunk(
     color?: string
     gender?: string
     isDeleted?: boolean | string,
-    priceSale?: number  |string,
+    priceSale?: number | string,
   }) => {
     try {
       const response = await getProductsWithFilter(

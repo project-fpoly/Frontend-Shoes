@@ -13,6 +13,7 @@ import Sidebar from '../../components/GreaUp/Sidebar';
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct';
 import ListProduct from '../../components/Sale/Products';
 import LoadingBar from 'react-top-loading-bar'
+import { scrollToTop } from '../../hooks/utils';
 
 const { Meta } = Card;
 
@@ -26,6 +27,7 @@ const Sale = () => {
   useEffect(() => {
     dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }));
     document.title = 'Sale';
+    scrollToTop()
   }, []);
 
   const handleChange = (value: string) => {

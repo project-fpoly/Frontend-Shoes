@@ -17,15 +17,17 @@ import { AppDispatch } from '../../../redux/store'
 import { getCartItems } from '../../../features/cart'
 const
   NavRight = () => {
+    const token = localStorage.getItem('accessToken')
     const dispatch = useDispatch<AppDispatch>()
     const cart = useSelector((state: any) => state.cart.cartItems)
     const cartSession = JSON.parse(sessionStorage.getItem('cart'))
-
-
-
     useEffect(() => {
       dispatch(getCartItems())
     }, [])
+
+    console.log(cartSession?.cartItems?.lengt);
+    console.log(cartSession?.cartItems);
+
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [valueInput, setValueInput] = useState('')
@@ -73,7 +75,7 @@ const
           </Link>
         )}
         <Link to="cart">
-          <Badge className='mt-2' count={cart?.cart?.cartItems?.length}>
+          <Badge className='mt-2' count={token ? cart?.cart?.cartItems?.length : cartSession?.cartItems?.length}>
             <IoCartOutline
               className=" cursor-pointer hover:bg-[#e5e5e5] rounded-full  "
               size={32}
@@ -83,7 +85,7 @@ const
         <ModalCustom isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
           <Search setIsModalOpen={setIsModalOpen}></Search>
         </ModalCustom>
-      </div>
+      </div >
     )
   }
 

@@ -14,7 +14,7 @@ import { GrTransaction } from 'react-icons/gr'
 import clsx from 'clsx'
 import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
 import LoadingBar from 'react-top-loading-bar'
-
+import { scrollToTop } from '../../hooks/utils'
 
 
 const GreaUp = () => {
@@ -22,10 +22,9 @@ const GreaUp = () => {
 
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
-  console.table(shoes);
-
   const loading = useSelector((state: IStateProduct) => state.product.loading)
   useEffect(() => {
+    scrollToTop()
     dispact(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
     document.title = 'Greaup'
   }, [])

@@ -5,7 +5,13 @@ import Trending from '../../components/Home/Trending'
 import Sale from '../../components/Home/Sale'
 import Sport from '../../components/Home/Sport'
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { scrollToTop } from '../../hooks/utils'
 const Home = () => {
+
+  useEffect(() => {
+    scrollToTop()
+  }, [])
   const accessToken = localStorage.getItem('accessToken')
   return (
     <div className="px-3 lg:px-10">

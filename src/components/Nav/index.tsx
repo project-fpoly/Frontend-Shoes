@@ -35,8 +35,6 @@ const NavBar = () => {
       {/*<p>Logout</p>*/}
     </div>
   )
-  const [showNav, setShowNav] = useState<boolean>(false)
-  const [position, setPosition] = useState<boolean>(false)
   const user = useSelector((state: any) => state.auth.user)
   const dispatch = useDispatch()
   const handleLogout = () => {

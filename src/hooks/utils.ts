@@ -10,3 +10,9 @@ export const formatCurrency = (money: number) => {
 export const discountcurrency = (money: number, percent: number) => {
   return (money * (1 - percent / 100))
 }
+export const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth" // Smooth scrolling behavior
+  })
+}
