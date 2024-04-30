@@ -15,7 +15,6 @@ const DetailShoe = () => {
   const dispatch = useDispatch<AppDispatch>()
   const shoe = useSelector((state: IStateProduct) => state.product.product)
   const shoes = useSelector((state: IStateProduct) => state.product.products)
-  const commnets = useSelector((state: IStateCmt) => state.comment.comments)
   const Loading = useSelector((state: IStateProduct) => state.product.loading)
   const category = useSelector((state: IStateProduct) => state.product.category)
   const { id } = useParams()

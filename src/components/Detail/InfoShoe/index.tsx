@@ -69,6 +69,7 @@ const InfoShoe = (props: Props) => {
     color,
     images,
     price,
+   priceSale ,
     ...shoeCart
   } = shoe
   const { sale } = shoeCart
@@ -166,7 +167,7 @@ const InfoShoe = (props: Props) => {
             <p>{categoryId?.name}</p>
             <span className="flex gap-5">
               <h3 className="my-10  text-xl ">
-                {sale?.discount ? formatCurrency(priceFormat) : ''}
+                {sale?.discount ? formatCurrency(priceSale) : ''}
               </h3>
 
               {!sale?.discount ? (
