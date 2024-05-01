@@ -34,7 +34,7 @@ const ThankYou = () => {
   }
   return (
     <div className="flex items-center mx-auto justify-center h-screen">
-      <div className="p-1 rounded shadow-lg min-w-96 bg-gradient-to-r from-purple-500 via-green-500 to-blue-500">
+      <div className="p-1  shadow-lg min-w-96 bg-gradient-to-r 0">
         <div className="flex flex-col items-center p-4 space-y-2 bg-white">
           {vnp_TransactionStatus === '00' ? (
             <svg
@@ -111,7 +111,7 @@ const ThankYou = () => {
               </g>
             </svg>
           )}
-          <h1 className="text-4xl  font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">
+          <h1 className="text-4xl  font-extrabold text-transparent ">
             {vnp_TransactionStatus === '00' ? (
               'Thank You !'
             ) : (
