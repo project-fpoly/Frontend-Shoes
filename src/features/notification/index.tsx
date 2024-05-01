@@ -14,13 +14,13 @@ const initialState: initialNotification = {
   loading: 'idle',
   notifications: [],
   notification: '',
-  listSend:[]
+  listSend: [],
 }
 
 ///// Đây là actions
 export const fetchAllNotification = createAsyncThunk(
   '/user/fetchAllNotification',
-  async (type:string) => {
+  async (type: string) => {
     try {
       const respone = await getAllNotification(type)
       return respone
@@ -56,10 +56,10 @@ export const updateNotificationById = createAsyncThunk(
 )
 export const sendNotification = createAsyncThunk(
   'notification/sendNotification',
-  async (data: ISendNoti,thunkApi) => {
+  async (data: ISendNoti, thunkApi) => {
     try {
-      const responsive= await createNotification(data)
-      thunkApi.dispatch(fetchAllNotification(""))
+      const responsive = await createNotification(data)
+      thunkApi.dispatch(fetchAllNotification(''))
       thunkApi.dispatch(getSendNotifications())
       return responsive
     } catch (error) {
@@ -71,7 +71,7 @@ export const getSendNotifications = createAsyncThunk(
   'notification/getSendNotifications',
   async () => {
     try {
-      const responsive= await getSentNotification()
+      const responsive = await getSentNotification()
       return responsive
     } catch (error) {
       return isRejected('Error fetching data')
@@ -128,9 +128,9 @@ export const notificationSlice = createSlice({
     builder.addCase(getSendNotifications.rejected, (state) => {
       state.loading = 'failed'
     })
-    builder.addCase(getSendNotifications.fulfilled, (state,action) => {
+    builder.addCase(getSendNotifications.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
-      state.listSend=action.payload
+      state.listSend = action.payload
     })
   },
 })

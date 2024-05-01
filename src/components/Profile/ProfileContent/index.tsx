@@ -1,6 +1,6 @@
-import NikeApps from "./Apps"
-import Infomation from "./Infomation"
-import MemberBenefits from "./MemberBenefits"
+import NikeApps from './Apps'
+import Infomation from './Infomation'
+import MemberBenefits from './MemberBenefits'
 
 const ProfileContent = () => {
   return (

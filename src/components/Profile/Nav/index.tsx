@@ -18,7 +18,8 @@ const NavProfile = () => {
         <Link to="/order">
           <h1 className="font-bold text-sm">Orders</h1>
         </Link>
-      ), key: 'Orders'
+      ),
+      key: 'Orders',
     },
     {
       label: (
@@ -43,13 +44,15 @@ const NavProfile = () => {
         components: {
           Menu: {
             horizontalItemSelectedColor: 'black',
-
           },
         },
       }}
     >
-      <Menu className="flex w-[800px]    pt-8 gap-16 " mode="horizontal" items={items as any} />
-
+      <Menu
+        className="flex w-[800px]    pt-8 gap-16 "
+        mode="horizontal"
+        items={items as any}
+      />
     </ConfigProvider>
   )
 }

@@ -9,30 +9,27 @@ const initialState: initialChart = {
   data: [],
 }
 
-export const fetchList = createAsyncThunk(
-  '/user/fetchList',
-  async () => {
+export const fetchList = createAsyncThunk('/user/fetchList', async () => {
+  try {
+    const respone = await getLists()
+    return respone
+  } catch (error) {
+    console.log('error')
+    return isRejected('Error fetching data')
+  }
+})
+export const fetchData = createAsyncThunk(
+  '/user/fetchData',
+  async (id: string) => {
     try {
-      const respone = await getLists()
+      const respone = await getChart(id)
       return respone
     } catch (error) {
       console.log('error')
       return isRejected('Error fetching data')
     }
-  }
+  },
 )
-export const fetchData = createAsyncThunk(
-    '/user/fetchData',
-    async (id:string) => {
-      try {
-        const respone = await getChart(id)
-        return respone
-      } catch (error) {
-        console.log('error')
-        return isRejected('Error fetching data')
-      }
-    }
-  )
 /// đây là chỗ chọc vào kho để lấy db
 export const chartSlice = createSlice({
   name: 'chart',
@@ -47,22 +44,18 @@ export const chartSlice = createSlice({
     })
     builder.addCase(fetchList.fulfilled, (state, action) => {
       state.loading = 'fulfilled'
-      state.list = Array.isArray(action.payload.data)
-        ? action.payload.data
-        : []
+      state.list = Array.isArray(action.payload.data) ? action.payload.data : []
     })
     builder.addCase(fetchData.pending, (state) => {
-        state.loading = 'pending'
-      })
-      builder.addCase(fetchData.rejected, (state) => {
-        state.loading = 'failed'
-      })
-      builder.addCase(fetchData.fulfilled, (state, action) => {
-        state.loading = 'fulfilled'
-        state.data = Array.isArray(action.payload.data)
-          ? action.payload.data
-          : []
-      })
+      state.loading = 'pending'
+    })
+    builder.addCase(fetchData.rejected, (state) => {
+      state.loading = 'failed'
+    })
+    builder.addCase(fetchData.fulfilled, (state, action) => {
+      state.loading = 'fulfilled'
+      state.data = Array.isArray(action.payload.data) ? action.payload.data : []
+    })
   },
 })
 

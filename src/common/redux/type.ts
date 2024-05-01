@@ -16,6 +16,7 @@ export interface initialProduct {
   comments?: [];
   loadingSearch: "idle" | "pending" | "fulfilled" | "failed";
   isDeleted: boolean;
+  productSearch?: IProduct[]
 }
 export interface initialUser {
   loading: "idle" | "pending" | "fulfilled" | "failed";

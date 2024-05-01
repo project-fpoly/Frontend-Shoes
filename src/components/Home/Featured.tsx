@@ -5,12 +5,12 @@ const Featured = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
       <Typography className="home_title">Featured</Typography>
-      <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div style={{ position: 'relative' }}>
           <img
             src="../../../public/nam.jpg"
             style={{ height: '650px', width: '100%' }}
-            className='rounded-lg'
+            className="rounded-lg"
           />
           <Typography
             className="text-3xl font-bold"
@@ -37,7 +37,7 @@ const Featured = () => {
           <img
             src="../../../public/women.jpg"
             style={{ height: '650px', width: '100%' }}
-            className='rounded-lg'
+            className="rounded-lg"
           />
           <Typography
             className="text-3xl font-bold"

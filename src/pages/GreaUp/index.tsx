@@ -16,10 +16,7 @@ import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
 import LoadingBar from 'react-top-loading-bar'
 import { scrollToTop } from '../../hooks/utils'
 
-
 const GreaUp = () => {
-
-
   const dispact = useDispatch<AppDispatch>()
   const shoes = useSelector((state: IStateProduct) => state.product.products)
   const loading = useSelector((state: IStateProduct) => state.product.loading)
@@ -56,12 +53,12 @@ const GreaUp = () => {
           className="flex gap-2 cursor-pointer "
         >
           {hideFilter ? 'Hide fillter' : 'Show filter'}
-          <button style={{ backgroundColor: "transparent" }}>
+          <button style={{ backgroundColor: 'transparent' }}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button style={{ backgroundColor: "transparent" }}>Sort by :</button>
+        <button style={{ backgroundColor: 'transparent' }}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}

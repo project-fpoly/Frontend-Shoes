@@ -21,13 +21,16 @@ type Inputs = {
 const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
   const dispact = useDispatch<AppDispatch>()
   const [dataSearch, setData] = useState<IProduct[]>([])
-  const shoes = useSelector((state: IStateProduct) => state.product.products)
-  const Loading = useSelector((state: IStateProduct) => state.product.loadingSearch)
+  const shoes = useSelector(
+    (state: IStateProduct) => state.product.productSearch,
+  )
+  const Loading = useSelector(
+    (state: IStateProduct) => state.product.loadingSearch,
+  )
   const { register, handleSubmit, reset } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = ({ resultSearch }) => {
     searchProductsByKeyword(resultSearch)
   }
-
   const searchInput = (e: any) => {
     debonceSearch(e.target.value)
   }
@@ -51,7 +54,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
           />
           <button
             type="submit"
-            style={{ backgroundColor: "transparent" }}
+            style={{ backgroundColor: 'transparent' }}
             className="cursor-pointer absolute top-[5%] left-0 hover:bg-[#e5e5e5] rounded-full p-2 z-20 "
           >
             <CiSearch size={23} />
@@ -61,7 +64,7 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
               reset()
               setData([])
             }}
-            style={{ backgroundColor: "transparent" }}
+            style={{ backgroundColor: 'transparent' }}
             className="cursor-pointer absolute top-[5%] right-[7%] hover:opacity-75 rounded-full p-2 z-20 "
           >
             <MdOutlineClear size={22} />
@@ -88,8 +91,10 @@ const Search = ({ setIsModalOpen }: { setIsModalOpen: any }) => {
                         <h2 className="text-black">{data.name}</h2>
                         <p className="text-black">{data.price}</p>
                       </span>
-                      <img className='w-[100px]' src={data.images ? data.images[0] : ''} />
-
+                      <img
+                        className="w-[100px]"
+                        src={data.images ? data.images[0] : ''}
+                      />
                     </div>
                   </Link>
                 </Fragment>

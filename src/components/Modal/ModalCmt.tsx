@@ -17,7 +17,11 @@ const ModalCmt: React.FC<Props> = ({
   }
   return (
     <>
-      <Modal className="h-[700px]" open={isModalOpenCmt} onCancel={handleCancel}>
+      <Modal
+        className="h-[700px]"
+        open={isModalOpenCmt}
+        onCancel={handleCancel}
+      >
         {children}
       </Modal>
     </>

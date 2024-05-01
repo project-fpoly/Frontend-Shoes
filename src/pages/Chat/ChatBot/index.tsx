@@ -1,10 +1,6 @@
 // import ChatBot from 'react-simple-chatbot';
 const ChatBot = () => {
-    return (
-        <>
-          {/* <ChatBot ></ChatBot > */}
-        </>
-    )
+  return <>{/* <ChatBot ></ChatBot > */}</>
 }
 
-export default ChatBot;
+export default ChatBot

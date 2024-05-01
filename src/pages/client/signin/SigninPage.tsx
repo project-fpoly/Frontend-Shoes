@@ -26,47 +26,7 @@ const SigninPage = () => {
   const onFinish = async (values: { email: string }) => {
     dispatch(setUser({ email: values.email }))
     navigate(`/password?email=${values.email}`)
-    // try {
-    //   if (!isValidEmail(values.email)) {
-    //     message.error("Invalid email format. Please enter a valid email address.", 5);
-    //     return;
-    //   }
-
-    //   const response = await axios.post('http://localhost:9000/api/auth/signin', { email: values.email });
-    //   if (response && response.status === 200) {
-    //     //redirect to signup page
-    //     setIsVerified(true);
-    //     navigate('/signup');
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    // if (isVerified == true) {
-    //   const key = "loading";
-    //   if (values) {
-    //     try {
-    //       const loading = await message.loading({
-    //         content: "đang xử lý!",
-    //         key,
-    //         duration: 2,
-    //       });
-    //       if (loading) {
-    //         const response: AxiosResponse<LoginResponse> = await signin(values);
-    //         if (response) {
-    //           const data: any = response;
-    //           localStorage.setItem("accessToken", data.accessToken);
-    //           localStorage.setItem("refreshToken", data.refreshToken);
-    //           localStorage.setItem("user", JSON.stringify(data.user));
-    //           message.success(data.message, 3);
-    //           navigate("/");
-    //         }
-    //       }
-    //     } catch (error: any) {
-    //       message.error(error.response.data.message, 5);
-    //     }
-    //   }
-    // }
+    sessionStorage.removeItem('cart')
   }
 
   return (

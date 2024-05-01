@@ -7,10 +7,10 @@ const Infomation = () => {
 
   return (
     <div className="">
-      <div className='flex gap-5'>
+      <div className="flex gap-5">
         <Avatar size={80} src={user?.avt?.url} />
-        <div className='flex flex-col gap-3'>
-          <h3 className=' text-4xl'>{user?.userName!}</h3>
+        <div className="flex flex-col gap-3">
+          <h3 className=" text-4xl">{user?.userName!}</h3>
           <p>Nike Member Since {moment(user.createdAt).calendar()}</p>
         </div>
       </div>

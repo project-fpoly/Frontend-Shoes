@@ -13,7 +13,7 @@ const Banner = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
       <Carousel autoplay autoplaySpeed={3000} style={{ width: '100%' }}>
-        <div >
+        <div>
           <img
             className="rounded-lg img_banner w-full object-cover"
             src="../../../banner.jpg"

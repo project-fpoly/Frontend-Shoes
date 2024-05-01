@@ -15,9 +15,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../redux/store'
 import { discountcurrency, formatCurrency } from '../../../hooks/utils'
 import ModalCmt from '../../Modal/ModalCmt'
-import { FaHeart } from "react-icons/fa";
+import { FaHeart } from 'react-icons/fa'
 
 import { useEffect } from 'react'
+import { blankSearchItems } from '../../../features/product'
+import ModalCart from '../../Modal/modalCart'
+import ModalCartItem from '../../Modal/Material'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 interface Props {
@@ -25,8 +28,13 @@ interface Props {
   category: ICategory
 }
 const InfoShoe = (props: Props) => {
+  const handleTimeClose = () => {
+    setOpen(true)
+    setTimeout(() => {
+      setOpen(false)
+    }, 5000)
+  }
   const { shoe, category } = props
-
   const state = useSelector((state: any) => state.fav.favItems.fav)
   const favs = useSelector((state: any) => state.fav.favItems.fav?.favItems)
   const [size, setSize] = useState('')
@@ -34,9 +42,11 @@ const InfoShoe = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>()
   const favItem = favs?.some((item: any) => item.product === shoe._id)
   const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     dispatch(getFavItems())
+    dispatch(blankSearchItems())
   }, [shoe])
   const handleClick = (index: any) => {
     setActiveButton(index === activeButton ? null : index)
@@ -51,10 +61,6 @@ const InfoShoe = (props: Props) => {
         break
       default:
         'success'
-        notification[type]({
-          message: 'Thêm sản phẩm thành công',
-          description: 'Sản phẩm đã được thêm vào giỏ hàng',
-        })
         break
     }
   }
@@ -69,7 +75,7 @@ const InfoShoe = (props: Props) => {
     color,
     images,
     price,
-   priceSale ,
+    priceSale,
     ...shoeCart
   } = shoe
   const { sale } = shoeCart
@@ -88,8 +94,10 @@ const InfoShoe = (props: Props) => {
     const cartItem = { product, size: size, price: priceFormat }
     if (accessToken) {
       dispatch(addToCart(cartItem as any))
+      handleTimeClose()
     } else {
       const updatedCart = cart?.cartItems.map((item: any) => {
+        handleTimeClose()
         if (item.product === shoe._id && item.size === size) {
           // If product with the same ID already exists, increase its quantity
           return { ...item, quantity: item.quantity + 1 }
@@ -103,6 +111,7 @@ const InfoShoe = (props: Props) => {
           (item) => item.product === product && item.size === size,
         )
       ) {
+        handleTimeClose()
         updatedCart?.push({
           product,
           size: size,
@@ -220,7 +229,6 @@ const InfoShoe = (props: Props) => {
             {favItem && state?.user ? (
               <>
                 <button
-
                   className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
                 >
                   Favourite
@@ -251,7 +259,11 @@ const InfoShoe = (props: Props) => {
             View product detail
           </p>
           <Colspace shoe={shoe}></Colspace>
-
+          <ModalCartItem
+            shoe={shoe}
+            open={open}
+            setOpen={setOpen}
+          ></ModalCartItem>
           <ModalCustom
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}

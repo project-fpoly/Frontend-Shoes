@@ -295,7 +295,8 @@ const CardThree = ({ data, data2 }: CardThreeProps) => {
                 <div className="mt-4 flex items-end justify-between">
                   <div className="">
                     <h4 className="text-title-md font-bold text-black  ">
-                      {data?.moneyOrderStatus[index]?.value?.toLocaleString()} VND
+                      {data?.moneyOrderStatus[index]?.value?.toLocaleString()}{' '}
+                      VND
                     </h4>
                     <span className="text-base font-medium">
                       {orderStatus.value} đơn{' '}

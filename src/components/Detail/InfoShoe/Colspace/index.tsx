@@ -21,10 +21,14 @@ import { Link } from 'react-router-dom'
 import user from '../../../../features/user'
 import moment from 'moment'
 import { AppDispatch } from '../../../../redux/store'
-import { checkIsBuyProduct, createCommnets, deleteCommentById, updateCommentById } from '../../../../features/comment'
+import {
+  checkIsBuyProduct,
+  createCommnets,
+  deleteCommentById,
+  updateCommentById,
+} from '../../../../features/comment'
 import ModalCmt from '../../../Modal/ModalCmt'
 const Colspace = ({ shoe }: { shoe: IProduct }) => {
-
   const checkBuy = useSelector((state: any) => state.comment.checked)
   const [typeCmt, setTypeCmt] = useState<string>('')
   const userIdStorage = localStorage.getItem('userID')
@@ -35,7 +39,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalOpenCmt, setIsModalOpenCmt] = useState(false)
   const [idCmt, setIdCmt] = useState<ICmt>()
-
 
   useEffect(() => {
     dispatch(checkIsBuyProduct(shoe))
@@ -49,8 +52,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     0,
   )
   const averageRating = totalStars / commnets.length
-  const onChange = (key: string | string[]) => {
-  }
+  const onChange = (key: string | string[]) => {}
 
   const handleShowModal = () => {
     setIsModalOpen(true)
@@ -72,11 +74,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     },
   })
 
-
-
-
   const previousContent = watch('content')
-
 
   const { _id: shoeId } = shoe
   const [rating, setRating] = useState<any>(0)
@@ -86,8 +84,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const confirm = () => {
     dispatch(deleteCommentById(idCmt as ICmt))
   }
-
-
 
   const contentCommnet = () => {
     return (
@@ -104,11 +100,11 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             Update
           </button>
           <Popconfirm
-            className='z-10'
+            className="z-10"
             title="Delete "
             description="Are you sure to delete this commnet?"
             onConfirm={confirm}
-            okText={<button className='text-white'> Yes</button>}
+            okText={<button className="text-white"> Yes</button>}
             cancelText="No"
           >
             <button className="flex flex-start py-2 hover:bg-gray-100 rounded-sm">
@@ -156,23 +152,25 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             ></Rate>
           </p>
 
-          {checkBuy?.message === 'Chưa mua hàng' ? <>
-            <p
-              className="text-black  text-xl pb-2 font-bold cursor-pointer  hover:opacity-70"
-            >
-              Bạn phải mua hàng để có thể đánh giá
-            </p>
-          </> : <>
-            <p
-              onClick={() => {
-                handleShowModal()
-                setTypeCmt('CREATE')
-              }}
-              className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
-            >
-              Write a review
-            </p>
-          </>}
+          {checkBuy?.message === 'Chưa mua hàng' ? (
+            <>
+              <p className="text-black  text-xl pb-2 font-bold cursor-pointer  hover:opacity-70">
+                Bạn phải mua hàng để có thể đánh giá
+              </p>
+            </>
+          ) : (
+            <>
+              <p
+                onClick={() => {
+                  handleShowModal()
+                  setTypeCmt('CREATE')
+                }}
+                className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
+              >
+                Write a review
+              </p>
+            </>
+          )}
           <div className="flex flex-col gap-8  ">
             {commnets.map((comment, index) => {
               const { content, userId } = comment
@@ -194,9 +192,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
                     <div className="flex  gap-5">
                       <>
-                        <p className="text-xl">
-                          {comment?.userId['userName']}
-                        </p>
+                        <p className="text-xl">{comment?.userId['userName']}</p>
                         {userId?._id! === userIdStorage && (
                           <>
                             <Popover
@@ -205,16 +201,18 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                               content={contentCommnet}
                               trigger="click"
                             >
-                              <button className='font-bold' onClick={() => {
-                                setIdCmt(comment)
-                              }}>
+                              <button
+                                className="font-bold"
+                                onClick={() => {
+                                  setIdCmt(comment)
+                                }}
+                              >
                                 ...
                               </button>
                             </Popover>
                           </>
                         )}
                       </>
-
                     </div>
                   </div>
 
@@ -254,7 +252,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
         reset()
         setRating(null)
       }
-    } if (typeCmt === 'UPDATE') {
+    }
+    if (typeCmt === 'UPDATE') {
       setIsModalOpenCmt(false)
       setTypeCmt('')
       dispatch(updateCommentById(comentUpdate as any))
@@ -282,8 +281,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           </span>
           {accessToken && (
             <>
-
-
               <div className="flex gap-5">
                 <Image width={80} src={shoe.images ? shoe.images[0] : ''} />
                 <p>{shoe.name}</p>
@@ -338,7 +335,10 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           )}
         </div>
       </ModalCustom>
-      <ModalCmt isModalOpenCmt={isModalOpenCmt} setIsModalOpenCmt={setIsModalOpenCmt} >
+      <ModalCmt
+        isModalOpenCmt={isModalOpenCmt}
+        setIsModalOpenCmt={setIsModalOpenCmt}
+      >
         <div className="flex flex-col gap-10 ">
           <span className="text-center">
             <h1 className="text-xl">Write a Review</h1>
@@ -352,7 +352,6 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               <p>{shoe.name}</p>
             </div>
             <form
-
               className="flex flex-col gap-5"
               onSubmit={handleSubmit(onSubmit)}
             >
@@ -378,7 +377,8 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 </span>
               )}
 
-              {previousContent === idCmt?.content && rating === idCmt?.rating ? (
+              {previousContent === idCmt?.content &&
+              rating === idCmt?.rating ? (
                 <button
                   disabled
                   onClick={() => setTypeCmt('UPDATE')}
@@ -397,20 +397,15 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                     {Loading === 'pending' ? 'Loading...' : 'Send'}
                   </button>
                 </>
-
               )}
-
-
             </form>
             <p>
-              Describe what you liked, what you didn't like and other key
-              things shoppers should know. Minimum 30 characters.
+              Describe what you liked, what you didn't like and other key things
+              shoppers should know. Minimum 30 characters.
             </p>
           </>
-
         </div>
       </ModalCmt>
-
     </>
   )
 }

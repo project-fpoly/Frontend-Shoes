@@ -102,21 +102,21 @@ const Router = (user: any) => {
     })
     socket.on('server_delete_product', (data) => {
       if (data && data.data && data.data.data) {
-          const productData = data.data.data;
-          if (productData.data.name) {
-              const productName = productData.data.name;
-              const message = `Sản phẩm ${productName} đã được xóa thành công!`;
-              notification.success({ message: message });
-              dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }));
-          } else {
-              console.log('Trường name không tồn tại trong dữ liệu sản phẩm');
-          }
+        const productData = data.data.data
+        if (productData.data.name) {
+          const productName = productData.data.name
+          const message = `Sản phẩm ${productName} đã được xóa thành công!`
+          notification.success({ message: message })
+          dispatch(
+            fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }),
+          )
+        } else {
+          console.log('Trường name không tồn tại trong dữ liệu sản phẩm')
+        }
       } else {
-          console.log('Dữ liệu không hợp lệ: data không tồn tại');
+        console.log('Dữ liệu không hợp lệ: data không tồn tại')
       }
-  });
-  ;
-  
+    })
     if (user.user && user.user.role === 'admin') {
       dispatch(fetchList())
       socket.on('newNotification', (data) => {

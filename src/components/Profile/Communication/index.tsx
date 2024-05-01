@@ -1,5 +1,4 @@
-import { Checkbox, ConfigProvider } from "antd"
-
+import { Checkbox, ConfigProvider } from 'antd'
 
 const Communication = () => {
   return (
@@ -7,7 +6,7 @@ const Communication = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: 'black'
+            colorPrimary: 'black',
           },
         }}
       >
@@ -15,12 +14,9 @@ const Communication = () => {
           <p className="text-2xl ">Communication Preferences</p>
           <p>General Communication</p>
           <p>Get updates on products, offers and your Member benefits.</p>
-          <Checkbox checked={true}>
-            Yes send me email
-          </Checkbox>
+          <Checkbox checked={true}>Yes send me email</Checkbox>
         </div>
       </ConfigProvider>
-
     </>
   )
 }

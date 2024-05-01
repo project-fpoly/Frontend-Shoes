@@ -31,9 +31,7 @@ function getItem(
   } as MenuItem
 }
 
-
 const items: MenuProps['items'] = [
-
   getItem('Gender', 'Gender', '', [
     getItem('Men', 'nam'),
     getItem('Women', 'nữ'),
@@ -42,7 +40,8 @@ const items: MenuProps['items'] = [
     getItem('Jordan', '6584f32081f5022799afe79e'),
     getItem('Nike', '65899c32bb48834579fde67e'),
     getItem('Adidas', '65b32b3962fec2570781106c'),
-  ]), ,
+  ]),
+  ,
   getItem('Shop by price', 'Price', '', [
     getItem('1  to  1,000,000', '1  to  1,000,000'),
     getItem('1,000,000đ  to  2,000,000đ', '1,000,000 to  2,000,000'),
@@ -73,7 +72,6 @@ const items: MenuProps['items'] = [
   //   getItem('White', 'white'),
   //   getItem('Green', 'green'),
   // ]),
-
 ]
 fetchProductsByCategory
 
@@ -98,14 +96,23 @@ const Sidebar = (props: Props) => {
 
       case 'Price':
         if (e.keyPath[0] === '1  to  1,000,000') {
-          console.log('hi');
+          console.log('hi')
           dispact(featchProductByPrice({ minPrice: 1, maxPrice: 999999 }))
-        } if (e.keyPath[0] === '1,000,000 to  2,000,000') {
-          dispact(featchProductByPrice({ minPrice: 1000000, maxPrice: 1999999 }))
-        } if (e.keyPath[0] === '2,000,000  to  5,000,000') {
-          dispact(featchProductByPrice({ minPrice: 2000000, maxPrice: 4999999 }))
-        } if (e.keyPath[0] === '5,000,000  to  10,000,000') {
-          dispact(featchProductByPrice({ minPrice: 5000000, maxPrice: 9999999 }))
+        }
+        if (e.keyPath[0] === '1,000,000 to  2,000,000') {
+          dispact(
+            featchProductByPrice({ minPrice: 1000000, maxPrice: 1999999 }),
+          )
+        }
+        if (e.keyPath[0] === '2,000,000  to  5,000,000') {
+          dispact(
+            featchProductByPrice({ minPrice: 2000000, maxPrice: 4999999 }),
+          )
+        }
+        if (e.keyPath[0] === '5,000,000  to  10,000,000') {
+          dispact(
+            featchProductByPrice({ minPrice: 5000000, maxPrice: 9999999 }),
+          )
         }
         break
       case 'Color':
@@ -114,7 +121,8 @@ const Sidebar = (props: Props) => {
       case 'Material':
         dispact(featchProductByMaterial(e.keyPath[0]))
         break
-      default: ''
+      default:
+        ''
         break
     }
   }
@@ -126,7 +134,7 @@ const Sidebar = (props: Props) => {
           Menu: {
             dangerItemActiveBg: '#fff2f0',
             itemSelectedColor: 'black',
-            itemHoverBg: 'gray'
+            itemHoverBg: 'gray',
           },
         },
       }}
@@ -139,13 +147,7 @@ const Sidebar = (props: Props) => {
             onClick={onClick}
             style={{ width: 256 }}
             defaultSelectedKeys={['1']}
-            defaultOpenKeys={[
-              'Size',
-              'Gender',
-              'Price',
-              'Color',
-              'Material',
-            ]}
+            defaultOpenKeys={['Size', 'Gender', 'Price', 'Color', 'Material']}
             mode="inline"
             items={items}
           />

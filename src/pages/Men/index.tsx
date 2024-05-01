@@ -4,7 +4,6 @@ import ShopIcon from '../../components/Men/ShopIcon'
 import { scrollToTop } from '../../hooks/utils'
 
 const Men = () => {
-
   useEffect(() => {
     scrollToTop()
   }, [])

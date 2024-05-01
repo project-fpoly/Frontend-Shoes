@@ -52,33 +52,33 @@ import { HiMiniBars3CenterLeft } from 'react-icons/hi2'
 const { Search } = Input
 
 const AdminHeader: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState('left');
+  const [open, setOpen] = useState(false)
+  const [placement, setPlacement] = useState('left')
   const showDrawer = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const onClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
   const navigate = useNavigate()
   const { Option } = Select
   const user = useSelector((state: any) => state.auth.user)
   const [visible, setVisible] = useState(false)
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState('')
 
   const dispatch = useDispatch<AppDispatch>()
   const { notifications: notification } = useSelector(
     (state: IStateNotification) => state.notification,
   )
   useEffect(() => {
-    dispatch(fetchAllNotification(""))
+    dispatch(fetchAllNotification(''))
   }, [dispatch])
 
   const handleItemClick = async (item: INotification) => {
     if (!item.isRead) {
       await dispatch(updateNotificationById(item._id))
-      dispatch(fetchAllNotification(""))
+      dispatch(fetchAllNotification(''))
     }
     navigate(`/admin/notification/${item._id}`)
   }
@@ -107,8 +107,8 @@ const AdminHeader: React.FC = () => {
   ).length
   const handleSelectChange = async (value: string) => {
     await dispatch(fetchAllNotification(value))
-    setSelectedValue(value);
-  };
+    setSelectedValue(value)
+  }
   const notificationContent = (
     <>
       <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -156,8 +156,9 @@ const AdminHeader: React.FC = () => {
 
             return (
               <List.Item
-                className={`${styles.notificationItem} ${item.isRead ? styles.readItem : styles.unreadItem
-                  }`}
+                className={`${styles.notificationItem} ${
+                  item.isRead ? styles.readItem : styles.unreadItem
+                }`}
                 onClick={() => handleItemClick(item)}
               >
                 <div style={{ marginBottom: '16px', padding: 5 }}>
@@ -202,7 +203,10 @@ const AdminHeader: React.FC = () => {
       style={{ backgroundColor: 'ghostwhite' }}
     >
       <Col span={4} className="text-center lg:hidden">
-        <HiMiniBars3CenterLeft onClick={showDrawer} className='text-2xl mt-1 lg:hidden' />
+        <HiMiniBars3CenterLeft
+          onClick={showDrawer}
+          className="text-2xl mt-1 lg:hidden"
+        />
       </Col>
       <Col span={12}>
         <Search
@@ -249,19 +253,49 @@ const AdminHeader: React.FC = () => {
         open={open}
         key={placement}
       >
-        <div className='flex flex-col gap-16'>
-          <div className='flex flex-col gap-6 ml-3 justify-start'>
-            <Link onClick={onClose} to="/admin" className='text-[16px]'><BarChartOutlined className='mr-4' />Dashboard</Link>
-            <Link onClick={onClose} to="users" className='text-[16px]'><UserOutlined className='mr-4' />User</Link>
-            <Link onClick={onClose} to="orders" className='text-[16px]'><ReconciliationOutlined className='mr-4' />Order</Link>
-            <Link onClick={onClose} to="product" className='text-[16px]'><ShopFilled className='mr-4' />Products</Link>
-            <Link onClick={onClose} to="categories" className='text-[16px]'><PartitionOutlined className='mr-4' />Categories</Link>
-            <Link onClick={onClose} to="sale" className='text-[16px]'><ShoppingCartOutlined className='mr-4' />Sale</Link>
-            <Link onClick={onClose} to="comment" className='text-[16px]'><WechatOutlined className='mr-4' />Comments</Link>
-            <Link onClick={onClose} to="voucher" className='text-[16px]'><GiftOutlined className='mr-4' />Voucher</Link>
+        <div className="flex flex-col gap-16">
+          <div className="flex flex-col gap-6 ml-3 justify-start">
+            <Link onClick={onClose} to="/admin" className="text-[16px]">
+              <BarChartOutlined className="mr-4" />
+              Dashboard
+            </Link>
+            <Link onClick={onClose} to="users" className="text-[16px]">
+              <UserOutlined className="mr-4" />
+              User
+            </Link>
+            <Link onClick={onClose} to="orders" className="text-[16px]">
+              <ReconciliationOutlined className="mr-4" />
+              Order
+            </Link>
+            <Link onClick={onClose} to="product" className="text-[16px]">
+              <ShopFilled className="mr-4" />
+              Products
+            </Link>
+            <Link onClick={onClose} to="categories" className="text-[16px]">
+              <PartitionOutlined className="mr-4" />
+              Categories
+            </Link>
+            <Link onClick={onClose} to="sale" className="text-[16px]">
+              <ShoppingCartOutlined className="mr-4" />
+              Sale
+            </Link>
+            <Link onClick={onClose} to="comment" className="text-[16px]">
+              <WechatOutlined className="mr-4" />
+              Comments
+            </Link>
+            <Link onClick={onClose} to="voucher" className="text-[16px]">
+              <GiftOutlined className="mr-4" />
+              Voucher
+            </Link>
             {/* <Link onClick={onClose} to="setting" className='text-[16px]'><SettingOutlined className='mr-4' />Setting</Link> */}
-            <Link onClick={onClose} to="setting/sendNotification"><SendOutlined className='mr-4' />Send Notification</Link>
-            <Link onClick={onClose} to="setting/chat"><WechatWorkOutlined className='mr-4' />Chat</Link>
+            <Link onClick={onClose} to="setting/sendNotification">
+              <SendOutlined className="mr-4" />
+              Send Notification
+            </Link>
+            <Link onClick={onClose} to="setting/chat">
+              <WechatWorkOutlined className="mr-4" />
+              Chat
+            </Link>
           </div>
         </div>
       </Drawer>

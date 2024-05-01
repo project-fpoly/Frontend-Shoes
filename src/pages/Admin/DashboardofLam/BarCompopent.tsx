@@ -50,7 +50,7 @@ const BarCompopent = ({ id }: { id: string }) => {
     const currentDate = dayjs()
 
     if (endDate.isAfter(currentDate)) {
-      setTimeRangeState([currentDate.add(-6, 'days'), currentDate]);
+      setTimeRangeState([currentDate.add(-6, 'days'), currentDate])
     } else {
       setTimeRangeState([startDate, endDate])
     }
@@ -100,7 +100,11 @@ const BarCompopent = ({ id }: { id: string }) => {
             }}
             barSize={40}
           >
-            <Bar dataKey="value" label={{ position: 'top' }} fill={getRandomColor()} />
+            <Bar
+              dataKey="value"
+              label={{ position: 'top' }}
+              fill={getRandomColor()}
+            />
             <XAxis dataKey="time" />
             <YAxis />
             <Tooltip />

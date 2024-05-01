@@ -4,7 +4,7 @@ import Search from 'antd/es/input/Search'
 import Title from 'antd/es/typography/Title'
 
 type IProps = {
-  showModal: (() => void) |null
+  showModal: (() => void) | null
   name: string
   onSubmitt: (value: string) => void
 }
@@ -24,10 +24,10 @@ const HeaderTable = (props: IProps) => {
           onSearch={handleSearch}
           enterButton={<SearchOutlined />}
         />
-        {props.showModal!=null &&(
+        {props.showModal != null && (
           <Button icon={<PlusOutlined />} onClick={props.showModal}>
-          New
-        </Button>
+            New
+          </Button>
         )}
       </Space>
     </Space>

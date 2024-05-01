@@ -51,7 +51,6 @@ const SlideAlso = ({ shoes }: Props) => {
           </Swiper>
         </>
       )}
-
     </>
   )
 }

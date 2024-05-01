@@ -11,8 +11,7 @@ const Password = () => {
   const dispatch = useDispatch()
   const email =
     useSelector((state: any) => state.auth.user)?.email || params.get('email')
-    const role =
-    useSelector((state: any) => state.auth.user)
+  const role = useSelector((state: any) => state.auth.user)
 
   const getUserID = (token: string) => {
     const base64Url = token.split('.')[1]
@@ -57,10 +56,10 @@ const Password = () => {
             notification.success({
               message: 'Login successfully',
               placement: 'top',
-            });
-            if(res.data.user.role==="admin"){
+            })
+            if (res.data.user.role === 'admin') {
               navigate('/admin')
-            }else{
+            } else {
               navigate('/')
             }
           })
@@ -69,11 +68,12 @@ const Password = () => {
           })
       }
     } catch (e: any) {
-      e.response.data.message && notification.error({
-        message: 'Login failed',
-        description: e.response.data.message,
-        placement: 'top'
-      });
+      e.response.data.message &&
+        notification.error({
+          message: 'Login failed',
+          description: e.response.data.message,
+          placement: 'top',
+        })
       if (e.response.data.code === 404) {
         navigate('/signup')
       }
@@ -105,7 +105,6 @@ const Password = () => {
                 {
                   message: 'Mandatory!',
                   required: true,
-
                 },
               ]}
             >
@@ -145,8 +144,8 @@ const Password = () => {
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
                 }}
-              // onMouseEnter={handleMouseEnter}
-              // onMouseLeave={handleMouseLeave}
+                // onMouseEnter={handleMouseEnter}
+                // onMouseLeave={handleMouseLeave}
               >
                 Continue
               </Button>

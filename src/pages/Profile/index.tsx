@@ -1,11 +1,10 @@
-
-import { Outlet } from "react-router-dom"
-import NavProfile from "../../components/Profile/Nav"
-import { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "../../redux/store"
-import { fetchOneUsers } from "../../features/user"
-import { scrollToTop } from "../../hooks/utils"
+import { Outlet } from 'react-router-dom'
+import NavProfile from '../../components/Profile/Nav'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../redux/store'
+import { fetchOneUsers } from '../../features/user'
+import { scrollToTop } from '../../hooks/utils'
 
 const Profile = () => {
   const dispact = useDispatch<AppDispatch>()
@@ -23,8 +22,6 @@ const Profile = () => {
         <Outlet></Outlet>
       </div>
     </>
-
   )
-
 }
 export default Profile

@@ -131,57 +131,56 @@ const AllCompopent = ({ id }: { id: string }) => {
             </b>
           </Card>
         </Col>
-        
       </Row>
-      <Drawer title="Basic Drawer" onClose={onClose} open={open} width={"40%"}>
-      <Row gutter={[10,10]}>
-      <Col span={8}>
-          <Card
-            title="Hóa đơn"
-            headStyle={{
-              backgroundColor: '#f0f2f5',
-              color: 'blue',
-              fontWeight: 'bold',
-            }}
-          >
-            <p>{data.data?.totalAllBill}</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card
-            title="Người dùng"
-            headStyle={{
-              backgroundColor: '#f0f2f5',
-              color: 'blue',
-              fontWeight: 'bold',
-            }}
-          >
-            <p>{data.data?.totalUser}</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card
-            title="Số sản phẩm"
-            headStyle={{
-              backgroundColor: '#f0f2f5',
-              color: 'blue',
-              fontWeight: 'bold',
-            }}
-          >
-            <p>{data.data?.totalProduct}</p>
-          </Card>
-        </Col>
-        <Col span={24}>
-          <Card>
-            <Table
-              dataSource={dataSource}
-              size="small"
-              columns={columns}
-              pagination={false}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <Drawer title="Basic Drawer" onClose={onClose} open={open} width={'40%'}>
+        <Row gutter={[10, 10]}>
+          <Col span={8}>
+            <Card
+              title="Hóa đơn"
+              headStyle={{
+                backgroundColor: '#f0f2f5',
+                color: 'blue',
+                fontWeight: 'bold',
+              }}
+            >
+              <p>{data.data?.totalAllBill}</p>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card
+              title="Người dùng"
+              headStyle={{
+                backgroundColor: '#f0f2f5',
+                color: 'blue',
+                fontWeight: 'bold',
+              }}
+            >
+              <p>{data.data?.totalUser}</p>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card
+              title="Số sản phẩm"
+              headStyle={{
+                backgroundColor: '#f0f2f5',
+                color: 'blue',
+                fontWeight: 'bold',
+              }}
+            >
+              <p>{data.data?.totalProduct}</p>
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card>
+              <Table
+                dataSource={dataSource}
+                size="small"
+                columns={columns}
+                pagination={false}
+              />
+            </Card>
+          </Col>
+        </Row>
       </Drawer>
     </div>
   )

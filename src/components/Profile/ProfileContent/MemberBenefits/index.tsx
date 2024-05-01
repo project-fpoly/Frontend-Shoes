@@ -40,8 +40,7 @@ const MemberBenefits = () => {
               onClick={(e) => e.stopPropagation()}
             />
           }
-        >
-        </Card>
+        ></Card>
         <Card
           onDragStart={(event) => event.preventDefault()}
           hoverable
@@ -54,8 +53,7 @@ const MemberBenefits = () => {
               onClick={(e) => e.stopPropagation()}
             />
           }
-        >
-        </Card>
+        ></Card>
         <Card
           onDragStart={(event) => event.preventDefault()}
           hoverable
@@ -68,8 +66,7 @@ const MemberBenefits = () => {
               onClick={(e) => e.stopPropagation()}
             />
           }
-        >
-        </Card>
+        ></Card>
         <Card
           onDragStart={(event) => event.preventDefault()}
           hoverable
@@ -82,8 +79,7 @@ const MemberBenefits = () => {
               onClick={(e) => e.stopPropagation()}
             />
           }
-        >
-        </Card>
+        ></Card>
         <Card
           onDragStart={(event) => event.preventDefault()}
           hoverable
@@ -96,8 +92,7 @@ const MemberBenefits = () => {
               onClick={(e) => e.stopPropagation()}
             />
           }
-        >
-        </Card>
+        ></Card>
       </Carousel>
     </Space>
   )

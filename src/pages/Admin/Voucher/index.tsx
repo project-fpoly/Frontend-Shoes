@@ -13,7 +13,12 @@ import { format, isAfter } from 'date-fns'
 import HeaderTable from '../../../components/Admin/Layout/HeaderTable'
 import { AppDispatch } from '../../../redux/store'
 import { IStateVoucher } from '../../../common/redux/type'
-import { createVoucher, deleteeVoucher, fetchVoucher, updateVoucher } from '../../../features/voucher'
+import {
+  createVoucher,
+  deleteeVoucher,
+  fetchVoucher,
+  updateVoucher,
+} from '../../../features/voucher'
 import { IVoucher } from '../../../common/voucher'
 import FormVoucher from '../../../components/Admin/Voucher/FormVoucher'
 import dayjs from 'dayjs'
@@ -57,13 +62,12 @@ const VoucherManager: React.FC = () => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        dispatch(deleteeVoucher(voucherId));
-        setIsModalUpdateOpen(false); // Đóng modal sau khi xóa
+        dispatch(deleteeVoucher(voucherId))
+        setIsModalUpdateOpen(false) // Đóng modal sau khi xóa
       },
       onCancel() {},
-    });
-  };
-  
+    })
+  }
 
   const columns: ColumnsType<IVoucher> = [
     {
@@ -91,7 +95,7 @@ const VoucherManager: React.FC = () => {
       title: 'start  date',
       dataIndex: 'start_date',
       align: 'center',
-      width:120,
+      width: 120,
       render: (date) => format(new Date(date), 'dd-MM-yyyy'),
     },
     {
@@ -146,8 +150,12 @@ const VoucherManager: React.FC = () => {
     price_order: DetailVouche?.price_order || 0,
     description: DetailVouche?.description || '',
     create_by: DetailVouche?.create_by || {},
-    start_date: DetailVouche?.start_date ? dayjs(DetailVouche.start_date) : dayjs('2024-01-01'),
-    expiration_date: DetailVouche?.expiration_date ? dayjs(DetailVouche.expiration_date) : dayjs('2024-01-01'),
+    start_date: DetailVouche?.start_date
+      ? dayjs(DetailVouche.start_date)
+      : dayjs('2024-01-01'),
+    expiration_date: DetailVouche?.expiration_date
+      ? dayjs(DetailVouche.expiration_date)
+      : dayjs('2024-01-01'),
   }
   const defaultInitValue: IVoucher = {
     _id: '',
@@ -156,7 +164,7 @@ const VoucherManager: React.FC = () => {
     reduced_amount: 0,
     price_order: 0,
     description: '',
-    start_date:dayjs(),
+    start_date: dayjs(),
     expiration_date: dayjs().subtract(1, 'day'),
   }
   const searchUser = (value: string) => {

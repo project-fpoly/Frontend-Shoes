@@ -64,21 +64,21 @@ const FormVoucher: React.FC<IVoucher & FormVoucherProps> = ({
     >
       {_id && (
         <>
-        <Form.Item
-        label={'_id'}
-        name="_id"
-        initialValue={_id}
-        style={{display:"none"}}
-      >
-        <Input disabled />
-      </Form.Item>
-        <Form.Item
-          label={'Create By'}
-          name="create_by"
-          initialValue={create_by?.email}
-        >
-          <Input disabled />
-        </Form.Item>
+          <Form.Item
+            label={'_id'}
+            name="_id"
+            initialValue={_id}
+            style={{ display: 'none' }}
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item
+            label={'Create By'}
+            name="create_by"
+            initialValue={create_by?.email}
+          >
+            <Input disabled />
+          </Form.Item>
         </>
       )}
 

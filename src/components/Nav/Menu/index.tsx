@@ -16,7 +16,9 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/greaup">
-          <h1 className="hover:text-black visited:text-black font-bold">Products</h1>
+          <h1 className="hover:text-black visited:text-black font-bold">
+            Products
+          </h1>
         </Link>
       ),
       key: 'Products',
@@ -61,12 +63,16 @@ const MenuNav = () => {
           Menu: {
             dangerItemActiveBg: '#fff2f0',
             itemSelectedColor: 'black',
-            itemHoverBg: 'gray'
+            itemHoverBg: 'gray',
           },
         },
       }}
     >
-      <Menu className="hidden xl:flex  w-[800px] pl-52 " mode="horizontal" items={items} />
+      <Menu
+        className="hidden xl:flex  w-[800px] pl-52 "
+        mode="horizontal"
+        items={items}
+      />
     </ConfigProvider>
   )
 }

@@ -1,68 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Space, Typography, notification, Row, Col, Select } from 'antd';
-import { saleFilterProducts } from '../../services/productsQuery';
-import { IProduct } from '../../common/products';
-import { Link } from 'react-router-dom';
-import { AppDispatch } from '../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { IStateProduct } from '../../common/redux/type';
-import { fetchAllProducts, fetchProductsByPriceLowOrHight } from '../../features/product';
-import clsx from 'clsx';
-import { GrTransaction } from 'react-icons/gr';
-import Sidebar from '../../components/GreaUp/Sidebar';
-import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct';
-import ListProduct from '../../components/Sale/Products';
+import React, { useEffect, useState } from 'react'
+import { Card, Space, Typography, notification, Row, Col, Select } from 'antd'
+import { saleFilterProducts } from '../../services/productsQuery'
+import { IProduct } from '../../common/products'
+import { Link } from 'react-router-dom'
+import { AppDispatch } from '../../redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { IStateProduct } from '../../common/redux/type'
+import {
+  fetchAllProducts,
+  fetchProductsByPriceLowOrHight,
+} from '../../features/product'
+import clsx from 'clsx'
+import { GrTransaction } from 'react-icons/gr'
+import Sidebar from '../../components/GreaUp/Sidebar'
+import LoadingSkelethon from '../../components/Loading/LoadingSkelethonProduct'
+import ListProduct from '../../components/Sale/Products'
 import LoadingBar from 'react-top-loading-bar'
-import { scrollToTop } from '../../hooks/utils';
+import { scrollToTop } from '../../hooks/utils'
 
-const { Meta } = Card;
+const { Meta } = Card
 
 const Sale = () => {
-  const dispact = useDispatch<AppDispatch>();
-  const shoes = useSelector((state: IStateProduct) => state.product.products);
-  const loading = useSelector((state: IStateProduct) => state.product.loading);
+  const dispact = useDispatch<AppDispatch>()
+  const shoes = useSelector((state: IStateProduct) => state.product.products)
+  const loading = useSelector((state: IStateProduct) => state.product.loading)
 
-  const [hideFilter, setHideFilter] = useState<boolean>(true);
+  const [hideFilter, setHideFilter] = useState<boolean>(true)
 
   useEffect(() => {
-    dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }));
-    document.title = 'Sale';
+    dispact(fetchAllProducts({ page: 1, pageSize: 1000, searchKeyword: '' }))
+    document.title = 'Sale'
     scrollToTop()
-  }, []);
+  }, [])
 
   const handleChange = (value: string) => {
     switch (value) {
       case 'Newest':
-        break;
+        break
       case 'High-Low':
-        dispact(fetchProductsByPriceLowOrHight('desc'));
-        break;
+        dispact(fetchProductsByPriceLowOrHight('desc'))
+        break
       case 'Low-High':
-        dispact(fetchProductsByPriceLowOrHight('asc'));
-        break;
+        dispact(fetchProductsByPriceLowOrHight('asc'))
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   return (
     <div className="px-10">
-
-      <Typography style={{ fontSize: 24, fontWeight: 500 }} className='mt-5'>Sale Shoes</Typography>
+      <Typography style={{ fontSize: 24, fontWeight: 500 }} className="mt-5">
+        Sale Shoes
+      </Typography>
 
       <span className={clsx('flex gap-5 justify-end mr-5 mb-5')}>
         <p
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
-
         >
           {hideFilter ? 'Hide filter' : 'Show filter'}
-          <button style={{ backgroundColor: "transparent" }}>
+          <button style={{ backgroundColor: 'transparent' }}>
             <GrTransaction className="mt-1" size={20} />
           </button>
         </p>
 
-        <button style={{ backgroundColor: "transparent" }}>Sort by :</button>
+        <button style={{ backgroundColor: 'transparent' }}>Sort by :</button>
         <Select
           defaultValue="Options"
           style={{ width: 150 }}
@@ -108,7 +111,7 @@ const Sale = () => {
       </div>
       <LoadingBar color="black" progress={loading === 'fullfiled' ? 0 : 100} />
     </div>
-  );
-};
+  )
+}
 
-export default Sale;
+export default Sale

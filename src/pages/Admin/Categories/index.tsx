@@ -60,18 +60,21 @@ const CategoriesManager: React.FC = () => {
     _id: '',
     name: 'Tên danh mục',
     description: 'Mô tả của danh mục',
-    imageUrl:
-      '',
+    imageUrl: '',
     status: 'active',
     viewCount: 123,
   }
   const Value = {
     name: categoriesState?.name ? categoriesState?.name : '',
-    description: categoriesState?.description ? categoriesState?.description : '',
-    imageUrl: categoriesState?.imageUrl?.url ?categoriesState?.imageUrl?.url: '', 
+    description: categoriesState?.description
+      ? categoriesState?.description
+      : '',
+    imageUrl: categoriesState?.imageUrl?.url
+      ? categoriesState?.imageUrl?.url
+      : '',
     status: categoriesState?.status ? categoriesState?.status : '',
     viewCount: categoriesState?.viewCount ? categoriesState?.viewCount : 0,
-  };
+  }
   const removeCategory = (record: ICategory) => {
     Modal.confirm({
       title: 'Confirm Delete',
@@ -122,9 +125,7 @@ const CategoriesManager: React.FC = () => {
       title: ' Products',
       dataIndex: 'products',
       key: 'product',
-      render: (products) => (
-        <div>{products.length}</div>
-      ),
+      render: (products) => <div>{products.length}</div>,
     },
     {
       title: 'Action',

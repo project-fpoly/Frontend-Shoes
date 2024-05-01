@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import { scrollToTop } from '../../hooks/utils'
 const Home = () => {
-
   useEffect(() => {
     scrollToTop()
   }, [])

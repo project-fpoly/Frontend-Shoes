@@ -61,7 +61,7 @@ const Sale = () => {
           products.map((item, index) => (
             <Link key={index + 1} to={`/detail/${item._id}`}>
               <Card
-                className='w-auto'
+                className="w-auto"
                 onDragStart={(event) => event.preventDefault()}
                 key={index}
                 hoverable

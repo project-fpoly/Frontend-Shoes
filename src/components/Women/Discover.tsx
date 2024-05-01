@@ -19,7 +19,7 @@ const Discover = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const data = await genderFilterProducts("nữ")
+        const data = await genderFilterProducts('nữ')
         setProducts(data.data)
         setLoading(false)
       } catch (error) {
@@ -68,7 +68,11 @@ const Discover = () => {
                           <img
                             alt="example"
                             src={item.images ? item.images[0] : ''}
-                            style={{ width: '100%', height: '270px', objectFit: 'cover' }}
+                            style={{
+                              width: '100%',
+                              height: '270px',
+                              objectFit: 'cover',
+                            }}
                           />
                         }
                       >
@@ -82,7 +86,6 @@ const Discover = () => {
           )}
         </Swiper>
       </Space>
-
     </>
   )
 }

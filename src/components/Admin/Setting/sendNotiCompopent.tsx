@@ -40,7 +40,7 @@ const FormSend: React.FC<ISendNoti & FormVoucherProps> = ({
         name="message"
         rules={[{ required: true, message: 'Please input message' }]}
       >
-        <TextArea rows={4} placeholder='Hãy nhập gì đó vào đây...' />
+        <TextArea rows={4} placeholder="Hãy nhập gì đó vào đây..." />
       </Form.Item>
       <Form.Item
         label={'Loại thông báo'}

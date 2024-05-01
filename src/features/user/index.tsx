@@ -28,7 +28,7 @@ export const fetchAllUsers = createAsyncThunk(
     page,
     pageSize,
     search,
-    isDelete
+    isDelete,
   }: {
     page: number
     pageSize: number
@@ -73,7 +73,9 @@ export const updateUser = createAsyncThunk(
   async ({ newUser, id }: { newUser: IUsers; id: string }, thunkApi) => {
     try {
       const response = await updateUsers(newUser, id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
+      thunkApi.dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
       return response
     } catch (error) {
       return isRejected('Error updating user')
@@ -97,8 +99,10 @@ export const deleteeUser = createAsyncThunk(
   async (id: string[], thunkApi) => {
     try {
       const response = await deleteUsers(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
-      thunkApi.dispatch(fetchAllNotification(""))
+      thunkApi.dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
+      thunkApi.dispatch(fetchAllNotification(''))
       return response
     } catch (error) {
       return isRejected('Error updating user')
@@ -110,8 +114,10 @@ export const deletee2User = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await delete2Users(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }))
-      thunkApi.dispatch(fetchAllNotification(""))
+      thunkApi.dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: false }),
+      )
+      thunkApi.dispatch(fetchAllNotification(''))
       return response
     } catch (error) {
       return isRejected('Error updating user')
@@ -123,8 +129,10 @@ export const restoreUser = createAsyncThunk(
   async (id: string, thunkApi) => {
     try {
       const response = await restoreUsers(id)
-      thunkApi.dispatch(fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: true }))
-      thunkApi.dispatch(fetchAllNotification(""))
+      thunkApi.dispatch(
+        fetchAllUsers({ page: 1, pageSize: 10, search: '', isDelete: true }),
+      )
+      thunkApi.dispatch(fetchAllNotification(''))
       return response
     } catch (error) {
       return isRejected('Error updating user')

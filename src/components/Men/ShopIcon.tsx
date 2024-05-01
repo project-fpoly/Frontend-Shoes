@@ -33,7 +33,7 @@ const ShopIcon = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const data = await genderFilterProducts("nam")
+        const data = await genderFilterProducts('nam')
         setProducts(data.data)
         setLoading(false)
       } catch (error) {

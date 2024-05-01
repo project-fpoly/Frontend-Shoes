@@ -79,7 +79,7 @@ const UserManager: React.FC = () => {
           ? dispact(deletee2User(user._id))
           : dispact(deleteeUser([user._id]))
       },
-      onCancel() { },
+      onCancel() {},
     })
   }
   const restoreUser1 = (user: string) => {
@@ -93,7 +93,7 @@ const UserManager: React.FC = () => {
       onOk() {
         dispact(restoreUser(user))
       },
-      onCancel() { },
+      onCancel() {},
     })
   }
   const columns: ColumnsType<IUsers> = [
@@ -185,7 +185,11 @@ const UserManager: React.FC = () => {
             <></>
           ) : (
             <Tooltip title={'restore'}>
-              <Button type="link" danger onClick={() => restoreUser1(record._id)}>
+              <Button
+                type="link"
+                danger
+                onClick={() => restoreUser1(record._id)}
+              >
                 <RollbackOutlined />
               </Button>
             </Tooltip>

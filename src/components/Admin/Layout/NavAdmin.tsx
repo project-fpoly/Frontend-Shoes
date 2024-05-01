@@ -11,7 +11,7 @@ import {
   ReconciliationOutlined,
   PartitionOutlined,
   ShopFilled,
-  WechatWorkOutlined
+  WechatWorkOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu, Space } from 'antd'
@@ -50,9 +50,13 @@ const items: MenuItem[] = [
   getItem(<Link to="sale">Sale</Link>, 'sub6', <ShoppingCartOutlined />),
   getItem(<Link to="comment">Comments</Link>, 'sub7', <WechatOutlined />),
   getItem(<Link to="voucher">Voucher</Link>, 'sub8', <GiftOutlined />),
-  getItem("Setting", 'sub9', <SettingOutlined />,[
-    getItem(<Link to="setting/sendNotification">Send Notification</Link>, '5',<SendOutlined />),
-    getItem(<Link to="setting/chat">Chat</Link>, '5',<WechatWorkOutlined />),
+  getItem('Setting', 'sub9', <SettingOutlined />, [
+    getItem(
+      <Link to="setting/sendNotification">Send Notification</Link>,
+      '5',
+      <SendOutlined />,
+    ),
+    getItem(<Link to="setting/chat">Chat</Link>, '5', <WechatWorkOutlined />),
   ]),
 ]
 

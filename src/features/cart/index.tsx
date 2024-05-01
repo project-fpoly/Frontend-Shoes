@@ -51,7 +51,6 @@ export const addToCart = createAsyncThunk(
           },
         )
         thunkApi.dispatch(getCartItems())
-        notification.success({ message: response.data.message })
         return response.data.cart
       } else {
         response = await axios.post(
@@ -308,7 +307,11 @@ export const updateProductCart = createAsyncThunk(
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    blankCart: (state) => {
+      state.cartItems = []
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -414,4 +417,5 @@ const cartSlice = createSlice({
   },
 })
 
+export const { blankCart } = cartSlice.actions
 export default cartSlice.reducer

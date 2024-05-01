@@ -71,9 +71,9 @@ export const deleteCommentById = createAsyncThunk(
       const respone = await deleteComment(commnet._id)
       thunkApi.dispatch(fetchAllCommentByProduct(commnet.shoeId as any))
       notification.success({
-        message: "Success",
+        message: 'Success',
         description: `Delete comment successfully}`,
-      });
+      })
       return respone
     } catch (error) {
       console.log('hi')
@@ -84,14 +84,14 @@ export const deleteCommentById = createAsyncThunk(
 export const updateCommentById = createAsyncThunk(
   '/comment/updateCommentById',
   async (comment: ICmt, thunkApi) => {
-    const { shoeId, ...data } = comment;
+    const { shoeId, ...data } = comment
     try {
       const respone = await updateComment(data)
       thunkApi.dispatch(fetchAllCommentByProduct(shoeId as any))
       notification.success({
-        message: "Success",
+        message: 'Success',
         description: `Update comment successfully}`,
-      });
+      })
       return respone
     } catch (error) {
       console.log('hi')
@@ -107,7 +107,6 @@ export const checkIsBuyProduct = createAsyncThunk(
     try {
       const respone = await checkIsBuy(commnet._id)
       return respone
-
     } catch (error) {
       return isRejected('Error fetching data')
     }
@@ -186,7 +185,5 @@ export const commentSlice = createSlice({
 })
 
 export default commentSlice.reducer
-
-
 
 checkIsBuyProduct

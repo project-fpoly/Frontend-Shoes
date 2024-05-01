@@ -34,6 +34,7 @@ const initialState: initialProduct = {
   totalProducts: 0,
   loadingSearch: 'idle',
   isDeleted: false,
+  productSearch: []
 }
 
 export const getProductsWithFilters = createAsyncThunk(
@@ -360,7 +361,11 @@ export const featchProductByMaterial = createAsyncThunk(
 export const productSlice = createSlice({
   name: 'product',
   initialState,
-  reducers: {},
+  reducers: {
+    blankSearchItems: (state) => {
+      state.productSearch = [];
+    },
+  },
   extraReducers(builder) {
     //fetch product
     builder.addCase(fetchAllProducts.pending, (state) => {
@@ -500,7 +505,7 @@ export const productSlice = createSlice({
     })
     builder.addCase(searchProductsByKeyword.fulfilled, (state, action) => {
       state.loadingSearch = 'fulfilled'
-      state.products = Array.isArray(action.payload) ? action.payload : []
+      state.productSearch = Array.isArray(action.payload) ? action.payload : []
     })
     ///Filter products by price
     builder.addCase(featchProductByPrice.pending, (state) => {
@@ -600,5 +605,5 @@ export const productSlice = createSlice({
 
   },
 })
-
+export const { blankSearchItems } = productSlice.actions
 export default productSlice.reducer

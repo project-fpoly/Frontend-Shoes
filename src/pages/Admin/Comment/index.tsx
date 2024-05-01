@@ -17,11 +17,10 @@ const CommentManager = () => {
   const [size, setsize] = useState(10)
   const [Search, setSearch] = useState('')
 
-  const handlePageChange = (page: number,size:number) => {
+  const handlePageChange = (page: number, size: number) => {
     setCurrentPage(page)
     setsize(size)
-    console.log("page",page,"size",size);
-    
+    console.log('page', page, 'size', size)
   }
   const {
     comments: comment,
@@ -34,7 +33,7 @@ const CommentManager = () => {
       fetchAllComment({ page: currentPage, pageSize: size, search: Search }),
     )
     dispatch(fetchAllProducts({ page: 0, pageSize: 0, searchKeyword: '' }))
-  }, [dispatch, currentPage, Search,size])
+  }, [dispatch, currentPage, Search, size])
   const getProductName = (shoeId: string) => {
     const product = products.find((product) => product._id === shoeId)
     return product ? product.name : 'N/A'
@@ -42,13 +41,13 @@ const CommentManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const renderContent = (content: string) => {
     if (content.length > 10) {
-      const chunks = content.match(/.{1,10}/g); 
+      const chunks = content.match(/.{1,10}/g)
       if (chunks) {
-        return chunks.join(' '); 
+        return chunks.join(' ')
       }
     }
-    return content;
-  };
+    return content
+  }
   const columns: ColumnsType<ICmt> = [
     {
       title: 'No.',
@@ -75,7 +74,7 @@ const CommentManager = () => {
       title: 'content',
       dataIndex: 'content',
       render: (content) => renderContent(content),
-    },    
+    },
     {
       title: 'likes',
       dataIndex: 'likes',
@@ -165,22 +164,22 @@ const CommentManager = () => {
           <LoadingOutlined style={{ fontSize: 24 }} spin />
         </div>
       ) : ( */}
-        <>
-          <Table
-            style={{ marginTop: '15px' }}
-            columns={columns}
-            dataSource={comment}
-            bordered
-            size="small"
-            pagination={{
-              current: currentPage,
-              total: totalDocs,
-              showTotal: (total) => ` ${total} items`,
-              onChange: handlePageChange,
-              showSizeChanger: true,
-            }}
-          />
-        </>
+      <>
+        <Table
+          style={{ marginTop: '15px' }}
+          columns={columns}
+          dataSource={comment}
+          bordered
+          size="small"
+          pagination={{
+            current: currentPage,
+            total: totalDocs,
+            showTotal: (total) => ` ${total} items`,
+            onChange: handlePageChange,
+            showSizeChanger: true,
+          }}
+        />
+      </>
       {/* )} */}
       <Modal
         title="Create new comment"

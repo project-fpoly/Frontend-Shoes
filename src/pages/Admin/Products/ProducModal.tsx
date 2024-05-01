@@ -37,17 +37,16 @@ const ProducModal = (selectedProduct: IProduct) => {
             <strong>Category</strong>
           </Col>
           <Col span={16}>
-            {selectedProduct.categoryId && typeof selectedProduct.categoryId === 'object' && 'name' in selectedProduct.categoryId ? (
-              <>
-                {selectedProduct.categoryId.name}
-              </>
+            {selectedProduct.categoryId &&
+            typeof selectedProduct.categoryId === 'object' &&
+            'name' in selectedProduct.categoryId ? (
+              <>{selectedProduct.categoryId.name}</>
             ) : (
               <>N/A</>
             )}
           </Col>
         </Row>
       </Descriptions.Item>
-
 
       <Descriptions.Item>
         <Row gutter={16}>
@@ -97,9 +96,9 @@ const ProducModal = (selectedProduct: IProduct) => {
             <strong>Price</strong>
           </Col>
           <Col span={16}>
-            {selectedProduct.price.toLocaleString("en-US", {
-              style: "currency",
-              currency: "VND",
+            {selectedProduct.price.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'VND',
             })}
           </Col>
         </Row>
@@ -111,10 +110,10 @@ const ProducModal = (selectedProduct: IProduct) => {
             <strong>Sale</strong>
           </Col>
           <Col span={16}>
-            {selectedProduct.sale && typeof selectedProduct.sale === 'object' && 'name' in selectedProduct.sale ? (
-              <>
-                {selectedProduct.sale.name} %
-              </>
+            {selectedProduct.sale &&
+            typeof selectedProduct.sale === 'object' &&
+            'name' in selectedProduct.sale ? (
+              <>{selectedProduct.sale.name} %</>
             ) : (
               <>No sale available</>
             )}
@@ -128,20 +127,16 @@ const ProducModal = (selectedProduct: IProduct) => {
             <strong>Discount</strong>%
           </Col>
           <Col span={16}>
-            {selectedProduct.sale && typeof selectedProduct.sale === 'object' && 'discount' in selectedProduct.sale ? (
-              <>
-                {selectedProduct.sale.discount}%
-              </>
+            {selectedProduct.sale &&
+            typeof selectedProduct.sale === 'object' &&
+            'discount' in selectedProduct.sale ? (
+              <>{selectedProduct.sale.discount}%</>
             ) : (
               <>No discount available</>
             )}
           </Col>
         </Row>
       </Descriptions.Item>
-
-
-
-
 
       <Descriptions.Item>
         <Row gutter={16}>
