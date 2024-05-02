@@ -51,15 +51,20 @@ const Banner = () => {
         </Typography>
 
         <Typography className="mb-5 text-lg">
+<<<<<<< Updated upstream
           Meant for the spotlight. Double stacked Air Units turns a classic
           silhouette into a modern icon. Make a bold statement in the new Air
           Max 90 <br />
           LV8, styled by NewJeans.
+=======
+          Có nghĩa là cho ánh đèn sân khấu. Air Units xếp chồng đôi biến hình bóng cổ điển thành biểu tượng hiện đại. Tuyên bố táo bạo ở Air Max 90 mới <br />
+          LV8, được tạo kiểu bởi NewJeans.
+>>>>>>> Stashed changes
         </Typography>
 
         <Space>
           <Link
-            to={''}
+            to={'/greaup'}
             className="text-white bg-black font-medium text-medium px-4 py-2 leading-4 rounded-full mt-5"
           >
             Shop

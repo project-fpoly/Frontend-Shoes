@@ -15,7 +15,7 @@ const Delivery: React.FC = () => {
     <div className="px-20">
       <Space style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography style={{ fontSize: '33px' }} className="home_title">
-          GET HELP
+          HỖ TRỢ
         </Typography>
       </Space>
       <Form.Item
@@ -29,7 +29,7 @@ const Delivery: React.FC = () => {
             fontSize: '17px',
             borderRadius: '10px',
           }}
-          placeholder="What can we help you with?"
+          placeholder="Chúng tôi có thể giúp gì cho bạn?"
           suffix={
             <Button
               className="rounded-full btn-primary-dark btn-md"

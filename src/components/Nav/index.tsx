@@ -16,7 +16,7 @@ const NavBar = () => {
   const content = (
     <div>
       <Link to="/signin">
-        <h1 className="font-bold">Login</h1>
+        <h1 className="font-bold">Đăng nhập</h1>
       </Link>
       {/*<p>Logout</p>*/}
     </div>
@@ -83,7 +83,7 @@ const NavBar = () => {
                   content={
                     <>
                       <Link to="/profile">
-                        <h1 className="font-bold">Profile</h1>
+                        <h1 className="font-bold">Hồ sơ</h1>
                       </Link>
                       {user?.role === 'admin' && (
                         <Link to="/admin">
@@ -92,7 +92,7 @@ const NavBar = () => {
                       )}
                       <Link to="">
                         <h1 className="font-bold" onClick={handleLogout}>
-                          Logout
+                          Đăng xuất
                         </h1>
                       </Link>
                     </>
@@ -123,12 +123,39 @@ const NavBar = () => {
             className={clsx(
               'flex  bg-white w-full justify-evenly z-50')}
           >
+<<<<<<< Updated upstream
             <div className="flex justify-evenly mx-24 gap-[100px] z-10">
               <Link to={'/'}>
                 <SiNike className="hover:opacity-75" size={50} />
               </Link>
               <MenuNav></MenuNav>
               <NavRight></NavRight>
+=======
+            <div className="flex flex-col gap-16">
+              <div className="flex flex-col gap-6 mt-5 ml-10 justify-start">
+                <Link onClick={onClose} className="text-3xl" to={'/greaup'}>
+                  Sản phẩm
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/men'}>
+                  Nam
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/women'}>
+                  Nữ
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/sale'}>
+                  Giảm giá
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/contact'}>
+                  Liên hệ
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/membership'}>
+                  Thành viên
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/help'}>
+                  Hỗ trợ
+                </Link>
+              </div>
+>>>>>>> Stashed changes
             </div>
           </div>
         </div>

@@ -74,25 +74,25 @@ const CheckOut = () => {
   }
   const items = state?.cart
     ? state.cart.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
     : cartSession?.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 10, searchKeyword: '' }))
@@ -270,8 +270,13 @@ const CheckOut = () => {
       <div className="grid grid-cols-2">
         <div className="checkout_body col-span-1">
           <div>
+<<<<<<< Updated upstream
             <h2 className="text-xl mb-4">
               How would you like to get your order?
+=======
+            <h2 className="text-xl  mb-4">
+              Bạn muốn nhận đơn hàng bằng cách nào?
+>>>>>>> Stashed changes
             </h2>
 
             <Button
@@ -282,7 +287,7 @@ const CheckOut = () => {
                 <TbTruckDelivery
                   style={{ fontSize: '32px', marginRight: '12px' }}
                 />
-                Deliver It
+                Giao hàng
               </p>
             </Button>
           </div>
@@ -297,15 +302,24 @@ const CheckOut = () => {
               onFinish={handleFormSubmit}
             >
               <div className="">
-                <h2 className="text-2xl mb-4">Your delivery information</h2>
+                <h2 className="text-2xl mb-4">Thông tin giao hàng của bạn</h2>
 
                 <Form.Item
                   name="firstName"
                   rules={[
                     { required: true, message: 'Please enter your last name!' },
                     {
+<<<<<<< Updated upstream
                       min: 7,
                       message: 'First name must be at least 10 characters.',
+=======
+                      required: true,
+                      message: 'Vui lòng nhập tên của bạn!',
+                    },
+                    {
+                      min: 2,
+                      message: 'Tên phải có ít nhất 2 ký tự.',
+>>>>>>> Stashed changes
                     },
                   ]}
                 >
@@ -313,17 +327,21 @@ const CheckOut = () => {
                     name="firstName"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="First name"
+                    placeholder="Tên"
                   />
                 </Form.Item>
 
                 <Form.Item
                   name="lastName"
                   rules={[
-                    { required: true, message: 'Please enter your last name!' },
+                    { required: true, message: 'Vui lòng nhập họ của bạn!' },
                     {
                       min: 2,
+<<<<<<< Updated upstream
                       message: 'First name must be at least 4 characters.',
+=======
+                      message: 'Họ phải có ít nhất 2 ký tự.',
+>>>>>>> Stashed changes
                     },
                   ]}
                 >
@@ -331,7 +349,7 @@ const CheckOut = () => {
                     name="lastName"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Last name"
+                    placeholder="Họ"
                   />
                 </Form.Item>
 
@@ -354,7 +372,7 @@ const CheckOut = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter your phone number!',
+                      message: 'Vui lòng nhập số điện thoại của bạn!',
                     },
                     { validator: validatePhone },
                   ]}
@@ -363,7 +381,7 @@ const CheckOut = () => {
                     type="text"
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="Phone Number"
+                    placeholder="Số điện thoại"
                   />
                 </Form.Item>
 
@@ -372,14 +390,14 @@ const CheckOut = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter your Province/Municipality!',
+                      message: 'Vui lòng chọn Tỉnh/ Thành phố!',
                     },
                   ]}
                 >
                   <Select
                     className=""
                     size="large"
-                    placeholder="Province/Municipality"
+                    placeholder="Tỉnh/ Thành phố!"
                     onChange={hanlderChangeProvince}
                   >
                     {provinces &&
@@ -400,14 +418,14 @@ const CheckOut = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your District!',
+                        message: 'Vui lòng chọn Quận/ Huyện',
                       },
                     ]}
                   >
                     <Select
                       className=""
                       size="large"
-                      placeholder="District"
+                      placeholder="Quận/ Huyện"
                       onChange={hanlderChangeDistrict}
                     >
                       {districts &&
@@ -429,7 +447,7 @@ const CheckOut = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your Ward!',
+                        message: 'Vui lòng chọn Phường/ Xã!',
                       },
                     ]}
                   >
@@ -437,7 +455,11 @@ const CheckOut = () => {
                       className=""
                       size="large"
                       onChange={hanlderChangeWard}
+<<<<<<< Updated upstream
                       placeholder="Ward"
+=======
+                      placeholder="Phường/ Xã"
+>>>>>>> Stashed changes
                     >
                       {wards &&
                         wards.map((ward: any) => (
@@ -457,18 +479,18 @@ const CheckOut = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter your address details!',
+                      message: 'Vui lòng nhập địa chỉ chi tiết!',
                     },
                     {
                       min: 4,
-                      message: 'details address must be at least 4 characters.',
+                      message: 'Địa chỉ chi tiết phải có ít nhất 4 ký tự.',
                     },
                   ]}
                 >
                   <Input
                     className="border border-[#ccc] bg-white hover:bg-white hover:border-black focus:border-black p-4"
                     size="large"
-                    placeholder="detailed address, house number or easy-to-find place"
+                    placeholder="Địa chỉ chi tiết, số nhà hoặc địa điểm dễ tìm..."
                   />
                 </Form.Item>
               </div>
@@ -481,42 +503,56 @@ const CheckOut = () => {
                 initialValue="Thanh toán tiền mặt"
               >
                 <Radio.Group>
-                  <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
-                  <Radio value="vnPay">VNPAY</Radio>
+                  <Radio value="Thanh toán tiền mặt">Thanh toán tiền mặt</Radio>
+                  <Radio value="vnPay">Ví VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
               {state?.cart?.cartItems.length > 0 ||
-              cartSession?.cartItems.length > 0 ? (
+                cartSession?.cartItems.length > 0 ? (
                 <Button
                   type="default"
                   htmlType="submit"
                   block
                   className="bg-[#f5f5f5] text-[#757575] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-black hover:!text-white hover:!border-black"
                 >
-                  <p className="text-lg ">Check out</p>
+                  <p className="text-lg ">Thanh toán</p>
                 </Button>
               ) : null}
             </Form>
           </div>
         </div>
         <div className="checkout_summary col-span-1 ml-20">
-          <h2 className="text-[22px]">Order Summary</h2>
+          <h2 className="text-[22px]">Tóm tắt đặt hàng</h2>
           <div className="text-lg font-normal">
             <div className="flex justify-between items-center my-5">
+<<<<<<< Updated upstream
               <div className="text-[#6b7280]">Subtotal</div>
               <div className="text-[#6b7280]">
                 {totalCart} <span>đ</span>
               </div>
+=======
+              <div className="text-[#6b7280]">Tổng phụ</div>
+              <div className="text-[#6b7280]">{formatCurrency(totalCart)}</div>
+>>>>>>> Stashed changes
             </div>
             <div className="flex justify-between items-center my-5">
-              <div className="text-[#6b7280]">Delivery/Shipping</div>
+              <div className="text-[#6b7280]">Giao hàng/Vận chuyển</div>
               <div className="text-[#6b7280]">
+<<<<<<< Updated upstream
                 {district ? shippingOrder?.service_fee + 'đ' : 'Free'}
               </div>
             </div>
             <hr />
             <div className="flex justify-between items-center my-5">
               <div className="text-[#6b7280]">Voucher</div>
+=======
+                {district ? formatCurrency(shippingOrder?.service_fee) : 'Miễn phí'}
+              </div>
+            </div>
+            <hr />
+            <div className="flex justify-between gap-20 items-center my-5">
+              <div className="text-[#6b7280]">Mã giảm giá</div>
+>>>>>>> Stashed changes
               <div>
                 {data.length > 0 ? (
                   <Form className="pt-[26px]">
@@ -554,17 +590,22 @@ const CheckOut = () => {
             </div>
             <hr />
             <div className="flex justify-between items-center my-5">
+<<<<<<< Updated upstream
               <div>Total</div>
               <div>
                 {totalPrice}
                 <span className="font-light">đ</span>
               </div>
+=======
+              <div>Tổng cộng</div>
+              <div>{formatCurrency(totalPrice)}</div>
+>>>>>>> Stashed changes
             </div>
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {state?.cart?.cartItems.length > 0 ||
-            cartSession?.cartItems.length > 0 ? (
+              cartSession?.cartItems.length > 0 ? (
               <>
                 {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
@@ -602,12 +643,24 @@ const CheckOut = () => {
                         {getProductName(item.product)}
                       </h2>
                       <p className="text-[#6b7280]">
+<<<<<<< Updated upstream
                         {getCateName(item.product)}
                       </p>
                       <p className="text-[#6b7280]">{item.size}</p>
                       <p className="text-[#6b7280]">{item.quantity}</p>
                       <p className="text-[#6b7280]">
                         {item.price * item.quantity}
+=======
+                        Danh mục: {getCateName(item.product)}
+                      </p>
+                      <p className="text-[#6b7280]">Kích cỡ: {item.size}</p>
+                      <p className="text-[#6b7280]">Màu sắc: {item.color}</p>
+                      <p className="text-[#6b7280]">
+                        Số lượng: {item.quantity}
+                      </p>
+                      <p className="text-[#6b7280]">
+                        Giá: {formatCurrency(item.price * item.quantity)}
+>>>>>>> Stashed changes
                       </p>
                     </div>
                   </>

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 const Banner = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Typography className="home_title">Men</Typography>
       <img
         src="../../../bannermen.jpg"
         alt=""
@@ -24,11 +23,11 @@ const Banner = () => {
         </Typography>
 
         <Typography className="mb-5 text-lg">
-          Marathon speed to push beyond what you thought possible.
+          Tốc độ chạy marathon vượt xa những gì bạn nghĩ là có thể.
         </Typography>
 
         <Link
-          to={''}
+          to={'/greaup'}
           className="text-white bg-black font-medium text-medium px-4 py-2 leading-4 rounded-full mt-5"
         >
           Shop

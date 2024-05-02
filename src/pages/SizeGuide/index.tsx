@@ -82,12 +82,12 @@ const SizeGuide: React.FC = () => (
     <div className="mt-32 ">
       <div className="flex flex-col px-[200px] gap-5">
         <span className="flex flex-col gap-5">
-          <h1 className="text-5xlxl font-bold">Size guide</h1>
-          <p>Find your correct size in the chart below.</p>
-          <p>Scroll horizontally to see more sizes.</p>
+          <h1 className="text-5xlxl font-bold">Hướng dẫn chọn kích cỡ</h1>
+          <p>Tìm kích thước chính xác của bạn trong biểu đồ dưới đây.</p>
+          <p>Cuộn theo chiều ngang để xem thêm kích cỡ.</p>
         </span>
 
-        <h1 className="text-3xl font-bold">Size guide</h1>
+        <h1 className="text-3xl font-bold">Hướng dẫn chọn kích cỡ</h1>
         <Table columns={columns} dataSource={data} scroll={{ x: 2000 }} />
       </div>
     </div>

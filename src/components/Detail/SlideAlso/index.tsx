@@ -15,7 +15,7 @@ const SlideAlso = ({ shoes }: Props) => {
     <>
       {shoes && (
         <>
-          <h1 className="my-5 text-4xl font-medium ">You Might Also Like</h1>
+          <h1 className="my-5 text-4xl font-medium ">Có thể bạn cũng thích</h1>
           <Swiper
             breakpoints={{
               576: {

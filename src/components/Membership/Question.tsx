@@ -17,6 +17,7 @@ const Question = () => {
         setIsVisible2(!isVisible2);
     };
 
+<<<<<<< Updated upstream
     const toggleVisibility3 = () => {
         setIsVisible3(!isVisible3);
     };
@@ -58,6 +59,71 @@ const Question = () => {
                 </div>
             </Space>
             <hr />
+=======
+  const toggleVisibility3 = () => {
+    setIsVisible3(!isVisible3)
+  }
+  return (
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Typography className="home_title">Các câu hỏi thường gặp</Typography>
+      <Space direction="vertical" className="mt-16 mb-3">
+        <p
+          onClick={toggleVisibility1}
+          style={{ fontSize: 20, fontWeight: 500 }}
+        >
+          Tư cách thành viên Nike là gì?
+        </p>
+        <div
+          className={`text-container ${isVisible1 ? 'visible' : ''} mt-10 mb-10`}
+          style={{ fontSize: 20, fontWeight: 400 }}
+        >
+          <p>
+            Tư cách thành viên Nike là quyền truy cập vào những tính năng tốt nhất của Nike thông qua bất kỳ ứng dụng, sản phẩm độc quyền nào và trải nghiệm chỉ dành cho Thành viên của chúng tôi. Thành viên Nike cũng được hưởng giao hàng miễn phí, kiểm tra độ mòn trong XX ngày và trả lại hàng không cần biên nhận. Nó miễn phí và dễ dàng để tham gia.
+            <u className="font-bold">
+              <Link to={'/signup'}> Đăng ký.</Link>
+            </u>
+          </p>
+        </div>
+      </Space>
+      <hr />
+      <Space direction="vertical" className="mb-3">
+        <p
+          onClick={toggleVisibility2}
+          style={{ fontSize: 20, fontWeight: 500 }}
+        >
+          Tôi có phải là thành viên của Nike không?
+        </p>
+        <div
+          className={`text-container ${isVisible2 ? 'visible' : ''} mt-10 mb-10`}
+          style={{ fontSize: 20, fontWeight: 400 }}
+        >
+          <p>
+            Có lẽ! Nếu bạn đã từng đăng nhập vào Ứng dụng Nike thì đúng vậy. Chào mừng trở lại! Nếu không, hãy thay đổi điều đó.
+            <u className="font-bold">
+              <Link to={'/signup'}> Đăng ký.</Link>
+            </u>
+          </p>
+        </div>
+      </Space>
+      <hr />
+      <Space direction="vertical" className="mb-3">
+        <p
+          onClick={toggleVisibility3}
+          style={{ fontSize: 20, fontWeight: 500 }}
+        >
+          Tư cách thành viên Nike có miễn phí không?
+        </p>
+        <div
+          className={`text-container ${isVisible3 ? 'visible' : ''} mt-10 mb-10`}
+          style={{ fontSize: 20, fontWeight: 400 }}
+        >
+          <p>
+            100% có. Các thành viên được hưởng tất cả các lợi ích của Tư cách thành viên Nike mà không mất phí vì khi bạn tham gia, chúng tôi sẽ có bạn. Không có tiền giúp bạn có quyền truy cập vào tất cả.
+          </p>
+        </div>
+      </Space>
+      <hr />
+>>>>>>> Stashed changes
 
             <img src="../../../nike-membership.jpg" alt="" className="mt-5" />
         </Space>

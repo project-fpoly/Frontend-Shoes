@@ -183,9 +183,9 @@ const InfoShoe = (props: Props) => {
             </span>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
-            <p>Select size</p>
+            <p>Chọn kích cỡ</p>
             <Link to={'/sizeguide'}>
-              <p>Size guide</p>
+              <p>Hướng dẫn chọn kích cỡ</p>
             </Link>
           </span>
           <div className={style.sizes}>
@@ -213,16 +213,27 @@ const InfoShoe = (props: Props) => {
               onClick={() => addToCartt()}
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
-              Add to Bag
+              Thêm vào giỏ hàng
             </button>
             {favItem && state?.user ? (
               <>
+<<<<<<< Updated upstream
                 <Link to={'/favourite'} className="mt-1 px-3">
                   <CiHeart
                     title="your fav products list"
                     className="text-5xl text-white bg-pink-500  border-black hover:bg-pink-300  rounded-full p-1"
                   />
                 </Link>
+=======
+                <button
+                  className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
+                >
+                  Yêu thích
+                  <p className="mt-1 px-3">
+                    <FaHeart />
+                  </p>
+                </button>
+>>>>>>> Stashed changes
               </>
             ) : (
               <button
@@ -231,7 +242,7 @@ const InfoShoe = (props: Props) => {
                 }
                 className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >
-                Favourite
+                Yêu thích
                 <p className="mt-1 px-3">
                   <CiHeart />
                 </p>
@@ -243,7 +254,7 @@ const InfoShoe = (props: Props) => {
             className=" border-b-2 border-b-black w-[170px] font-bold text-lg cursor-pointer hover:opacity-70"
             onClick={() => showModal()}
           >
-            View product detail
+            Chi tiết sản phẩm
           </p>
           <Colspace shoe={shoe}></Colspace>
 

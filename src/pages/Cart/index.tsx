@@ -209,6 +209,7 @@ const Cart = () => {
                 {formatCurrency(totalCart)}
               </p>
             </div>
+<<<<<<< Updated upstream
             {cart
               ? cart?.cartItems?.map((cartItem: any, index: number) => {
                   const sizes = getProductSize(cartItem.product)
@@ -417,6 +418,307 @@ const Cart = () => {
                                   <option value={10}>10</option>
                                 </select>
                               </div>
+=======
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-10 lg:flex-row">
+              <div className="shopping-cart-bag lg:w-[65%]">
+                <h2 className="text-3xl font-semibold  lg:text-left lg:my-4">
+                  Giỏ hàng
+                </h2>
+                <div className="text-center mb-12 lg:hidden">
+                  <p>
+                    <span className="text-[#707072] pr-2 mr-2 border-r-2 border-[#707072]">
+                      {cart
+                        ? cart?.cartItems.length
+                        : cartSession?.cartItems.length}{' '}
+                      items
+                    </span>
+                    {formatCurrency(totalCart)}
+                  </p>
+                </div>
+                {cart
+                  ? cart?.cartItems?.map((cartItem: any, index: number) => {
+                    const sizes = getProductSize(cartItem.product)
+                    const renderOptions = (
+                      sizeName: string,
+                    ): JSX.Element[] => {
+                      const selectedSize =
+                        sizes &&
+                        Array.isArray(sizes) &&
+                        sizes.find((size: any) => size.name === sizeName)
+                      const options: JSX.Element[] = []
+                      if (selectedSize) {
+                        const customQuantity = Math.min(
+                          selectedSize.quantity,
+                          10,
+                        )
+                        for (let i = 1; i <= customQuantity; i++) {
+                          options.push(
+                            <option key={`${sizeName}-${i}`} value={i}>
+                              {i}
+                            </option>,
+                          )
+                        }
+                      }
+                      return options
+                    }
+                    return (
+                      <div
+                        key={`${cartItem.product}-${cartItem.size}`}
+                        className="cart-item flex mb-8"
+                      >
+                        <figure className="w-[220px]">
+                          <Link to={`/detail/${cartItem.product}`}>
+                            <img src={cartItem.images[0]} alt="" />
+                          </Link>
+                        </figure>
+                        <div className="cart-item-content flex w-full ml-4">
+                          <div className="flex flex-1 flex-col justify-between">
+                            <div className="">
+                              <div className="flex justify-between">
+                                <h2 className="font-semibold sm:text-xl text-sm">
+                                  {getProductName(cartItem.product)}
+                                </h2>
+                                <p className="text-sm font-semibold sm:text-xl">
+                                  {formatCurrency(
+                                    cartItem.price * cartItem.quantity,
+                                  )}
+                                </p>
+                              </div>
+                              <p className="text-sm sm:text-xl text-[#565656] my-2">
+                                {getCateName(cartItem.product)}
+                              </p>
+
+                              <div className="flex text-[12px] text-[#6b7280] sm:text-lg">
+                                <div>
+                                  <div className="flex text-lg text-[#6b7280]">
+                                    <div>
+                                      <label htmlFor="">Size</label>
+                                      <select
+                                        value={cartItem.size}
+                                        name="size"
+                                        id=""
+                                        className="px-2 ml-1"
+                                        onChange={(
+                                          event: React.ChangeEvent<HTMLSelectElement>,
+                                        ) =>
+                                          handleSizeChange(
+                                            index,
+                                            cartItem.product,
+                                            event,
+                                          )
+                                        }
+                                      >
+                                        {sizes && Array.isArray(sizes) ? (
+                                          sizes.map(
+                                            (size: any, index: number) => (
+                                              <option
+                                                disabled={size.quantity <= 0}
+                                                className={
+                                                  size.quantity <= 0
+                                                    ? 'text-[#ccc]'
+                                                    : ''
+                                                }
+                                                key={index}
+                                                value={size.name}
+                                              >
+                                                {size.name}
+                                              </option>
+                                            ),
+                                          )
+                                        ) : (
+                                          <option value="">
+                                            Không có sẵn kích cỡ
+                                          </option>
+                                        )}
+                                      </select>
+                                    </div>
+                                    <div className="ml-2">
+                                      <label htmlFor="">Số lượng</label>
+                                      <select
+                                        value={cartItem.quantity}
+                                        name="quantity"
+                                        id=""
+                                        className="px-2 ml-1"
+                                        onChange={(
+                                          event: React.ChangeEvent<HTMLSelectElement>,
+                                        ) =>
+                                          handleQuantityChange(
+                                            index,
+                                            cartItem.product,
+                                            event,
+                                          )
+                                        }
+                                      >
+                                        {renderOptions(cartItem.size)}
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="cart-item-content-action">
+                              <ul className="flex">
+                                <li>
+                                  <GrFavorite
+                                    style={{
+                                      fontSize: '24px',
+                                      marginRight: '12px',
+                                    }}
+                                  />
+                                </li>
+                                <li>
+                                  <RiDeleteBin6Line
+                                    className="hover:cursor-pointer"
+                                    onClick={() =>
+                                      removeItemFromCart(cartItem.product)
+                                    }
+                                    style={{ fontSize: '24px' }}
+                                  />
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                  : cartSession?.cartItems.map((item: any, index: any) => {
+                    const sizes = getProductSize(item.product)
+                    const renderOptions = (
+                      sizeName: string,
+                    ): JSX.Element[] => {
+                      const selectedSize =
+                        sizes &&
+                        Array.isArray(sizes) &&
+                        sizes.find((size: any) => size.name === sizeName)
+                      const options: JSX.Element[] = []
+                      if (selectedSize) {
+                        const customQuantity = Math.min(
+                          selectedSize.quantity,
+                          10,
+                        )
+                        for (let i = 1; i <= customQuantity; i++) {
+                          options.push(
+                            <option key={`${sizeName}-${i}`} value={i}>
+                              {i}
+                            </option>,
+                          )
+                        }
+                      }
+                      return options
+                    }
+                    return (
+                      <div
+                        key={`${item.product}-${item.size}`}
+                        className="cart-item flex mb-8"
+                      >
+                        <figure className="w-[220px]">
+                          <Link to={`/detail/${item.product}`}>
+                            <img src={item.images[0]} alt="" />
+                          </Link>
+                        </figure>
+                        <div className="cart-item-content flex w-full ml-4">
+                          <div className="flex flex-1 flex-col justify-between">
+                            <div className="">
+                              <div className="flex justify-between">
+                                <h2 className="font-semibold text-xl">
+                                  {getProductName(item.product)}
+                                </h2>
+                                <p className="text-xl font-semibold">
+                                  {formatCurrency(item.price * item.quantity)}
+                                </p>
+                              </div>
+                              <p className="text-lg text-[#565656]">
+                                {getCateName(item.product)}
+                              </p>
+
+                              <div className="flex text-lg text-[#6b7280]">
+                                <div>
+                                  <label htmlFor="">Kích cỡ</label>
+                                  <select
+                                    value={item.size}
+                                    name="size"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(e) =>
+                                      updateCartItem(
+                                        index,
+                                        'size',
+                                        e.target.value as any,
+                                      )
+                                    }
+                                  >
+                                    {sizes && Array.isArray(sizes) ? (
+                                      sizes.map(
+                                        (size: any, index: number) => (
+                                          <option
+                                            disabled={size.quantity <= 0}
+                                            className={
+                                              size.quantity <= 0
+                                                ? 'text-[#ccc]'
+                                                : ''
+                                            }
+                                            key={index}
+                                            value={size.name}
+                                          >
+                                            {size.name}
+                                          </option>
+                                        ),
+                                      )
+                                    ) : (
+                                      <option value="">
+                                        Không có sẵn kích cỡ
+                                      </option>
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="ml-2">
+                                  <label htmlFor="">Quantity</label>
+                                  <select
+                                    value={item.quantity}
+                                    name="quantity"
+                                    id=""
+                                    className="px-2 ml-1"
+                                    onChange={(e) =>
+                                      updateCartItem(
+                                        index,
+                                        'quantity',
+                                        e.target.value as any,
+                                      )
+                                    }
+                                  >
+                                    {renderOptions(item.size)}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="cart-item-content-action">
+                              <ul className="flex">
+                                <li>
+                                  <GrFavorite
+                                    style={{
+                                      fontSize: '24px',
+                                      marginRight: '12px',
+                                    }}
+                                  />
+                                </li>
+                                <li>
+                                  <RiDeleteBin6Line
+                                    className="hover:cursor-pointer"
+                                    onClick={() =>
+                                      removeItemFromCartSession(
+                                        item.product,
+                                        item.size,
+                                      )
+                                    }
+                                    style={{ fontSize: '24px' }}
+                                  />
+                                </li>
+                              </ul>
+>>>>>>> Stashed changes
                             </div>
                           </div>
                           <div className="cart-item-content-action">
@@ -444,7 +746,39 @@ const Cart = () => {
                             </ul>
                           </div>
                         </div>
+<<<<<<< Updated upstream
                       </div>
+=======
+                      </div>
+                    )
+                  })}
+                <hr />
+              </div>
+              <div className="shopping-cart-summary lg:w-[35%]">
+                <h2 className="text-3xl font-semibold my-4">Bản tóm tắt</h2>
+                <div>
+                  <div className="text-[18px] font-medium">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        Tổng phụ
+                        <FaQuestionCircle className="ml-2" />
+                      </div>
+                      <div>{formatCurrency(totalCart)}</div>
+                    </div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div>Ước tính giao hàng và xử lý</div>
+                      <div className="font-light">Miễn phí</div>
+                    </div>
+                    <div className="hidden lg:block">
+                      <hr />
+                    </div>
+                    <div className="flex justify-between items-center my-4 lg:my-5">
+                      <div>Tổng cộng</div>
+                      <div>{formatCurrency(totalCart)}</div>
+                    </div>
+                    <div className="hidden lg:block">
+                      <hr />
+>>>>>>> Stashed changes
                     </div>
                   )
                 })}
@@ -459,6 +793,7 @@ const Cart = () => {
                     Subtotal
                     <FaQuestionCircle className="ml-2" />
                   </div>
+<<<<<<< Updated upstream
                   <div>{formatCurrency(totalCart)}</div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
@@ -474,6 +809,22 @@ const Cart = () => {
                 </div>
                 <div className="hidden lg:block">
                   <hr />
+=======
+                  <div className="mt-5 ">
+                    {cart || cartSession?.cartItems.length ? (
+                      <>
+                        <Button
+                          onClick={() => navigate('./checkout')}
+                          style={{ background: 'rgb(17, 17, 17)' }}
+                          block
+                          className="h-[70px] rounded-[100px] text-xl text-white hover:!text-white hover:!border-white hover:!bg-stone-700 mb-2"
+                        >
+                          <p>Thanh toán</p>
+                        </Button>
+                      </>
+                    ) : null}
+                  </div>
+>>>>>>> Stashed changes
                 </div>
               </div>
               <div className="mt-5 hidden lg:block">

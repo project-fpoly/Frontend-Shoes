@@ -6,9 +6,15 @@ import { Link } from "react-router-dom";
 import Meta from "antd/es/card/Meta";
 
 const Benefits = () => {
+<<<<<<< Updated upstream
     return (
         <Space direction="vertical" style={{ width: '100%' }}>
             <Typography className="home_title">Member Benefits</Typography>
+=======
+  return (
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Typography className="home_title">Lợi ích thành viên</Typography>
+>>>>>>> Stashed changes
 
             <Swiper
                 modules={[Navigation, Pagination, A11y]}

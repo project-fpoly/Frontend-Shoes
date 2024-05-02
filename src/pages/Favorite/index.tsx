@@ -37,8 +37,15 @@ const Favorites = () => {
         fetchProducts()
     }, [])
 
+<<<<<<< Updated upstream
     return (
         <div className="px-10">
+=======
+  return (
+    <div className="px-10">
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Typography className="home_title">Tìm mục yêu thích của bạn</Typography>
+>>>>>>> Stashed changes
 
             <Space direction="vertical" style={{ width: '100%' }}>
                 <Typography className="home_title">Find Your Next Favourite</Typography>

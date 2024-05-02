@@ -42,8 +42,12 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
     0,
   )
   const averageRating = totalStars / commnets.length
+<<<<<<< Updated upstream
   const onChange = (key: string | string[]) => {
   }
+=======
+  const onChange = (key: string | string[]) => { }
+>>>>>>> Stashed changes
 
   const handleShowModal = () => {
     setIsModalOpen(true)
@@ -88,7 +92,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             }}
             className="flex flex-start py-2 hover:bg-gray-100 rounded-sm"
           >
-            Update
+            Chỉnh sửa bình luận
           </button>
           <Popconfirm
             className='z-10'
@@ -99,7 +103,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             cancelText="No"
           >
             <button className="flex flex-start py-2 hover:bg-gray-100 rounded-sm">
-              Delete
+              Xóa
             </button>
           </Popconfirm>
         </div>
@@ -109,28 +113,27 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: <h1 className=" text-xl font-bold">Free Delivery and Returns</h1>,
+      label: <h1 className=" text-xl font-bold">Phí giao hàng</h1>,
       children: (
         <div className="flex flex-col gap-5">
-          <h3>Your order of 5.000.000₫ or more gets free standard delivery.</h3>
+          <h3>Đơn hàng từ 5.000.000₫ trở lên bạn sẽ được giao hàng tiêu chuẩn miễn phí.</h3>
 
           <ul>
-            <li>Standard delivered 4-5 Business Days</li>
-            <li>Express delivered 2-4 Business Days</li>
+            <li>Giao hàng tiêu chuẩn 4-5 ngày làm việc.</li>
+            <li>Chuyển phát nhanh 2-4 ngày làm việc.</li>
           </ul>
 
           <p>
-            Orders are processed and delivered Monday-Friday (excluding public
-            holidays)
+            Đơn hàng được xử lý và giao từ Thứ Hai đến Thứ Sáu (trừ ngày lễ).
           </p>
 
-          <p>Nike Members enjoy free returns.</p>
+          <p>Thành viên Nike được hưởng lợi nhuận miễn phí..</p>
         </div>
       ),
     },
     {
       key: '2',
-      label: <h1 className=" text-xl font-bold">Reviews</h1>,
+      label: <h1 className=" text-xl font-bold">Đánh giá</h1>,
       children: (
         <div className="flex flex-col gap-5">
           <p className="flex gap-5">
@@ -142,6 +145,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               allowHalf
             ></Rate>
           </p>
+<<<<<<< Updated upstream
           <p
             onClick={() => {
               handleShowModal()
@@ -151,6 +155,28 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
           >
             Write a review
           </p>
+=======
+
+          {checkBuy?.message === 'Chưa mua hàng' ? (
+            <>
+              <p className="text-black  text-xl pb-2 font-bold cursor-pointer  hover:opacity-70">
+                Bạn phải mua hàng để có thể đánh giá
+              </p>
+            </>
+          ) : (
+            <>
+              <p
+                onClick={() => {
+                  handleShowModal()
+                  setTypeCmt('CREATE')
+                }}
+                className="text-black text-2xl font-bold cursor-pointer border-b-black border-b-[1px] w-[170px] hover:opacity-70"
+              >
+                Viết đánh giá
+              </p>
+            </>
+          )}
+>>>>>>> Stashed changes
           <div className="flex flex-col gap-8  ">
             {commnets.map((comment, index) => {
               const { content, userId } = comment
@@ -253,9 +279,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
       <ModalCustom isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
         <div className="flex flex-col gap-10">
           <span className="text-center">
-            <h1 className="text-xl">Write a Review</h1>
+            <h1 className="text-xl">Viết đánh giá</h1>
             <p className="text-gray-400">
-              Share your thoughts with the community.
+              Chia sẻ suy nghĩ của bạn với cộng đồng.
             </p>
           </span>
           {accessToken && (
@@ -271,7 +297,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <span>
-                  <h2 className="mb-3">Overall rating *</h2>
+                  <h2 className="mb-3">Đánh giá tổng thể *</h2>
                   <Rate
                     value={rating}
                     allowClear
@@ -280,7 +306,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                   />
                 </span>
                 <div className="border-t-[1px] "></div>
-                <p>Your Review *</p>
+                <p>Đánh giá của bạn *</p>
                 <input
                   className="h-[100px] p-2 rounded-md border border-black text-3xl outline-none"
                   type="text"
@@ -288,7 +314,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 />
                 {errors.content && (
                   <span className="text-red-500 font-bold ">
-                    This field is required
+                    Trường này là bắt buộc
                   </span>
                 )}
 
@@ -300,8 +326,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 </button>
               </form>
               <p>
-                Describe what you liked, what you didn't like and other key
-                things shoppers should know. Minimum 30 characters.
+                Mô tả những gì bạn thích, những gì bạn không thích và những điều quan trọng khác mà người mua hàng nên biết. Tối thiểu 30 ký tự.
               </p>
             </>
           )}
@@ -309,7 +334,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
             <>
               <Link to={'/signin'}>
                 <h1 className="font-bold text-2xl text-center underline text-black">
-                  You need to signin
+                  Bạn cần đăng nhập
                 </h1>
               </Link>
             </>
@@ -319,9 +344,9 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
       <ModalCmt isModalOpenCmt={isModalOpenCmt} setIsModalOpenCmt={setIsModalOpenCmt} >
         <div className="flex flex-col gap-10 ">
           <span className="text-center">
-            <h1 className="text-xl">Write a Review</h1>
+            <h1 className="text-xl">Viết đánh giá</h1>
             <p className="text-gray-400">
-              Share your thoughts with the community.
+              Chia sẻ suy nghĩ của bạn với cộng đồng.
             </p>
           </span>
           <>
@@ -335,7 +360,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               onSubmit={handleSubmit(onSubmit)}
             >
               <span>
-                <h2 className="mb-3">Overall rating *</h2>
+                <h2 className="mb-3">Đánh giá tổng thể *</h2>
                 <Rate
                   value={rating}
                   allowClear
@@ -344,7 +369,7 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
                 />
               </span>
               <div className="border-t-[1px] "></div>
-              <p>Your Review *</p>
+              <p>Đánh giá của bạn *</p>
               <input
                 className="h-[100px] p-2 rounded-md border border-black text-xl outline-none"
                 type="text"
@@ -352,11 +377,16 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
               />
               {errors.content && (
                 <span className="text-red-500 font-bold ">
-                  This field is required
+                  Trường này là bắt buộc
                 </span>
               )}
 
+<<<<<<< Updated upstream
               {previousContent === idCmt?.content && rating === idCmt?.rating ? (
+=======
+              {previousContent === idCmt?.content &&
+                rating === idCmt?.rating ? (
+>>>>>>> Stashed changes
                 <button
                   disabled
                   onClick={() => setTypeCmt('UPDATE')}
@@ -381,8 +411,12 @@ const Colspace = ({ shoe }: { shoe: IProduct }) => {
 
             </form>
             <p>
+<<<<<<< Updated upstream
               Describe what you liked, what you didn't like and other key
               things shoppers should know. Minimum 30 characters.
+=======
+              Mô tả những gì bạn thích, những gì bạn không thích và những điều quan trọng khác mà người mua hàng nên biết. Tối thiểu 30 ký tự.
+>>>>>>> Stashed changes
             </p>
           </>
 

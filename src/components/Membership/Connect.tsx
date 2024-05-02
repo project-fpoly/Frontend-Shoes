@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const { Title, Paragraph } = Typography
 
 const Connect = () => {
+<<<<<<< Updated upstream
     return (
         <Space direction="vertical" style={{ width: '100%' }}>
             <Typography className="home_title">Connect Through Membership</Typography>
@@ -62,6 +63,125 @@ const Connect = () => {
             </Space>
         </Space >
     )
+=======
+  return (
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Typography className="home_title">Kết nối thông qua tư cách thành viên</Typography>
+
+      <Space className="mt-20 grid grid-col items-center justify-center gap-14 md:grid-cols-2 lg:grid-cols-3" style={{ textAlign: 'center' }}>
+        <Space direction="vertical">
+          <Link to="">
+            <Space direction="vertical" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <img
+                src="../../../logo.jpg"
+                alt=""
+                width={60}
+                style={{
+                  boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+                }}
+              />
+              <Typography
+                className="mt-10"
+                style={{ fontWeight: 500, fontSize: 20 }}
+              >
+                Nike App <br />
+              </Typography>
+              <Typography
+                className="mt-5 mb-7"
+                style={{ fontWeight: 500, fontSize: 16 }}
+              >
+                Cập nhật hàng ngày những sản phẩm tốt <br /> nhất của
+                Nike, được cá nhân hóa dành cho bạn.
+              </Typography>
+              <Link
+                to={''}
+                style={{
+                  fontWeight: 500,
+                  fontSize: 15,
+                  textDecoration: 'underline',
+                }}
+              >
+                Khám phá
+              </Link>
+            </Space>
+          </Link>
+        </Space>
+        <Space direction="vertical">
+          <Link to="">
+            <Space direction="vertical" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <img
+                src="../../../nrc.jpg"
+                alt=""
+                width={60}
+                style={{
+                  boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+                }}
+              />
+              <Typography
+                className="mt-10"
+                style={{ fontWeight: 500, fontSize: 20 }}
+              >
+                Câu lạc bộ Nike Run<br />
+              </Typography>
+              <Typography
+                className="mt-5 mb-7"
+                style={{ fontWeight: 500, fontSize: 16 }}
+              >
+                Chạy cùng chúng tôi trong <br /> ứng dụngNike Run Club
+              </Typography>
+              <Link
+                to={''}
+                style={{
+                  fontWeight: 500,
+                  fontSize: 15,
+                  textDecoration: 'underline',
+                }}
+              >
+                Khám phá
+              </Link>
+            </Space>
+          </Link>
+        </Space>
+        <Space direction="vertical">
+          <Link to="">
+            <Space direction="vertical" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <img
+                src="../../../ntc.jpg"
+                alt=""
+                width={60}
+                style={{
+                  boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+                }}
+              />
+              <Typography
+                className="mt-10"
+                style={{ fontWeight: 500, fontSize: 20 }}
+              >
+                Câu lạc bộ Nike Trainning <br />
+              </Typography>
+              <Typography
+                className="mt-5 mb-7"
+                style={{ fontWeight: 500, fontSize: 16 }}
+              >
+                Di chuyển với những gì tốt nhất trong <br /> Nike Trainning Club App.
+              </Typography>
+              <Link
+                to={''}
+                style={{
+                  fontWeight: 500,
+                  fontSize: 15,
+                  textDecoration: 'underline',
+                }}
+              >
+                Khám phá
+              </Link>
+            </Space>
+          </Link>
+        </Space>
+      </Space>
+    </Space>
+  )
+>>>>>>> Stashed changes
 }
 
 export default Connect;

@@ -14,7 +14,7 @@ const Help = () => {
     <div className="px-20">
       <Space style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography style={{ fontSize: '33px' }} className="home_title">
-          GET HELP
+          HỖ TRỢ
         </Typography>
       </Space>
 
@@ -53,10 +53,9 @@ const Help = () => {
       </Form>
 
       <Space direction="vertical" className="mt-20 mb-5">
-        <Title level={3}>Quick assists</Title>
+        <Title level={3}>Hỗ trợ nhanh</Title>
         <p style={{ fontSize: '17px', fontWeight: 500 }}>
-          Answers to our most frequently asked questions are just one click
-          away.
+          Câu trả lời cho những câu hỏi thường gặp nhất của chúng tôi chỉ cần một cú nhấp chuột.
         </p>
       </Space>
       <hr />
@@ -66,33 +65,34 @@ const Help = () => {
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
       >
         <Space direction="vertical">
-          <Title level={4}>Dispatch & delivery</Title>
+          <Title level={4}>Vận chuyển và giao hàng</Title>
           <Link to="/help/a/free-shipping">
-            How do I get free delivery on Nike orders?
+            Làm cách nào để được giao hàng miễn phí?
           </Link>
-          <Link to="">What are Nike's delivery options?</Link>
-          <a href="">Can my Nike order be dispatched internationally?</a>
+          <Link to="">Các lựa chọn giao hàng của Nike là gì?</Link>
+          <a href="">Đơn hàng Nike có thể được gửi đi quốc tế không?</a>
         </Space>
         <Space direction="vertical">
-          <Title level={4}>Returns</Title>
-          <a href="">How do I return my Nike order?</a>
-          <a href="">What is Nike's returns policy?</a>
-          <a href="">Where is my refund?</a>
+          <Title level={4}>Trả lại</Title>
+          <a href="">Làm cách nào để trả lại đơn hàng của tôi?</a>
+          <a href="">Chính sách hoàn trả của Nike là gì?</a>
+          <a href="">Tiền hoàn lại của tôi ở đâu?</a>
         </Space>
         <Space direction="vertical">
-          <Title level={4}>Nike Membership</Title>
-          <a href="">What is Nike Membership?</a>
-          <a href="">How do I become a Nike Member?</a>
-          <a href="">How do I get the most out of NRC and NTC?</a>
+          <Title level={4}>Tư cách thành viên Nike</Title>
+          <a href="">Tư cách thành viên Nike là gì?</a>
+          <a href="">Làm cách nào để trở thành Thành viên Nike?</a>
+          <a href="">Làm cách nào để tận dụng tối đa NRC và NTC?</a>
         </Space>
       </Space>
 
       <Space direction="vertical" className="mt-20 mb-5">
-        <Title level={3}>Contact us</Title>
+        <Title level={3}>Liên hệ chúng tôi</Title>
       </Space>
       <hr />
       <Space
         direction="vertical"
+<<<<<<< Updated upstream
         className="mt-10 mb-5"
         style={{
           display: 'grid',
@@ -103,6 +103,16 @@ const Help = () => {
         <Space direction="vertical">
           <MobileOutlined style={{ fontSize: '40px' }} />
           <Title level={5} className='mt-3'>Products & orders</Title>
+=======
+        className="mt-10 mb-5 grid grid-cols-2 gap-7 lg:grid-cols-3"
+        style={{ textAlign: 'center' }}
+      >
+        <Space direction="vertical">
+          <MobileOutlined style={{ fontSize: '40px' }} />
+          <Title level={5} className="mt-3">
+            Sản phẩm & đơn đặt hàng
+          </Title>
+>>>>>>> Stashed changes
           <a href="">12280903 (Viettel)</a>
           <a href="">12032487 (VTI)</a>
           <a href="">05:00 - 23-00</a>
@@ -110,15 +120,31 @@ const Help = () => {
         </Space>
         <Space direction="vertical" style={{ textAlign: 'center' }}>
           <MessageOutlined style={{ fontSize: '40px' }} />
+<<<<<<< Updated upstream
           <Title level={5} className='mt-3'>Products & orders</Title>
+=======
+          <Title level={5} className="mt-3">
+            Sản phẩm & đơn đặt hàng
+          </Title>
+>>>>>>> Stashed changes
           <a href="">Chat with us</a>
           <a href="">24 hours a day</a>
           <a href="">7 days a week</a>
         </Space>
         <Space direction="vertical" style={{ textAlign: 'center' }}>
           <EnvironmentOutlined style={{ fontSize: '40px' }} />
+<<<<<<< Updated upstream
           <Title level={5} className='mt-3'>Store locator</Title>
           <a href="">FPT Polytechnic Building, 13 Trinh Van Bo Ward, <br />Xuan Phuong, Nam Tu Liem, Hanoi</a>
+=======
+          <Title level={5} className="mt-3">
+            Định vị cửa hàng
+          </Title>
+          <a href="">
+            Tòa nhà FPT Polytechnic, 13 Trịnh Văn Bô, <br />
+            Xuân Phương, Nam Từ Liêm, Hà Nội
+          </a>
+>>>>>>> Stashed changes
         </Space>
       </Space>
     </div>
