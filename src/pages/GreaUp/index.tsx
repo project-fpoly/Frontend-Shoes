@@ -52,33 +52,33 @@ const GreaUp = () => {
           onClick={() => setHideFilter(!hideFilter)}
           className="flex gap-2 cursor-pointer "
         >
-          {hideFilter ? 'Hide fillter' : 'Show filter'}
+          {hideFilter ? 'Ẩn lọc' : 'Hiện lọc'}
           <button style={{ backgroundColor: 'transparent' }}>
-            <GrTransaction className="mt-1" size={20} />
+            <GrTransaction className="" size={20} />
           </button>
         </p>
 
-        <button style={{ backgroundColor: 'transparent' }}>Sort by :</button>
+        <button style={{ backgroundColor: 'transparent' }}>Sắp xếp theo :</button>
         <Select
-          defaultValue="Options"
+          defaultValue="Lựa chọn"
           style={{ width: 150 }}
           onChange={handleChange}
           options={[
             {
               value: 'Newest',
-              label: 'Newest',
+              label: 'Mới nhất',
             },
             {
               value: 'Oldest',
-              label: 'Oldest',
+              label: 'Cũ nhất',
             },
             {
               value: 'High-Low',
-              label: 'Price: High-Low',
+              label: 'Giá: Cao nhất',
             },
             {
               value: 'Low-High',
-              label: 'Price: Low-High',
+              label: 'Giá: Thấp nhất',
             },
           ]}
         />

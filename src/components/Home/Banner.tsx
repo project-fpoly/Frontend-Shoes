@@ -47,14 +47,12 @@ const Banner = () => {
           className="mt-5"
           style={{ fontSize: 75, fontFamily: 'fantasy' }}
         >
-          STYLE UP, STAND OUT
+          PHONG CÁCH
         </Typography>
 
         <Typography className="mb-5 text-lg">
-          Meant for the spotlight. Double stacked Air Units turns a classic
-          silhouette into a modern icon. Make a bold statement in the new Air
-          Max 90 <br />
-          LV8, styled by NewJeans.
+        Có nghĩa là cho ánh đèn sân khấu. Air Units xếp chồng đôi biến hình bóng cổ điển thành biểu tượng hiện đại. Tuyên bố táo bạo ở Air Max 90 mới <br />
+        LV8, được tạo kiểu bởi NewJeans.
         </Typography>
 
         <Space>
@@ -68,7 +66,7 @@ const Banner = () => {
             to={''}
             className="text-white bg-black font-medium text-medium px-4 py-2 leading-4 rounded-full mt-5"
           >
-            Learn More
+            Tìm hiểu thêm
           </Link>
         </Space>
       </Space>

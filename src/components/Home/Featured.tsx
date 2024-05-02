@@ -22,8 +22,7 @@ const Featured = () => {
               color: 'white',
             }}
           >
-            Men's Shoes <br />
-            Collection
+              Bộ sưu tập <br /> giày nam
           </Typography>
           <Link
             to={'/men'}
@@ -49,8 +48,8 @@ const Featured = () => {
               color: 'white',
             }}
           >
-            Women's Shoes <br />
-            Collection
+            Bộ sưu tập <br />
+            giày nữ
           </Typography>
           <Link
             to={'/women'}

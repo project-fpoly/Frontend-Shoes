@@ -32,23 +32,23 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Gender', 'Gender', '', [
-    getItem('Men', 'nam'),
-    getItem('Women', 'nữ'),
+  getItem('Giới tính', 'Gender', '', [
+    getItem('Nam', 'nam'),
+    getItem('Nữ', 'nữ'),
   ]),
-  getItem('Category', 'Category', '', [
+  getItem('Loại ', 'Category', '', [
     getItem('Jordan', '6584f32081f5022799afe79e'),
     getItem('Nike', '65899c32bb48834579fde67e'),
     getItem('Adidas', '65b32b3962fec2570781106c'),
   ]),
   ,
-  getItem('Shop by price', 'Price', '', [
+  getItem('Sản phẩm theo giá', 'Price', '', [
     getItem('1  to  1,000,000', '1  to  1,000,000'),
     getItem('1,000,000đ  to  2,000,000đ', '1,000,000 to  2,000,000'),
     getItem('2,000,000đ  to  5,000,000đ', '2,000,000  to  5,000,000'),
     getItem('5,000,000đ  to  10,000,000đ', '5,000,000  to  10,000,000'),
   ]),
-  getItem('Size', 'Size', '', [
+  getItem('Kích cỡ', 'Size', '', [
     getItem('36', '36'),
     getItem('37', '37'),
     getItem('38', '38'),
@@ -62,7 +62,7 @@ const items: MenuProps['items'] = [
     getItem('White', 'white'),
     getItem('Green', 'green'),
   ]),
-  getItem('Material', 'Material', '', [
+  getItem('Chất liệu', 'Material', '', [
     getItem('Plastic', 'Plastic'),
     getItem('Eva', 'EVA'),
     getItem('Leather', 'Leather'),

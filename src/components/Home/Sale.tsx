@@ -52,7 +52,7 @@ const Sale = () => {
 
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Typography className="home_title">Are On Sale</Typography>
+      <Typography className="home_title">Đang giảm giá</Typography>
 
       <Carousel responsive={responsive}>
         {loading ? (

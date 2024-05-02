@@ -43,7 +43,7 @@ const SlideAlso = ({ shoes }: Props) => {
                       alt="BigCo Inc. logo"
                     />
                     <h2 className="font-bold">{shoe.name}</h2>
-                    <p>{formatCurrency(shoe.price)}</p>
+                    <p>{formatCurrency(shoe.price ? shoe.priceSale : shoe.price)}</p>
                   </Link>
                 </SwiperSlide>
               )

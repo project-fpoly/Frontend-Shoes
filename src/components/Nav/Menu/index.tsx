@@ -7,17 +7,9 @@ const MenuNav = () => {
   const items: MenuProps['items'] = [
     {
       label: (
-        <Link to="/">
-          <h1 className="font-bold">New & Features</h1>
-        </Link>
-      ),
-      key: 'mail',
-    },
-    {
-      label: (
         <Link to="/greaup">
           <h1 className="hover:text-black visited:text-black font-bold">
-            Products
+            Sản phẩm
           </h1>
         </Link>
       ),
@@ -26,7 +18,7 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/men">
-          <h1 className="font-bold">Men</h1>
+          <h1 className="font-bold">Nam</h1>
         </Link>
       ),
       key: 'Men',
@@ -34,7 +26,7 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/women">
-          <h1 className="font-bold">Women</h1>
+          <h1 className="font-bold">Nữ</h1>
         </Link>
       ),
       key: 'Women',
@@ -42,7 +34,7 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/sale">
-          <h1 className="font-bold">Sale</h1>
+          <h1 className="font-bold">Giảm giá</h1>
         </Link>
       ),
       key: 'Sale',
@@ -50,10 +42,18 @@ const MenuNav = () => {
     {
       label: (
         <Link to="/contact">
-          <h1 className="font-bold">Contact</h1>
+          <h1 className="font-bold">Liên hệ</h1>
         </Link>
       ),
       key: 'Contact',
+    },
+    {
+      label: (
+        <Link to="/membership">
+          <h1 className="font-bold">Thành viên</h1>
+        </Link>
+      ),
+      key: 'membership',
     },
   ]
   return (

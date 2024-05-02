@@ -73,7 +73,7 @@ const NavBar = () => {
               <span className="hidden lg:block">|</span>
               <Link to={'/help'}>
                 <Popover className="hover:opacity-70 hidden lg:block" title="">
-                  Help
+                  Hỗ trợ
                 </Popover>
               </Link>
               <span className="hidden lg:block">|</span>
@@ -138,26 +138,26 @@ const NavBar = () => {
           >
             <div className="flex flex-col gap-16">
               <div className="flex flex-col gap-6 mt-5 ml-10 justify-start">
-                <Link onClick={onClose} className="text-3xl" to={'/'}>
-                  New & Featured
-                </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/greaup'}>
-                  Product
+                  Sản phẩm
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/men'}>
-                  Men
+                  Nam
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/women'}>
-                  Women
+                  Nữ
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/sale'}>
-                  Sale
+                  Giảm giá 
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/contact'}>
-                  Contact
+                  Liên hệ
+                </Link>
+                <Link onClick={onClose} className="text-3xl" to={'/membership'}>
+                  Thành viên
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/help'}>
-                  Help
+                  Hỗ trợ
                 </Link>
               </div>
             </div>
