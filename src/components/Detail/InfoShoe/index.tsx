@@ -194,9 +194,9 @@ const InfoShoe = (props: Props) => {
             </span>
           </div>
           <span className="flex justify-between cursor-pointer text-xl text-gray-400">
-            <p>Select size</p>
+            <p>Chọn size</p>
             <Link to={'/sizeguide'}>
-              <p>Size guide</p>
+              <p>Bảng size</p>
             </Link>
           </span>
           <div className={style.sizes}>
@@ -224,14 +224,14 @@ const InfoShoe = (props: Props) => {
               onClick={() => addToCartt()}
               className="w-[100%] py-4 bg-black font-bold text-white rounded-full hover:bg-opacity-65 "
             >
-              Add to Bag
+              Thêm vào giỏ hàng
             </button>
             {favItem && state?.user ? (
               <>
                 <button
                   className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
                 >
-                  Favourite
+                  Yêu thích
                   <p className="mt-1 px-3">
                     <FaHeart />
                   </p>
@@ -244,7 +244,7 @@ const InfoShoe = (props: Props) => {
                 }
                 className={`w-[100%] py-4 border flex items-center justify-center border-[#CACACB] hover:border-black font-bold  rounded-full hover:bg-opacity-65 `}
               >
-                Favourite
+                Yêu thích
                 <p className="mt-1 px-3">
                   <CiHeart />
                 </p>
@@ -253,10 +253,10 @@ const InfoShoe = (props: Props) => {
           </div>
           <p>{shoe.description}</p>
           <p
-            className=" border-b-2 border-b-black w-[170px] font-bold text-lg cursor-pointer hover:opacity-70"
+            className=" border-b-2 border-b-black w-[200px] font-bold text-lg cursor-pointer hover:opacity-70"
             onClick={() => showModal()}
           >
-            View product detail
+            Xem chi tiết sản phẩm
           </p>
           <Colspace shoe={shoe}></Colspace>
           <ModalCartItem
@@ -279,7 +279,7 @@ const InfoShoe = (props: Props) => {
               <h2 className="text-2xl ">{category?.name}</h2>
               <p>{shoe.description}</p>
               <p>
-                <p className="font-bold text-xl mb-3">Benefits</p>
+                <p className="font-bold text-xl mb-3">Lợi ích</p>
                 {shoe.stock_status}
               </p>
             </div>

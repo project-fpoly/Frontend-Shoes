@@ -54,7 +54,7 @@ const Password = () => {
             dispatch(setUser(res.data.user))
             // alert('Login successfully');
             notification.success({
-              message: 'Login successfully',
+              message: 'Đăng nhập thành công',
               placement: 'top',
             })
             if (res.data.user.role === 'admin') {
@@ -70,7 +70,7 @@ const Password = () => {
     } catch (e: any) {
       e.response.data.message &&
         notification.error({
-          message: 'Login failed',
+          message: 'Đăng nhập thất bại',
           description: e.response.data.message,
           placement: 'top',
         })
@@ -95,7 +95,7 @@ const Password = () => {
             autoComplete="off"
           >
             <h1 className="text-2xl font-normal sm:text-4xl">
-              Enter password for email: {email}
+              Nhập mật khẩu cho email: {email}
             </h1>
 
             <Form.Item
@@ -122,9 +122,9 @@ const Password = () => {
                 className="text-sm font-medium leading-none text-gray-800"
               >
                 {' '}
-                <Link to="/forgotpassword">Forgot Password?</Link>
+                <Link to="/forgotpassword">Quên mật khẩu?</Link>
                 <div style={{ marginTop: '5px', textDecorationLine: 'none' }}>
-                  Don't have an account? <Link to="/signup">Sign up here</Link>
+                  Chưa có tài khoản? <Link to="/signup">Đăng ký ở đây</Link>
                 </div>
               </span>
             </p>
@@ -144,10 +144,10 @@ const Password = () => {
                   justifyContent: 'center', // Để căn giữa theo chiều ngang
                   marginLeft: 'auto', // Để nút sang bên phải
                 }}
-                // onMouseEnter={handleMouseEnter}
-                // onMouseLeave={handleMouseLeave}
+              // onMouseEnter={handleMouseEnter}
+              // onMouseLeave={handleMouseLeave}
               >
-                Continue
+                Tiếp tục
               </Button>
             </div>
           </Form>

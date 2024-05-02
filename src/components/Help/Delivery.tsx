@@ -15,7 +15,7 @@ const Delivery: React.FC = () => {
     <div className="px-20">
       <Space style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography style={{ fontSize: '33px' }} className="home_title">
-          GET HELP
+          Hỗ trợ
         </Typography>
       </Space>
       <Form.Item

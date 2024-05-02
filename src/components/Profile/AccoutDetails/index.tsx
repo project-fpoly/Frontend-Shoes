@@ -52,14 +52,14 @@ const AccoutDetails = () => {
 
   return (
     <>
-      <h1 className="text-3xl mb-5">Account Details </h1>
+      <h1 className="text-3xl mb-5">Thông tin cá nhân </h1>
       <form onSubmit={handleSubmit(onSubmit)} action="">
         <div className="grid grid-cols lg:grid-cols-2 xl:grid-cols-3 gap-5 ">
           <div>
             {openUserName ? (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>UserName</label>
+                  <label>Tên tài khoản</label>
                   <input
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
                     {...register('userName')}
@@ -78,7 +78,7 @@ const AccoutDetails = () => {
             ) : (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>UserName</label>
+                  <label>Tên tài khoản</label>
                   <input
                     disabled
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
@@ -98,7 +98,7 @@ const AccoutDetails = () => {
             {openAddress ? (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Delivery Address</label>
+                  <label>Điạ chỉ giao hàng</label>
                   <input
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
                     {...register('deliveryAddress')}
@@ -117,7 +117,7 @@ const AccoutDetails = () => {
             ) : (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Delivery Address</label>
+                  <label>Điạ chỉ giao hàng</label>
                   <input
                     disabled
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
@@ -137,7 +137,7 @@ const AccoutDetails = () => {
             {OpenPhoneNumber ? (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Phone Number</label>
+                  <label>Số điện thoại</label>
                   <input
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
                     {...register('phoneNumbers')}
@@ -156,7 +156,7 @@ const AccoutDetails = () => {
             ) : (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Phone Number</label>
+                  <label>Số điện thoại</label>
                   <input
                     disabled
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
@@ -176,7 +176,7 @@ const AccoutDetails = () => {
             {openDate ? (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Date of birth</label>
+                  <label>Ngày sinh</label>
                   <input
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
                     {...register('dateOfBirth')}
@@ -195,7 +195,7 @@ const AccoutDetails = () => {
             ) : (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Date of birth</label>
+                  <label>Ngày sinh</label>
                   <input
                     disabled
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
@@ -215,7 +215,7 @@ const AccoutDetails = () => {
             {openGender ? (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Gender </label>
+                  <label>Giới tính </label>
                   <input
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
                     {...register('gender')}
@@ -234,7 +234,7 @@ const AccoutDetails = () => {
             ) : (
               <>
                 <div className="flex flex-col gap-3 relative w-[250px]">
-                  <label>Gender </label>
+                  <label>Giới tính </label>
                   <input
                     disabled
                     className=" px-2 h-[50px] outline-none  rounded-lg border border-black"
@@ -252,10 +252,10 @@ const AccoutDetails = () => {
           </div>
         </div>
         {preUserName === user.userName &&
-        preUserDate === user.dateOfBirth &&
-        prephoneNumbers === user.phoneNumbers &&
-        predeliveryAddress === user.deliveryAddress &&
-        prepGender === user.gender ? (
+          preUserDate === user.dateOfBirth &&
+          prephoneNumbers === user.phoneNumbers &&
+          predeliveryAddress === user.deliveryAddress &&
+          prepGender === user.gender ? (
           <>
             <p
               onClick={() => setOpenGender(!openGender)}

@@ -14,7 +14,7 @@ const Help = () => {
     <div className="px-20">
       <Space style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography style={{ fontSize: '33px' }} className="home_title">
-          GET HELP
+          Hỗ trợ
         </Typography>
       </Space>
 
@@ -32,7 +32,7 @@ const Help = () => {
               fontSize: '17px',
               borderRadius: '10px',
             }}
-            placeholder="What can we help you with?"
+            placeholder="Chúng tôi có thể giúp gì cho bạn?"
             suffix={
               <Button
                 className="rounded-full btn-primary-dark btn-md"
@@ -53,10 +53,9 @@ const Help = () => {
       </Form>
 
       <Space direction="vertical" className="mt-20 mb-5">
-        <Title level={3}>Quick assists</Title>
+        <Title level={3}>Hỗ trợ nhanh</Title>
         <p style={{ fontSize: '17px', fontWeight: 500 }}>
-          Answers to our most frequently asked questions are just one click
-          away.
+          Câu trả lời cho những câu hỏi thường gặp nhất của chúng tôi chỉ cần một cú nhấp chuột.
         </p>
       </Space>
       <hr />
@@ -65,29 +64,29 @@ const Help = () => {
         className="grid grid-cols-1 md:grid-cols-2 gap-7 lg:grid-cols-3"
       >
         <Space direction="vertical">
-          <Title level={4}>Dispatch & delivery</Title>
+          <Title level={4}>Vận chuyển và giao hàng</Title>
           <Link to="/help/a/free-shipping">
-            How do I get free delivery on Nike orders?
+            Làm cách nào để được giao hàng miễn phí cho các đơn hàng của Nike?
           </Link>
-          <Link to="">What are Nike's delivery options?</Link>
-          <a href="">Can my Nike order be dispatched internationally?</a>
+          <Link to="">Các lựa chọn giao hàng của Nike là gì?</Link>
+          <a href="">Đơn hàng Nike của tôi có thể được gửi đi quốc tế không?</a>
         </Space>
         <Space direction="vertical">
-          <Title level={4}>Returns</Title>
-          <a href="">How do I return my Nike order?</a>
-          <a href="">What is Nike's returns policy?</a>
+          <Title level={4}>Trả hàng</Title>
+          <a href="">Làm cách nào để trả lại đơn hàng Nike của tôi?</a>
+          <a href="">Chính sách hoàn trả của Nike là gì?</a>
           <a href="">Where is my refund?</a>
         </Space>
         <Space direction="vertical">
-          <Title level={4}>Nike Membership</Title>
-          <a href="">What is Nike Membership?</a>
-          <a href="">How do I become a Nike Member?</a>
-          <a href="">How do I get the most out of NRC and NTC?</a>
+          <Title level={4}>Tư cách thành viên NIKE</Title>
+          <a href="">Tư cách thành viên Nike là gì?</a>
+          <a href="">Làm cách nào để trở thành Thành viên Nike?</a>
+          <a href="">Làm cách nào để tận dụng tối đa NRC và NTC?</a>
         </Space>
       </Space>
 
       <Space direction="vertical" className="mt-20 mb-5">
-        <Title level={3}>Contact us</Title>
+        <Title level={3}>Liên hệ chúng tôi</Title>
       </Space>
       <hr />
       <Space
@@ -97,7 +96,7 @@ const Help = () => {
         <Space direction="vertical">
           <MobileOutlined style={{ fontSize: '40px' }} />
           <Title level={5} className="mt-3">
-            Products & orders
+            Sản phẩm & đơn đặt hàng
           </Title>
           <a href="">12280903 (Viettel)</a>
           <a href="">12032487 (VTI)</a>
@@ -107,16 +106,16 @@ const Help = () => {
         <Space direction="vertical" style={{ textAlign: 'center' }}>
           <MessageOutlined style={{ fontSize: '40px' }} />
           <Title level={5} className="mt-3">
-            Products & orders
+            Liên hệ với chúng tôi
           </Title>
-          <a href="">Chat with us</a>
-          <a href="">24 hours a day</a>
-          <a href="">7 days a week</a>
+          <a href="">Nhắn tin cho chúng tôi</a>
+          <a href="">24 giờ một ngày</a>
+          <a href="">7 ngày trên tuần</a>
         </Space>
         <Space direction="vertical">
           <EnvironmentOutlined style={{ fontSize: '40px' }} />
           <Title level={5} className="mt-3">
-            Store locator
+            Địa chỉ
           </Title>
           <a href="">
             FPT Polytechnic Building, 13 Trinh Van Bo Ward, <br />

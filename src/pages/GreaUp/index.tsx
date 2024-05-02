@@ -74,11 +74,11 @@ const GreaUp = () => {
             },
             {
               value: 'High-Low',
-              label: 'Giá: Cao nhất',
+              label: 'Giá: Tăng dần',
             },
             {
               value: 'Low-High',
-              label: 'Giá: Thấp nhất',
+              label: 'Giá: Giảm dần',
             },
           ]}
         />

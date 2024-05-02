@@ -44,11 +44,11 @@ const SigninPage = () => {
             autoComplete="off"
           >
             <h1 className="text-2xl font-normal sm:text-4xl">
-              Enter your email address to join or log in.
+              Nhập địa chỉ email của bạn để tham gia hoặc đăng nhập.
             </h1>
 
             <p className="text-sm mt-4 font-medium leading-none text-gray-500">
-              Don't have account?{' '}
+              Chưa có tài khoản?{' '}
               <span
                 tabIndex={0}
                 role="link"
@@ -56,7 +56,7 @@ const SigninPage = () => {
                 className="text-sm font-medium leading-none underline text-gray-800 cursor-pointer"
               >
                 {' '}
-                <Link to="/signup">Sign up here</Link>
+                <Link to="/signup">Đăng ký</Link>
               </span>
             </p>
 
@@ -78,13 +78,13 @@ const SigninPage = () => {
               />
             </Form.Item>
             <h1 className="text-sm sm:text-xl mt-4 font-inherit leading-none text-gray-500">
-              By continuing, I agree to Nike's{' '}
+              Bằng cách tiếp tục, tôi đồng ý với Nike{' '}
               <a href="" className="underline" target="_blank">
-                Privacy Policy
+                Chính sách quyền riêng tư
               </a>{' '}
-              and{' '}
+              và{' '}
               <a href="" className="underline" target="_blank">
-                Terms of Use.
+                Điều khoản sử dụng.
               </a>
             </h1>
 
@@ -106,7 +106,7 @@ const SigninPage = () => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
-                Continue
+                Tiếp tục
               </Button>
             </div>
             {/* <div>

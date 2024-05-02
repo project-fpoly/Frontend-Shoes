@@ -8,7 +8,7 @@ const NavProfile = () => {
     {
       label: (
         <Link to="/profile">
-          <h1 className="font-bold text-sm">Profile</h1>
+          <h1 className="font-bold text-sm">Hồ sơ</h1>
         </Link>
       ),
       key: 'Profile',
@@ -16,7 +16,7 @@ const NavProfile = () => {
     {
       label: (
         <Link to="/order">
-          <h1 className="font-bold text-sm">Orders</h1>
+          <h1 className="font-bold text-sm">Đơn hàng</h1>
         </Link>
       ),
       key: 'Orders',
@@ -24,7 +24,7 @@ const NavProfile = () => {
     {
       label: (
         <Link to="/favourite">
-          <h1 className="font-bold text-sm">Favourites</h1>
+          <h1 className="font-bold text-sm">Yêu thích</h1>
         </Link>
       ),
       key: 'Favourites',
@@ -32,7 +32,7 @@ const NavProfile = () => {
     {
       label: (
         <Link to="/profile/setting">
-          <h1 className="font-bold text-sm">Settings</h1>
+          <h1 className="font-bold text-sm">Cài đặt</h1>
         </Link>
       ),
       key: 'Settings',

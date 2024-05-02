@@ -15,7 +15,7 @@ const SlideAlso = ({ shoes }: Props) => {
     <>
       {shoes && (
         <>
-          <h1 className="my-5 text-4xl font-medium ">You Might Also Like</h1>
+          <h1 className="my-5 text-4xl font-medium ">Có thể bạn cũng thích</h1>
           <Swiper
             breakpoints={{
               576: {
@@ -43,7 +43,7 @@ const SlideAlso = ({ shoes }: Props) => {
                       alt="BigCo Inc. logo"
                     />
                     <h2 className="font-bold">{shoe.name}</h2>
-                    <p>{formatCurrency(shoe.price ? shoe.priceSale : shoe.price)}</p>
+                    <p>{formatCurrency(shoe.sale ? shoe.priceSale : shoe.price)}</p>
                   </Link>
                 </SwiperSlide>
               )

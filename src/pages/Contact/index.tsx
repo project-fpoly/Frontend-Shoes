@@ -23,11 +23,10 @@ const Contact = () => {
         <Col span={12}>
           <ChatsPage></ChatsPage>
           <Typography className="font-bold text-4xl text-center">
-            Contact Us
+            Liên hệ chúng tôi
           </Typography>
-          <Typography className="text-base mt-5 text-center">
-            “We're Here to Help! Reach out to us anytime and we'll happily
-            answer your questions”
+          <Typography className="text-base mt-5 ">
+            “Chúng tôi ở đây để giúp đỡ! Hãy liên hệ với chúng tôi bất cứ lúc nào và chúng tôi sẽ vui vẻ trả lời câu hỏi của bạn”
           </Typography>
 
           <Space
@@ -35,7 +34,7 @@ const Contact = () => {
             className="px-10 py-5 mt-10 w-full h-96 bg-zinc-100 rounded-md"
           >
             <Typography className="font-bold text-2xl mb-3 text-slate-500">
-              Send Message
+              Gửi tin nhắn
             </Typography>
 
             <Form.Item
@@ -60,7 +59,7 @@ const Contact = () => {
             </Form.Item>
 
             <Button className="w-full bg-black text-white h-11 text-lg">
-              Send
+              Gửi
             </Button>
           </Space>
         </Col>

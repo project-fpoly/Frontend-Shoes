@@ -17,14 +17,15 @@ const Home = () => {
       {!accessToken && (
         <>
           <div className="flex justify-center mt-10 mb-1 items-center flex-col">
-            <h2>Move, Shop, Customise & Celebrate With Us.</h2>
+            <h2>
+              Di chuyển, Mua sắm, Tùy chỉnh & Ăn mừng cùng chúng tôi.</h2>
             <p>
-              No matter what you feel like doing today, It’s better as a Member.
+              Dù bạn muốn làm gì hôm nay, Đó sẽ tốt hơn khi là một Thành viên..
             </p>
             <a href="">
               <u>
                 <b>
-                  <Link to={'/signup'}>Join us</Link>
+                  <Link to={'/signup'}>Tham gia   </Link>
                 </b>
               </u>
             </a>

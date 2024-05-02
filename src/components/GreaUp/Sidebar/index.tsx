@@ -57,10 +57,10 @@ const items: MenuProps['items'] = [
     getItem('41', '41'),
     getItem('42', '42'),
   ]),
-  getItem('Color', 'Color', '', [
-    getItem('Black', 'black'),
-    getItem('White', 'white'),
-    getItem('Green', 'green'),
+  getItem('Màu', 'Color', '', [
+    getItem('Đen', 'black'),
+    getItem('Trắng', 'white'),
+    getItem('Xanh lá cây', 'green'),
   ]),
   getItem('Chất liệu', 'Material', '', [
     getItem('Plastic', 'Plastic'),

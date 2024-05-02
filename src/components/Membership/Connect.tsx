@@ -7,7 +7,7 @@ const { Title, Paragraph } = Typography
 const Connect = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Typography className="home_title">Connect Through Membership</Typography>
+      <Typography className="home_title">Kết nối thông qua tư cách thành viên</Typography>
 
       <Space className="mt-20 grid grid-col items-center justify-center gap-14 md:grid-cols-2 lg:grid-cols-3">
         <Space direction="vertical">

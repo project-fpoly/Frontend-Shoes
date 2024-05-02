@@ -23,7 +23,6 @@ const Favourite = () => {
     const product = products.find((product: any) => product._id === shoeId)
     return product ? product.description : 'N/A'
   }
-  console.log(state)
   useEffect(() => {
     dispatch(getFavItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 40, searchKeyword: '' }))
@@ -36,7 +35,7 @@ const Favourite = () => {
             Our Team
           </h2>
           <p className=" text-gray-500 lg:mb-16 sm:text-2xl font-bold uppercase dark:text-gray-400">
-            Your favorite products list
+            DANH SÁCH SẢN PHẨM BẠN YÊU THÍCH
           </p>
         </div>
         <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">

@@ -8,7 +8,7 @@ import Meta from 'antd/es/card/Meta'
 const Benefits = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Typography className="home_title">Member Benefits</Typography>
+      <Typography className="home_title">Lợi ích thành viên</Typography>
 
       <Swiper
         modules={[Navigation, Pagination, A11y]}
