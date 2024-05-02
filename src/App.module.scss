@@ -1,0 +1,32 @@
+.ant-btn {
+  border-color: black; /* Change the border color on hover */
+}
+.ant-btn-default {
+  &:hover {
+    border-color: black; /* Change the border color on hover */
+  }
+}
+
+.notificationItem {
+  width: 360px;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+.notificationItem:hover {
+  background-color: #d3eaff;
+}
+.readItem {
+  background-color: #ffffff;
+}
+.unreadItem {
+  background-color: #f5f5f5;
+}
+.ant-btn-primary {
+  background: #000000;
+}
+.ant-btn-primary:hover {
+  background-color: #415566;
+}

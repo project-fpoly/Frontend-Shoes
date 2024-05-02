@@ -1,0 +1,8 @@
+.slick-list {
+  margin: 0 auto;
+}
+
+.slick-slide > div {
+  width: 90%;
+  margin: 0 auto;
+}
