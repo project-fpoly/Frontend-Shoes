@@ -178,14 +178,6 @@ const FormCategory: React.FC<
         </Select>
       </Form.Item>
 
-      <Form.Item
-        label={'View Count'}
-        name="viewCount"
-        initialValue={viewCount}
-        rules={[{ required: false, message: 'Please input the view count' }]}
-      >
-        <InputNumber />
-      </Form.Item>
 
       <Form.Item
         style={{ textAlign: 'right' }}

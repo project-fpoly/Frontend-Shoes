@@ -61,11 +61,18 @@ const items: MenuProps['items'] = [
     getItem('Black', 'black'),
     getItem('White', 'white'),
     getItem('Green', 'green'),
+    getItem('Red', 'red'),
+    getItem('Yellow', 'yellow'),
+    getItem('Blue', 'blue'),
   ]),
   getItem('Chất liệu', 'Material', '', [
     getItem('Plastic', 'Plastic'),
     getItem('Eva', 'EVA'),
     getItem('Leather', 'Leather'),
+    getItem('Fabric', 'Fabric'),
+    getItem('Rubber', 'Rubber'),
+    getItem('Mesh', 'Mesh'),
+    getItem('Velvet', 'Velvet'),
   ]),
   // getItem('Color', 'Color', '', [
   //   getItem('Black', 'black'),

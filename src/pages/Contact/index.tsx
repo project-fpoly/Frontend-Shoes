@@ -1,14 +1,53 @@
-import { Button, Col, Flex, Form, Input, Row, Space, Typography } from 'antd'
-import './index.css'
-import Title from 'antd/es/typography/Title'
+import { Button, Col, Form, Input, Row, Space, Typography, notification } from 'antd';
+import './index.css';
+import Title from 'antd/es/typography/Title';
 import {
   EnvironmentOutlined,
   MessageOutlined,
   MobileOutlined,
-} from '@ant-design/icons'
-import ChatsPage from '../Chat'
+} from '@ant-design/icons';
+import ChatsPage from '../Chat';
+import React, { useEffect } from 'react';
+import emailjs from 'emailjs-com';
+const { TextArea } = Input;
 
 const Contact = () => {
+  const [form] = Form.useForm(); // Sử dụng hook Form.useForm() để tạo form instance
+  const email = localStorage.getItem("email");
+  useEffect(() => {
+    if (email) {
+      form.setFieldsValue({ email: email }); // Điền giá trị email từ localStorage vào trường email của form
+    }
+  }, []);
+
+  const sendEmail = (values: any) => {
+    emailjs
+      .send(
+        'service_t8lv8u1',
+        'template_bmpapcw',
+        {
+          to_email: 'ntrkien001@gmail.com',
+          email: values.email,
+          name: values.name,
+          message: values.message
+        },
+        'Mc4EzlCqkbu9supJL',
+      )
+      .then(() => {
+        notification.success({
+          message: 'Email Sent',
+          description: 'Your email has been sent successfully.',
+        })
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error)
+        notification.error({
+          message: 'Error',
+          description: 'Failed to send email. Please try again later.',
+        })
+      })
+  }
+
   return (
     <div className="px-10 pt-10">
       <Row gutter={[80, 80]} style={{ alignItems: 'center' }}>
@@ -21,7 +60,8 @@ const Contact = () => {
           ></iframe>
         </Col>
         <Col span={12}>
-          <ChatsPage></ChatsPage>
+          {email ? <ChatsPage /> : null}
+
           <Typography className="font-bold text-4xl text-center">
             Contact Us
           </Typography>
@@ -38,30 +78,46 @@ const Contact = () => {
               Send Message
             </Typography>
 
-            <Form.Item
-              name="name"
-              rules={[{ required: true, message: 'Please input your name!' }]}
+            <Form
+              form={form} // Gắn form instance vào Form
+              onFinish={sendEmail}
             >
-              <Input size="large" placeholder="Name" />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              rules={[{ required: true, message: 'Please input your email!' }]}
-            >
-              <Input size="large" placeholder="Email" />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              rules={[
-                { required: true, message: 'Please input your message!' },
-              ]}
-            >
-              <Input size="large" placeholder="Type your message..." />
-            </Form.Item>
+              <Form.Item
+                name="name"
+                rules={[{ required: true, message: 'Please input your name!' }]}
+              >
+                <Input size="large" placeholder="Name" />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: 'Please input your email!' },
+                  { type: 'email', message: 'Please enter a valid email!' }, // Validate email
+                ]}
+              >
+                <Input size="large" placeholder="Email" />
+              </Form.Item>
+              <Form.Item
+                name="message"
+                rules={[
+                  { required: true, message: 'Please input your message!' },
+                ]}
+              >
+                <TextArea
+                  rows={4}
+                  placeholder="Type your message..."
+                />
+              </Form.Item>
 
-            <Button className="w-full bg-black text-white h-11 text-lg">
-              Send
-            </Button>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  className="w-full bg-black text-white h-11 text-lg"
+                >
+                  Send
+                </Button>
+              </Form.Item>
+            </Form>
           </Space>
         </Col>
       </Row>
@@ -74,13 +130,13 @@ const Contact = () => {
           <MobileOutlined className="text-4xl" />
           <Title level={5}>Products & orders</Title>
           <a href="">0342683960 (Viettel)</a>
-          <a href="">05:00 - 23-00</a>
+          <a href="">05:00 - 23:00</a>
         </Space>
         <Space direction="vertical">
           <MessageOutlined className="text-4xl" />
           <Title level={5}>Email</Title>
           <a href="">ntl260303@gmail.com</a>
-          <a href="">05:00 - 23-00</a>
+          <a href="">05:00 - 23:00</a>
           <a href="">7 days a week</a>
         </Space>
         <Space direction="vertical">
@@ -94,7 +150,7 @@ const Contact = () => {
         </Space>
       </Space>
     </div>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;
