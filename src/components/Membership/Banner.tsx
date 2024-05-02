@@ -50,7 +50,7 @@ const Banner = () => {
             color: 'white',
           }}
         >
-          Move, shop, customise and celebrate with the of Nike
+          Di chuyển, mua sắm, tùy chỉnh và ăn mừng với Nike
         </Typography>
         <Link
           style={{

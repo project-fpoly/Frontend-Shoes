@@ -13,7 +13,7 @@ const Setting = () => {
       label: (
         <Link to={'/profile/setting'}>
           <p className="text-[20px] ">
-            <p className=" hidden lg:block">Account Detail</p>
+            <p className=" hidden lg:block">Thông tin cá nhân</p>
           </p>
         </Link>
       ),
@@ -24,7 +24,7 @@ const Setting = () => {
       label: (
         <Link to={'/profile/setting/communication-preferences'}>
           <p className="text-[20px] hidden lg:block ">
-            Communication Preferences
+            Tùy chọn liên lạc
           </p>
         </Link>
       ),
@@ -34,7 +34,7 @@ const Setting = () => {
     {
       label: (
         <Link to={'/profile/setting/privacy'}>
-          <p className="text-[20px] hidden lg:block ">Privacy</p>
+          <p className="text-[20px] hidden lg:block ">Quyền riêng tư</p>
         </Link>
       ),
       key: 'Privacy',
@@ -43,7 +43,7 @@ const Setting = () => {
     {
       label: (
         <Link to={'/profile/setting/profile-visibility'}>
-          <p className="text-[20px] hidden lg:block">Profile Visibility</p>
+          <p className="text-[20px] hidden lg:block">Tính hiển thị của Hồ sơ</p>
         </Link>
       ),
       key: 'profile-visibility',
@@ -67,7 +67,7 @@ const Setting = () => {
       }}
     >
       <div>
-        <h1 className="text-3xl mb-8">Setting</h1>
+        <h1 className="text-3xl mb-8">Cài đặt</h1>
         <div className="flex gap-24 min-h-[500px]">
           <Menu
             className="flex flex-col gap-10 w-[25%] "

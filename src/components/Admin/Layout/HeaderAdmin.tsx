@@ -93,10 +93,10 @@ const AdminHeader: React.FC = () => {
 
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile">Profile</Menu.Item>
-      <Menu.Item key="settings">Settings</Menu.Item>
+      <Menu.Item key="profile">Hồ sơ</Menu.Item>
+      <Menu.Item key="settings">Cài đặt</Menu.Item>
       <Menu.Item key="logout" onClick={handleLogout}>
-        Logout
+        Đăng xuất
       </Menu.Item>
     </Menu>
   )
@@ -156,9 +156,8 @@ const AdminHeader: React.FC = () => {
 
             return (
               <List.Item
-                className={`${styles.notificationItem} ${
-                  item.isRead ? styles.readItem : styles.unreadItem
-                }`}
+                className={`${styles.notificationItem} ${item.isRead ? styles.readItem : styles.unreadItem
+                  }`}
                 onClick={() => handleItemClick(item)}
               >
                 <div style={{ marginBottom: '16px', padding: 5 }}>

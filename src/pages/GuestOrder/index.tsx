@@ -33,7 +33,7 @@ const GuestOrder = () => {
   const a = orders.map((order: any) => order.trackingNumber)
   return (
     <div className="mt-[100px] w-[60%] mx-auto">
-      <Title level={3}> Search for orders</Title>
+      <Title level={3}> Tìm kiếm đơn hàng</Title>
 
       <Search
         placeholder="input search text"

@@ -11,7 +11,7 @@ const Infomation = () => {
         <Avatar size={80} src={user?.avt?.url} />
         <div className="flex flex-col gap-3">
           <h3 className=" text-4xl">{user?.userName!}</h3>
-          <p>Nike Member Since {moment(user.createdAt).calendar()}</p>
+          <p>Thành viên NIKE từ {moment(user.createdAt).calendar()}</p>
         </div>
       </div>
     </div>

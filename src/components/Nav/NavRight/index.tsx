@@ -45,7 +45,7 @@ const NavRight = () => {
         <IoSearchOutline size={23} />
       </button>
 
-      <Link to="favorites">
+      <Link to={token ? 'favourite' : 'signin'}>
         <IoMdHeartEmpty
           className="cursor-pointer mt-1 hover:bg-[#e5e5e5] rounded-full p-2"
           size={43}

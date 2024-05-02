@@ -19,24 +19,24 @@ const Footer = () => {
       >
         <div className={clsx('flex gap-32 flex-row', style.infoFooter)}>
           <div className="text-base flex flex-col gap-3 text-white">
-            <p>FIND A STORE</p>
-            <p>BECOME A MEMBER</p>
-            <p>Send Us Feedback</p>
+            <p>Tìm cửa hàng</p>
+            <p>Trở thành thành viên</p>
+            <p>Gửi phản hồi cho chúng tôi</p>
           </div>
           <div>
-            <p className="text-base text-white">GET HELP</p>
-            <p className="text-gray-400 hover:text-white">Order Status</p>
-            <p className="text-gray-400 hover:text-white">Delivery</p>
-            <p className="text-gray-400 hover:text-white">Returns</p>
-            <p className="text-gray-400 hover:text-white">Payment Options</p>
-            <p className="text-gray-400 hover:text-white">Contact Us</p>
+            <p className="text-base text-white">Hỗ trợ</p>
+            <p className="text-gray-400 hover:text-white">Trạng thái đơn hàng</p>
+            <p className="text-gray-400 hover:text-white">Giao hàng</p>
+            <p className="text-gray-400 hover:text-white">Trả hàng</p>
+            <p className="text-gray-400 hover:text-white">Lựa chọn thanh toán</p>
+            <p className="text-gray-400 hover:text-white">Liên hệ chúng tôi</p>
           </div>
           <div>
-            <p className="text-base text-white">About nike</p>
-            <p className="text-gray-400 hover:text-white">News</p>
-            <p className="text-gray-400 hover:text-white">Careers</p>
-            <p className="text-gray-400 hover:text-white">Investors</p>
-            <p className="text-gray-400 hover:text-white">Sustainability</p>
+            <p className="text-base text-white">Về NIKE</p>
+            <p className="text-gray-400 hover:text-white">Những thông tin mới</p>
+            <p className="text-gray-400 hover:text-white">Nghề nghiệp</p>
+            <p className="text-gray-400 hover:text-white">Nhà đầu tư</p>
+            <p className="text-gray-400 hover:text-white">Sự bền vững</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -85,10 +85,10 @@ const Footer = () => {
             style.aboutDtFooter,
           )}
         >
-          <p>Guides</p>
-          <p>Terms of Sale</p>
-          <p>Terms of Use</p>
-          <p>Nike Privacy Policy</p>
+          <p>Hướng đẫn</p>
+          <p>Điều khoản bán hàng</p>
+          <p>Điều khoản sử dụng</p>
+          <p>Chính sách quyền riêng tư của Nike</p>
         </span>
       </div>
     </div>

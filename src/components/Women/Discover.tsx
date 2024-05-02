@@ -38,7 +38,7 @@ const Discover = () => {
   return (
     <>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Typography className="home_title">Discover</Typography>
+        <Typography className="home_title">Khám phá</Typography>
 
         <Swiper
           modules={[Navigation, Pagination, A11y]}

@@ -27,7 +27,7 @@ const NavBar = () => {
   const content = (
     <div>
       <Link to="/signin">
-        <h1 className="font-bold">Login</h1>
+        <h1 className="font-bold">Đăng nhập</h1>
       </Link>
       {/*<p>Logout</p>*/}
     </div>
@@ -83,21 +83,21 @@ const NavBar = () => {
                   content={
                     <>
                       <Link to="/profile">
-                        <h1 className="font-bold">Profile</h1>
+                        <h1 className="font-bold">Hồ sơ</h1>
                       </Link>
                       {user?.role === 'admin' && (
                         <Link to="/admin">
-                          <h1 className="font-bold">Admin</h1>
+                          <h1 className="font-bold">Quản trị viên</h1>
                         </Link>
                       )}
                       <Link to="">
                         <h1 className="font-bold" onClick={handleLogout}>
-                          Logout
+                          Đăng xuất
                         </h1>
                       </Link>
                     </>
                   }
-                  title="Account"
+                  title="Tài khoản"
                 >
                   <p className="hidden lg:block">Hi, {user.userName}</p>
                   <Avatar
@@ -112,7 +112,7 @@ const NavBar = () => {
                 <Popover
                   className="flex gap-2 hover:opacity-70"
                   content={content}
-                  title="Account"
+                  title="Tài khoản"
                 >
                   <Avatar size={30} icon={<UserOutlined />} />
                 </Popover>
@@ -148,7 +148,7 @@ const NavBar = () => {
                   Nữ
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/sale'}>
-                  Giảm giá 
+                  Giảm giá
                 </Link>
                 <Link onClick={onClose} className="text-3xl" to={'/contact'}>
                   Liên hệ

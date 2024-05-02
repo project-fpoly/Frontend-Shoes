@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Trending = () => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Typography className="home_title">Trending</Typography>
+      <Typography className="home_title">Xu hướng</Typography>
       <img
         src="../../../bannerwomen.jpg"
         alt=""
@@ -24,8 +24,7 @@ const Trending = () => {
         </Typography>
 
         <Typography className="mb-5 text-lg">
-          Add a twist to your style with a silhouette inspired by retro running
-          designs.
+          Thêm điểm nhấn cho phong cách của bạn với kiểu dáng lấy cảm hứng từ thiết kế chạy bộ cổ điển.
         </Typography>
 
         <Link

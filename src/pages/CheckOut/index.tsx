@@ -73,25 +73,25 @@ const CheckOut = () => {
   }
   const items = state?.cart
     ? state.cart.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
     : cartSession?.cartItems.map((cartItem: any) => {
-        return {
-          name: getProductName(cartItem.product),
-          quantity: cartItem.quantity,
-          height: 200,
-          weight: 1000,
-          length: 200,
-          width: 200,
-        }
-      })
+      return {
+        name: getProductName(cartItem.product),
+        quantity: cartItem.quantity,
+        height: 200,
+        weight: 1000,
+        length: 200,
+        width: 200,
+      }
+    })
   useEffect(() => {
     dispatch(getCartItems())
     dispatch(fetchAllProducts({ page: 1, pageSize: 100, searchKeyword: '' }))
@@ -274,7 +274,7 @@ const CheckOut = () => {
         <div className="checkout_body col-span-1">
           <div>
             <h2 className="text-xl  mb-4">
-              How would you like to get your order?
+              Bạn muốn nhận đơn hàng bằng cách nào?
             </h2>
             <Button
               block
@@ -284,7 +284,7 @@ const CheckOut = () => {
                 <TbTruckDelivery
                   style={{ fontSize: '32px', marginRight: '12px' }}
                 />
-                Deliver It
+                Giao nó
               </p>
             </Button>
           </div>
@@ -299,7 +299,7 @@ const CheckOut = () => {
               onFinish={handleFormSubmit}
             >
               <div className="">
-                <h2 className="text-2xl mb-4">Your delivery information</h2>
+                <h2 className="text-2xl mb-4">Thông tin giao hàng của bạn</h2>
 
                 <Form.Item
                   name="firstName"
@@ -490,35 +490,35 @@ const CheckOut = () => {
                 initialValue="Thanh toán tiền mặt"
               >
                 <Radio.Group>
-                  <Radio value="Thanh toán tiền mặt">Cash on delivery</Radio>
+                  <Radio value="Thanh toán tiền mặt">Thanh toán khi giao hàng </Radio>
                   <Radio value="vnPay">VNPAY</Radio>
                 </Radio.Group>
               </Form.Item>
               {state?.cart?.cartItems.length > 0 ||
-              cartSession?.cartItems.length > 0 ? (
+                cartSession?.cartItems.length > 0 ? (
                 <Button
                   type="default"
                   htmlType="submit"
                   block
                   className="bg-black text-[#fff] h-[60px]  border-[#f5f5f5] rounded-full mb-12 hover:!bg-[#333] hover:!text-white hover:!border-black"
                 >
-                  <p className="text-lg ">Check out</p>
+                  <p className="text-lg ">Thanh toán</p>
                 </Button>
               ) : null}
             </Form>
           </div>
         </div>
         <div className="checkout_summary col-span-1 ml-20">
-          <h2 className="text-[22px]">Order Summary</h2>
+          <h2 className="text-[22px]">Tóm tắt theo thứ tự</h2>
           <div className="text-lg font-normal">
             <div className="flex justify-between items-center my-5">
-              <div className="text-[#6b7280]">Subtotal</div>
+              <div className="text-[#6b7280]">Tổng tiền</div>
               <div className="text-[#6b7280]">{formatCurrency(totalCart)}</div>
             </div>
             <div className="flex justify-between items-center my-5">
-              <div className="text-[#6b7280]">Delivery/Shipping</div>
+              <div className="text-[#6b7280]">Giao hàng/Vận chuyển</div>
               <div className="text-[#6b7280]">
-                {district ? formatCurrency(shippingOrder?.service_fee) : 'Free'}
+                {district ? formatCurrency(shippingOrder?.service_fee) : 'Miễn phí'}
               </div>
             </div>
             <hr />
@@ -561,14 +561,14 @@ const CheckOut = () => {
             </div>
             <hr />
             <div className="flex justify-between items-center my-5">
-              <div>Total</div>
+              <div>Tổng </div>
               <div>{formatCurrency(totalPrice)}</div>
             </div>
             <hr />
           </div>
           <div className="grid grid-cols-2 mt-10 gap-y-2 gap-x-2">
             {state?.cart?.cartItems.length > 0 ||
-            cartSession?.cartItems.length > 0 ? (
+              cartSession?.cartItems.length > 0 ? (
               <>
                 {state?.cart?.cartItems.map((cartItem: any, index: number) => (
                   <>
@@ -584,15 +584,15 @@ const CheckOut = () => {
                         {getProductName(cartItem.product)}
                       </h2>
                       <p className="text-[#6b7280]">
-                        Category: {getCateName(cartItem.product)}
+                        Loại hàng: {getCateName(cartItem.product)}
                       </p>
                       <p className="text-[#6b7280]">Size: {cartItem.size}</p>
-                      <p className="text-[#6b7280]">Color: {cartItem.color}</p>
+                      <p className="text-[#6b7280]">Màu: {cartItem.color}</p>
                       <p className="text-[#6b7280]">
-                        Quantity: {cartItem.quantity}
+                        Số lượng: {cartItem.quantity}
                       </p>
                       <p className="text-[#6b7280]">
-                        Price: {formatCurrency(cartItem.price)}
+                        Gía: {formatCurrency(cartItem.price)}
                       </p>
                     </div>
                   </>
@@ -614,12 +614,12 @@ const CheckOut = () => {
                         Category: {getCateName(item.product)}
                       </p>
                       <p className="text-[#6b7280]">Size: {item.size}</p>
-                      <p className="text-[#6b7280]">Color: {item.color}</p>
+                      <p className="text-[#6b7280]">Màu: {item.color}</p>
                       <p className="text-[#6b7280]">
-                        Quantity: {item.quantity}
+                        Số lượng: {item.quantity}
                       </p>
                       <p className="text-[#6b7280]">
-                        Price: {formatCurrency(item.price * item.quantity)}
+                        Gía: {formatCurrency(item.price * item.quantity)}
                       </p>
                     </div>
                   </>

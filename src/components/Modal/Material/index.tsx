@@ -45,7 +45,7 @@ const ModalCartItem = (props: Props) => {
           <div className="flex justify-between">
             <p className="flex gap-5 ">
               <FaCheck className="mt-1 text-green-500" />
-              Added to Bag
+              Đã thêm sản phảm vào giỏ hàng
             </p>
             <IoCloseCircleOutline
               size={30}
@@ -72,13 +72,13 @@ const ModalCartItem = (props: Props) => {
             <Link to={'/cart'}>
               {' '}
               <button className="w-40  py-3 border border-gray-400 text-black rounded-2xl bg-white text-sm">
-                View bag
+                Xem giỏ hàng
               </button>
             </Link>
             <Link to={'/cart/checkout'}>
               {' '}
               <button className="w-40 text-white py-3 rounded-2xl bg-black">
-                Check out
+                Thanh toán
               </button>
             </Link>
           </div>
